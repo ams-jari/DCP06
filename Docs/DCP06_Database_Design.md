@@ -125,14 +125,14 @@ exportToTXT(path) -> bool
 
 ## 5. Implementation Plan
 
-### Phase 1: Introduce Database Layer in DCP06
+### Phase 1: Introduce Database Layer in DCP06 ✅ (March 2025)
 
-| Step | Action |
-|------|--------|
-| 1.1 | Create `include/dcp06/database/IDatabase.hpp` — abstract interface using **STL types** (`std::string`, `std::vector`, etc.) |
-| 1.2 | Create `include/dcp06/database/DatabaseTypes.hpp` — structs matching DCP9 semantics |
-| 1.3 | Create `src/database/JsonDatabaseSTL.cpp` — JSON backend using nlohmann/json or rapidjson, `std::fstream` |
-| 1.4 | Storage path: use Captivate/Leica path APIs or `%APPDATA%\A.M.S\DCP06\jobs\` on CS35 simulator |
+| Step | Action | Status |
+|------|--------|--------|
+| 1.1 | Create `include/dcp06/database/IDatabase.hpp` — abstract interface using **STL types** | Done |
+| 1.2 | Create `include/dcp06/database/DatabaseTypes.hpp` — structs matching DCP9 semantics | Done |
+| 1.3 | Create `src/database/JsonDatabase.cpp` — JSON backend using nlohmann/json, `std::fstream` | Done |
+| 1.4 | Storage: `setDataDirectory()` — use `%APPDATA%\A.M.S\DCP06\jobs\` on CS35, Captivate path on instrument | Done |
 
 ### Phase 2: ADF Compatibility
 

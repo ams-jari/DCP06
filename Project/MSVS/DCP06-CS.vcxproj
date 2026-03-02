@@ -273,6 +273,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\core\SelectOnePoint.cpp" />
     <ClCompile Include="..\..\src\core\stdafx.cpp" />
     <ClCompile Include="..\..\src\core\UserDefStatus.cpp" />
+    <ClCompile Include="..\..\src\database\JsonDatabase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\include\dcp06\core\CS35.hpp" />

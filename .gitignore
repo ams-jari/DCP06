@@ -18,6 +18,9 @@ Win32/
 # Leica SDK / external (if local)
 # SYSTEM1500_ROOT paths are external
 
+# Legacy DCP05 layout (removed in Option B)
+/Hdr/
+
 # OS
 Thumbs.db
 .DS_Store
