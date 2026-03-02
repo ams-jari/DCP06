@@ -39,6 +39,37 @@ std::string JsonDatabase::getDataDirectory() const {
     return m_dataDirectory;
 }
 
+std::string JsonDatabase::getJobWorkingPath(const std::string& jobId) const {
+    if (m_dataDirectory.empty() || jobId.empty()) return "";
+    boost::filesystem::path p(m_dataDirectory);
+    p /= ".work";
+    boost::system::error_code ec;
+    if (!boost::filesystem::exists(p, ec))
+        boost::filesystem::create_directories(p, ec);
+    p /= jobId + ".adf";
+    return p.string();
+}
+
+std::vector<std::string> JsonDatabase::listJobIds() const {
+    std::vector<std::string> ids;
+    if (m_dataDirectory.empty()) return ids;
+    boost::filesystem::path dir(m_dataDirectory);
+    boost::system::error_code ec;
+    if (!boost::filesystem::exists(dir, ec) || !boost::filesystem::is_directory(dir, ec))
+        return ids;
+    for (boost::filesystem::directory_iterator it(dir, ec); it != boost::filesystem::directory_iterator(); it.increment(ec)) {
+        if (ec) continue;
+        boost::filesystem::path fp = it->path();
+        if (!boost::filesystem::is_regular_file(fp, ec)) continue;
+        std::string stem = fp.stem().string();
+        std::string ext = fp.extension().string();
+        if (ext == ".json" && !stem.empty() && stem[0] != '.')
+            ids.push_back(stem);
+    }
+    std::sort(ids.begin(), ids.end());
+    return ids;
+}
+
 bool JsonDatabase::isJobLoaded() const {
     return m_isJobLoaded && m_currentJob;
 }
@@ -310,6 +341,116 @@ std::vector<std::shared_ptr<PointData>> JsonDatabase::getAllPoints() const {
     return out;
 }
 
+namespace {
+bool pointHasActualValues(const PointData& p) {
+    return !(std::isnan(p.x_mea) && std::isnan(p.y_mea) && std::isnan(p.z_mea));
+}
+bool pointHasDesignValues(const PointData& p) {
+    return !(std::isnan(p.x_dsg) && std::isnan(p.y_dsg) && std::isnan(p.z_dsg));
+}
+// Natural sort: extract numeric suffix for P1,P2,P10 ordering
+int pointIdSortKey(const std::string& id) {
+    const char* p = id.c_str();
+    while (*p && !std::isdigit(static_cast<unsigned char>(*p))) ++p;
+    if (*p) {
+        try { return std::stoi(p); }
+        catch (...) {}
+    }
+    return 0;
+}
+}  // namespace
+
+std::vector<std::shared_ptr<PointData>> JsonDatabase::getAllPointsInJob() const {
+    std::vector<std::shared_ptr<PointData>> out;
+    if (!m_currentJob) return out;
+    std::vector<std::pair<int, std::shared_ptr<PointData>>> sorted;
+    for (const auto& kv : m_currentJob->points) {
+        if (!kv.second) continue;
+        if (!pointHasActualValues(*kv.second) && !pointHasDesignValues(*kv.second)) continue;
+        sorted.emplace_back(pointIdSortKey(kv.first), kv.second);
+    }
+    std::sort(sorted.begin(), sorted.end(), [](const auto& a, const auto& b) {
+        if (a.first != b.first) return a.first < b.first;
+        return a.second->id < b.second->id;
+    });
+    for (const auto& p : sorted) out.push_back(p.second);
+    return out;
+}
+
+short JsonDatabase::getPointListAsSelectPoints(S_SELECT_POINTS* pList, short iMaxPoints, short iDef) const {
+    auto pts = getAllPointsInJob();
+    short iCount = 0;
+    for (size_t i = 0; i < pts.size() && iCount < iMaxPoints; i++) {
+        const auto& pt = pts[i];
+        if (!pt) continue;
+        bool mea = pointHasActualValues(*pt);
+        bool des = pointHasDesignValues(*pt);
+        pList[iCount].iId = static_cast<short>(i + 1);
+        std::string id = pt->id.size() <= 6 ? pt->id : pt->id.substr(0, 6);
+        sprintf(pList[iCount].point_id, "%-6.6s", id.c_str());
+        pList[iCount].bActualDefined = mea;
+        pList[iCount].bDesignDefined = des;
+        pList[iCount].bPointSelected = false;
+        if (iDef == BOTH) {
+            pList[iCount].bDesignSelected = des;
+            pList[iCount].bActualSelected = mea;
+        } else if (iDef == ACTUAL) {
+            pList[iCount].bDesignSelected = false;
+            pList[iCount].bActualSelected = mea;
+            if (!pList[iCount].bActualSelected)
+                pList[iCount].bDesignSelected = des;
+        } else {
+            pList[iCount].bDesignSelected = des;
+            pList[iCount].bActualSelected = false;
+            if (!pList[iCount].bDesignSelected)
+                pList[iCount].bActualSelected = mea;
+        }
+        iCount++;
+    }
+    return iCount;
+}
+
+short JsonDatabase::getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxPoints) const {
+    auto pts = getAllPointsInJob();
+    short iCount = 0;
+    for (size_t i = 0; i < pts.size() && iCount < iMaxPoints; i++) {
+        const auto& pt = pts[i];
+        if (!pt) continue;
+        pList[iCount].no = static_cast<short>(i + 1);
+        std::string id = pt->id.size() <= 6 ? pt->id : pt->id.substr(0, 6);
+        sprintf(pList[iCount].point_id, "%-6.6s", id.c_str());
+        bool mea = pointHasActualValues(*pt);
+        bool des = pointHasDesignValues(*pt);
+        sprintf(pList[iCount].point_status, "%s/%s", mea ? "A" : "-", des ? "D" : "-");
+        iCount++;
+    }
+    return iCount;
+}
+
+bool JsonDatabase::getPointByIndex(int index1Based, bool useActual, char* pid,
+    char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const {
+    (void)useActual;  // we fill both actual and design like form_pnt1
+    auto pts = getAllPointsInJob();
+    if (index1Based < 1 || index1Based > static_cast<int>(pts.size())) return false;
+    const auto& pt = pts[index1Based - 1];
+    if (!pt) return false;
+    auto fmt = [](double v, char* buf) {
+        if (buf) std::isnan(v) ? sprintf(buf, "%9.9s", " ") : sprintf(buf, "%9.3f", v);
+    };
+    if (pid) {
+        std::string id = pt->id.size() <= 6 ? pt->id : pt->id.substr(0, 6);
+        sprintf(pid, "%-6.6s", id.c_str());
+    }
+    if (xact) fmt(pt->x_mea, xact); if (xdes) fmt(pt->x_dsg, xdes);
+    if (yact) fmt(pt->y_mea, yact); if (ydes) fmt(pt->y_dsg, ydes);
+    if (zact) fmt(pt->z_mea, zact); if (zdes) fmt(pt->z_dsg, zdes);
+    if (note) {
+        std::string n = pt->note.size() <= 6 ? pt->note : pt->note.substr(0, 6);
+        sprintf(note, "%-6.6s", n.c_str());
+    }
+    return true;
+}
+
 bool JsonDatabase::importFromADF(const std::string& filename) {
     if (!m_currentJob) return false;
     std::ifstream f(filename);
@@ -350,13 +491,30 @@ bool JsonDatabase::exportToADF(const std::string& filename) {
     if (!m_currentJob) return false;
     std::ofstream f(filename);
     if (!f.is_open()) return false;
-    f << "ADF File\nJob: " << m_currentJob->id << "\nDate: " << getCurrentIsoTime() << "\n\nPoints:\n";
-    f << "ID\tX\tY\tZ\tNote\tStatus\n----------------------------------------\n";
-    f << std::fixed << std::setprecision(6);
+    // DCP05-compatible fixed-width format (matches importFromADF parsing)
+    f << "ADF File\nJob: " << m_currentJob->id << "\nDate: " << getCurrentIsoTime() << "\n\n";
+    f << "PID X X_ACTUAL X_DESIGN Y Y_ACTUAL Y_DESIGN Z Z_ACTUAL Z_DESIGN\n";
+    f << std::fixed << std::setprecision(3);
     for (const auto& kv : m_currentJob->points) {
         const auto& pt = kv.second;
         if (!pt) continue;
-        f << pt->id << "\t" << pt->x_mea << "\t" << pt->y_mea << "\t" << pt->z_mea << "\t" << pt->note << "\t" << pt->status << "\n";
+        char pid[8] = "      ";
+        std::string id = pt->id.size() <= 6 ? pt->id : pt->id.substr(0, 6);
+        for (size_t i = 0; i < id.size() && i < 6; i++) pid[i] = id[i];
+        char xa[10], xd[10], ya[10], yd[10], za[10], zd[10];
+        auto fmtNum = [](double v, char* out) { std::isnan(v) ? sprintf(out, "%9.9s", " ") : sprintf(out, "%9.3f", v); };
+        auto fmtStatus = [](double v) { return (std::isnan(v) || v == 0) ? ' ' : 'X'; };
+        fmtNum(pt->x_mea, xa); fmtNum(pt->x_dsg, xd);
+        fmtNum(pt->y_mea, ya); fmtNum(pt->y_dsg, yd);
+        fmtNum(pt->z_mea, za); fmtNum(pt->z_dsg, zd);
+        char xsta = fmtStatus(pt->x_mea), ysta = fmtStatus(pt->y_mea), zsta = fmtStatus(pt->z_mea);
+        std::string note = pt->note.size() <= 6 ? pt->note : pt->note.substr(0, 6);
+        char noteBuf[8] = "      ";
+        for (size_t i = 0; i < note.size() && i < 6; i++) noteBuf[i] = note[i];
+        char line[256];
+        sprintf(line, "%-6.6s %c %9.9s %9.9s %c %9.9s %9.9s %c %9.9s %9.9s %-6.6s\n",
+                pid, xsta, xa, xd, ysta, ya, yd, zsta, za, zd, noteBuf);
+        f << line;
     }
     return true;
 }

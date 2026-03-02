@@ -29,6 +29,7 @@
 #include <dcp06/measurement/DCP_3DFileView.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/file/DCP_File.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
 #include <dcp06/core/DCP_SelectPoint.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
 #include <dcp06/core/DCP_InputText.hpp>
@@ -48,7 +49,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -62,25 +63,25 @@
 
 
 // ================================================================================================
-// ====================================  DCP053DFileViewDlgC         ==============================
+// ====================================  DCP063DFileViewDlgC         ==============================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP053DFileViewDlgC::DCP053DFileViewDlgC(DCP::DCP05FileModelC* pDataModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
+DCP::DCP063DFileViewDlgC::DCP063DFileViewDlgC(DCP::DCP06FileModelC* pDataModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
 			,m_pFile(0),m_pPointId(0), m_pXDsg(0), m_pYDsg(0), m_pZDsg(0),
 			m_pXActDev(0),m_pYActDev(0),m_pZActDev(0),m_pDataModel(pDataModel)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 }
 
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP053DFileViewDlgC::~DCP053DFileViewDlgC()
+DCP::DCP063DFileViewDlgC::~DCP063DFileViewDlgC()
 {
 	if(pCommon)
 	{
@@ -92,7 +93,7 @@ DCP::DCP053DFileViewDlgC::~DCP053DFileViewDlgC()
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
+void DCP::DCP063DFileViewDlgC::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -100,14 +101,14 @@ void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
 
 	m_pFile = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pFile->SetId(eFile);
-	m_pFile->SetText(StringC(AT_DCP05,P_DCP_3DFILE_SK_TOK));
+	m_pFile->SetText(StringC(AT_DCP06,P_DCP_3DFILE_SK_TOK));
 	m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	AddCtrl(m_pFile);
 	
 	m_pPointId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointId->SetId(ePointId);
-	m_pPointId->SetText(StringC(AT_DCP05,P_DCP_POINT_ID_SK_TOK));
+	m_pPointId->SetText(StringC(AT_DCP06,P_DCP_POINT_ID_SK_TOK));
 	m_pPointId->GetStringInputCtrl()->SetCharsCountMax(DCP_POINT_ID_LENGTH);
 	m_pPointId->SetEmptyAllowed(true);
 	m_pPointId->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
@@ -116,8 +117,8 @@ void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
 
 	m_pXDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pXDsg->SetId(eXDsg);
-	m_pXDsg->SetText(StringC(AT_DCP05,P_DCP_X_DSG_TOK));
-	m_pXDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP05Model()->m_nDecimals);
+	m_pXDsg->SetText(StringC(AT_DCP06,P_DCP_X_DSG_TOK));
+	m_pXDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
 	m_pXDsg->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pXDsg->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	//m_pXDsg->GetFlexFloatInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
@@ -129,8 +130,8 @@ void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
 
 	m_pYDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pYDsg->SetId(eYDsg);
-	m_pYDsg->SetText(StringC(AT_DCP05,P_DCP_Y_DSG_TOK));
-	m_pYDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP05Model()->m_nDecimals);
+	m_pYDsg->SetText(StringC(AT_DCP06,P_DCP_Y_DSG_TOK));
+	m_pYDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
 	m_pYDsg->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pYDsg->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	//m_pYDsg->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
@@ -141,11 +142,11 @@ void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
 
 	m_pZDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pZDsg->SetId(eZDsg);
-	m_pZDsg->SetText(StringC(AT_DCP05,P_DCP_Z_DSG_TOK));
+	m_pZDsg->SetText(StringC(AT_DCP06,P_DCP_Z_DSG_TOK));
 
 	m_pZDsg->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pZDsg->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
-	m_pZDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP05Model()->m_nDecimals);
+	m_pZDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
 	m_pZDsg->SetEmptyAllowed(true);
 	
 	//m_pZDsg->SetAutoColon(false);
@@ -156,7 +157,7 @@ void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
 	//SetColonPosLong( GUI::StandardDialogC::CP_10 );
 	m_pXActDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pXActDev->SetId(eXActDev);
-	m_pXActDev->SetText(StringC(AT_DCP05,P_DCP_X_ACT_DEV_TOK));
+	m_pXActDev->SetText(StringC(AT_DCP06,P_DCP_X_ACT_DEV_TOK));
 	m_pXActDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pXActDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pXActDev->SetEmptyAllowed(true);
@@ -166,7 +167,7 @@ void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
 
 	m_pYActDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pYActDev->SetId(eYActDev);
-	m_pYActDev->SetText(StringC(AT_DCP05,P_DCP_Y_ACT_DEV_TOK));
+	m_pYActDev->SetText(StringC(AT_DCP06,P_DCP_Y_ACT_DEV_TOK));
 	m_pYActDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pYActDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pYActDev->SetEmptyAllowed(true);
@@ -176,7 +177,7 @@ void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
 
 	m_pZActDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pZActDev->SetId(eZActDev);
-	m_pZActDev->SetText(StringC(AT_DCP05,P_DCP_Z_ACT_DEV_TOK));
+	m_pZActDev->SetText(StringC(AT_DCP06,P_DCP_Z_ACT_DEV_TOK));
 	m_pZActDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pZActDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pZActDev->SetEmptyAllowed(true);
@@ -190,10 +191,10 @@ void DCP::DCP053DFileViewDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP::DCP053DFileViewDlgC::OnDialogActivated()
+void DCP::DCP063DFileViewDlgC::OnDialogActivated()
 {
 	m_pDataModel->m_pAdfFile->always_single = 1;
-	pCommon = new DCP05CommonC(GetDCP05Model());
+	pCommon = new DCP06CommonC(GetDCP06Model());
 
 	RefreshControls();
 }
@@ -201,14 +202,14 @@ void DCP::DCP053DFileViewDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP053DFileViewDlgC::UpdateData()
+void DCP::DCP063DFileViewDlgC::UpdateData()
 {
 }
 
 // ================================================================================================
 // Description: refresh all controls
 // ================================================================================================
-void DCP::DCP053DFileViewDlgC::RefreshControls()
+void DCP::DCP063DFileViewDlgC::RefreshControls()
 {
 	if(m_pFile && m_pPointId && m_pXDsg && m_pYDsg && m_pZDsg && m_pXActDev &&
 		m_pYActDev && m_pZActDev) 
@@ -238,7 +239,7 @@ void DCP::DCP053DFileViewDlgC::RefreshControls()
 
 		if(!pCommon->strblank(xdes_ptr))
 		{
-			//sprintf(temp,"%.*f",m_pDCP05Model->m_nDecimals,atof(GetDCP05Model()->m_pAdfFile->xdes_front));
+			//sprintf(temp,"%.*f",m_pDCP06Model->m_nDecimals,atof(GetDCP06Model()->m_pAdfFile->xdes_front));
 			m_pXDsg->GetFloatInputCtrl()->SetDouble(atof(xdes_ptr));
 		}
 		else
@@ -248,7 +249,7 @@ void DCP::DCP053DFileViewDlgC::RefreshControls()
 		
 		if(!pCommon->strblank(ydes_ptr))
 		{
-			sprintf(temp,"%.*f",GetDCP05Model()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->ydes_front));
+			sprintf(temp,"%.*f",GetDCP06Model()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->ydes_front));
 			//m_pYDsg->GetFloatInputCtrl()->SetString(StringC(temp));
 			m_pYDsg->GetFloatInputCtrl()->SetDouble(atof(ydes_ptr));
 		}
@@ -259,7 +260,7 @@ void DCP::DCP053DFileViewDlgC::RefreshControls()
 		
 		if(!pCommon->strblank(zdes_ptr))
 		{
-			sprintf(temp,"%.*f",GetDCP05Model()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->zdes_front));
+			sprintf(temp,"%.*f",GetDCP06Model()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->zdes_front));
 			//m_pZDsg->GetFloatInputCtrl()->SetString(StringC(temp));
 			m_pZDsg->GetFloatInputCtrl()->SetDouble(atof(zdes_ptr));
 		}
@@ -272,21 +273,21 @@ void DCP::DCP053DFileViewDlgC::RefreshControls()
 		pCommon->get_dist_(ymea_ptr,ydes_ptr,y_diff);
 		pCommon->get_dist_(zmea_ptr,zdes_ptr,z_diff);
 
-		//if(!pCommon->strblank(GetDCP05Model()->m_pAdfFile->xmea_front))
+		//if(!pCommon->strblank(GetDCP06Model()->m_pAdfFile->xmea_front))
 		//{
 			sprintf(temp_act,"%9.9s %9.9s", x_diff,xmea_ptr);
 			
 		//}
 		m_pXActDev->GetStringInputCtrl()->SetString(StringC(temp_act));
 
-		//if(!pCommon->strblank(GetDCP05Model()->m_pAdfFile->ymea_front))
+		//if(!pCommon->strblank(GetDCP06Model()->m_pAdfFile->ymea_front))
 		//{
 			sprintf(temp_act,"%9.9s %9.9s",y_diff, ymea_ptr);
 			
 		//}
 		m_pYActDev->GetStringInputCtrl()->SetString(StringC(temp_act));
 		
-		//if(!pCommon->strblank(GetDCP05Model()->m_pAdfFile->zmea_front))
+		//if(!pCommon->strblank(GetDCP06Model()->m_pAdfFile->zmea_front))
 		//{
 			sprintf(temp_act,"%9.9s %9.9s", z_diff,  zmea_ptr);
 			
@@ -300,14 +301,14 @@ void DCP::DCP053DFileViewDlgC::RefreshControls()
 // ================================================================================================
 // Description: only accept xxx Model objects
 // ================================================================================================
-bool DCP::DCP053DFileViewDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP063DFileViewDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -317,63 +318,63 @@ bool DCP::DCP053DFileViewDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // ================================================================================================
-// Description: GetDCP05Model
+// Description: GetDCP06Model
 // ================================================================================================
-DCP::DCP05ModelC* DCP::DCP053DFileViewDlgC::GetDCP05Model() const
+DCP::DCP06ModelC* DCP::DCP063DFileViewDlgC::GetDCP06Model() const
 {
-    return (DCP::DCP05ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-// ====================================  DCP05UserControllerC  ===================================
+// ====================================  DCP06UserControllerC  ===================================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP053DFileViewControllerC::DCP053DFileViewControllerC(DCP::DCP05FileModelC* pDataModel)
+DCP::DCP063DFileViewControllerC::DCP063DFileViewControllerC(DCP::DCP06FileModelC* pDataModel)
     : m_pDlg( NULL ),m_pDataModel(pDataModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_3DFILE_VIEW_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_3DFILE_VIEW_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP053DFileViewDlgC(pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP063DFileViewDlgC(pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( _3DFILEVIEW_DLG, m_pDlg, true );
 
     // Set the function key
 	FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
 		
-	vDef.strLable = StringC(AT_DCP05,K_DCP_POINT_ID_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_ID_TOK);
 	SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_POINT_HOME_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_HOME_TOK);
 	SetFunctionKey( FK2, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_POINT_END_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_END_TOK);
 	SetFunctionKey( FK3, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_PREV_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_PREV_TOK);
 	SetFunctionKey( FK4, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_NEXT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_NEXT_TOK);
 	SetFunctionKey( FK5, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_DEL_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
 	SetFunctionKey( SHFK2, vDef );
 
 		// Hide quit
 		FKDef vDef1;
-		//vDef1.nAppId = AT_DCP05;
+		//vDef1.nAppId = AT_DCP06;
 		vDef1.poOwner = this;
 		vDef1.strLable = L" ";;
 		SetFunctionKey( SHFK6, vDef1 );
@@ -385,7 +386,7 @@ DCP::DCP053DFileViewControllerC::DCP053DFileViewControllerC(DCP::DCP05FileModelC
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP053DFileViewControllerC::~DCP053DFileViewControllerC()
+DCP::DCP063DFileViewControllerC::~DCP063DFileViewControllerC()
 {
 
 }
@@ -393,7 +394,7 @@ DCP::DCP053DFileViewControllerC::~DCP053DFileViewControllerC()
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnControllerActivated(void)
+void DCP::DCP063DFileViewControllerC::OnControllerActivated(void)
 {
 	
 }
@@ -401,7 +402,7 @@ void DCP::DCP053DFileViewControllerC::OnControllerActivated(void)
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP053DFileViewControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP063DFileViewControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -412,12 +413,12 @@ bool DCP::DCP053DFileViewControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -430,20 +431,28 @@ bool DCP::DCP053DFileViewControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: F1 / PID
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnF1Pressed()
+void DCP::DCP063DFileViewControllerC::OnF1Pressed()
 {
-		DCP::DCP05SelectPointModelC* pModel = new DCP05SelectPointModelC;
+		DCP::DCP06SelectPointModelC* pModel = new DCP06SelectPointModelC;
 
-		int iCount = m_pDataModel->m_pAdfFile->GetPointList(&pModel->points[0],MAX_SELECT_POINTS);
+		auto* db = m_pDlg->GetDCP06Model()->GetDatabase();
+		auto* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : nullptr;
+		bool useDb = jdb && jdb->isJobLoaded() && !m_pDlg->GetDCP06Model()->m_currentJobId.empty();
+
+		int iCount = 0;
+		if (useDb)
+			iCount = jdb->getPointListAsSelectPoint(&pModel->points[0], MAX_SELECT_POINTS);
+		else
+			iCount = m_pDataModel->m_pAdfFile->GetPointList(&pModel->points[0], MAX_SELECT_POINTS);
 		pModel->m_iCounts = iCount;
-		pModel->m_iSelectedId = m_pDataModel->m_pAdfFile->active_point_front;
+		pModel->m_iSelectedId = useDb ? 1 : m_pDataModel->m_pAdfFile->active_point_front;
 
 		if(GetController(SELECT_POINT_CONTROLLER) == NULL)
 		{
-			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP05SelectPointControllerC );
+			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP06SelectPointControllerC );
 		}
 
-		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_PLANE_MEAS_TOK);
+		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
 
 		(void)GetController( SELECT_POINT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_POINT_CONTROLLER, true);
@@ -453,7 +462,7 @@ void DCP::DCP053DFileViewControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F2
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnF2Pressed()
+void DCP::DCP063DFileViewControllerC::OnF2Pressed()
 {
 	m_pDataModel->m_pAdfFile->form_pnt(1);
 	m_pDlg->RefreshControls();
@@ -462,7 +471,7 @@ void DCP::DCP053DFileViewControllerC::OnF2Pressed()
 // ================================================================================================
 // Description: F3 
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnF3Pressed()
+void DCP::DCP063DFileViewControllerC::OnF3Pressed()
 {
 	m_pDataModel->m_pAdfFile->form_pnt(m_pDataModel->m_pAdfFile->points);
 	m_pDlg->RefreshControls();
@@ -471,7 +480,7 @@ void DCP::DCP053DFileViewControllerC::OnF3Pressed()
 // ================================================================================================
 // Description: F4  / PREV
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnF4Pressed()
+void DCP::DCP063DFileViewControllerC::OnF4Pressed()
 {
 	m_pDataModel->m_pAdfFile->form_prev_pnt();
 	m_pDlg->RefreshControls();
@@ -480,7 +489,7 @@ void DCP::DCP053DFileViewControllerC::OnF4Pressed()
 // ================================================================================================
 // Description: F5 / NEXT
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnF5Pressed()
+void DCP::DCP063DFileViewControllerC::OnF5Pressed()
 {
 	m_pDataModel->m_pAdfFile->form_next_pnt();
 	m_pDlg->RefreshControls();
@@ -489,7 +498,7 @@ void DCP::DCP053DFileViewControllerC::OnF5Pressed()
 // ================================================================================================
 // Description: F6 
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnF6Pressed()
+void DCP::DCP063DFileViewControllerC::OnF6Pressed()
 {
 	Close(EC_KEY_CONT);
 }
@@ -497,7 +506,7 @@ void DCP::DCP053DFileViewControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: SHF2 / DELETE
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnSHF2Pressed()
+void DCP::DCP063DFileViewControllerC::OnSHF2Pressed()
 {
 	short pno = m_pDataModel->m_pAdfFile->active_point_front;
 	m_pDataModel->m_pAdfFile->delete_point_from_adf(pno);
@@ -507,7 +516,7 @@ void DCP::DCP053DFileViewControllerC::OnSHF2Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP063DFileViewControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 
 }
@@ -515,11 +524,11 @@ void DCP::DCP053DFileViewControllerC::OnActiveDialogClosed( int lDlgID, int lExi
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP053DFileViewControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP063DFileViewControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectPointModelC* pModel = (DCP::DCP05SelectPointModelC*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
+		DCP::DCP06SelectPointModelC* pModel = (DCP::DCP06SelectPointModelC*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
 		m_pDataModel->m_pAdfFile->form_pnt(pModel->m_iSelectedId);
 	}
 	m_pDlg->RefreshControls();
@@ -529,7 +538,7 @@ void DCP::DCP053DFileViewControllerC::OnActiveControllerClosed( int lCtrlID, int
 // ================================================================================================
 // Description: ConfirmClose
 // ================================================================================================
-bool DCP::DCP053DFileViewControllerC::ConfirmClose(bool bEsc)
+bool DCP::DCP063DFileViewControllerC::ConfirmClose(bool bEsc)
 {
 	return true;
 }

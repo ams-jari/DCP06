@@ -3,8 +3,10 @@
 #include <dcp06/database/IDatabase.hpp>
 #include <dcp06/database/DatabaseTypes.hpp>
 #include <dcp06/database/nlohmann/json.hpp>
+#include <dcp06/core/DCP_Defs.hpp>
 #include <string>
 #include <memory>
+#include <vector>
 
 namespace DCP {
 namespace Database {
@@ -15,7 +17,9 @@ public:
     ~JsonDatabase() override;
 
     void setDataDirectory(const std::string& path);
-    std::string getDataDirectory() const;
+    std::string getDataDirectory() const override;
+    std::string getJobWorkingPath(const std::string& jobId) const override;
+    std::vector<std::string> listJobIds() const override;
     bool isJobLoaded() const;
     std::unique_ptr<JobData> getCurrentJob() const;
 
@@ -31,6 +35,19 @@ public:
     bool deletePoint(const std::string& pointId) override;
     bool getPoint(const std::string& pointId, PointData& data) const override;
     std::vector<std::shared_ptr<PointData>> getAllPoints() const override;
+
+    /// DCP9-style: all points in current job (main points; extend later for alignments/circles/etc.)
+    std::vector<std::shared_ptr<PointData>> getAllPointsInJob() const;
+
+    /// Fill S_SELECT_POINTS from current job for point selection dialogs. Returns count.
+    short getPointListAsSelectPoints(S_SELECT_POINTS* pList, short iMaxPoints, short iDef) const;
+
+    /// Fill S_SELECT_POINT from current job (no/point_id/point_status format). Returns count.
+    short getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxPoints) const;
+
+    /// Get point by 1-based index (sorted by point ID). Fills coord buffers like form_pnt1. Returns true if found.
+    bool getPointByIndex(int index1Based, bool useActual, char* pid,
+        char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const;
 
     bool addMidpoint(const std::string&, const MidpointData&) override { return false; }
     bool updateMidpoint(const std::string&, const MidpointData&) override { return false; }
