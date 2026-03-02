@@ -43,7 +43,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::DCP05UnitDlgC);
+// OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
 
 //================================================================================================
 // =====================================  Static Functions  =======================================
@@ -57,30 +57,30 @@
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP05CalcDist2PointsDlgC::DCP05CalcDist2PointsDlgC(DCP::DCP05ModelC* pDCP05Model):m_pPoints(0),
+DCP::DCP06CalcDist2PointsDlgC::DCP06CalcDist2PointsDlgC(DCP::DCP06ModelC* pDCP06Model):m_pPoints(0),
 		m_pHeaderDevAct(0), m_pHeaderDevDes(0), m_pHeaderDevDev(0), m_pXText(0), m_pYText(0),
 		m_pZText(0), m_pTotalText(0), m_pXAct(0),m_pYAct(0),m_pZAct(0),m_pTotalAct(0),
 		m_pXDsg(0),m_pYDsg(0),m_pZDsg(0),m_pTotalDsg(0),m_pXDev(0),m_pYDev(0),m_pZDev(0),m_pTotalDev(0),
-		m_pDCP05Model(pDCP05Model),m_pCommon(0)
+		m_pDCP06Model(pDCP06Model),m_pCommon(0)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 	
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 
-	m_strDevActual.LoadTxt(AT_DCP05,P_DCP_DEV_ACTUAL_TOK);
-	m_strDevDesign.LoadTxt(AT_DCP05,P_DCP_DEV_DESIGN_TOK);
-	m_strDevDev.LoadTxt(AT_DCP05,P_DCP_DEV_DEVIATION_TOK);
+	m_strDevActual.LoadTxt(AT_DCP06,P_DCP_DEV_ACTUAL_TOK);
+	m_strDevDesign.LoadTxt(AT_DCP06,P_DCP_DEV_DESIGN_TOK);
+	m_strDevDev.LoadTxt(AT_DCP06,P_DCP_DEV_DEVIATION_TOK);
 
-	m_strX.LoadTxt(AT_DCP05, P_DCP_X_TOK);
+	m_strX.LoadTxt(AT_DCP06, P_DCP_X_TOK);
 	//m_strX += L":";
 
-	m_strY.LoadTxt(AT_DCP05, P_DCP_Y_TOK);
+	m_strY.LoadTxt(AT_DCP06, P_DCP_Y_TOK);
 	//m_strY += L":";
 
-	m_strZ.LoadTxt(AT_DCP05, P_DCP_Z_TOK);
+	m_strZ.LoadTxt(AT_DCP06, P_DCP_Z_TOK);
 	//m_strZ += L":";
 
-	m_strTotal.LoadTxt(AT_DCP05, P_DCP_TOTAL_DIST_TOK);
+	m_strTotal.LoadTxt(AT_DCP06, P_DCP_TOTAL_DIST_TOK);
 	//m_strTotal += L":";
 
 	 bXmea[0] = '\0'; bYmea[0] = '\0'; bZmea[0] = '\0'; 
@@ -99,7 +99,7 @@ DCP::DCP05CalcDist2PointsDlgC::DCP05CalcDist2PointsDlgC(DCP::DCP05ModelC* pDCP05
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05CalcDist2PointsDlgC::~DCP05CalcDist2PointsDlgC()
+DCP::DCP06CalcDist2PointsDlgC::~DCP06CalcDist2PointsDlgC()
 {
 	if(m_pCommon)
 	{
@@ -111,13 +111,13 @@ DCP::DCP05CalcDist2PointsDlgC::~DCP05CalcDist2PointsDlgC()
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP05CalcDist2PointsDlgC::OnInitDialog(void)
+void DCP::DCP06CalcDist2PointsDlgC::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
     
 	m_pPoints = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPoints->SetId(ePoints);
-	m_pPoints->SetText(StringC(AT_DCP05,P_DCP_POINTS_TOK));
+	m_pPoints->SetText(StringC(AT_DCP06,P_DCP_POINTS_TOK));
 	
 	//m_pPoints->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
 	
@@ -213,7 +213,7 @@ void DCP::DCP05CalcDist2PointsDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP::DCP05CalcDist2PointsDlgC::OnDialogActivated()
+void DCP::DCP06CalcDist2PointsDlgC::OnDialogActivated()
 {
 	// Set title for dialog
 	SetTitle(GetDataModel()->sTitle);
@@ -226,7 +226,7 @@ void DCP::DCP05CalcDist2PointsDlgC::OnDialogActivated()
 // Description: refresh all controls
 // ================================================================================================
 
-void DCP::DCP05CalcDist2PointsDlgC::RefreshControls()
+void DCP::DCP06CalcDist2PointsDlgC::RefreshControls()
 {	
 	if(m_pPoints && m_pHeaderDevAct && m_pHeaderDevDes && m_pHeaderDevDev &&
 		m_pXText && m_pYText && m_pZText && m_pTotalText && m_pXAct && m_pYAct && m_pZAct && m_pTotalAct &&
@@ -272,7 +272,7 @@ void DCP::DCP05CalcDist2PointsDlgC::RefreshControls()
 // ================================================================================================
 // Description: clac distances
 // ================================================================================================
-void DCP::DCP05CalcDist2PointsDlgC::calc_distances(
+void DCP::DCP06CalcDist2PointsDlgC::calc_distances(
 						short p1, char* pid1, char* bXmea1, char* bXdes1, char* bYmea1, char* bYdes1,char* bZmea1, char* bZdes1,
 						short p2, char* pid2, char* bXmea2, char* bXdes2, char* bYmea2, char* bYdes2,char* bZmea2, char* bZdes2)
 {
@@ -332,7 +332,7 @@ void DCP::DCP05CalcDist2PointsDlgC::calc_distances(
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP05CalcDist2PointsDlgC::UpdateData()
+void DCP::DCP06CalcDist2PointsDlgC::UpdateData()
 {
 	// nothing to update
 }
@@ -340,16 +340,16 @@ void DCP::DCP05CalcDist2PointsDlgC::UpdateData()
 
 
 // ================================================================================================
-// Description: only accept DCP05CalcDist2PointsModelC objects
+// Description: only accept DCP06CalcDist2PointsModelC objects
 // ================================================================================================
-bool DCP::DCP05CalcDist2PointsDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06CalcDist2PointsDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05CalcDist2PointsModelC* pDCP05Model = dynamic_cast< DCP::DCP05CalcDist2PointsModelC* >( pModel );
+    DCP::DCP06CalcDist2PointsModelC* pDCP06Model = dynamic_cast< DCP::DCP06CalcDist2PointsModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -360,11 +360,11 @@ bool DCP::DCP05CalcDist2PointsDlgC::SetModel( GUI::ModelC* pModel )
 
 
 // ================================================================================================
-// Description: get DCP05CalcDist2PointsModelC 
+// Description: get DCP06CalcDist2PointsModelC 
 // ================================================================================================
-DCP::DCP05CalcDist2PointsModelC* DCP::DCP05CalcDist2PointsDlgC::GetDataModel() const
+DCP::DCP06CalcDist2PointsModelC* DCP::DCP06CalcDist2PointsDlgC::GetDataModel() const
 {
-    return (DCP::DCP05CalcDist2PointsModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06CalcDist2PointsModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
@@ -376,33 +376,33 @@ DCP::DCP05CalcDist2PointsModelC* DCP::DCP05CalcDist2PointsDlgC::GetDataModel() c
 // ================================================================================================
 // Description: // constructor
 // ================================================================================================
-DCP::DCP05CalcDist2PointsControllerC::DCP05CalcDist2PointsControllerC(DCP::DCP05ModelC* pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model)
+DCP::DCP06CalcDist2PointsControllerC::DCP06CalcDist2PointsControllerC(DCP::DCP06ModelC* pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
     
 	// do not set title here
-	//SetTitleTok( AT_DCP05,xxx_TOK);
+	//SetTitleTok( AT_DCP06,xxx_TOK);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP05CalcDist2PointsDlgC(pDCP05Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06CalcDist2PointsDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( CALC_2_POINTS_DLG, m_pDlg, true );
 
     // Set the function key
 	FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_PICK_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_PICK_TOK);
     SetFunctionKey( FK1, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
     SetFunctionKey( FK6, vDef );
 
     // Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -412,21 +412,21 @@ DCP::DCP05CalcDist2PointsControllerC::DCP05CalcDist2PointsControllerC(DCP::DCP05
 // ===========================================================================================
 // Description: destructor
 // ===========================================================================================
-DCP::DCP05CalcDist2PointsControllerC::~DCP05CalcDist2PointsControllerC()
+DCP::DCP06CalcDist2PointsControllerC::~DCP06CalcDist2PointsControllerC()
 {
 
 }
 // ===========================================================================================
 // Description: Route model to everybody else
 // ===========================================================================================
-bool DCP::DCP05CalcDist2PointsControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06CalcDist2PointsControllerC::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
 	// set title here bacause it depending on caller...
-	DCP::DCP05CalcDist2PointsModelC* pMod = dynamic_cast< DCP::DCP05CalcDist2PointsModelC* >( pModel );
+	DCP::DCP06CalcDist2PointsModelC* pMod = dynamic_cast< DCP::DCP06CalcDist2PointsModelC* >( pModel );
 	SetTitle(pMod->sTitle);
 	
     // Set it to hello world dialog
@@ -436,7 +436,7 @@ bool DCP::DCP05CalcDist2PointsControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: F1, Select 2 points
 // ================================================================================================
-void DCP::DCP05CalcDist2PointsControllerC::OnF1Pressed()
+void DCP::DCP06CalcDist2PointsControllerC::OnF1Pressed()
 {	
     if (m_pDlg == NULL)
     {
@@ -445,7 +445,7 @@ void DCP::DCP05CalcDist2PointsControllerC::OnF1Pressed()
     }
 
 	// SELECT MULTIPOINTS
-	DCP::DCP05SelectMultiPointsModelC* pModel = new DCP05SelectMultiPointsModelC;
+	DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
 	memcpy(&pModel->sel_points[0],&m_pDlg->GetDataModel()->points[0], sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 	pModel->m_iPointsCount = m_pDlg->GetDataModel()->m_iCounts;
 	
@@ -456,7 +456,7 @@ void DCP::DCP05CalcDist2PointsControllerC::OnF1Pressed()
 	
 	// set info text....
 	StringC sInfo;
-	sInfo.LoadTxt(AT_DCP05, T_DCP_SELECT_2_POINTS_TOK);
+	sInfo.LoadTxt(AT_DCP06, T_DCP_SELECT_2_POINTS_TOK);
 	sInfo += L"  ";
 	sInfo += pModel->sSelectedFile;
 	pModel->sInfo = sInfo;
@@ -469,7 +469,7 @@ void DCP::DCP05CalcDist2PointsControllerC::OnF1Pressed()
 
 	if(GetController(SELECT_MULTIPOINTS_CONTROLLER) == NULL)
 	{
-			(void)AddController( SELECT_MULTIPOINTS_CONTROLLER, new DCP::DCP05SelectMultiPointsControllerC(m_pDCP05Model) );
+			(void)AddController( SELECT_MULTIPOINTS_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDCP06Model) );
 	}
 
 	(void)GetController( SELECT_MULTIPOINTS_CONTROLLER )->SetModel(pModel);
@@ -480,7 +480,7 @@ void DCP::DCP05CalcDist2PointsControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F6, CONT
 // ================================================================================================
-void DCP::DCP05CalcDist2PointsControllerC::OnF6Pressed()
+void DCP::DCP06CalcDist2PointsControllerC::OnF6Pressed()
 {
     if (m_pDlg == NULL)
     {
@@ -500,19 +500,19 @@ void DCP::DCP05CalcDist2PointsControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP05CalcDist2PointsControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP06CalcDist2PointsControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 }
 
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP05CalcDist2PointsControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06CalcDist2PointsControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_MULTIPOINTS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectMultiPointsModelC* pModel = (DCP::DCP05SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();		
-		DCP05CommonC common(m_pDCP05Model);
+		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();		
+		DCP06CommonC common(m_pDCP06Model);
 		
 		short p1 = 0, p2 = 0;
 
@@ -521,9 +521,9 @@ void DCP::DCP05CalcDist2PointsControllerC::OnActiveControllerClosed( int lCtrlID
 
 		if(p1 == 0 || p2 == 0)
 		{
-			DCP05MsgBoxC msgBox;
+			DCP06MsgBoxC msgBox;
 			StringC sMsg;
-			sMsg.LoadTxt(AT_DCP05, M_DCP_2_POINTS_MUST_BE_DEFINED_TOK);
+			sMsg.LoadTxt(AT_DCP06, M_DCP_2_POINTS_MUST_BE_DEFINED_TOK);
 			msgBox.ShowMessageOk(sMsg);
 		}
 		else
@@ -548,14 +548,14 @@ void DCP::DCP05CalcDist2PointsControllerC::OnActiveControllerClosed( int lCtrlID
 }
 
 // ================================================================================================
-// ====================================  DCP05CalcDist2PointsModelC  ===================================
+// ====================================  DCP06CalcDist2PointsModelC  ===================================
 // ================================================================================================
 
 
 // ===========================================================================================
 // Description: Constructor
 // ===========================================================================================
-DCP::DCP05CalcDist2PointsModelC::DCP05CalcDist2PointsModelC()
+DCP::DCP06CalcDist2PointsModelC::DCP06CalcDist2PointsModelC()
 {
 	memset(&points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE); 
 }
@@ -563,6 +563,6 @@ DCP::DCP05CalcDist2PointsModelC::DCP05CalcDist2PointsModelC()
 // ===========================================================================================
 // Description: Destructor
 // ===========================================================================================
-DCP::DCP05CalcDist2PointsModelC::~DCP05CalcDist2PointsModelC()
+DCP::DCP06CalcDist2PointsModelC::~DCP06CalcDist2PointsModelC()
 {
 }

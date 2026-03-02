@@ -34,28 +34,33 @@
 
 #include <dcp06/core/DCP_Types.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
+#include <dcp06/database/IDatabase.hpp>
 
 #include <GUI_AppBase.hpp>
+#include <memory>
+#include <string>
 
 // Description: The Hello World application
 //
 namespace DCP
 {
-	class DCP05ConfigControllerC;
+	class DCP06ConfigControllerC;
+
+	namespace Database { class JsonDatabase; }
 
     // Description: Hello World application class
     //              
-    class DCP05ModelC : public  ABL::AppConfigModelC//public GUI::ModelC
+    class DCP06ModelC : public  ABL::AppConfigModelC//public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05ModelC();
+            DCP06ModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05ModelC();
+            virtual ~DCP06ModelC();
 			/*
 			typedef struct
 			{
@@ -151,6 +156,7 @@ namespace DCP
 			
 
 			StringC ADFFileName;
+			std::string m_currentJobId;  // DB-primary: active job (empty = no job / legacy ADF mode)
 
 			//short m_ActiveCoordinateSystem;
 			
@@ -219,17 +225,17 @@ namespace DCP
 
 
 			// POM
-			S_POINT_BUFF	POM_point_DCS[MAX_POM_POINTS];
-			S_POINT_BUFF	POM_point_OCS[MAX_POM_POINTS];
-			S_POINT_BUFF	POM_point_RES[MAX_POM_POINTS];
+			S_POINT_BUFF	POM_point_DCS[MAX_BESTFIT_POINTS];
+			S_POINT_BUFF	POM_point_OCS[MAX_BESTFIT_POINTS];
+			S_POINT_BUFF	POM_point_RES[MAX_BESTFIT_POINTS];
 
 			short pom_into_capture;
 			short pom_into_template;
 
 			// CHST
-			S_POINT_BUFF	CHST_point_DCS[MAX_POM_POINTS];
-			S_POINT_BUFF	CHST_point_OCS[MAX_POM_POINTS];
-			S_POINT_BUFF	CHST_point_RES[MAX_POM_POINTS];
+			S_POINT_BUFF	CHST_point_DCS[MAX_BESTFIT_POINTS];
+			S_POINT_BUFF	CHST_point_OCS[MAX_BESTFIT_POINTS];
+			S_POINT_BUFF	CHST_point_RES[MAX_BESTFIT_POINTS];
 			short chst_last_sel;
 			short chst_used_hz_plane;
 			short stationNumber;
@@ -303,7 +309,7 @@ namespace DCP
 			bool bDemoMode;
 			short iStartCount;
 
-			DCP05ConfigControllerC* poConfigController;
+			DCP06ConfigControllerC* poConfigController;
 
 			/*unsigned int iVersion;
 			unsigned int iRelease;
@@ -328,29 +334,34 @@ namespace DCP
 
 			StringC SerialNumber;
 
+			// Database (DCP9-aligned): 321/BestFit/Cylinder/ChangeStation terminology
+			Database::IDatabase* GetDatabase() const;
+			void SetDatabaseDataDirectory(const char* path);
+
 		private:
 			void initialize_matrix4x4(double pMatrix[4][4]);
+			std::unique_ptr<Database::JsonDatabase> m_pDatabase;
 
 
     };
 
 	
 	 // Description: Survey config controller
-    class DCP05ConfigControllerC : public ABL::AppConfigControllerC
+    class DCP06ConfigControllerC : public ABL::AppConfigControllerC
     {
         public:
 
             // Description: Constructor
             // Input      : pParent - Pointer to parent controller
             //              poModel - Configuration model
-            DCP05ConfigControllerC(GUI::ControllerC* pParent, DCP05ModelC* poModel = NULL);
+            DCP06ConfigControllerC(GUI::ControllerC* pParent, DCP06ModelC* poModel = NULL);
 
             // Description: Destructor
-            virtual ~DCP05ConfigControllerC(void);
+            virtual ~DCP06ConfigControllerC(void);
 
             // Description: Get the configuration model
             // Return     : configuration model
-            DCP05ModelC*    GetModel(void) const;
+            DCP06ModelC*    GetModel(void) const;
 
         protected:
 
@@ -375,38 +386,38 @@ namespace DCP
         private:
 			void save_matrix4x4(CPI::CFG::ArchiveC* poArchive, double matrix[4][4]);
 			void load_matrix4x4(CPI::CFG::ArchiveC* poArchive, double matrix[4][4]);
-			void save_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_home_points(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_circle_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_shaft_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
+			void save_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_home_points(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_circle_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_shaft_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
 
-			void load_adf_file_name(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_crl_file_name(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_shaft_file_name(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_init_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_dom_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_pom_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_chst_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_userdef_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_matrix_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_tool_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void load_lisence(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
+			void load_adf_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_crl_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_shaft_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_init_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_dom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_pom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_chst_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_userdef_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_matrix_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_tool_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_lisence(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
 
-			void save_adf_file_name(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_crl_file_name(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_shaft_file_name(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_init_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_dom_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_pom_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_chst_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_userdef_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_matrix_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_tool_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_home_points(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_circle_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_shaft_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_lisence(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
+			void save_adf_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_crl_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_shaft_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_init_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_dom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_pom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_chst_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_userdef_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_matrix_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_tool_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_home_points(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_circle_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_shaft_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_lisence(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
 			
 			void save_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BUFF* pPoint);
 			void save_line(CPI::CFG::ArchiveC* poArchive, S_LINE_BUFF* pLine);
@@ -421,11 +432,11 @@ namespace DCP
 			void save_circle_buff(CPI::CFG::ArchiveC* poArchive, S_CIRCLE_BUFF* pBuff);	
 
 
-			void load_linefitting_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_linefitting_data(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
+			void load_linefitting_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_linefitting_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
 
-			void load_demo_licenses(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
-			void save_demo_licenses(CPI::CFG::ArchiveC* poArchive, DCP05ModelC* pModel);
+			void load_demo_licenses(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_demo_licenses(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
 
 	};
 };

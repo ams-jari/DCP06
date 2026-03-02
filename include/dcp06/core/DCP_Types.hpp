@@ -32,7 +32,7 @@
 // ================================================================================================
 
 #ifdef WIN32
-    #if defined(DCP06_EXPORTS) || defined(DCP05_EXPORTS)
+    #if defined(DCP06_EXPORTS)
     #define DCP_API __declspec(dllexport)
     #else
     #define DCP_API __declspec(dllimport)
@@ -66,8 +66,8 @@ namespace DCP
     enum CnfKeyT
     {
         CNF_KEY_INIT = 105,//2,
-		CNF_KEY_DOM = 3,
-		CNF_KEY_POM = 4,	 
+		CNF_KEY_A321 = 3,
+		CNF_KEY_BESTFIT = 4,	 
 		CNF_KEY_CHST = 5,
 		CNF_KEY_USERDEF_OLD = 6,
 		CNF_KEY_CIRCLE =70,//7,

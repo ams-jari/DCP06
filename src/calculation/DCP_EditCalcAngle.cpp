@@ -26,7 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/init/DCP_DCP05Init.hpp>
+#include <dcp06/init/DCP_DCP06Init.hpp>
 #include <dcp06/calculation/DCP_EditCalcAngle.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
@@ -44,7 +44,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -58,15 +58,15 @@
 
 // USER DIALOG
 
-DCP::DCP05EditCalcAngleDlgC::DCP05EditCalcAngleDlgC(DCP::DCP05ModelC *pDCP05Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pDistId(0),m_pRefId(0),m_pTrgtId(0),m_pNote(0),m_pDCP05Model(pDCP05Model)
+DCP::DCP06EditCalcAngleDlgC::DCP06EditCalcAngleDlgC(DCP::DCP06ModelC *pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+	m_pDistId(0),m_pRefId(0),m_pTrgtId(0),m_pNote(0),m_pDCP06Model(pDCP06Model)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 }
 
 
             // Description: Destructor
-DCP::DCP05EditCalcAngleDlgC::~DCP05EditCalcAngleDlgC()
+DCP::DCP06EditCalcAngleDlgC::~DCP06EditCalcAngleDlgC()
 {
 	if(m_pCommon)
 	{
@@ -75,7 +75,7 @@ DCP::DCP05EditCalcAngleDlgC::~DCP05EditCalcAngleDlgC()
 	}
 }
 
-void DCP::DCP05EditCalcAngleDlgC::OnInitDialog(void)
+void DCP::DCP06EditCalcAngleDlgC::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 
@@ -84,28 +84,28 @@ void DCP::DCP05EditCalcAngleDlgC::OnInitDialog(void)
 
 	m_pDistId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDistId->SetId(eDistId);
-	m_pDistId->SetText(StringC(AT_DCP05,P_DCP_ANGLE_ID_TOK));
+	m_pDistId->SetText(StringC(AT_DCP06,P_DCP_ANGLE_ID_TOK));
 	m_pDistId->GetStringInputCtrl()->SetCharsCountMax(6);
 	m_pDistId->SetEmptyAllowed(true);
 	AddCtrl(m_pDistId);
 
 	m_pRefId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pRefId->SetId(eRefId);
-	m_pRefId->SetText(StringC(AT_DCP05,P_DCP_REF_ID_TOK));
+	m_pRefId->SetText(StringC(AT_DCP06,P_DCP_REF_ID_TOK));
 	m_pRefId->GetStringInputCtrl()->SetCharsCountMax(6);
 	m_pRefId->SetEmptyAllowed(true);
 	AddCtrl(m_pRefId);
 
 	m_pTrgtId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pTrgtId->SetId(eTrgtId);
-	m_pTrgtId->SetText(StringC(AT_DCP05,P_DCP_TARGET_ID_TOK));
+	m_pTrgtId->SetText(StringC(AT_DCP06,P_DCP_TARGET_ID_TOK));
 	m_pTrgtId->GetStringInputCtrl()->SetCharsCountMax(6);
 	m_pTrgtId->SetEmptyAllowed(true);
 	AddCtrl(m_pTrgtId);
 
 	m_pNote = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pNote->SetId(eNote);
-	m_pNote->SetText(StringC(AT_DCP05,P_DCP_NOTE_TOK));
+	m_pNote->SetText(StringC(AT_DCP06,P_DCP_NOTE_TOK));
 	m_pNote->GetStringInputCtrl()->SetCharsCountMax(8);
 	m_pNote->SetEmptyAllowed(true);
 	AddCtrl(m_pNote);
@@ -114,13 +114,13 @@ void DCP::DCP05EditCalcAngleDlgC::OnInitDialog(void)
 }
 
 
-void DCP::DCP05EditCalcAngleDlgC::OnDialogActivated()
+void DCP::DCP06EditCalcAngleDlgC::OnDialogActivated()
 {
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 	RefreshControls();
 }
 
-void DCP::DCP05EditCalcAngleDlgC::UpdateData()
+void DCP::DCP06EditCalcAngleDlgC::UpdateData()
 {
 	GetDataModel()->sDistId = m_pDistId->GetStringInputCtrl()->GetString();
 	GetDataModel()->sRefId = m_pRefId->GetStringInputCtrl()->GetString();
@@ -131,7 +131,7 @@ void DCP::DCP05EditCalcAngleDlgC::UpdateData()
 }
 
 // Description: refresh all controls
-void DCP::DCP05EditCalcAngleDlgC::RefreshControls()
+void DCP::DCP06EditCalcAngleDlgC::RefreshControls()
 {
 	if(m_pDistId  && m_pRefId && m_pNote && m_pTrgtId)
 	{	
@@ -143,14 +143,14 @@ void DCP::DCP05EditCalcAngleDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP05EditCalcAngleDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06EditCalcAngleDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05EditCalcAngleModelC* pDCP05Model = dynamic_cast< DCP::DCP05EditCalcAngleModelC* >( pModel );
+    DCP::DCP06EditCalcAngleModelC* pDCP06Model = dynamic_cast< DCP::DCP06EditCalcAngleModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -160,54 +160,54 @@ bool DCP::DCP05EditCalcAngleDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP05EditCalcAngleModelC* DCP::DCP05EditCalcAngleDlgC::GetDataModel() const
+DCP::DCP06EditCalcAngleModelC* DCP::DCP06EditCalcAngleDlgC::GetDataModel() const
 {
-    return (DCP::DCP05EditCalcAngleModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06EditCalcAngleModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 
 // ================================================================================================
-// ====================================  DCP05UserControllerC  ===================================
+// ====================================  DCP06UserControllerC  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP05UserControllerC
+// DCP06UserControllerC
 // 
-DCP::DCP05EditCalcAngleControllerC::DCP05EditCalcAngleControllerC(DCP::DCP05ModelC *pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model),m_pCommon(0)
+DCP::DCP06EditCalcAngleControllerC::DCP06EditCalcAngleControllerC(DCP::DCP06ModelC *pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model),m_pCommon(0)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_CALC_ANGLE_EDIT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_CALC_ANGLE_EDIT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP05EditCalcAngleDlgC(pDCP05Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06EditCalcAngleDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( XORYORZ_DLG, m_pDlg, true );
 
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK1, vDef );
 
 	// Hide SHF6(Quit Key)
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
 	
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05EditCalcAngleControllerC::~DCP05EditCalcAngleControllerC()
+DCP::DCP06EditCalcAngleControllerC::~DCP06EditCalcAngleControllerC()
 {
 	if(m_pCommon)
 	{
@@ -217,7 +217,7 @@ DCP::DCP05EditCalcAngleControllerC::~DCP05EditCalcAngleControllerC()
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP05EditCalcAngleControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06EditCalcAngleControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -228,12 +228,12 @@ bool DCP::DCP05EditCalcAngleControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -244,7 +244,7 @@ bool DCP::DCP05EditCalcAngleControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // CONT
-void DCP::DCP05EditCalcAngleControllerC::OnF1Pressed()
+void DCP::DCP06EditCalcAngleControllerC::OnF1Pressed()
 {
     // Update model
     // Set it to hello world dialog
@@ -259,12 +259,12 @@ void DCP::DCP05EditCalcAngleControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP05EditCalcAngleControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06EditCalcAngleControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP05EditCalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06EditCalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );

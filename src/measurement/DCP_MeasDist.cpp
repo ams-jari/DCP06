@@ -26,7 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/init/DCP_DCP05Init.hpp>
+#include <dcp06/init/DCP_DCP06Init.hpp>
 
 #include <dcp06/measurement/DCP_MeasDist.hpp>
 
@@ -56,7 +56,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05MeasDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06MeasDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -69,9 +69,9 @@
 
 
 //-------------------------------------------------------------------------------------------------
-// DCP05UserControllerC
+// DCP06UserControllerC
 
-DCP::DCP05DoMeasDistControllerC::DCP05DoMeasDistControllerC()
+DCP::DCP06DoMeasDistControllerC::DCP06DoMeasDistControllerC()
     :TBL::MeasurementC(),poSurveyModel(0),poErrorHandler(0)
 {
 	poSurveyModel = new DCPSurveyModelC(/*m_poConfigModel*/);
@@ -83,13 +83,13 @@ DCP::DCP05DoMeasDistControllerC::DCP05DoMeasDistControllerC()
     USER_APP_VERIFY(/*GUI::*/ModelHandlerC::SetModel(poSurveyModel));
     /*TBL::*/MeasurementC::SetSurveyModel(poSurveyModel);
 
-	poErrorHandler = new DCP05DistErrorHandlerC();
+	poErrorHandler = new DCP06DistErrorHandlerC();
 
 	 USER_APP_VERIFY( AddGuardController( DEFINE_DIST_MEAS_START_CONTROLLER, CreateMeasStartController() ) );
 	
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05DoMeasDistControllerC::~DCP05DoMeasDistControllerC()
+DCP::DCP06DoMeasDistControllerC::~DCP06DoMeasDistControllerC()
 {
 	if(poErrorHandler)
 	{
@@ -98,7 +98,7 @@ DCP::DCP05DoMeasDistControllerC::~DCP05DoMeasDistControllerC()
 	}
 }
 // Description: Route model to everybody else
-bool DCP::DCP05DoMeasDistControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06DoMeasDistControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -106,15 +106,15 @@ bool DCP::DCP05DoMeasDistControllerC::SetModel( GUI::ModelC* pModel )
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
-     return false;//m_pDCP05MeasDlg->SetModel( pModel );
+     return false;//m_pDCP06MeasDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -124,7 +124,7 @@ bool DCP::DCP05DoMeasDistControllerC::SetModel( GUI::ModelC* pModel )
 	 
 }
 
-TBL::MeasErrorHandlerC::HandlingKindT DCP::DCP05DistErrorHandlerC::HandleMeasError(MeasErrorT eMeasError, MeasErrorSourceT eSource, unsigned int ulErrorCodeSensor)
+TBL::MeasErrorHandlerC::HandlingKindT DCP::DCP06DistErrorHandlerC::HandleMeasError(MeasErrorT eMeasError, MeasErrorSourceT eSource, unsigned int ulErrorCodeSensor)
 {
 
 	// StopDist(); Removed 20122014
@@ -139,26 +139,26 @@ TBL::MeasErrorHandlerC::HandlingKindT DCP::DCP05DistErrorHandlerC::HandleMeasErr
 
 
 // Description: React on close of controller
-void DCP::DCP05DoMeasDistControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06DoMeasDistControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	 /*GUI::*/ControllerC::OnControllerClosed(lExitCode);
 	DestroyController( lCtrlID );
 }
 
-void DCP::DCP05DoMeasDistControllerC::OnControllerActivated(void)
+void DCP::DCP06DoMeasDistControllerC::OnControllerActivated(void)
 {
 	ControllerC::OnControllerActivated();
 	poErrorHandler->Attach();
 	ActivateMeasurement();
 	TBL::MeasurementC::ExecuteAll();
 }
-void DCP::DCP05DoMeasDistControllerC::OnControllerClosed(int lExitCode)
+void DCP::DCP06DoMeasDistControllerC::OnControllerClosed(int lExitCode)
 {
 	poErrorHandler->Detach();
 	DeactivateMeasurement(lExitCode);
 }
 
-void DCP::DCP05DoMeasDistControllerC::OnPeriodicInclineValidation(int ulParam1, int ulParam2)
+void DCP::DCP06DoMeasDistControllerC::OnPeriodicInclineValidation(int ulParam1, int ulParam2)
 {	
 	TBL::CompensatorStatusT oStat = TBL::GetCompensatorStatus();
 	if(oStat == TBL::CS_OFF || oStat == TBL::CS_IN_RANGE)
@@ -167,30 +167,30 @@ void DCP::DCP05DoMeasDistControllerC::OnPeriodicInclineValidation(int ulParam1, 
 	}
 	else
 	{
-		//DCP05MsgBoxC MsgBox;
+		//DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"OnPeriodicInclineValidation");
-		//DCP05Log("GetCompensatorStatus", (int ) oStat);
+		//DCP06Log("GetCompensatorStatus", (int ) oStat);
 
 		Close(EC_KEY_ESC);
 	}
 
 	/*
-	DCP05MsgBoxC MsgBox;
+	DCP06MsgBoxC MsgBox;
 	MsgBox.ShowMessageOk(L"OnPeriodicInclineValidation");
-	DCP05Log("DCP05DoMeasXYZControllerC::OnPeriodicInclineValidation",ulParam1,ulParam2);
+	DCP06Log("DCP06DoMeasXYZControllerC::OnPeriodicInclineValidation",ulParam1,ulParam2);
 	*/
 }
 
-void  DCP::DCP05DoMeasDistControllerC::OnStopDistEvent(int unParam1,  int ulParam2)
+void  DCP::DCP06DoMeasDistControllerC::OnStopDistEvent(int unParam1,  int ulParam2)
  {
 
-	//DCP05MsgBoxC MsgBox;
+	//DCP06MsgBoxC MsgBox;
 	//MsgBox.ShowMessageOk(L"OnStopDistEvent");
 	Close(EC_KEY_ESC);
  }
 
 // Samalainen sitten searchille
-void DCP::DCP05DoMeasDistControllerC::OnOperationDistEvent(int unNotifyCode,  int ulOperationId)
+void DCP::DCP06DoMeasDistControllerC::OnOperationDistEvent(int unNotifyCode,  int ulOperationId)
 {
 	double dSlopeDist=0.0,dH=0.0,dV=0.0;
 
@@ -199,18 +199,18 @@ void DCP::DCP05DoMeasDistControllerC::OnOperationDistEvent(int unNotifyCode,  in
 
 	if(unNotifyCode == TBL::DistanceMeasProcedureC::NC_ON_START)
 	{
-		//DCP05MsgBoxC MsgBox;
+		//DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"NC ON START");
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_SUCCESS)
 	{
-		SetMeasData(GetDistanceProc()->GetMeasDataHandle()); // MUISTA TÄMÄ
+		SetMeasData(GetDistanceProc()->GetMeasDataHandle()); // MUISTA Tï¿½Mï¿½
 		dSlopeDist = /*GetModel()*/poSurveyModel->GetMeas().GetSlopeDistance();
 		dH = poSurveyModel->GetMeas().GetHorizontalAngle();
 		dV = poSurveyModel->GetMeas().GetVerticalAngle();
 		int iCount = poSurveyModel->GetMeas().GetAveragedDistCount();
 
-		DCP::DCP05MeasDistModelC* pModel = (DCP::DCP05MeasDistModelC*) GetModel();
+		DCP::DCP06MeasDistModelC* pModel = (DCP::DCP06MeasDistModelC*) GetModel();
 
 		pModel->m_dD = dSlopeDist;
 		pModel->m_dH = dH;
@@ -220,17 +220,17 @@ void DCP::DCP05DoMeasDistControllerC::OnOperationDistEvent(int unNotifyCode,  in
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_STOP)
 	{
-		DCP05MsgBoxC MsgBox;
+		DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"NC ON STOP");
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_FAIL)
 	{
-		DCP05MsgBoxC MsgBox;
+		DCP06MsgBoxC MsgBox;
 		MsgBox.ShowMessageOk(L"Error measurement!");
 	}
 }
 
-short DCP::DCP05DoMeasDistControllerC::get_xyz_values(double* x, double* y, double* z)
+short DCP::DCP06DoMeasDistControllerC::get_xyz_values(double* x, double* y, double* z)
 {
 	/*
 	*x = m_dX;
@@ -240,19 +240,19 @@ short DCP::DCP05DoMeasDistControllerC::get_xyz_values(double* x, double* y, doub
 	return 1;
 }
 // ======================================================================================== 
-DCP::DCP05MeasDistControllerC::DCP05MeasDistControllerC(DCP::DCP05ModelC* pDCP05Model)
-    :TBL::MeasurementC(),poSurveyModel(0), poDCP05Model(pDCP05Model)
+DCP::DCP06MeasDistControllerC::DCP06MeasDistControllerC(DCP::DCP06ModelC* pDCP06Model)
+    :TBL::MeasurementC(),poSurveyModel(0), poDCP06Model(pDCP06Model)
 {
 	poSurveyModel = new DCPSurveyModelC(/*m_poConfigModel*/);
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP05MeasDistControllerC::~DCP05MeasDistControllerC()
+DCP::DCP06MeasDistControllerC::~DCP06MeasDistControllerC()
 {
 
 }
 // Description: Route model to everybody else
-bool DCP::DCP05MeasDistControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06MeasDistControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -262,15 +262,15 @@ bool DCP::DCP05MeasDistControllerC::SetModel( GUI::ModelC* pModel )
 	int x = 1;
 	x++;
     // Set it to hello world dialog
-     return false;//m_pDCP05MeasDlg->SetModel( pModel );
+     return false;//m_pDCP06MeasDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -282,12 +282,12 @@ bool DCP::DCP05MeasDistControllerC::SetModel( GUI::ModelC* pModel )
 
 
 // Description: React on close of controller
-void DCP::DCP05MeasDistControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06MeasDistControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	// Handle averaging and 2 face measurement
 	if(lCtrlID == DO_MEAS_DIST_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05MeasDistModelC* pModel = (DCP::DCP05MeasDistModelC*) GetController( DO_MEAS_DIST_CONTROLLER )->GetModel();		
+		DCP::DCP06MeasDistModelC* pModel = (DCP::DCP06MeasDistModelC*) GetController( DO_MEAS_DIST_CONTROLLER )->GetModel();		
 		
 		//dist_tot	+=	pModel->m_dD
 		//ver_tot		+=	pModel->m_dV;
@@ -301,31 +301,31 @@ void DCP::DCP05MeasDistControllerC::OnActiveControllerClosed( int lCtrlID, int l
 	DestroyController( lCtrlID );
 }
 
-void DCP::DCP05MeasDistControllerC::OnControllerActivated(void)
+void DCP::DCP06MeasDistControllerC::OnControllerActivated(void)
 {
 	//ActivateMeasurement();
 	//ExecuteAll();
 	// start measuring
 	/*if(GetController(DO_MEAS_DIST_CONTROLLER) == NULL)
 	{
-		(void)AddController( DO_MEAS_DIST_CONTROLLER, new DCP::DCP05DoMeasDistControllerC );
+		(void)AddController( DO_MEAS_DIST_CONTROLLER, new DCP::DCP06DoMeasDistControllerC );
 	}
 	(void)GetController( DO_MEAS_DIST_CONTROLLER )->SetModel(GetModel());
 	SetActiveController(DO_MEAS_DIST_CONTROLLER, true);*/
 
 }
 
-void DCP::DCP05MeasDistControllerC::Run()
+void DCP::DCP06MeasDistControllerC::Run()
 {
 	if(GetController(DO_MEAS_DIST_CONTROLLER) == NULL)
 	{
-		(void)AddController( DO_MEAS_DIST_CONTROLLER, new DCP::DCP05DoMeasDistControllerC );
+		(void)AddController( DO_MEAS_DIST_CONTROLLER, new DCP::DCP06DoMeasDistControllerC );
 	}
 	(void)GetController( DO_MEAS_DIST_CONTROLLER )->SetModel(GetModel());
 	SetActiveController(DO_MEAS_DIST_CONTROLLER, true);
 }
 
-void DCP::DCP05MeasDistControllerC::OnControllerClosed(int lExitCode)
+void DCP::DCP06MeasDistControllerC::OnControllerClosed(int lExitCode)
 {
 	//	DeactivateMeasurement(lExitCode);
 }
@@ -339,12 +339,12 @@ void DCP::DCP05MeasDistControllerC::OnControllerClosed(int lExitCode)
 // 
 // ===========================================================================================
 // Instantiate template classes
-DCP::DCP05MeasDistModelC::DCP05MeasDistModelC()
+DCP::DCP06MeasDistModelC::DCP06MeasDistModelC()
 {
 
 }
 
-DCP::DCP05MeasDistModelC::~DCP05MeasDistModelC()
+DCP::DCP06MeasDistModelC::~DCP06MeasDistModelC()
 {
 }
 

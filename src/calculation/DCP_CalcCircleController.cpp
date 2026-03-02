@@ -63,27 +63,27 @@ using namespace DCP;
 // ================================================================================================
 
 // ================================================================================================
-// ====================================  DCP053DMeasControllerC ===================================
+// ====================================  DCP063DMeasControllerC ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
 
-DCP::DCP05CalcCircleControllerC::DCP05CalcCircleControllerC(DCP05CircleModelC* pCircleModel, short iDisplay):
+DCP::DCP06CalcCircleControllerC::DCP06CalcCircleControllerC(DCP06CircleModelC* pCircleModel, short iDisplay):
 	m_pDataModel(pCircleModel), m_iDisplay(iDisplay)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-	//m_pCommon = new DCP05CommonC();
+	//m_pCommon = new DCP06CommonC();
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05CalcCircleControllerC::~DCP05CalcCircleControllerC()
+DCP::DCP06CalcCircleControllerC::~DCP06CalcCircleControllerC()
 {
 	if(m_pCommon)
 	{
@@ -95,17 +95,17 @@ DCP::DCP05CalcCircleControllerC::~DCP05CalcCircleControllerC()
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP05CalcCircleControllerC::OnControllerActivated(void)
+void DCP::DCP06CalcCircleControllerC::OnControllerActivated(void)
 {
 }
 
-void DCP::DCP05CalcCircleControllerC::Run(void)
+void DCP::DCP06CalcCircleControllerC::Run(void)
 {
-	DCP05CalcCircleC circle(m_pDataModel->PLANE_TYPE, 
+	DCP06CalcCircleC circle(m_pDataModel->PLANE_TYPE, 
 								&m_pDataModel->circle_points[0],
 								&m_pDataModel->planes[0],
 								&m_pDataModel->circle_points_in_plane[0],
-								m_pDataModel->bR, m_pDCP05Model);
+								m_pDataModel->bR, m_pDCP06Model);
 	
 	if(circle.calc_center_of_circle())
 	{
@@ -117,7 +117,7 @@ void DCP::DCP05CalcCircleControllerC::Run(void)
 				//m_pDataModel->circle_points[0].calc = 1;
 				//if(m_pDataModel->m_iCounts > 3)
 				//{
-						DCP::DCP05CircleModelC* pModel = new DCP05CircleModelC(m_pDCP05Model);
+						DCP::DCP06CircleModelC* pModel = new DCP06CircleModelC(m_pDCP06Model);
 						pModel->bR = m_pDataModel->bR;
 						pModel->cx = m_pDataModel->cx;
 						pModel->cy = m_pDataModel->cy;
@@ -142,10 +142,10 @@ void DCP::DCP05CalcCircleControllerC::Run(void)
 						
 						if(GetController(RES_CIRCLE_CONTROLLER) == NULL)
 						{
-							(void)AddController( RES_CIRCLE_CONTROLLER, new DCP::DCP05ResCircleControllerC(m_pDCP05Model, m_iDisplay) );
+							(void)AddController( RES_CIRCLE_CONTROLLER, new DCP::DCP06ResCircleControllerC(m_pDCP06Model, m_iDisplay) );
 						}
 
-						(void)GetController(RES_CIRCLE_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_DEV_OF_CIRCLE_TOK));
+						(void)GetController(RES_CIRCLE_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DEV_OF_CIRCLE_TOK));
 
 						(void)GetController( RES_CIRCLE_CONTROLLER )->SetModel(pModel);
 						SetActiveController(RES_CIRCLE_CONTROLLER, true);
@@ -163,15 +163,15 @@ void DCP::DCP05CalcCircleControllerC::Run(void)
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05CalcCircleControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06CalcCircleControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     //(void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	m_pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 	return/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
@@ -181,7 +181,7 @@ bool DCP::DCP05CalcCircleControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP05CalcCircleControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP06CalcCircleControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	/*
 	if(m_bPointMenu && lExitCode == 2)
@@ -193,12 +193,12 @@ void DCP::DCP05CalcCircleControllerC::OnActiveDialogClosed( int lDlgID, int lExi
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP05CalcCircleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06CalcCircleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == RES_CIRCLE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		// kopioi arvot takaisin...
-		DCP::DCP05CircleModelC* pModel = (DCP::DCP05CircleModelC*) GetController( RES_CIRCLE_CONTROLLER )->GetModel();	
+		DCP::DCP06CircleModelC* pModel = (DCP::DCP06CircleModelC*) GetController( RES_CIRCLE_CONTROLLER )->GetModel();	
 
 		m_pDataModel->bR = pModel->bR;
 		m_pDataModel->cx = pModel->cx;

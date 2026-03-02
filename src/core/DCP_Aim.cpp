@@ -66,14 +66,14 @@ using namespace DCP;
 // ================================================================================================
 
 // ================================================================================================
-// ====================================  DCP053DMeasControllerC ===================================
+// ====================================  DCP063DMeasControllerC ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
 
-DCP::DCP05AimControllerC::DCP05AimControllerC(double x, double y, double z, short cds):m_dX(x), m_dY(y), m_dZ(z),
+DCP::DCP06AimControllerC::DCP06AimControllerC(double x, double y, double z, short cds):m_dX(x), m_dY(y), m_dZ(z),
 	lockin_done(0),m_iCds(cds)
 {
 		point1[0] = 0.0;
@@ -83,14 +83,14 @@ DCP::DCP05AimControllerC::DCP05AimControllerC(double x, double y, double z, shor
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-	//m_pCommon = new DCP05CommonC();
+	//m_pCommon = new DCP06CommonC();
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05AimControllerC::~DCP05AimControllerC()
+DCP::DCP06AimControllerC::~DCP06AimControllerC()
 {
 	if(m_pCommon)
 	{
@@ -99,7 +99,7 @@ DCP::DCP05AimControllerC::~DCP05AimControllerC()
 	}
 }
 
-void DCP::DCP05AimControllerC::set_values(double x, double y, double z, short cds)
+void DCP::DCP06AimControllerC::set_values(double x, double y, double z, short cds)
 {
 	m_dX = x;
 	m_dY = y;
@@ -110,7 +110,7 @@ void DCP::DCP05AimControllerC::set_values(double x, double y, double z, short cd
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP05AimControllerC::OnControllerActivated(void)
+void DCP::DCP06AimControllerC::OnControllerActivated(void)
 {
 	// AIM
 		/*TBL::PositTelescopeControllerC* poPositTelescope = new TBL::PositTelescopeControllerC();
@@ -122,7 +122,7 @@ void DCP::DCP05AimControllerC::OnControllerActivated(void)
 
 }
 
-void DCP::DCP05AimControllerC::Run(void)
+void DCP::DCP06AimControllerC::Run(void)
 {
 
 		point1[0] = m_dX;
@@ -131,29 +131,29 @@ void DCP::DCP05AimControllerC::Run(void)
 		point1[3] = 1;
 
 		// test
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		char temp[100];
 		sprintf(temp,"X:%.2f Y:%.2f Z%.2f",m_dX, m_dY, m_dZ);
 		//msgbox.ShowMessageOk(StringC(temp));
 		
-		if(m_pDCP05Model->active_tool > 0)
+		if(m_pDCP06Model->active_tool > 0)
 		{
-			if(m_pDCP05Model->m_nToolInfo)
+			if(m_pDCP06Model->m_nToolInfo)
 			{
-				//DCP05MsgBoxC msgBox;
+				//DCP06MsgBoxC msgBox;
 				//msgBox.ShowMessageOk(L"Aim with tool");
 				if(GetController(TOOL_CONTROLLER) == NULL)
 				{
-					(void)AddController( TOOL_CONTROLLER, new DCP::DCP05ToolControllerC());
+					(void)AddController( TOOL_CONTROLLER, new DCP::DCP06ToolControllerC());
 				}
-				(void)GetController( TOOL_CONTROLLER )->SetModel( m_pDCP05Model);
+				(void)GetController( TOOL_CONTROLLER )->SetModel( m_pDCP06Model);
 				SetActiveController(TOOL_CONTROLLER, true);
 			}
 			else
 			{
-				point1[0] = point1[0] + m_pDCP05Model->active_tool_x;
-				point1[1] = point1[1] + m_pDCP05Model->active_tool_y;
-				point1[2] = point1[2] + m_pDCP05Model->active_tool_z;
+				point1[0] = point1[0] + m_pDCP06Model->active_tool_x;
+				point1[1] = point1[1] + m_pDCP06Model->active_tool_y;
+				point1[2] = point1[2] + m_pDCP06Model->active_tool_z;
 				
 				if(!set_aim())
 					Close(EC_KEY_CONT);
@@ -174,37 +174,37 @@ void DCP::DCP05AimControllerC::Run(void)
 // ================================================================================================
 // Description: set_aim
 // ================================================================================================
-short DCP::DCP05AimControllerC::set_aim()
+short DCP::DCP06AimControllerC::set_aim()
 {
 	
 		// Object coordinate system, POM
-		if (m_iCds/*m_pDCP05Model->active_coodinate_system*/ == OCSP)
+		if (m_iCds/*m_pDCP06Model->active_coodinate_system*/ == OCSP)
 		{
-			ptrans(point1, &m_pDCP05Model->ocsp_inv_matrix[0], &point2);
+			ptrans(point1, &m_pDCP06Model->ocsp_inv_matrix[0], &point2);
 		}
 		
 		// Object coordinate system, CHST 
-		else if (m_iCds/*m_pDCP05Model->active_coodinate_system*/ == OCSC)
+		else if (m_iCds/*m_pDCP06Model->active_coodinate_system*/ == OCSC)
 		{
-			ptrans(point1, &m_pDCP05Model->ocsc_inv_matrix[0], &point2);
+			ptrans(point1, &m_pDCP06Model->ocsc_inv_matrix[0], &point2);
 		}
 
 		// Object coordinate system, DOM 
-		else if (m_iCds/*m_pDCP05Model->active_coodinate_system*/ == OCSD)
+		else if (m_iCds/*m_pDCP06Model->active_coodinate_system*/ == OCSD)
 		{
-			ptrans(point1, &m_pDCP05Model->ocsd_inv_matrix[0], &point2);
+			ptrans(point1, &m_pDCP06Model->ocsd_inv_matrix[0], &point2);
 		}
 
 		// Object coordinate system, USER DEFINED 
-		else if (m_iCds/*m_pDCP05Model->active_coodinate_system*/ == OCSU)
+		else if (m_iCds/*m_pDCP06Model->active_coodinate_system*/ == OCSU)
 		{
-			ptrans(point1, &m_pDCP05Model->ocsu_inv_matrix[0], &point2);
+			ptrans(point1, &m_pDCP06Model->ocsu_inv_matrix[0], &point2);
 		}
 		
 		// Device coordinate system 
 		else
 		{
-			ptrans(point1, &m_pDCP05Model->dcs_inv_matrix[0], &point2);
+			ptrans(point1, &m_pDCP06Model->dcs_inv_matrix[0], &point2);
 		}
 
 
@@ -213,7 +213,7 @@ short DCP::DCP05AimControllerC::set_aim()
 			convert cartesian coordinates to sphere
 
 		********************************************************/
-		if(m_pDCP05Model->m_nLeftRightHand == RIGHTHAND)
+		if(m_pDCP06Model->m_nLeftRightHand == RIGHTHAND)
 		{
 			if(cartsph(point2, &dist1, &fii1, &theta1) == -1)
 
@@ -244,7 +244,7 @@ short DCP::DCP05AimControllerC::set_aim()
 		// ***********************
 	
 		lockin_done = 0;
-		if(m_pDCP05Model->isATR)
+		if(m_pDCP06Model->isATR)
 		{
 			// TSEKKAA
 			/*
@@ -280,7 +280,7 @@ short DCP::DCP05AimControllerC::set_aim()
 		// test
 		char temp[100];
 		sprintf(temp,"H:%.4f V:%.4f", theta1, fii1);
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		//msgbox.ShowMessageOk(StringC(temp));
 
 		TBL::PositTelescopeControllerC* poPositTelescope = new TBL::PositTelescopeControllerC();
@@ -312,15 +312,15 @@ short DCP::DCP05AimControllerC::set_aim()
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05AimControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06AimControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     //(void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	m_pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 	return/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
@@ -330,7 +330,7 @@ bool DCP::DCP05AimControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP05AimControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP06AimControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	/*
 	if(m_bPointMenu && lExitCode == 2)
@@ -342,7 +342,7 @@ void DCP::DCP05AimControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP05AimControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06AimControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	// 
 	if(lCtrlID == DO_AIM_CONTROLLER && lExitCode == EC_KEY_CONT)
@@ -361,11 +361,11 @@ void DCP::DCP05AimControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 	// 
 	else if(lCtrlID == TOOL_CONTROLLER )//&& lExitCode == EC_KEY_CONT)
 	{
-		if(m_pDCP05Model->active_tool > 0 &&  lExitCode == EC_KEY_CONT)
+		if(m_pDCP06Model->active_tool > 0 &&  lExitCode == EC_KEY_CONT)
 		{	
-			point1[0] = point1[0] + m_pDCP05Model->active_tool_x;
-			point1[1] = point1[1] + m_pDCP05Model->active_tool_y;
-			point1[2] = point1[2] + m_pDCP05Model->active_tool_z;
+			point1[0] = point1[0] + m_pDCP06Model->active_tool_x;
+			point1[1] = point1[1] + m_pDCP06Model->active_tool_y;
+			point1[2] = point1[2] + m_pDCP06Model->active_tool_z;
 		}
 		set_aim();
 	}

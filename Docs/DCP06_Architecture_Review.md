@@ -41,7 +41,7 @@ Current (DCP05/06):              DCP9 (modern reference):
 ```
 
 **Problems:**
-- No domain separation beyond `math/` — Init, DOM, POM, Measurement, Calc, File, Application all mixed
+- No domain separation beyond `math/` — Init, 321 Alignment, Best Fit, Measurement, Calc, File, Application all mixed
 - Hard to navigate 100+ files in one folder
 - New developers cannot quickly locate feature code
 - Poor fit for the planned database layer (no natural place)
@@ -53,8 +53,8 @@ Current (DCP05/06):              DCP9 (modern reference):
 | Responsibility | Lines (approx) | Should be |
 |----------------|----------------|-----------|
 | Init config | — | `InitModel` |
-| DOM (plane, line, OCS) | — | `DomModel` |
-| POM points | — | `PomModel` |
+| 321 Alignment (plane, line, OCS) | — | `DomModel` |
+| Best Fit points | — | `PomModel` |
 | CHST | — | `ChstModel` |
 | Circle, Shaft, Line fit | — | Domain models |
 | Files (ADF, CDF, ...) | — | Via `IDatabase` |
@@ -86,7 +86,7 @@ Current (DCP05/06):              DCP9 (modern reference):
 DCP06/
 ├── include/dcp06/              # Public API, namespace-qualified
 │   ├── init/
-│   ├── orientation/            # DOM, POM, CHST
+│   ├── orientation/            # 321 Alignment, Best Fit, CHST
 │   ├── measurement/
 │   ├── calculation/
 │   ├── file/

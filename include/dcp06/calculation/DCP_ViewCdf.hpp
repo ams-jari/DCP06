@@ -49,18 +49,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05ViewCdfDlgC;
-	class DCP05ViewCdfModelC;
+    class DCP06ModelC;
+	class DCP06ViewCdfDlgC;
+	class DCP06ViewCdfModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05ViewCdfControllerC : public GUI::ControllerC
+    class DCP06ViewCdfControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05ViewCdfControllerC(CdfFileFunc* pFileFunc,DCP05ModelC* pDCP05Model);
-			~DCP05ViewCdfControllerC();
+            DCP06ViewCdfControllerC(CdfFileFunc* pFileFunc,DCP06ModelC* pDCP06Model);
+			~DCP06ViewCdfControllerC();
 
             // Description: Handle change of position values
 			virtual void OnF1Pressed();
@@ -78,28 +78,28 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05ViewCdfControllerC( const DCP05ViewCdfControllerC& oDCP05ViewCdfController )
+            DCP06ViewCdfControllerC( const DCP06ViewCdfControllerC& oDCP06ViewCdfController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05ViewCdfControllerC& operator=( const DCP05ViewCdfControllerC& oDCP05ViewCdfController )
+            DCP06ViewCdfControllerC& operator=( const DCP06ViewCdfControllerC& oDCP06ViewCdfController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05ViewCdfDlgC* m_pDlg;
+            DCP06ViewCdfDlgC* m_pDlg;
 			CdfFileFunc* m_pFileFunc;
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 
 			
     };
 
 
-    class DCP05ViewCdfDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC//, public OBS::CommandC
+    class DCP06ViewCdfDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC//, public OBS::CommandC
 	{
 	 public:
 			/*
@@ -120,10 +120,10 @@ namespace DCP
 				CI_Note
 			};
 
-		   DCP05ViewCdfDlgC(CdfFileFunc *pFileFunc,DCP05ModelC* pDCP05Model);
+		   DCP06ViewCdfDlgC(CdfFileFunc *pFileFunc,DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05ViewCdfDlgC();
+            virtual ~DCP06ViewCdfDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -136,7 +136,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05ModelC* GetDCP05Model() const;
+            DCP06ModelC* GetDCP06Model() const;
 
 			//OBS::ObserverC m_pMultiColCtrlObserver;
 			//virtual void OnChanged(int unNotifyCode, int ulParam2);
@@ -150,9 +150,9 @@ namespace DCP
 		protected:
 			
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 
-			//OBS_DECLARE_EXECUTE(DCP05SelectMultiPointsDlgC);
+			//OBS_DECLARE_EXECUTE(DCP06SelectMultiPointsDlgC);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -161,12 +161,12 @@ namespace DCP
 				StringC sDesignSelected;
 				StringC sDesignNonSelected;
 
-				//void DCP::DCP05SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP05SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
+				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
 
 				short m_iSelectedCount;
 				StringC m_strMaxPointSelected;
-				DCP05CommonC* m_pCommon;
+				DCP06CommonC* m_pCommon;
 				CdfFileFunc* m_pFileFunc;
  	};
 };

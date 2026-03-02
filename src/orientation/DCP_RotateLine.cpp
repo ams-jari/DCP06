@@ -26,8 +26,8 @@
 
 #include "stdafx.h"
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/init/DCP_DCP05Init.hpp>
-#include <dcp06/core/DCP_DCP05Meas.hpp>
+#include <dcp06/init/DCP_DCP06Init.hpp>
+#include <dcp06/core/DCP_DCP06Meas.hpp>
 #include <dcp06/core/DCP_SpecialMenu.hpp>
 #include <dcp06/core/DCP_xyz.hpp>
 #include <dcp06/measurement/DCP_HiddenPoint.hpp>
@@ -45,7 +45,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -59,29 +59,29 @@
 
 // USER DIALOG
 
-DCP::DCP05RotateLineDlgC::DCP05RotateLineDlgC(DCP::DCP05ModelC *pDCP05Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-			m_pInfo1(0),m_pInfo2(0), m_pAxis1(0),m_pDCP05Model(pDCP05Model)
+DCP::DCP06RotateLineDlgC::DCP06RotateLineDlgC(DCP::DCP06ModelC *pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+			m_pInfo1(0),m_pInfo2(0), m_pAxis1(0),m_pDCP06Model(pDCP06Model)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 }
 
 
             // Description: Destructor
-DCP::DCP05RotateLineDlgC::~DCP05RotateLineDlgC()
+DCP::DCP06RotateLineDlgC::~DCP06RotateLineDlgC()
 {
 
 }
 
-void DCP::DCP05RotateLineDlgC::OnInitDialog(void)
+void DCP::DCP06RotateLineDlgC::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
 	SetTitle(GetDataModel()->sTitle);	
 
 	// Add fields to dialog
-	//m_pInfo1 = new GUI::TextBoxCtrlC(0,0,300,100,StringC(AT_DCP05,M_DCP_ROTATE_LINE_INFO1_TOK)); CAPTIVATE
+	//m_pInfo1 = new GUI::TextBoxCtrlC(0,0,300,100,StringC(AT_DCP06,M_DCP_ROTATE_LINE_INFO1_TOK)); CAPTIVATE
 	m_pInfo1 = new GUI::TextCtrlC();
-	m_pInfo1->SetText(StringC(AT_DCP05,M_DCP_ROTATE_LINE_INFO1_TOK));
+	m_pInfo1->SetText(StringC(AT_DCP06,M_DCP_ROTATE_LINE_INFO1_TOK));
 	m_pInfo1->SetId(eInfo1);
 	void(m_pInfo1->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pInfo1->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
@@ -92,13 +92,13 @@ void DCP::DCP05RotateLineDlgC::OnInitDialog(void)
 	m_pAxis1->SetId(eAxis1);
 
 	if(GetDataModel()->plane_type == XY_PLANE)
-		m_pAxis1->SetText(StringC(AT_DCP05,P_DCP_Z_AXIS_TOK));
+		m_pAxis1->SetText(StringC(AT_DCP06,P_DCP_Z_AXIS_TOK));
 
 	else if(GetDataModel()->plane_type == YZ_PLANE)
-		m_pAxis1->SetText(StringC(AT_DCP05,P_DCP_X_AXIS_TOK));
+		m_pAxis1->SetText(StringC(AT_DCP06,P_DCP_X_AXIS_TOK));
 
 	else if(GetDataModel()->plane_type == ZX_PLANE)
-		m_pAxis1->SetText(StringC(AT_DCP05,P_DCP_Y_AXIS_TOK));
+		m_pAxis1->SetText(StringC(AT_DCP06,P_DCP_Y_AXIS_TOK));
 
 	m_pAxis1->GetFloatInputCtrl()->SetDecimalPlaces(6);
 	m_pAxis1->GetFloatInputCtrl()->SetRange(-359.999999,359.999999);
@@ -107,9 +107,9 @@ void DCP::DCP05RotateLineDlgC::OnInitDialog(void)
 
 	//InsertEmptyLine(); CAPTIVATE
 
-	//m_pInfo2 = new GUI::TextBoxCtrlC(0,0,300,100,StringC(AT_DCP05,M_DCP_ROTATE_LINE_INFO2_TOK)); CAPTIVATE
+	//m_pInfo2 = new GUI::TextBoxCtrlC(0,0,300,100,StringC(AT_DCP06,M_DCP_ROTATE_LINE_INFO2_TOK)); CAPTIVATE
 	m_pInfo2 = new GUI::TextCtrlC();
-	m_pInfo2->SetText(StringC(AT_DCP05,M_DCP_ROTATE_LINE_INFO2_TOK));
+	m_pInfo2->SetText(StringC(AT_DCP06,M_DCP_ROTATE_LINE_INFO2_TOK));
 	m_pInfo2->SetId(eInfo2);
 	void(m_pInfo2->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pInfo2->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
@@ -118,12 +118,12 @@ void DCP::DCP05RotateLineDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_ROTATE_LINE_TOK,0);
 }	
 
-void DCP::DCP05RotateLineDlgC::OnDialogActivated()
+void DCP::DCP06RotateLineDlgC::OnDialogActivated()
 {
 	RefreshControls();
 }
 
-void DCP::DCP05RotateLineDlgC::UpdateData()
+void DCP::DCP06RotateLineDlgC::UpdateData()
 {
 	if(GetDataModel()->plane_type == XY_PLANE)
 	{
@@ -140,7 +140,7 @@ void DCP::DCP05RotateLineDlgC::UpdateData()
 }
 
 // Description: refresh all controls
-void DCP::DCP05RotateLineDlgC::RefreshControls()
+void DCP::DCP06RotateLineDlgC::RefreshControls()
 {
 	if(m_pAxis1)
 	{
@@ -160,14 +160,14 @@ void DCP::DCP05RotateLineDlgC::RefreshControls()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP05RotateLineDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06RotateLineDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05RotateLineModelC* pDCP05Model = dynamic_cast< DCP::DCP05RotateLineModelC* >( pModel );
+    DCP::DCP06RotateLineModelC* pDCP06Model = dynamic_cast< DCP::DCP06RotateLineModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -177,41 +177,41 @@ bool DCP::DCP05RotateLineDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP05RotateLineModelC* DCP::DCP05RotateLineDlgC::GetDataModel() const
+DCP::DCP06RotateLineModelC* DCP::DCP06RotateLineDlgC::GetDataModel() const
 {
-    return (DCP::DCP05RotateLineModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06RotateLineModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP05UserControllerC  ===================================
+// ====================================  DCP06UserControllerC  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP05UserControllerC
+// DCP06UserControllerC
 // 
-DCP::DCP05RotateLineControllerC::DCP05RotateLineControllerC(DCP::DCP05ModelC *pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model)
+DCP::DCP06RotateLineControllerC::DCP06RotateLineControllerC(DCP::DCP06ModelC *pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    // SetTitleTok( AT_DCP05, T_DCP_DOM_ROTATE_LINE_DLG_TOK /*C_DCP_APPLICATION_NAME_TOK */);
+    // SetTitleTok( AT_DCP06, T_DCP_DOM_ROTATE_LINE_DLG_TOK /*C_DCP_APPLICATION_NAME_TOK */);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP05RotateLineDlgC(pDCP05Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06RotateLineDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( ROTATE_LINE_DLG, m_pDlg, true );
 
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK1, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -219,13 +219,13 @@ DCP::DCP05RotateLineControllerC::DCP05RotateLineControllerC(DCP::DCP05ModelC *pD
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05RotateLineControllerC::~DCP05RotateLineControllerC()
+DCP::DCP06RotateLineControllerC::~DCP06RotateLineControllerC()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP05RotateLineControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06RotateLineControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -236,12 +236,12 @@ bool DCP::DCP05RotateLineControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -252,7 +252,7 @@ bool DCP::DCP05RotateLineControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // CONT
-void DCP::DCP05RotateLineControllerC::OnF1Pressed()
+void DCP::DCP06RotateLineControllerC::OnF1Pressed()
 {
     if (m_pDlg == NULL)
     {
@@ -272,12 +272,12 @@ void DCP::DCP05RotateLineControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP05RotateLineControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06RotateLineControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP05RotateLineControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06RotateLineControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -289,9 +289,9 @@ void DCP::DCP05RotateLineControllerC::OnActiveControllerClosed( int lCtrlID, int
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP05RotateLineModelC::DCP05RotateLineModelC()
+DCP::DCP06RotateLineModelC::DCP06RotateLineModelC()
 {
 }
-DCP::DCP05RotateLineModelC::~DCP05RotateLineModelC()
+DCP::DCP06RotateLineModelC::~DCP06RotateLineModelC()
 {
 }

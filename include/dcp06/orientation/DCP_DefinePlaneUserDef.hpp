@@ -32,7 +32,7 @@
 // ================================================================================================
 
 #include <dcp06/core/DCP_Types.hpp>
-#include <dcp06/orientation/DCP_DCP05Dom.hpp>
+#include <dcp06/orientation/DCP_DCP06Alignment321.hpp>
 #include <GUI_ComboLineCtrl.hpp>
 #include <GUI_StandardDialog.hpp>
 #include <GUI_TextCtrl.hpp>
@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-	class DCP05DefinePlaneUserDefDlgC;
-    class DCP05ModelC;
-	class DCP05DefinePlaneUserDefModelC;
+	class DCP06DefinePlaneUserDefDlgC;
+    class DCP06ModelC;
+	class DCP06DefinePlaneUserDefModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05DefinePlaneUserDefControllerC : public GUI::ControllerC
+    class DCP06DefinePlaneUserDefControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05DefinePlaneUserDefControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05DefinePlaneUserDefControllerC();
+            DCP06DefinePlaneUserDefControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06DefinePlaneUserDefControllerC();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -80,25 +80,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05DefinePlaneUserDefControllerC( const DCP05DefinePlaneUserDefControllerC& oDCP05DefinePlaneUserDefController )
+            DCP06DefinePlaneUserDefControllerC( const DCP06DefinePlaneUserDefControllerC& oDCP05DefinePlaneUserDefController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05DefinePlaneUserDefControllerC& operator=( const DCP05DefinePlaneUserDefControllerC& oDCP05DefinePlaneUserDefController )
+            DCP06DefinePlaneUserDefControllerC& operator=( const DCP06DefinePlaneUserDefControllerC& oDCP05DefinePlaneUserDefController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05DefinePlaneUserDefDlgC* m_pDlg;
-			DCP05ModelC* m_pDCP05Model;
+            DCP06DefinePlaneUserDefDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
     };
 
 
-    class DCP05DefinePlaneUserDefDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class DCP06DefinePlaneUserDefDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -115,10 +115,10 @@ namespace DCP
 				*/
 			};
 
-		   DCP05DefinePlaneUserDefDlgC(DCP05ModelC* pDCP05Model);
+		   DCP06DefinePlaneUserDefDlgC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05DefinePlaneUserDefDlgC();
+            virtual ~DCP06DefinePlaneUserDefDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -132,7 +132,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05DefinePlaneUserDefModelC* GetDataModel() const;
+            DCP06DefinePlaneUserDefModelC* GetDataModel() const;
 		
 			virtual void RefreshControls();
 
@@ -152,7 +152,7 @@ namespace DCP
 
 			// Description: add all controls
 
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
             
 	private:
 
@@ -168,19 +168,19 @@ namespace DCP
 
 	};
 	
-    class DCP05DefinePlaneUserDefModelC : public GUI::ModelC
+    class DCP06DefinePlaneUserDefModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05DefinePlaneUserDefModelC();
+            DCP06DefinePlaneUserDefModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05DefinePlaneUserDefModelC();
+            virtual ~DCP06DefinePlaneUserDefModelC();
 
-			DCP05DefinePlaneModelC* planeModel;
+			DCP06DefinePlaneModelC* planeModel;
 
 			
 			S_POINT_BUFF userdef_measured_points[MAX_USERDEF_POINTS];

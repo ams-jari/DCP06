@@ -46,13 +46,13 @@ namespace DCP
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05MidPointControllerC : public GUI::ControllerC
+    class DCP06MidPointControllerC : public GUI::ControllerC
 	{
 	public:
 
             // Description: Constructor
-            DCP05MidPointControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05MidPointControllerC();
+            DCP06MidPointControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06MidPointControllerC();
 
 
             // Description: Handle change of position values
@@ -68,8 +68,8 @@ namespace DCP
 			// Description: Route model to everybody else
 
 			virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05PointBuffModelC* m_pPointBuffModel;
-			DCP05PointBuffModelC* GetDataModel() const;
+			DCP06PointBuffModelC* m_pPointBuffModel;
+			DCP06PointBuffModelC* GetDataModel() const;
 		
             // Description: React on close of tabbed dialog
             virtual void OnActiveDialogClosed( int lDlgID, int lExitCode );
@@ -81,23 +81,23 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05MidPointControllerC( const DCP05MidPointControllerC& oDCP05MidPointController )
+            DCP06MidPointControllerC( const DCP06MidPointControllerC& oDCP06MidPointController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05MidPointControllerC& operator=( const DCP05MidPointControllerC& oDCP05MidPointControllerC )
+            DCP06MidPointControllerC& operator=( const DCP06MidPointControllerC& oDCP06MidPointControllerC )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP05CommonC* m_pCommon;
-			DCP05ModelC* m_pDCP05Model;
+			DCP06CommonC* m_pCommon;
+			DCP06ModelC* m_pDCP06Model;
 			
-			DCP05PointBuffModelC* m_pPoint;
+			DCP06PointBuffModelC* m_pPoint;
 			/*short m_iActDes;
 			short m_iAskId;*/
     };

@@ -46,7 +46,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -60,17 +60,17 @@
 
 // USER DIALOG
 
-DCP::DCP05MsgBoxC::DCP05MsgBoxC()
+DCP::DCP06MsgBoxC::DCP06MsgBoxC()
 {
 	
 }
 // ****************************************************************************************
-DCP::DCP05MsgBoxC::~DCP05MsgBoxC()
+DCP::DCP06MsgBoxC::~DCP06MsgBoxC()
 {
 	
 }
 // ****************************************************************************************
-bool DCP::DCP05MsgBoxC::ShowMessageYesNo(StringC strMessage, StringC Title)
+bool DCP::DCP06MsgBoxC::ShowMessageYesNo(StringC strMessage, StringC Title)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -87,7 +87,7 @@ bool DCP::DCP05MsgBoxC::ShowMessageYesNo(StringC strMessage, StringC Title)
 }		
 
 // ****************************************************************************************
-bool DCP::DCP05MsgBoxC::ShowMessageOkAbort(StringC strMessage, StringC Title)
+bool DCP::DCP06MsgBoxC::ShowMessageOkAbort(StringC strMessage, StringC Title)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -104,7 +104,7 @@ bool DCP::DCP05MsgBoxC::ShowMessageOkAbort(StringC strMessage, StringC Title)
 }		
 
 // ****************************************************************************************
-void DCP::DCP05MsgBoxC::ShowMessageOk(StringC strMessage, StringC Title)
+void DCP::DCP06MsgBoxC::ShowMessageOk(StringC strMessage, StringC Title)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -115,7 +115,7 @@ void DCP::DCP05MsgBoxC::ShowMessageOk(StringC strMessage, StringC Title)
 }
 
 // ****************************************************************************************
-short DCP::DCP05MsgBoxC::ShowMessageOkAbortRetry(StringC strMessage)
+short DCP::DCP06MsgBoxC::ShowMessageOkAbortRetry(StringC strMessage)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -134,7 +134,7 @@ short DCP::DCP05MsgBoxC::ShowMessageOkAbortRetry(StringC strMessage)
 }
 
 // ****************************************************************************************
-short DCP::DCP05MsgBoxC::DeleteChstMessage(StringC strMessage)
+short DCP::DCP06MsgBoxC::DeleteChstMessage(StringC strMessage)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -143,16 +143,16 @@ short DCP::DCP05MsgBoxC::DeleteChstMessage(StringC strMessage)
 		pDlg->SetMessageText( strMessage );
 
 		FKDef vDef;
-		//vDef.nAppId = AT_DCP05;
+		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = pDlg;
 		
-		vDef.strLable	= StringC(AT_DCP05,K_DCP_ALL_TOK);
+		vDef.strLable	= StringC(AT_DCP06,K_DCP_ALL_TOK);
 		pDlg->SetFunctionKey( FK2, vDef );
 
-		vDef.strLable	= StringC(AT_DCP05,K_DCP_STATION_TOK);
+		vDef.strLable	= StringC(AT_DCP06,K_DCP_STATION_TOK);
 		pDlg->SetFunctionKey( FK4, vDef );
 
-		vDef.strLable	=StringC(AT_DCP05, K_DCP_ABORT_TOK);
+		vDef.strLable	=StringC(AT_DCP06, K_DCP_ABORT_TOK);
 		pDlg->SetFunctionKey( FK6, vDef );
 
 		//pDlg->ActivateFunctionKeys();
@@ -174,7 +174,7 @@ short DCP::DCP05MsgBoxC::DeleteChstMessage(StringC strMessage)
 			return -1;
 	}
 
-short DCP::DCP05MsgBoxC::DeletePointsMeas(StringC strMessage)
+short DCP::DCP06MsgBoxC::DeletePointsMeas(StringC strMessage)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -183,16 +183,16 @@ short DCP::DCP05MsgBoxC::DeletePointsMeas(StringC strMessage)
 		pDlg->SetMessageText( strMessage );
 
 		FKDef vDef;
-		//vDef.nAppId = AT_DCP05;
+		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = pDlg;
 		
-		vDef.strLable	= StringC(AT_DCP05,K_DCP_ALL_TOK);
+		vDef.strLable	= StringC(AT_DCP06,K_DCP_ALL_TOK);
 		pDlg->SetFunctionKey( FK2, vDef );
 
-		vDef.strLable	= StringC(AT_DCP05,K_DCP_CURRENT_POINT_TOK);
+		vDef.strLable	= StringC(AT_DCP06,K_DCP_CURRENT_POINT_TOK);
 		pDlg->SetFunctionKey( FK4, vDef );
 
-		vDef.strLable	=StringC(AT_DCP05, K_DCP_ABORT_TOK);
+		vDef.strLable	=StringC(AT_DCP06, K_DCP_ABORT_TOK);
 		pDlg->SetFunctionKey( FK6, vDef );
 
 		//pDlg->ActivateFunctionKeys();

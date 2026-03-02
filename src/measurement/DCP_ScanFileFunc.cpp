@@ -43,7 +43,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -58,12 +58,12 @@
 // USER DIALOG
 
 
-DCP::ScanFileFunc::ScanFileFunc(DCP05ModelC* pDCP05Model): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pDCP05Model(pDCP05Model)
+DCP::ScanFileFunc::ScanFileFunc(DCP06ModelC* pDCP06Model): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pDCP06Model(pDCP06Model)
 {
 	m_cPath[0] = '\0';
 	m_cPathAndFileName[0] = '\0';
 
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 
 	// get path
 	getPath();
@@ -100,7 +100,7 @@ bool DCP::ScanFileFunc::setFile(const char* filename)
 		m_pFile = 0;
 	}
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	//CPI::SensorC::GetInstance()->
 	
 	char temp[CPI::LEN_PATH_MAX];
@@ -157,7 +157,7 @@ bool DCP::ScanFileFunc::setFile(StringC filename)
 	if(m_pCommon->strblank(filename_temp))
 		return false;
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	char temp[CPI::LEN_PATH_MAX];
 		char temp_name[CPI::LEN_PATH_MAX];	
@@ -179,7 +179,7 @@ bool DCP::ScanFileFunc::setFile(StringC filename)
 	char* pSearch = &temp[0];
 
 	int rr = m_pCommon->find_first_file(pSearch, &FileInfo);
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	// for test
 	/*
 	StringC ss;
@@ -196,7 +196,7 @@ bool DCP::ScanFileFunc::setFile(StringC filename)
 		points = ReadPointsCount(m_cPathAndFileName);
 		m_bExists = true;
 		/*
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		msgbox.ShowMessageOk(L"File opened!");
 		*/
 		return true;
@@ -204,7 +204,7 @@ bool DCP::ScanFileFunc::setFile(StringC filename)
 	else
 	{	
 		/*
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		msgbox.ShowMessageOk(StringC(temp));
 		*/
 	}
@@ -215,7 +215,7 @@ bool DCP::ScanFileFunc::setFile(StringC filename)
 // ****************************************************************************************
 void DCP::ScanFileFunc::getPath()
 {
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 
 	//boost::filesystem::
 	//CPI::FileUtilitiesC::MakeDir(m_cPath);
@@ -363,7 +363,7 @@ short ret;
 	if(!m_pCommon->card_status())//(1) != 0)
 		return -1;
 
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	
 	ret = -1;
 
@@ -373,7 +373,7 @@ short ret;
 	if(!fopen1(mode))// /*FIL_ACC_RDWR */,&fp) != TRUE)
 	{
 		StringC msg;
-		msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 		msg.Format(msg,(const wchar_t*)StringC(m_cPathAndFileName/*m_cFileName*/));
 		msgbox.ShowMessageOk(msg);
 	}
@@ -416,7 +416,7 @@ short DCP::ScanFileFunc::close_adf_file()
 short DCP::ScanFileFunc::fopen1(const char* mode)
 {
 	
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	//StringC sT;
 	//sT = L"fopen1  ";
 	//sT += StringC(m_cPathAndFileName);
@@ -427,7 +427,7 @@ short DCP::ScanFileFunc::fopen1(const char* mode)
 		return true;		
 	}
 	StringC msg;
-	msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
+	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(m_cPathAndFileName));
 			msgbox.ShowMessageOk(msg);
 	return false;
@@ -449,9 +449,9 @@ FILE* DCP::ScanFileFunc::fopen2(FILE *pFile , char* fname, const char* mode)
 	{
 		return pFile;		
 	}
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
-	msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
+	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(temp));
 			msgbox.ShowMessageOk(msg);
 
@@ -469,7 +469,7 @@ short DCP::ScanFileFunc::create_adf_file(char *fname, bool showOKMessage)
 {
 //unsigned long new_file_size;
 char filename[FILENAME_BUFF_LEN];
-DCP05MsgBoxC msgbox;		
+DCP06MsgBoxC msgbox;		
 		
 	if(!m_pCommon->card_status())//card_status(1) != 0)
 			return -1;
@@ -482,7 +482,7 @@ DCP05MsgBoxC msgbox;
 		if(access1(filename) == 1)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_DELETE_OLD_FILE_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_DELETE_OLD_FILE_TOK);
 			msg.Format(msg,StringC(filename));
 			if(!msgbox.ShowMessageYesNo(msg))
 				return -1;
@@ -490,7 +490,7 @@ DCP05MsgBoxC msgbox;
 			if(remove1(filename) != 0)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_DELETE_FILE_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_FILE_TOK);
 				msgbox.ShowMessageOk(msg);
 				
 				return -1;
@@ -500,7 +500,7 @@ DCP05MsgBoxC msgbox;
 		{
 			remove1(filename);
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg,(const wchar_t*) StringC(filename));
 			msgbox.ShowMessageOk(msg);
 			//msgbox1(TXT_NIL_TOKEN,M_FILE_OPEN_ERROR_TOK,(void *) filename,MB_OK);
@@ -515,7 +515,7 @@ DCP05MsgBoxC msgbox;
 		if(showOKMessage)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_CREATE_3DF_OK_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_CREATE_3DF_OK_TOK);
 			msgbox.ShowMessageOk(msg);
 		}
 
@@ -535,7 +535,7 @@ int attr = 0;
 	//char filename_temp[20];
 	//UTL::UnicodeToAscii(filename_temp, fname);
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	char temp[CPI::LEN_PATH_MAX];
 	temp[0] = '\0';
@@ -559,7 +559,7 @@ short  DCP::ScanFileFunc::remove1(char *fname)
 {
 char apu[CPI::LEN_PATH_MAX];
 bool Result;
-	DCP05CommonC common(m_pDCP05Model);
+	DCP06CommonC common(m_pDCP06Model);
 
     sprintf(apu,"%s%-s",m_cPath,common.strbtrim(fname));
 	boost::filesystem::path f = apu;
@@ -581,7 +581,7 @@ bool Result;
 ************************************************************************/
 short DCP::ScanFileFunc::delete_adf_file(bool showMsg)
 {
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
 
 	short result=-1;
@@ -595,7 +595,7 @@ short DCP::ScanFileFunc::delete_adf_file(bool showMsg)
 		return false;
 
 
-	msg.LoadTxt(AT_DCP05,M_DCP_DELETE_FILE_TOK);
+	msg.LoadTxt(AT_DCP06,M_DCP_DELETE_FILE_TOK);
 	msg.Format(msg,(const wchar_t*)StringC(m_cFileName));
 	
 	if(!showMsg || (showMsg && msgbox.ShowMessageYesNo(msg)))
@@ -607,7 +607,7 @@ short DCP::ScanFileFunc::delete_adf_file(bool showMsg)
 		{
 			if(showMsg)
 			{
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_DELETE_FILE_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_FILE_TOK);
 				msgbox.ShowMessageOk(msg);
 			}
 			ret = false;
@@ -624,7 +624,7 @@ short DCP::ScanFileFunc::add_new_pnt(char *pid, char *xact,char *yact,char *zact
 char bXact[15], bYact[15], bZact[15];
 int Result;
 
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 
 	if(!m_pCommon->card_status())
 		return false;

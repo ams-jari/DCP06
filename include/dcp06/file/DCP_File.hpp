@@ -48,18 +48,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05FileDlgC;
-	class DCP05FileModelC;
+    class DCP06ModelC;
+	class DCP06FileDlgC;
+	class DCP06FileModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05FileControllerC : public GUI::ControllerC
+    class DCP06FileControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05FileControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05FileControllerC();
+            DCP06FileControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06FileControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -68,8 +68,10 @@ namespace DCP
 			virtual void OnF4Pressed();
 			virtual void OnF5Pressed();
 			virtual void OnF6Pressed();
+			virtual void OnSHF1Pressed();
 			virtual void OnSHF2Pressed();
 			virtual void OnSHF3Pressed();
+			virtual void OnSHF4Pressed();
 			virtual void OnSHF5Pressed();
 			
             // Description: Route model to everybody else
@@ -83,27 +85,27 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05FileControllerC( const DCP05FileControllerC& oDCP05FileController )
+            DCP06FileControllerC( const DCP06FileControllerC& oDCP06FileController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05FileControllerC& operator=( const DCP05FileControllerC& oDCP05FileController )
+            DCP06FileControllerC& operator=( const DCP06FileControllerC& oDCP06FileController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05FileDlgC* m_pDlg;
-			DCP05FileModelC* m_pDataModel;
+            DCP06FileDlgC* m_pDlg;
+			DCP06FileModelC* m_pDataModel;
 			StringC sFileToCreate;
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
     };
 
 
-    class DCP05FileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+    class DCP06FileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 	 public:
 
@@ -117,10 +119,10 @@ namespace DCP
 				eFreeSpace
 			};
 
-		   DCP05FileDlgC(DCP05FileModelC* pFileModel);
+		   DCP06FileDlgC(DCP06FileModelC* pFileModel);
 
             // Description: Destructor
-            virtual ~DCP05FileDlgC();
+            virtual ~DCP06FileDlgC();
 
 			virtual void OnInitDialog(void);
 			
@@ -133,7 +135,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05ModelC* GetDCP05Model() const;
+            DCP06ModelC* GetDCP06Model() const;
 
 			virtual void RefreshControls();
 
@@ -156,25 +158,25 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pTime;
 			GUI::ComboLineCtrlC* m_pFreeSpace;
 
-			DCP05FileModelC* m_pDataModel;
+			DCP06FileModelC* m_pDataModel;
 			StringC sSelectedFile;
 		private:
-			DCP05CommonC* m_pCommon;
-			DCP05ModelC* m_pDCP05Model;
+			DCP06CommonC* m_pCommon;
+			DCP06ModelC* m_pDCP06Model;
 
 	};
 
-   class DCP05FileModelC : public GUI::ModelC
+   class DCP06FileModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05FileModelC(DCP05ModelC* pDCP05Model);
+            DCP06FileModelC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
             //
-            virtual ~DCP05FileModelC();
+            virtual ~DCP06FileModelC();
 			
 			AdfFileFunc* m_pAdfFile;
 			char x_diff[20];
@@ -182,7 +184,7 @@ namespace DCP
 			char z_def[20];
 
 		private:
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
     };
 
 };

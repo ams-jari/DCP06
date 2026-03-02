@@ -46,7 +46,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05ViewCdfDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06ViewCdfDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -60,26 +60,26 @@ using namespace DCP;
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP05ViewCdfDlgC::DCP05ViewCdfDlgC(DCP::CdfFileFunc *pFileFunc,DCP05ModelC* pDCP05Model):poMultiColCtrl(NULL),
-	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP05ViewCdfDlgC, OnChanged), this),
+DCP06ViewCdfDlgC::DCP06ViewCdfDlgC(DCP::CdfFileFunc *pFileFunc,DCP06ModelC* pDCP06Model):poMultiColCtrl(NULL),
+	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06ViewCdfDlgC, OnChanged), this),
 	m_pFileFunc(pFileFunc),m_iSelectedCount(0)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 
 
-	sActualSelected.LoadTxt(AT_DCP05,P_DCP_ACTUAL_SELECTED_TOK);
-	sActualNonSelected.LoadTxt(AT_DCP05,P_DCP_ACTUAL_NONSELECTED_TOK);
-	sDesignSelected.LoadTxt(AT_DCP05,P_DCP_DESIGN_SELECTED_TOK);
-	sDesignNonSelected.LoadTxt(AT_DCP05,P_DCP_DESIGN_NONSELECTED_TOK);
+	sActualSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_SELECTED_TOK);
+	sActualNonSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_NONSELECTED_TOK);
+	sDesignSelected.LoadTxt(AT_DCP06,P_DCP_DESIGN_SELECTED_TOK);
+	sDesignNonSelected.LoadTxt(AT_DCP06,P_DCP_DESIGN_NONSELECTED_TOK);
 
-	m_strMaxPointSelected.LoadTxt(AT_DCP05,L_DCP_MAX_POINTS_SELECTED_TOK); 
+	m_strMaxPointSelected.LoadTxt(AT_DCP06,L_DCP_MAX_POINTS_SELECTED_TOK); 
 
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 }
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP05ViewCdfDlgC::~DCP05ViewCdfDlgC()
+DCP06ViewCdfDlgC::~DCP06ViewCdfDlgC()
 {
 	if(m_pCommon)
 	{
@@ -90,7 +90,7 @@ DCP05ViewCdfDlgC::~DCP05ViewCdfDlgC()
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP05ViewCdfDlgC::OnInitDialog(void)
+void DCP06ViewCdfDlgC::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
@@ -108,10 +108,10 @@ void DCP05ViewCdfDlgC::OnInitDialog(void)
 	//poMultiColCtrl->AddColConfig(oConfigCols1, true);
 	poMultiColCtrl->Sort(GUI::ListMultiColCtrlC::SORT_Disabled);
 
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_POINT_NUMBER_TOK),CI_No));
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_DISTANCE_ID_TOK),CI_DistId));
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_DIST_TOK),CI_Dist));
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_NOTE_TOK),CI_Note));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_POINT_NUMBER_TOK),CI_No));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_DISTANCE_ID_TOK),CI_DistId));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_DIST_TOK),CI_Dist));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_NOTE_TOK),CI_Note));
 
 	poMultiColCtrl->AddColSelection(CI_No,CI_DistId,CI_Dist,CI_Note);
 
@@ -122,7 +122,7 @@ void DCP05ViewCdfDlgC::OnInitDialog(void)
 	// infotext
 	/*
 	StringC sTemp1;
-	sTemp1.LoadTxt(AT_DCP05,P_DCP_DISTANCE_FILE_TOK);
+	sTemp1.LoadTxt(AT_DCP06,P_DCP_DISTANCE_FILE_TOK);
 	sTemp1 += L":";
 	sTemp1 =  m_pDataModel->sSelectedDistFile;
 
@@ -142,7 +142,7 @@ void DCP05ViewCdfDlgC::OnInitDialog(void)
 // Description: OnChanged
 // ================================================================================================
 /*
-void DCP05ViewCdfDlgC::OnChanged(int unNotifyCode, int ulParam2)
+void DCP06ViewCdfDlgC::OnChanged(int unNotifyCode, int ulParam2)
 {
 	//if(unNotifyCode == GUI::NC_ONCOMBOBOX_SELECTION_CHANGED)
 	if(unNotifyCode == GUI::NC_ONLISTMULTICOL_SELECTION_ACCEPTED)
@@ -157,7 +157,7 @@ void DCP05ViewCdfDlgC::OnChanged(int unNotifyCode, int ulParam2)
 // ================================================================================================
 // Description: RefreshControls
 // ================================================================================================
-void DCP05ViewCdfDlgC::RefreshControls()
+void DCP06ViewCdfDlgC::RefreshControls()
 {
 	if(poMultiColCtrl)
 	{
@@ -199,7 +199,7 @@ void DCP05ViewCdfDlgC::RefreshControls()
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP05ViewCdfDlgC::OnDialogActivated()
+void DCP06ViewCdfDlgC::OnDialogActivated()
 {
 	GUI::TableDialogC::OnDialogActivated();
 
@@ -228,7 +228,7 @@ void DCP05ViewCdfDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP05ViewCdfDlgC::UpdateData()
+void DCP::DCP06ViewCdfDlgC::UpdateData()
 {
 	//nothing to update
 }
@@ -237,7 +237,7 @@ void DCP::DCP05ViewCdfDlgC::UpdateData()
 // ================================================================================================
 // Description: DeletePoint
 // ================================================================================================
-bool DCP::DCP05ViewCdfDlgC::DeletePoint()
+bool DCP::DCP06ViewCdfDlgC::DeletePoint()
 {
 	bool ret = false;
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
@@ -249,7 +249,7 @@ bool DCP::DCP05ViewCdfDlgC::DeletePoint()
 	return ret;
 }
 
-bool DCP::DCP05ViewCdfDlgC::GetSelectedData(StringC& sDistId, StringC& sRefId, StringC& sNote)
+bool DCP::DCP06ViewCdfDlgC::GetSelectedData(StringC& sDistId, StringC& sRefId, StringC& sNote)
 {
 	bool ret = false;
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
@@ -272,16 +272,16 @@ bool DCP::DCP05ViewCdfDlgC::GetSelectedData(StringC& sDistId, StringC& sRefId, S
 }
 
 // ================================================================================================
-// Description: only accept DCP05ViewCdfModelC objects
+// Description: only accept DCP06ViewCdfModelC objects
 // ================================================================================================
-bool DCP::DCP05ViewCdfDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ViewCdfDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -293,67 +293,67 @@ bool DCP::DCP05ViewCdfDlgC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: GetDataModel
 // ================================================================================================
-DCP::DCP05ModelC* DCP::DCP05ViewCdfDlgC::GetDCP05Model() const
+DCP::DCP06ModelC* DCP::DCP06ViewCdfDlgC::GetDCP06Model() const
 {
-    return (DCP::DCP05ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ================================================================================================
-// ====================================  DCP05ViewCdfControllerC=========================
+// ====================================  DCP06ViewCdfControllerC=========================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP05ViewCdfControllerC::DCP05ViewCdfControllerC(DCP::CdfFileFunc *pFileFunc, DCP05ModelC* pDCP05Model)
-    : m_pDlg( NULL ),m_pFileFunc(pFileFunc),m_pDCP05Model(pDCP05Model)
+DCP::DCP06ViewCdfControllerC::DCP06ViewCdfControllerC(DCP::CdfFileFunc *pFileFunc, DCP06ModelC* pDCP06Model)
+    : m_pDlg( NULL ),m_pFileFunc(pFileFunc),m_pDCP06Model(pDCP06Model)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    //OnControllerActivatedSetTitleTok( AT_DCP05, T_DCP_3D_FILE_DLG_TOK /*C_DCP_APPLICATION_NAME_TOK */);
+    //OnControllerActivatedSetTitleTok( AT_DCP06, T_DCP_3D_FILE_DLG_TOK /*C_DCP_APPLICATION_NAME_TOK */);
 
-	//SetTitleTok( AT_DCP05, T_DCP_CALC_DIST_VIEW_TOK);
+	//SetTitleTok( AT_DCP06, T_DCP_CALC_DIST_VIEW_TOK);
 
 	StringC sTitle;
-	sTitle.LoadTxt(AT_DCP05,T_DCP_CALC_DIST_VIEW_TOK);
+	sTitle.LoadTxt(AT_DCP06,T_DCP_CALC_DIST_VIEW_TOK);
 	sTitle += L" (";
 	sTitle += StringC(m_pFileFunc->getFileName());
 	sTitle += L")";
 	SetTitle(sTitle);
 
 	// Create a dialog
-    m_pDlg = new DCP::DCP05ViewCdfDlgC(m_pFileFunc, m_pDCP05Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06ViewCdfDlgC(m_pFileFunc, m_pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( VIEWCDF_DLG, m_pDlg, true );
 
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_EDIT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_EDIT_TOK);
 	SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_DEL_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
 	SetFunctionKey( SHFK5, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";
 	SetFunctionKey( SHFK6, vDef1 );
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05ViewCdfControllerC::~DCP05ViewCdfControllerC()
+DCP::DCP06ViewCdfControllerC::~DCP06ViewCdfControllerC()
 {
 
 }
@@ -361,7 +361,7 @@ DCP::DCP05ViewCdfControllerC::~DCP05ViewCdfControllerC()
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05ViewCdfControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ViewCdfControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -369,7 +369,7 @@ bool DCP::DCP05ViewCdfControllerC::SetModel( GUI::ModelC* pModel )
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
 	// set title here bacause it depending on caller...
-	DCP::DCP05ModelC* pMod = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+	DCP::DCP06ModelC* pMod = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 	//SetTitleStr(pMod->sTitle);
 		
 	// Set it to hello world dialog
@@ -379,7 +379,7 @@ bool DCP::DCP05ViewCdfControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: F1 / EDIT
 // ================================================================================================
-void DCP::DCP05ViewCdfControllerC::OnF1Pressed()
+void DCP::DCP06ViewCdfControllerC::OnF1Pressed()
 {
     if (m_pDlg == NULL)
     {
@@ -392,7 +392,7 @@ void DCP::DCP05ViewCdfControllerC::OnF1Pressed()
 	if(m_pDlg->GetSelectedData(sDistId,sRefId,sNote) == false)
 		return;
 
-	DCP::DCP05EditCalcDistModelC* pModel = new DCP05EditCalcDistModelC;
+	DCP::DCP06EditCalcDistModelC* pModel = new DCP06EditCalcDistModelC;
 
 	pModel->sDistId = sDistId;
 	pModel->sRefId =  sRefId;
@@ -400,7 +400,7 @@ void DCP::DCP05ViewCdfControllerC::OnF1Pressed()
 
 	if(GetController(VIEWCDF_EDIT_CONTROLLER) == NULL)
 	{
-		(void)AddController( VIEWCDF_EDIT_CONTROLLER, new DCP::DCP05EditCalcDistControllerC(m_pDlg->GetDCP05Model() ));
+		(void)AddController( VIEWCDF_EDIT_CONTROLLER, new DCP::DCP06EditCalcDistControllerC(m_pDlg->GetDCP06Model() ));
 	}
 	(void)GetController( VIEWCDF_EDIT_CONTROLLER )->SetModel(pModel);
 	SetActiveController(VIEWCDF_EDIT_CONTROLLER, true);
@@ -417,7 +417,7 @@ void DCP::DCP05ViewCdfControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: SHF2 / DELETE
 // ================================================================================================
-void DCP::DCP05ViewCdfControllerC::OnSHF5Pressed()
+void DCP::DCP06ViewCdfControllerC::OnSHF5Pressed()
 {
     if (m_pDlg == NULL)
     {
@@ -439,7 +439,7 @@ void DCP::DCP05ViewCdfControllerC::OnSHF5Pressed()
 // ================================================================================================
 // Description: F6 /CONT
 // ================================================================================================
-void DCP::DCP05ViewCdfControllerC::OnF6Pressed()
+void DCP::DCP06ViewCdfControllerC::OnF6Pressed()
 {
     if (m_pDlg == NULL)
     {
@@ -459,21 +459,21 @@ void DCP::DCP05ViewCdfControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: React on close of active dialog
 // ================================================================================================
-void DCP::DCP05ViewCdfControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06ViewCdfControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP05ViewCdfControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06ViewCdfControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 
 	if(lCtrlID == VIEWCDF_EDIT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05EditCalcDistModelC* pModel = (DCP::DCP05EditCalcDistModelC*) GetController( VIEWCDF_EDIT_CONTROLLER )->GetModel();	
+		DCP::DCP06EditCalcDistModelC* pModel = (DCP::DCP06EditCalcDistModelC*) GetController( VIEWCDF_EDIT_CONTROLLER )->GetModel();	
 		
-		DCP05CommonC pCommon(m_pDCP05Model);
+		DCP06CommonC pCommon(m_pDCP06Model);
 		char temp[100];
 		
 		

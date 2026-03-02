@@ -62,27 +62,27 @@ using namespace DCP;
 // ================================================================================================
 
 // ================================================================================================
-// ====================================  DCP053DMeasControllerC ===================================
+// ====================================  DCP063DMeasControllerC ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
 
-DCP::DCP05CalcLineControllerC::DCP05CalcLineControllerC(S_LINE_BUFF* oLineBuff, short actdes, short iAskId):
+DCP::DCP06CalcLineControllerC::DCP06CalcLineControllerC(S_LINE_BUFF* oLineBuff, short actdes, short iAskId):
 	m_pLineBuff(oLineBuff),m_iActDes(actdes), m_iAskId(iAskId)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-	//m_pCommon = new DCP05CommonC();
+	//m_pCommon = new DCP06CommonC();
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05CalcLineControllerC::~DCP05CalcLineControllerC()
+DCP::DCP06CalcLineControllerC::~DCP06CalcLineControllerC()
 {
 	if(m_pCommon)
 	{
@@ -94,13 +94,13 @@ DCP::DCP05CalcLineControllerC::~DCP05CalcLineControllerC()
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP05CalcLineControllerC::OnControllerActivated(void)
+void DCP::DCP06CalcLineControllerC::OnControllerActivated(void)
 {
 }
 
-void DCP::DCP05CalcLineControllerC::Run(void)
+void DCP::DCP06CalcLineControllerC::Run(void)
 {
-	DCP05CalcLineC calcline;
+	DCP06CalcLineC calcline;
 	if(calcline.calc(m_pLineBuff,m_iActDes))
 	{
 		m_pLineBuff->calc = 1;
@@ -110,8 +110,8 @@ void DCP::DCP05CalcLineControllerC::Run(void)
 		{
 			if(m_iAskId)
 			{
-				DCP::DCP05InputTextModelC* pModel = new DCP05InputTextModelC;
-				pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_LINE_ID_TOK);
+				DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_LINE_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = L" ";//StringC(buffer);
@@ -124,7 +124,7 @@ void DCP::DCP05CalcLineControllerC::Run(void)
 
 				if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
 				{
-					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP05InputTextControllerC(m_pDCP05Model ));
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC(m_pDCP06Model ));
 				}
 
 				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -135,14 +135,14 @@ void DCP::DCP05CalcLineControllerC::Run(void)
 		}
 		else if(m_pCommon->defined_points_count_in_line(&m_pLineBuff[0],0) > 2)
 		{
-				DCP::DCP05DefineLineModelC* pModel = new DCP::DCP05DefineLineModelC;
+				DCP::DCP06DefineLineModelC* pModel = new DCP::DCP06DefineLineModelC;
 				memcpy(&pModel->line_buff[0],&m_pLineBuff[0], sizeof(S_LINE_BUFF));
 				if(GetController(RES_LINE_CONTROLLER) == NULL)
 				{
-					(void)AddController( RES_LINE_CONTROLLER, new DCP::DCP05ResLineControllerC(m_pDCP05Model));
+					(void)AddController( RES_LINE_CONTROLLER, new DCP::DCP06ResLineControllerC(m_pDCP06Model));
 				}
 	
-				(void)GetController(RES_LINE_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_DOM_LINE_MEAS_TOK));
+				(void)GetController(RES_LINE_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK));
 	
 				(void)GetController( RES_LINE_CONTROLLER )->SetModel(pModel);
 				SetActiveController(RES_LINE_CONTROLLER, true);
@@ -157,15 +157,15 @@ void DCP::DCP05CalcLineControllerC::Run(void)
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05CalcLineControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06CalcLineControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     //(void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	m_pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 	return/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
@@ -175,7 +175,7 @@ bool DCP::DCP05CalcLineControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP05CalcLineControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP06CalcLineControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	/*
 	if(m_bPointMenu && lExitCode == 2)
@@ -187,17 +187,17 @@ void DCP::DCP05CalcLineControllerC::OnActiveDialogClosed( int lDlgID, int lExitC
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP05CalcLineControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06CalcLineControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == RES_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05DefineLineModelC* pModel = (DCP::DCP05DefineLineModelC*) GetController( RES_LINE_CONTROLLER )->GetModel();		
+		DCP::DCP06DefineLineModelC* pModel = (DCP::DCP06DefineLineModelC*) GetController( RES_LINE_CONTROLLER )->GetModel();		
 		memcpy(&m_pLineBuff[0],&pModel->line_buff[0], sizeof(S_LINE_BUFF));
 		
 		if(m_iAskId)
 		{
-				DCP::DCP05InputTextModelC* pModel = new DCP05InputTextModelC;
-				pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_LINE_ID_TOK);
+				DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_LINE_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = L" ";//StringC(buffer);
@@ -210,7 +210,7 @@ void DCP::DCP05CalcLineControllerC::OnActiveControllerClosed( int lCtrlID, int l
 
 				if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
 				{
-					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP05InputTextControllerC(m_pDCP05Model ));
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC(m_pDCP06Model ));
 				}
 
 				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -230,7 +230,7 @@ void DCP::DCP05CalcLineControllerC::OnActiveControllerClosed( int lCtrlID, int l
 	{
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP05InputTextModelC* pModel = (DCP::DCP05InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 			char buffer[10]; buffer[0] = '\0';
 			m_pCommon->convert_to_ascii(strNewFile, buffer,7); // 6 -> 7 280508

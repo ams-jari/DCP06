@@ -139,7 +139,7 @@ void DCP::DCPScanningDialogC::RefreshControls()
 //
 OBS_IMPLEMENT_EXECUTE(DCP::DCPScanningControllerC);
 
-DCP::DCPScanningControllerC::DCPScanningControllerC(DCP::DCP05ModelC* pDCP05Model) 
+DCP::DCPScanningControllerC::DCPScanningControllerC(DCP::DCP06ModelC* pDCP06Model) 
 : GUI::GControllerC()
 , MeasurementC()
 , m_poScanningModel(new DCP::DCPScanningModelC())
@@ -148,10 +148,10 @@ DCP::DCPScanningControllerC::DCPScanningControllerC(DCP::DCP05ModelC* pDCP05Mode
 //, m_dHorizScanV(70.0)
 , m_pOnApplicationClosedObserver(OBS_METHOD_TO_PARAM0(DCPScanningControllerC, OnApplicationClosed), this)
 ,m_poDCPScanningDialogC(0)
-,m_pDCP05Model(pDCP05Model)
+,m_pDCP06Model(pDCP06Model)
 {
 
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 
     // Set Title
     SetTitle(StringC(AT_DCP05, T_DCP_ADV_SCANNING_TOK));
@@ -569,7 +569,7 @@ void DCP::DCPScanningControllerC::OnF5Pressed(void)
 					char m_cPathAndFileName[CPI::LEN_PATH_MAX];
 					char line[512];
 
-					bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, cPath);
+					bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, cPath);
 					FILE* m_pFile=0;
 					
 					//UTL::UnicodeToAscii(cFileName, scanName);
@@ -653,7 +653,7 @@ void DCP::DCPScanningControllerC::OnF5Pressed(void)
 					}
 					else
 					{
-						DCP05MsgBoxC msgbox;
+						DCP06MsgBoxC msgbox;
 						StringC msg;
 						msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
 						msg.Format(msg, (const wchar_t*)StringC(m_cPathAndFileName));

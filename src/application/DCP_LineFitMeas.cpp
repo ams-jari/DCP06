@@ -26,7 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/init/DCP_DCP05Init.hpp>
+#include <dcp06/init/DCP_DCP06Init.hpp>
 #include <dcp06/application/DCP_LineFitMeas.hpp>
 #include <dcp06/core/DCP_SpecialMenu.hpp>
 #include <dcp06/measurement/DCP_MeasXYZ.hpp>
@@ -62,7 +62,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP05LineFitMeasDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::DCP06LineFitMeasDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -76,16 +76,16 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP05LineFitMeasDlgC);
 
 // USER DIALOG
 
-DCP::DCP05LineFitMeasDlgC::DCP05LineFitMeasDlgC(DCP::DCP05ModelC *pDCP05Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pPointNo(0),m_pPointId(0),m_pHeight(0),m_pDistFromLine(0),m_pDistAlongLine(0),m_pLineOffset(0)/*,m_pInfo(0)*/,m_pDCP05Model(pDCP05Model),
-	m_pPointIdObserver(OBS_METHOD_TO_PARAM0(DCP05LineFitMeasDlgC, OnPointIdChanged), this),
+DCP::DCP06LineFitMeasDlgC::DCP06LineFitMeasDlgC(DCP::DCP06ModelC *pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+	m_pPointNo(0),m_pPointId(0),m_pHeight(0),m_pDistFromLine(0),m_pDistAlongLine(0),m_pLineOffset(0)/*,m_pInfo(0)*/,m_pDCP06Model(pDCP06Model),
+	m_pPointIdObserver(OBS_METHOD_TO_PARAM0(DCP06LineFitMeasDlgC, OnPointIdChanged), this),
 	iInfoInd(0),m_pCommon(0)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 	
 
-	m_pCommon = new DCP05CommonC(pDCP05Model);
-	strInfoText.LoadTxt(AT_DCP05,P_DCP_INFO_TOK);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
+	strInfoText.LoadTxt(AT_DCP06,P_DCP_INFO_TOK);
 
 	//memset(temp_point_table,0, sizeof(S_POINT_BUFF)*20);
 	//memset(temp_point_table2,0, sizeof(S_POINT_BUFF)*20);
@@ -93,7 +93,7 @@ DCP::DCP05LineFitMeasDlgC::DCP05LineFitMeasDlgC(DCP::DCP05ModelC *pDCP05Model):G
 
 
             // Description: Destructor
-DCP::DCP05LineFitMeasDlgC::~DCP05LineFitMeasDlgC()
+DCP::DCP06LineFitMeasDlgC::~DCP06LineFitMeasDlgC()
 {
 	 //m_pTimer.KillTimer();
 	 if(m_pCommon)
@@ -103,14 +103,14 @@ DCP::DCP05LineFitMeasDlgC::~DCP05LineFitMeasDlgC()
 	 }
 }
 
-void DCP::DCP05LineFitMeasDlgC::OnInitDialog(void)
+void DCP::DCP06LineFitMeasDlgC::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 
 	// Add fields to dialog
 	m_pPointNo = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointNo->SetId(ePointNo);
-	m_pPointNo->SetText(StringC(AT_DCP05,P_DCP_POINT_NO_TOK));
+	m_pPointNo->SetText(StringC(AT_DCP06,P_DCP_POINT_NO_TOK));
 	m_pPointNo->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pPointNo->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	// m_pPointNo->GetStringInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
@@ -118,7 +118,7 @@ void DCP::DCP05LineFitMeasDlgC::OnInitDialog(void)
 
 	m_pPointId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointId->SetId(ePointId);
-	m_pPointId->SetText(StringC(AT_DCP05,P_DCP_POINT_ID_SK_TOK));
+	m_pPointId->SetText(StringC(AT_DCP06,P_DCP_POINT_ID_SK_TOK));
 	m_pPointId->GetStringInputCtrl()->SetCharsCountMax(DCP_POINT_ID_LENGTH);
 	// m_pPointId->GetStringInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	m_pPointId->SetEmptyAllowed(true);
@@ -128,7 +128,7 @@ void DCP::DCP05LineFitMeasDlgC::OnInitDialog(void)
 
 	m_pHeight = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pHeight->SetId(eHeight);
-	m_pHeight->SetText(StringC(AT_DCP05,P_DCP_LINEFIT_HEIGHT_TOK));
+	m_pHeight->SetText(StringC(AT_DCP06,P_DCP_LINEFIT_HEIGHT_TOK));
 	//m_pHeight->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pHeight->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pHeight->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
@@ -141,7 +141,7 @@ void DCP::DCP05LineFitMeasDlgC::OnInitDialog(void)
 
 	m_pDistAlongLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDistAlongLine->SetId(eDistAlongLine);
-	m_pDistAlongLine->SetText(StringC(AT_DCP05,P_DCP_LINEFIT_DIST_ALONG_LINE_TOK));
+	m_pDistAlongLine->SetText(StringC(AT_DCP06,P_DCP_LINEFIT_DIST_ALONG_LINE_TOK));
 	//m_pDistAlongLine->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pDistAlongLine->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pDistAlongLine->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
@@ -151,7 +151,7 @@ void DCP::DCP05LineFitMeasDlgC::OnInitDialog(void)
 	
 	m_pLineOffset = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pLineOffset->SetId(eLineOffset);
-	m_pLineOffset->SetText(StringC(AT_DCP05,P_DCP_LINEFIT_LINE_OFFSET_TOK));
+	m_pLineOffset->SetText(StringC(AT_DCP06,P_DCP_LINEFIT_LINE_OFFSET_TOK));
 	//m_pDistAlongLine->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pLineOffset->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pLineOffset->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
@@ -161,7 +161,7 @@ void DCP::DCP05LineFitMeasDlgC::OnInitDialog(void)
 
 	m_pDistFromLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDistFromLine->SetId(eDistFromLine);
-	m_pDistFromLine->SetText(StringC(AT_DCP05,P_DCP_LINEFIT_DIST_FROM_LINE_TOK));
+	m_pDistFromLine->SetText(StringC(AT_DCP06,P_DCP_LINEFIT_DIST_FROM_LINE_TOK));
 	//m_pDistFromLine->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pDistFromLine->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pDistFromLine->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
@@ -184,10 +184,10 @@ void DCP::DCP05LineFitMeasDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_MEAS_TOK,0);
 }
 
-void DCP::DCP05LineFitMeasDlgC::OnDialogActivated()
+void DCP::DCP06LineFitMeasDlgC::OnDialogActivated()
 {
 	// get last defined point
-	//DCP05CommonC common(m_pDCP05Model);
+	//DCP06CommonC common(m_pDCP06Model);
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 
 	GetDataModel()->m_iPointsCount = m_pCommon->get_last_defined_point(&GetDataModel()->point_table[0],GetDataModel()->m_iMaxPoint);
@@ -198,25 +198,25 @@ void DCP::DCP05LineFitMeasDlgC::OnDialogActivated()
 	RefreshControls();
 }
 
-//void DCP::DCP05LineFitMeasDlgC::OnTimer(void)
+//void DCP::DCP06LineFitMeasDlgC::OnTimer(void)
 //{
 //	StringC sMsg = m_pCommon->get_info_text(iInfoInd);
 //	//m_pInfo->SetText(strInfoText + sMsg);
 //	GUI::DesktopC::Instance()->MessageShow(strInfoText + sMsg,true);
 //}
 
-void DCP::DCP05LineFitMeasDlgC::UpdateData()
+void DCP::DCP06LineFitMeasDlgC::UpdateData()
 {
 }
 
 // Description: refresh all controls
-void DCP::DCP05LineFitMeasDlgC::RefreshControls()
+void DCP::DCP06LineFitMeasDlgC::RefreshControls()
 {
 	if(m_pPointNo && m_pPointId && m_pHeight && m_pDistFromLine && m_pDistAlongLine && m_pLineOffset)
 	{
 		if(GetDataModel()->selectedRefLine == REF_LINE_VERTICAL)
 		{
-			m_pHeight->SetText(StringC(AT_DCP05,P_DCP_LINEFIT_DEPTH_TOK));
+			m_pHeight->SetText(StringC(AT_DCP06,P_DCP_LINEFIT_DEPTH_TOK));
 		}
 
 		StringC sTemp;
@@ -238,7 +238,7 @@ void DCP::DCP05LineFitMeasDlgC::RefreshControls()
 		StringC sDistAlongLine  = L"-";
 		StringC sLineOffset  = L"-";
 
-		int decimals = m_pDCP05Model->m_nDecimals;
+		int decimals = m_pDCP06Model->m_nDecimals;
 		
 		// HEIGHT
 		if(GetDataModel()->linefit_results[GetDataModel()->m_iCurrentPoint-1].sta == 1)
@@ -267,7 +267,7 @@ void DCP::DCP05LineFitMeasDlgC::RefreshControls()
 
 		if(GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].sta != POINT_NOT_DEFINED)
 		{
-			int decimals = m_pDCP05Model->m_nDecimals;
+			int decimals = m_pDCP06Model->m_nDecimals;
 			sTemp.Format(L"%.*f",decimals,GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].x);
 			m_pX->GetStringInputCtrl()->SetString(sTemp);
 
@@ -287,14 +287,14 @@ void DCP::DCP05LineFitMeasDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP05LineFitMeasDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06LineFitMeasDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05LineFitMeasModelC* pDCP05Model = dynamic_cast< DCP::DCP05LineFitMeasModelC* >( pModel );
+    DCP::DCP06LineFitMeasModelC* pDCP06Model = dynamic_cast< DCP::DCP06LineFitMeasModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -304,7 +304,7 @@ bool DCP::DCP05LineFitMeasDlgC::SetModel( GUI::ModelC* pModel )
 }
 // ================================================================================================
 
-void DCP::DCP05LineFitMeasDlgC::SelectPoint(StringC strSelectedPoint,short iSelectedPointId)
+void DCP::DCP06LineFitMeasDlgC::SelectPoint(StringC strSelectedPoint,short iSelectedPointId)
 {
 	GetDataModel()->m_iCurrentPoint = iSelectedPointId;
 	RefreshControls();
@@ -312,15 +312,15 @@ void DCP::DCP05LineFitMeasDlgC::SelectPoint(StringC strSelectedPoint,short iSele
 }
 // ================================================================================================
 
-void DCP::DCP05LineFitMeasDlgC::delete_point()
+void DCP::DCP06LineFitMeasDlgC::delete_point()
 {
 	StringC strMsg;
-	strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_POINT_TOK);
+	strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_POINT_TOK);
 
 	StringC strActivePointId(L"");
 
 	strMsg.Format(strMsg, (const wchar_t*)strActivePointId);
-	DCP05MsgBoxC MsgBox;
+	DCP06MsgBoxC MsgBox;
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
 		GetDataModel()->m_iPointsCount--;
@@ -345,17 +345,17 @@ void DCP::DCP05LineFitMeasDlgC::delete_point()
 	RefreshControls();
 }
 // ================================================================================================
-void DCP::DCP05LineFitMeasDlgC::next_point()
+void DCP::DCP06LineFitMeasDlgC::next_point()
 {
 	if(GetDataModel()->m_iCurrentPoint < GetDataModel()->m_iPointsCount)
 		GetDataModel()->m_iCurrentPoint++;
 	else
-		 GUI::DesktopC::Instance()->MessageShow(StringC(AT_DCP05,I_DCP_LAST_POINT_TOK));
+		 GUI::DesktopC::Instance()->MessageShow(StringC(AT_DCP06,I_DCP_LAST_POINT_TOK));
 
 	RefreshControls();
 }
 // ================================================================================================
-void DCP::DCP05LineFitMeasDlgC::prev_point()
+void DCP::DCP06LineFitMeasDlgC::prev_point()
 {
 	if(GetDataModel()->m_iCurrentPoint > 1)
 		GetDataModel()->m_iCurrentPoint--;
@@ -365,23 +365,23 @@ void DCP::DCP05LineFitMeasDlgC::prev_point()
 
 // ================================================================================================
 
-void DCP::DCP05LineFitMeasDlgC::update_meas_values(double x, double y, double z, short /*DCP_POINT_STATUS*/ status)
+void DCP::DCP06LineFitMeasDlgC::update_meas_values(double x, double y, double z, short /*DCP_POINT_STATUS*/ status)
 {
-	//DCP05CommonC common(m_pDCP05Model);
+	//DCP06CommonC common(m_pDCP06Model);
 
 	if(m_pCommon->check_distance(x,y,z,GetDataModel()->point_table,GetDataModel()->m_iPointsCount, GetDataModel()->m_iCurrentPoint))
 	{
 		GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].x = x;
 		GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].y = y;
 		GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].z = z;
-		GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].cds = m_pDCP05Model->active_coodinate_system;
+		GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].cds = m_pDCP06Model->active_coodinate_system;
 		GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].sta = status;
 
 		RefreshControls();
 	}
 }
 // ================================================================================================
-void DCP::DCP05LineFitMeasDlgC::add_point()
+void DCP::DCP06LineFitMeasDlgC::add_point()
 {
 	if(GetDataModel()->m_iPointsCount < GetDataModel()->m_iMaxPoint)
 	{
@@ -408,13 +408,13 @@ void DCP::DCP05LineFitMeasDlgC::add_point()
 	else 
 	{
 		StringC strMsg;
-		strMsg.LoadTxt(AT_DCP05,M_DCP_CANNOT_ADD_POINT_TOK);
-		DCP05MsgBoxC MsgBox;
+		strMsg.LoadTxt(AT_DCP06,M_DCP_CANNOT_ADD_POINT_TOK);
+		DCP06MsgBoxC MsgBox;
 		MsgBox.ShowMessageOk(strMsg);
 	}
 }
 // ================================================================================================
-void DCP::DCP05LineFitMeasDlgC::OnPointIdChanged( int unNotifyCode, int ulParam2)
+void DCP::DCP06LineFitMeasDlgC::OnPointIdChanged( int unNotifyCode, int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
@@ -434,29 +434,29 @@ void DCP::DCP05LineFitMeasDlgC::OnPointIdChanged( int unNotifyCode, int ulParam2
 
 
 // ================================================================================================
-// ====================================  DCP05UserControllerC  ===================================
+// ====================================  DCP06UserControllerC  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP05UserControllerC
+// DCP06UserControllerC
 // 
-DCP::DCP05LineFitMeasControllerC::DCP05LineFitMeasControllerC(DCP05ModelC *pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model), m_pCommon(0),poVideoDlg(0),m_bCamera(false)
+DCP::DCP06LineFitMeasControllerC::DCP06LineFitMeasControllerC(DCP06ModelC *pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model), m_pCommon(0),poVideoDlg(0),m_bCamera(false)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_LINE_FITTING_POINTS_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_LINE_FITTING_POINTS_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP05LineFitMeasDlgC(pDCP05Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06LineFitMeasDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( MEAS_DLG, m_pDlg, true );
 
-	calcLineFit = new DCP05CalcLineFitC(pDCP05Model);
+	calcLineFit = new DCP06CalcLineFitC(pDCP06Model);
 
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
     // Set the function key
-	isATR = pDCP05Model->isATR;
+	isATR = pDCP06Model->isATR;
    show_function_keys();
 
 
@@ -470,7 +470,7 @@ DCP::DCP05LineFitMeasControllerC::DCP05LineFitMeasControllerC(DCP05ModelC *pDCP0
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-void DCP::DCP05LineFitMeasControllerC::show_function_keys()
+void DCP::DCP06LineFitMeasControllerC::show_function_keys()
 {
 	ResetFunctionKeys();
 	
@@ -479,16 +479,16 @@ void DCP::DCP05LineFitMeasControllerC::show_function_keys()
 		FKDef vDef;
 		vDef.poOwner = this;
 		
-		//vDef.nAppId = AT_DCP05;
+		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP05, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
 		SetFunctionKey( FK1, vDef );
 
-		vDef.strLable = StringC(AT_DCP05, K_DCP_CONT_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK);
 		SetFunctionKey( FK6, vDef );
 
 		FKDef vDef1;
-			//vDef1.nAppId = AT_DCP05;
+			//vDef1.nAppId = AT_DCP06;
 			vDef1.poOwner = this;
 			vDef1.strLable = L" ";;
 			SetFunctionKey( SHFK1, vDef1 );
@@ -499,57 +499,57 @@ void DCP::DCP05LineFitMeasControllerC::show_function_keys()
 	else 
 	{
 		FKDef vDef;
-		//vDef.nAppId = AT_DCP05;
+		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP05,K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		if(isATR)
 		{
-			vDef.strLable = StringC(AT_DCP05,K_DCP_DIST_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
 			SetFunctionKey( FK2, vDef );
 		}
 
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_NEXT_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_NEXT_TOK);
 		SetFunctionKey( FK3, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_PREV_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_PREV_TOK);
 		SetFunctionKey( FK4, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_ADD_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_ADD_TOK);
 		SetFunctionKey( FK5, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 		SetFunctionKey( FK6, vDef );
 		
 		// SHIFT
 		// CAPTIVATE
 		//if( ABL::VideoDialogC::IsCameraAvailable(CFA::CT_OVC) )
 		//{
-			vDef.strLable = StringC(AT_DCP05,K_DCP_CAMERA_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_CAMERA_TOK);
 			SetFunctionKey( SHFK1, vDef );
 		//}
 		
-		vDef.strLable = StringC(AT_DCP05,K_DCP_DEL_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
 		SetFunctionKey( SHFK2, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_INIT_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_INIT_TOK);
 		SetFunctionKey( SHFK3, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_SPECIAL_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_SPECIAL_TOK);
 		SetFunctionKey( SHFK4, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_POINT_ID_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_ID_TOK);
 		SetFunctionKey( SHFK5, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_CHANGE_FACE_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_CHANGE_FACE_TOK);
 		SetFunctionKey( SHFK6, vDef );
 	}
 	GUI::DesktopC::Instance()->UpdateFunctionKeys();
 }
 
-DCP::DCP05LineFitMeasControllerC::~DCP05LineFitMeasControllerC()
+DCP::DCP06LineFitMeasControllerC::~DCP06LineFitMeasControllerC()
 {
 	if(m_pCommon)
 	{
@@ -564,14 +564,14 @@ DCP::DCP05LineFitMeasControllerC::~DCP05LineFitMeasControllerC()
 	}
 }
 // Description: Hello World model
-DCP::DCP05LineFitMeasModelC* DCP::DCP05LineFitMeasDlgC::GetDataModel() const
+DCP::DCP06LineFitMeasModelC* DCP::DCP06LineFitMeasDlgC::GetDataModel() const
 {
-    return (DCP::DCP05LineFitMeasModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06LineFitMeasModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP05LineFitMeasControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06LineFitMeasControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -582,12 +582,12 @@ bool DCP::DCP05LineFitMeasControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -598,7 +598,7 @@ bool DCP::DCP05LineFitMeasControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Handle change of position values
-void DCP::DCP05LineFitMeasControllerC::OnF1Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnF1Pressed()
 {
 	if(m_bCamera)
 	{
@@ -608,13 +608,13 @@ void DCP::DCP05LineFitMeasControllerC::OnF1Pressed()
 		show_function_keys();
 	}
 
-	if(m_pDCP05Model->m_nOverWriteInfo )
+	if(m_pDCP06Model->m_nOverWriteInfo )
 	{
 		if(m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].sta != POINT_NOT_DEFINED)
 		{
 				StringC msg;
-				DCP05MsgBoxC msgbox;
-				msg.LoadTxt(AT_DCP05, M_DCP_OVERWRITE_POINT_TOK);
+				DCP06MsgBoxC msgbox;
+				msg.LoadTxt(AT_DCP06, M_DCP_OVERWRITE_POINT_TOK);
 				msg.Format(msg,(const wchar_t*)StringC(m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id));
 				if(!msgbox.ShowMessageYesNo(msg))
 				//if(msgbox1(TXT_NIL_TOKEN, M_OVERWRITE_POINT_TOK,(void *) pid_ptr, MB_YESNO) == FALSE)
@@ -636,14 +636,14 @@ void DCP::DCP05LineFitMeasControllerC::OnF1Pressed()
 		DisableFunctionKey(FK6);
 
 
-		DCP::DCP05MeasXYZModelC* pModel = new DCP05MeasXYZModelC;
+		DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
 		
 		sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 		
 		if(GetController(MEAS_XYZ_CONTROLLER) == NULL)
 		{
-			(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::DCP05MeasXYZControllerC(m_pDCP05Model));
+			(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDCP06Model));
 		}
 		(void)GetController( MEAS_XYZ_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MEAS_XYZ_CONTROLLER, true);
@@ -669,7 +669,7 @@ void DCP::DCP05LineFitMeasControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F2
 // ================================================================================================
-void DCP::DCP05LineFitMeasControllerC::OnF2Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnF2Pressed()
 {
 	//// DIST
 	if(m_pCommon->check_edm_mode())
@@ -681,34 +681,34 @@ void DCP::DCP05LineFitMeasControllerC::OnF2Pressed()
 		DisableFunctionKey(FK5);
 		DisableFunctionKey(FK6);
 
-		DCP::DCP05MeasDistModelC* pModel = new DCP05MeasDistModelC;
+		DCP::DCP06MeasDistModelC* pModel = new DCP06MeasDistModelC;
 
 		if(GetController(MEAS_DIST_CONTROLLER) == NULL)
 		{
-			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::DCP05MeasDistControllerC(m_pDCP05Model));
+			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::DCP06MeasDistControllerC(m_pDCP06Model));
 		}
 		(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MEAS_DIST_CONTROLLER, true);
 	}
 } 
 // NEXT POINT
-void DCP::DCP05LineFitMeasControllerC::OnF3Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnF3Pressed()
 {
 	m_pDlg->next_point();
 }
 // previous point
-void DCP::DCP05LineFitMeasControllerC::OnF4Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnF4Pressed()
 {
 	m_pDlg->prev_point();
 }
 
 // Add point
-void DCP::DCP05LineFitMeasControllerC::OnF5Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnF5Pressed()
 {
 	m_pDlg->add_point();
 }
 // Description: Handle change of position values
-void DCP::DCP05LineFitMeasControllerC::OnF6Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnF6Pressed()
 {
     if (m_pDlg == NULL)
     {
@@ -736,7 +736,7 @@ void DCP::DCP05LineFitMeasControllerC::OnF6Pressed()
     // to the main menu
     //(void)Close(EC_KEY_CONT);
 }
-void DCP::DCP05LineFitMeasControllerC::OnSHF1Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnSHF1Pressed()
 {
 	/* CAPTIVATE
 	if( ABL::VideoDialogC::IsCameraAvailable(CFA::CT_OVC) )
@@ -744,7 +744,7 @@ void DCP::DCP05LineFitMeasControllerC::OnSHF1Pressed()
 
 		if(poVideoDlg == 0)
 		{
-			poVideoDlg = new ABL::VideoDialogC( AT_DCP05);
+			poVideoDlg = new ABL::VideoDialogC( AT_DCP06);
 			CFA::CameraT cameraType = poVideoDlg->GetCameraType();
 			
 			poVideoDlg->SetId(CAMERA_DLG);
@@ -771,47 +771,47 @@ void DCP::DCP05LineFitMeasControllerC::OnSHF1Pressed()
 		show_function_keys();
 }
 // Description: Handle change of position values
-void DCP::DCP05LineFitMeasControllerC::OnSHF2Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnSHF2Pressed()
 {
 	m_pDlg->delete_point();
 }
 
 // INIT
-void DCP::DCP05LineFitMeasControllerC::OnSHF3Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnSHF3Pressed()
 {
 	if(GetController(INIT_CONTROLLER) == NULL)
 	{
-		(void)AddController( INIT_CONTROLLER, new DCP::DCP05InitControllerC );
+		(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC );
 	}
-	(void)GetController( INIT_CONTROLLER )->SetModel( m_pDCP05Model);
+	(void)GetController( INIT_CONTROLLER )->SetModel( m_pDCP06Model);
 	SetActiveController(INIT_CONTROLLER, true);
 }
 
-void DCP::DCP05LineFitMeasControllerC::OnSHF4Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnSHF4Pressed()
 {
 	/*
 	// SPECIAL MENU
-	DCP::DCP05SpecialMenuDlgC* poSpecialMenuDlg = new DCP::DCP05SpecialMenuDlgC();
+	DCP::DCP06SpecialMenuDlgC* poSpecialMenuDlg = new DCP::DCP06SpecialMenuDlgC();
 	AddDialog(SPECIAL_MENU,poSpecialMenuDlg); 	
 	SetActiveDialog(SPECIAL_MENU, true);
 	*/
 	if(GetController(SPECIAL_MENU_CONTROLLER) == NULL)
 	{
-		(void)AddController( SPECIAL_MENU_CONTROLLER, new DCP::DCP05SpecialMenuControllerC(m_pDCP05Model, DISABLE_HIDDEN_POINT | DISABLE_HOME_POINTS | DISABLE_X_OR_Y_OR_Z |DISABLE_SEPARATE_REC) );
+		(void)AddController( SPECIAL_MENU_CONTROLLER, new DCP::DCP06SpecialMenuControllerC(m_pDCP06Model, DISABLE_HIDDEN_POINT | DISABLE_HOME_POINTS | DISABLE_X_OR_Y_OR_Z |DISABLE_SEPARATE_REC) );
 	}
-	(void)GetController( SPECIAL_MENU_CONTROLLER )->SetModel( m_pDCP05Model);
+	(void)GetController( SPECIAL_MENU_CONTROLLER )->SetModel( m_pDCP06Model);
 	SetActiveController(SPECIAL_MENU_CONTROLLER, true);
 
 }
 // PID
-void DCP::DCP05LineFitMeasControllerC::OnSHF5Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnSHF5Pressed()
 {
 		if (m_pDlg == NULL)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
-		DCP::DCP05SelectPointModelC* pModel = new DCP05SelectPointModelC;
+		DCP::DCP06SelectPointModelC* pModel = new DCP06SelectPointModelC;
 		
 		// create point list
 		for(int i = 0; i < m_pDlg->GetDataModel()->m_iPointsCount;i++)
@@ -824,15 +824,15 @@ void DCP::DCP05LineFitMeasControllerC::OnSHF5Pressed()
 
 		if(GetController(SELECT_POINT_CONTROLLER) == NULL)
 		{
-			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP05SelectPointControllerC );
+			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP06SelectPointControllerC );
 		}
 		(void)GetController( SELECT_POINT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_POINT_CONTROLLER, true);
 }
-void DCP::DCP05LineFitMeasControllerC::OnSHF6Pressed()
+void DCP::DCP06LineFitMeasControllerC::OnSHF6Pressed()
 {
 	
-	//DCP05ChangeFaceC changeFace(CHANGE_FACE_CONTROLLER);
+	//DCP06ChangeFaceC changeFace(CHANGE_FACE_CONTROLLER);
 	
 	// I<>II
 		TBL::ChangeFaceControllerC* poChangeFace = new TBL::ChangeFaceControllerC();
@@ -843,7 +843,7 @@ void DCP::DCP05LineFitMeasControllerC::OnSHF6Pressed()
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP05LineFitMeasControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP06LineFitMeasControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == CAMERA_DLG)
 	{
@@ -854,12 +854,12 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveDialogClosed( int lDlgID, int lEx
 }
 
 // Description: React on close of controller
-void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	// SELECT POINT
 	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectPointModelC* pModel = (DCP::DCP05SelectPointModelC*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
+		DCP::DCP06SelectPointModelC* pModel = (DCP::DCP06SelectPointModelC*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
 		StringC strSelectedPoint = pModel->m_strSelectedPoint;
 		short iSelectedPointId = pModel->m_iSelectedId;
 		m_pDlg->SelectPoint(strSelectedPoint,iSelectedPointId);
@@ -876,7 +876,7 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP05MeasDistModelC* pModel = (DCP::DCP05MeasDistModelC*) GetController( MEAS_DIST_CONTROLLER )->GetModel();
+			DCP::DCP06MeasDistModelC* pModel = (DCP::DCP06MeasDistModelC*) GetController( MEAS_DIST_CONTROLLER )->GetModel();
 			int x;
 			x=1;
 		}
@@ -894,7 +894,7 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP05MeasXYZModelC* pModel = (DCP::DCP05MeasXYZModelC*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
+			DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
 			double x = pModel->m_dX;
 			double y = pModel->m_dY;
 			double z = pModel->m_dZ;
@@ -905,7 +905,7 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 			m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint - 1].sta = 1;
 
 			calculate_linefit(m_pDlg->GetDataModel()->m_iCurrentPoint);
-			/*if(m_pDCP05Model->m_nAutoIncrement)
+			/*if(m_pDCP06Model->m_nAutoIncrement)
 			{
 				if(m_pDlg->GetDataModel()->m_iCurrentPoint < m_pDlg->GetDataModel()->m_iPointsCount)
 					m_pDlg->GetDataModel()->m_iCurrentPoint++;
@@ -914,7 +914,7 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 	}
 	else if(lCtrlID == MEAS_XYZ_CONTROLLER)
 	{/*
-		DCP05MsgBoxC MsgBox;
+		DCP06MsgBoxC MsgBox;
 		char temp[100];
 		sprintf(temp,"%s (%d)", "Exit code", lExitCode);
 		MsgBox.ShowMessageOk(StringC(temp));
@@ -927,15 +927,15 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 		// **********************************************************************************************************
 		if(lExitCode == HIDDEN_POINT)
 		{
-			DCP05MsgBoxC msgbox;
+			DCP06MsgBoxC msgbox;
 			msgbox.ShowMessageOk(L"Cannot use the hiddenpoint");
 
 			//// create model
-			//DCP::DCP05PointBuffModelC* pModel = new DCP05PointBuffModelC;
+			//DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
 
 			//if(GetController(HIDDENPOINT_CONTROLLER) == NULL)
 			//{
-			//	(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::DCP05HiddenPointControllerC(m_pDCP05Model));
+			//	(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::DCP06HiddenPointControllerC(m_pDCP06Model));
 			//}
 			//(void)GetController( HIDDENPOINT_CONTROLLER )->SetModel(pModel/* m_pDlg->GetDataModel()*/);
 			//SetActiveController(HIDDENPOINT_CONTROLLER, true);
@@ -945,18 +945,18 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 		// **********************************************************************************************************
 		else if(lExitCode == X_OR_Y_OR_Z)
 		{
-			DCP05MsgBoxC msgbox;
+			DCP06MsgBoxC msgbox;
 			msgbox.ShowMessageOk(L"Cannot use the hiddenpoint");
 
 			//// create model
-			//DCP::DCP05PointBuffModelC* pModel = new DCP05PointBuffModelC;
+			//DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
 			//
 			//sprintf(pModel->m_pPointBuff[0].point_id,"%s", m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
 
 
 			//if(GetController(XYZ_CONTROLLER) == NULL)
 			//{
-			//	(void)AddController( XYZ_CONTROLLER, new DCP::DCP05XYZControllerC( m_pDCP05Model));
+			//	(void)AddController( XYZ_CONTROLLER, new DCP::DCP06XYZControllerC( m_pDCP06Model));
 			//}
 			//(void)GetController( XYZ_CONTROLLER )->SetModel( pModel);
 			//SetActiveController(XYZ_CONTROLLER, true);
@@ -964,11 +964,11 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 		else if(lExitCode == CIRCLE)
 		{
 			// create model
-			DCP::DCP05PointBuffModelC* pModel = new DCP05PointBuffModelC;
+			DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
 
 			if(GetController(CIRCLE_CONTROLLER) == NULL)
 			{
-				(void)AddController( CIRCLE_CONTROLLER, new DCP::DCP05CircleControllerC(m_pDCP05Model));
+				(void)AddController( CIRCLE_CONTROLLER, new DCP::DCP06CircleControllerC(m_pDCP06Model));
 			}
 			(void)GetController( CIRCLE_CONTROLLER )->SetModel(pModel );
 			SetActiveController(CIRCLE_CONTROLLER, true);
@@ -977,13 +977,13 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 		}
 		else if(lExitCode == MID_POINT)
 		{
-			DCP::DCP05PointBuffModelC* pModel = new DCP05PointBuffModelC;
+			DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
 
 			sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", "");
 			
 			if(GetController(MID_POINT_CONTROLLER) == NULL)
 			{
-				(void)AddController( MID_POINT_CONTROLLER, new DCP::DCP05MidPointControllerC(m_pDCP05Model));
+				(void)AddController( MID_POINT_CONTROLLER, new DCP::DCP06MidPointControllerC(m_pDCP06Model));
 			}
 			(void)GetController( MID_POINT_CONTROLLER )->SetModel( pModel);
 			SetActiveController(MID_POINT_CONTROLLER, true);
@@ -991,13 +991,13 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 		else if(lExitCode == HOME_POINTS)
 		{
 			// create model
-			DCP::DCP05PointBuffModelC* pModel = new DCP05PointBuffModelC;
+			DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
 
 			if(GetController(HOME_POINTS_CONTROLLER) == NULL)
 			{
-				(void)AddController( HOME_POINTS_CONTROLLER, new DCP::DCP05HomePointsControllerC(m_pDCP05Model) );
+				(void)AddController( HOME_POINTS_CONTROLLER, new DCP::DCP06HomePointsControllerC(m_pDCP06Model) );
 			}
-			(void)GetController( HOME_POINTS_CONTROLLER )->SetModel(m_pDCP05Model/* m_pDlg->GetDataModel()*/);
+			(void)GetController( HOME_POINTS_CONTROLLER )->SetModel(m_pDCP06Model/* m_pDlg->GetDataModel()*/);
 			SetActiveController(HOME_POINTS_CONTROLLER, true);
 
 		}
@@ -1007,7 +1007,7 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 	// CIRCLE
 	if(lCtrlID == CIRCLE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05PointBuffModelC* pModel = (DCP::DCP05PointBuffModelC*) GetController( CIRCLE_CONTROLLER )->GetModel();		
+		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( CIRCLE_CONTROLLER )->GetModel();		
 		if(pModel->m_pPointBuff[0].sta != 0)
 		{
 			m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].x = pModel->m_pPointBuff[0].x;
@@ -1032,7 +1032,7 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 	}
 	if(lCtrlID == MID_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05PointBuffModelC* pModel = (DCP::DCP05PointBuffModelC*) GetController( MID_POINT_CONTROLLER )->GetModel();		
+		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( MID_POINT_CONTROLLER )->GetModel();		
 		if(pModel->m_pPointBuff[0].sta != 0)
 		{
 			m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].x = pModel->m_pPointBuff[0].x;
@@ -1049,7 +1049,7 @@ void DCP::DCP05LineFitMeasControllerC::OnActiveControllerClosed( int lCtrlID, in
 	DestroyController( lCtrlID );
 }
 
-void DCP::DCP05LineFitMeasControllerC::calculate_linefit(short iCurrPoint)
+void DCP::DCP06LineFitMeasControllerC::calculate_linefit(short iCurrPoint)
 {
 
 	calcLineFit->CalcPoint(iCurrPoint -1, &m_pDlg->GetDataModel()->pLline_buff[0],
@@ -1081,11 +1081,11 @@ void DCP::DCP05LineFitMeasControllerC::calculate_linefit(short iCurrPoint)
 	//}
 }
 
-void DCP::DCP05LineFitMeasControllerC::OnControllerActivated(void)
+void DCP::DCP06LineFitMeasControllerC::OnControllerActivated(void)
 {
 //	ActivateMeasurement();
 }
-void DCP::DCP05LineFitMeasControllerC::OnControllerClosed(int lExitCode)
+void DCP::DCP06LineFitMeasControllerC::OnControllerClosed(int lExitCode)
 {
 //	DeactivateMeasurement(lExitCode);
 }
@@ -1095,7 +1095,7 @@ void DCP::DCP05LineFitMeasControllerC::OnControllerClosed(int lExitCode)
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP05LineFitMeasModelC::DCP05LineFitMeasModelC()
+DCP::DCP06LineFitMeasModelC::DCP06LineFitMeasModelC()
 {
 	m_iMinPoint = 0;
 	m_iMaxPoint = 0;
@@ -1111,6 +1111,6 @@ DCP::DCP05LineFitMeasModelC::DCP05LineFitMeasModelC()
 
 	disable_point_editing = false;
 }
-DCP::DCP05LineFitMeasModelC::~DCP05LineFitMeasModelC()
+DCP::DCP06LineFitMeasModelC::~DCP06LineFitMeasModelC()
 {
 }

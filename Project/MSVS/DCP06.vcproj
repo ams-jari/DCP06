@@ -312,7 +312,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcDom.cpp"
+				RelativePath="..\..\src\calculation\DCP_Calc321.cpp"
 				>
 			</File>
 			<File
@@ -340,7 +340,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcPom.cpp"
+				RelativePath="..\..\src\calculation\DCP_CalcBestFit.cpp"
 				>
 			</File>
 			<File
@@ -368,35 +368,35 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DCP05Chst.cpp"
+				RelativePath="..\..\src\orientation\DCP_DCP06Chst.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DCP05Dom.cpp"
+				RelativePath="..\..\src\orientation\DCP_DCP06Alignment321.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DCP05DomUserDef.cpp"
+				RelativePath="..\..\src\orientation\DCP_DCP06Alignment321UserDef.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_DCP05GUI.cpp"
+				RelativePath="..\..\src\core\DCP_DCP06GUI.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\init\DCP_DCP05Init.cpp"
+				RelativePath="..\..\src\init\DCP_DCP06Init.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_DCP05Meas.cpp"
+				RelativePath="..\..\src\core\DCP_DCP06Meas.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DCP05Pom.cpp"
+				RelativePath="..\..\src\orientation\DCP_DCP06BestFit.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\init\DCP_DCP05Unit.cpp"
+				RelativePath="..\..\src\init\DCP_DCP06Unit.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Stellar_EC7_3P (ARMv4I)"
@@ -408,7 +408,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\init\DCP_DCP05User.cpp"
+				RelativePath="..\..\src\init\DCP_DCP06User.cpp"
 				>
 			</File>
 			<File
@@ -516,7 +516,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_PomSelectPoints.cpp"
+				RelativePath="..\..\src\orientation\DCP_BestFitSelectPoints.cpp"
 				>
 			</File>
 			<File
@@ -532,7 +532,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_ResPom.cpp"
+				RelativePath="..\..\src\orientation\DCP_ResBestFit.cpp"
 				>
 			</File>
 			<File
@@ -809,7 +809,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcDom.hpp"
+				RelativePath="..\..\include\dcp06\calculation\DCP_Calc321.hpp"
 				>
 			</File>
 			<File
@@ -837,7 +837,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcPom.hpp"
+				RelativePath="..\..\include\dcp06\calculation\DCP_CalcBestFit.hpp"
 				>
 			</File>
 			<File
@@ -865,39 +865,39 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DCP05Chst.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DCP_DCP06Chst.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DCP05Dom.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DCP_DCP06Alignment321.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DCP05DomUserDef.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DCP_DCP06Alignment321UserDef.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_DCP05GUI.hpp"
+				RelativePath="..\..\include\dcp06\core\DCP_DCP06GUI.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\init\DCP_DCP05Init.hpp"
+				RelativePath="..\..\include\dcp06\init\DCP_DCP06Init.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_DCP05Meas.hpp"
+				RelativePath="..\..\include\dcp06\core\DCP_DCP06Meas.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DCP05Pom.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DCP_DCP06BestFit.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\init\DCP_DCP05Unit.hpp"
+				RelativePath="..\..\include\dcp06\init\DCP_DCP06Unit.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\init\DCP_DCP05User.hpp"
+				RelativePath="..\..\include\dcp06\init\DCP_DCP06User.hpp"
 				>
 			</File>
 			<File
@@ -1009,7 +1009,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_PomSelectPoints.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DCP_BestFitSelectPoints.hpp"
 				>
 			</File>
 			<File
@@ -1025,7 +1025,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_ResPom.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DCP_ResBestFit.hpp"
 				>
 			</File>
 			<File

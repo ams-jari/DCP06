@@ -13,7 +13,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -27,20 +27,20 @@
 
 // USER DIALOG
 
-DCP::DCP05CS35C::DCP05CS35C()
+DCP::DCP06CS35C::DCP06CS35C()
 {
 	
 }
 
 // ****************************************************************************************
-DCP::DCP05CS35C::~DCP05CS35C()
+DCP::DCP06CS35C::~DCP06CS35C()
 {
 	
 } 
 
  
 // ****************************************************************************************
-void DCP::DCP05CS35C::get_serialnumber(char* serialNumber)
+void DCP::DCP06CS35C::get_serialnumber(char* serialNumber)
 {
 	serialNumber[0] = '\0';
 
@@ -136,7 +136,7 @@ void DCP::DCP05CS35C::get_serialnumber(char* serialNumber)
 
 	   BSS::UTI::BSS_UTI_WCharToAscii(vSerialNumber.bstrVal, serialNumber);
 
-	   /*DCP05MsgBoxC msgBox;	
+	   /*DCP06MsgBoxC msgBox;	
  	   msgBox.ShowMessageOk(StringC(serialNumber));*/
 		
 	   

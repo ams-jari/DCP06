@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+    <RootNamespace>DCP06_TestBuild</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <VcpkgEnabled>true</VcpkgEnabled>
+    <VcpkgManifestInstall>true</VcpkgManifestInstall>
+    <VcpkgConfiguration>Release</VcpkgConfiguration>
+    <VcpkgManifestPath>..\vcpkg.json</VcpkgManifestPath>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(ProjectDir)out\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Configuration)\$(Platform)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\include;..\include\dcp06;..\include\dcp06\math;..\include\geometry;..\include\core;..\include\sdk_fallback;..\src\core;..\Text;$(VcpkgInstalledDir)$(VcpkgTriplet)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>HW_X86;OS_WINPC;PLAT_WINPC_X86;WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;DCP06_NO_SDK;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)dcp06_test.lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\application\DCP06.cpp" />
+    <ClCompile Include="..\src\application\DCP_Application.cpp" />
+    <ClCompile Include="..\src\application\DCP_ApplicationMenu.cpp" />
+    <ClCompile Include="..\src\application\DCP_LineFitMeas.cpp" />
+    <ClCompile Include="..\src\application\DCP_LineFitting.cpp" />
+    <ClCompile Include="..\src\application\DCP_LineSetting.cpp" />
+    <ClCompile Include="..\src\application\DCP_LineSettingConf.cpp" />
+    <ClCompile Include="..\src\application\DCP_Shaft.cpp" />
+    <ClCompile Include="..\src\application\DCP_ShaftLine.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcAngle.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcChst.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_calccircle.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcCircleController.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcDist.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcDist2Points.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_Calc321.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_calcline.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcLineController.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcLineFit.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcMenu.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_calcplane.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcPlaneController.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalcBestFit.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_CalculationCircle.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_EditCalcAngle.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_EditCalcDist.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_ResCircle.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_ViewAgf.cpp" />
+    <ClCompile Include="..\src\calculation\DCP_ViewCdf.cpp" />
+    <ClCompile Include="..\src\core\CS35.cpp" />
+    <ClCompile Include="..\src\core\DCP_AddTool.cpp" />
+    <ClCompile Include="..\src\core\DCP_Aim.cpp" />
+    <ClCompile Include="..\src\core\DCP_ChangeFace.cpp" />
+    <ClCompile Include="..\src\core\DCP_Common.cpp" />
+    <ClCompile Include="..\src\core\DCP_DCP06GUI.cpp" />
+    <ClCompile Include="..\src\core\DCP_DCP06Meas.cpp" />
+    <ClCompile Include="..\src\core\DCP_InputText.cpp" />
+    <ClCompile Include="..\src\core\DCP_InputTextModel.cpp" />
+    <ClCompile Include="..\src\core\DCP_Model.cpp" />
+    <ClCompile Include="..\src\core\DCP_MsgBox.cpp" />
+    <ClCompile Include="..\src\core\DCP_PointBuffModel.cpp" />
+    <ClCompile Include="..\src\core\DCP_ResShaft.cpp" />
+    <ClCompile Include="..\src\core\DCP_SelectMultiPoints.cpp" />
+    <ClCompile Include="..\src\core\DCP_SelectPoint.cpp" />
+    <ClCompile Include="..\src\core\DCP_SelectTool.cpp" />
+    <ClCompile Include="..\src\core\DCP_SpecialMenu.cpp" />
+    <ClCompile Include="..\src\core\DCP_Tool.cpp" />
+    <ClCompile Include="..\src\core\DCP_xyz.cpp" />
+    <ClCompile Include="..\src\core\DemoLicense.cpp" />
+    <ClCompile Include="..\src\core\SelectOnePoint.cpp" />
+    <ClCompile Include="..\src\core\geometry\Point.cpp" />
+    <ClCompile Include="..\src\core\geometry\Plane.cpp" />
+    <ClCompile Include="..\src\core\geometry\Line.cpp" />
+    <ClCompile Include="..\src\core\geometry\Circle.cpp" />
+    <ClCompile Include="..\src\core\geometry\PlaneFitting.cpp" />
+    <ClCompile Include="..\src\core\geometry\LineFitting.cpp" />
+    <ClCompile Include="..\src\core\geometry\CircleFitting.cpp" />
+    <ClCompile Include="..\src\core\geometry\Transformations.cpp" />
+    <ClCompile Include="..\src\core\geometry\AlignmentCalculator.cpp" />
+    <ClCompile Include="..\src\core\stdafx.cpp" />
+    <ClCompile Include="..\src\core\UserDefStatus.cpp" />
+    <ClCompile Include="..\src\database\JsonDatabase.cpp" />
+    <ClCompile Include="..\src\file\DCP_AdfFileFunc.cpp" />
+    <ClCompile Include="..\src\file\DCP_AngleFile.cpp" />
+    <ClCompile Include="..\src\file\DCP_CircleFile.cpp" />
+    <ClCompile Include="..\src\file\DCP_CircleSave.cpp" />
+    <ClCompile Include="..\src\file\DCP_DistFile.cpp" />
+    <ClCompile Include="..\src\file\DCP_File.cpp" />
+    <ClCompile Include="..\src\file\DCP_SelectFile.cpp" />
+    <ClCompile Include="..\src\file\DCP_ShaftFile.cpp" />
+    <ClCompile Include="..\src\file\DCP_ShaftSave.cpp" />
+    <ClCompile Include="..\src\init\DCP_DCP06Init.cpp" />
+    <ClCompile Include="..\src\init\DCP_DCP06Unit.cpp" />
+    <ClCompile Include="..\src\init\DCP_DCP06User.cpp" />
+    <ClCompile Include="..\src\math\CANGLE.cpp" />
+    <ClCompile Include="..\src\math\CART.cpp" />
+    <ClCompile Include="..\src\math\ccircle.cpp" />
+    <ClCompile Include="..\src\math\DEGTORAD.cpp" />
+    <ClCompile Include="..\src\math\DIRVEC.cpp" />
+    <ClCompile Include="..\src\math\DOTPROD.cpp" />
+    <ClCompile Include="..\src\math\EQOFLI.cpp" />
+    <ClCompile Include="..\src\math\EQOFPL.cpp" />
+    <ClCompile Include="..\src\math\HROTAX.cpp" />
+    <ClCompile Include="..\src\math\HROTAY.cpp" />
+    <ClCompile Include="..\src\math\HROTAZ.cpp" />
+    <ClCompile Include="..\src\math\HTRANSM.cpp" />
+    <ClCompile Include="..\src\math\MATCOP_N.cpp" />
+    <ClCompile Include="..\src\math\MATINV_N.cpp" />
+    <ClCompile Include="..\src\math\MATMUL_N.cpp" />
+    <ClCompile Include="..\src\math\MATSUM_N.cpp" />
+    <ClCompile Include="..\src\math\MATTRA_N.cpp" />
+    <ClCompile Include="..\src\math\Minv4x4.cpp" />
+    <ClCompile Include="..\src\math\MMUL4X4.cpp" />
+    <ClCompile Include="..\src\math\PDISL.cpp" />
+    <ClCompile Include="..\src\math\PDISPL.cpp" />
+    <ClCompile Include="..\src\math\PDIST.cpp" />
+    <ClCompile Include="..\src\math\PTRANS.cpp" />
+    <ClCompile Include="..\src\math\RADTODEG.cpp" />
+    <ClCompile Include="..\src\math\RESETMAT.cpp" />
+    <ClCompile Include="..\src\math\SPHCART.cpp" />
+    <ClCompile Include="..\src\math\UNIVEC.cpp" />
+    <ClCompile Include="..\src\math\VECLNTH.cpp" />
+    <ClCompile Include="..\src\math\VECMAT.cpp" />
+    <ClCompile Include="..\src\math\VECPRO.cpp" />
+    <ClCompile Include="..\src\math\VECPROD.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_3dfbs.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_3dFileView.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_3dmeas.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_AdvScan.cpp" />
+    <ClCompile Include="..\src\core\DCP_AutoMatch.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_Circle.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_HiddenPoint.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_HiddenPointConf.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_HomePoints.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_MeasDist.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_MeasXYZ.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_MidPointController.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_PlaneScanning.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_ScanFileFunc.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_ScanMeasXYZ.cpp" />
+    <ClCompile Include="..\src\measurement\DCP_SeparateRec.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_DCP06Chst.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_DCP06Alignment321.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_DCP06Alignment321UserDef.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_DCP06BestFit.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_DefineLine.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_DefineLineUserDef.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_DefinePlane.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_DefinePlaneUserDef.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_MeasV.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_Offsv.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_BestFitSelectPoints.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_ResLine.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_ResPlane.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_ResBestFit.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_RotateLine.cpp" />
+    <ClCompile Include="..\src\orientation\DCP_RotatePlane.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

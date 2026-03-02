@@ -43,17 +43,17 @@
 namespace DCP
 {
    // Forward declaration
-	class DCP05ModelC;
-	class DCP05CalcMenuDlgC;
+	class DCP06ModelC;
+	class DCP06CalcMenuDlgC;
 
-  	class DCP05CalcMenuDlgC:public GUI::GraphMenuDialogC
+  	class DCP06CalcMenuDlgC:public GUI::GraphMenuDialogC
 	{
 		 public:
 
-		   DCP05CalcMenuDlgC(DCP05ModelC* pDCP05Model);
+		   DCP06CalcMenuDlgC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05CalcMenuDlgC();
+            virtual ~DCP06CalcMenuDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -62,12 +62,12 @@ namespace DCP
 			virtual void OnSelectionDone(void);
 			
 			// virtual bool SetModel( GUI::ModelC* pModel );
-			// DCP::DCP05ModelC* DCP::DCP05SpecialMenuDlgC::GetDCP05Model() const;
+			// DCP::DCP06ModelC* DCP::DCP06SpecialMenuDlgC::GetDCP06Model() const;
 
 			virtual void OnF1Pressed(void);
 
 	private:
-		DCP05ModelC* m_pDCP05Model;
+		DCP06ModelC* m_pDCP06Model;
 	};
 
 };

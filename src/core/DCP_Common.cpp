@@ -54,7 +54,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -68,22 +68,22 @@
 
 // USER DIALOG
 
-DCP::DCP05CommonC::DCP05CommonC(DCP::DCP05ModelC* pDCP05Model): m_pDCP05Model(pDCP05Model)
+DCP::DCP06CommonC::DCP06CommonC(DCP::DCP06ModelC* pDCP06Model): m_pDCP06Model(pDCP06Model)
 {
 	
 }
 
-//DCP::DCP05CommonC::DCP05CommonC(): m_pDCP05Model(0)
+//DCP::DCP06CommonC::DCP06CommonC(): m_pDCP06Model(0)
 //{
 //	
 //}
 // ****************************************************************************************
-DCP::DCP05CommonC::~DCP05CommonC()
+DCP::DCP06CommonC::~DCP06CommonC()
 {
 	
 }
 // ****************************************************************************************
-bool DCP::DCP05CommonC::check_distance(double x, double y, double z, S_POINT_BUFF* points, short iCount, short iCurrentPoint)
+bool DCP::DCP06CommonC::check_distance(double x, double y, double z, S_POINT_BUFF* points, short iCount, short iCurrentPoint)
 {
 	struct ams_vector cur_xyz, xyz;
 	double dist=0.0;
@@ -111,7 +111,7 @@ bool DCP::DCP05CommonC::check_distance(double x, double y, double z, S_POINT_BUF
 					sPoint.Format(L"%d/%d %s", i+1, iCount,(const wchar_t*) StringC(points[i].point_id));
 					msg.LoadTxt(AT_DCP05,M_DCP_SAME_MEASURED_VALUES_TOK);
 					msg.Format(msg,(const wchar_t*)StringC(sPoint));
-					DCP05MsgBoxC msgbox;
+					DCP06MsgBoxC msgbox;
 					if(!msgbox.ShowMessageYesNo(msg))
 					{
 						bRet = false;
@@ -127,15 +127,15 @@ bool DCP::DCP05CommonC::check_distance(double x, double y, double z, S_POINT_BUF
 // ********************************************************************************
 //	
 // ********************************************************************************
-double DCP::DCP05CommonC::to_mm(double dist)
+double DCP::DCP06CommonC::to_mm(double dist)
 {
 double ret;
 
-	if(m_pDCP05Model->m_nUnit == INCH)
+	if(m_pDCP06Model->m_nUnit == INCH)
 	{
 		ret = dist * 25.400051;
 	}
-	else if(m_pDCP05Model->m_nUnit == FEET)
+	else if(m_pDCP06Model->m_nUnit == FEET)
 	{
 		ret = dist * 304.800612;
 	}
@@ -150,7 +150,7 @@ double ret;
 // ********************************************************************************
 //	
 // ********************************************************************************
-short DCP::DCP05CommonC::points_count_in_plane(S_PLANE_BUFF* plane)
+short DCP::DCP06CommonC::points_count_in_plane(S_PLANE_BUFF* plane)
 {
 	short iCount = 0;
 	for(short i=0; i < MAX_POINTS_IN_PLANE; i++)
@@ -164,7 +164,7 @@ short DCP::DCP05CommonC::points_count_in_plane(S_PLANE_BUFF* plane)
 // ********************************************************************************
 //	
 // ********************************************************************************
-short  DCP::DCP05CommonC::get_last_defined_point(S_POINT_BUFF* points, short max)
+short  DCP::DCP06CommonC::get_last_defined_point(S_POINT_BUFF* points, short max)
 {
 	short ret=0,i;
 	StringC id;
@@ -181,7 +181,7 @@ short  DCP::DCP05CommonC::get_last_defined_point(S_POINT_BUFF* points, short max
 // ********************************************************************************
 //	
 // ********************************************************************************
-short  DCP::DCP05CommonC::get_last_defined_point(S_POINT_BUFF *point_OCS, S_POINT_BUFF *point_DCS, short max)
+short  DCP::DCP06CommonC::get_last_defined_point(S_POINT_BUFF *point_OCS, S_POINT_BUFF *point_DCS, short max)
 {
 short i,ret=0;
 
@@ -200,7 +200,7 @@ short i,ret=0;
 // ********************************************************************************
 //	
 // ********************************************************************************
-short  DCP::DCP05CommonC::get_OCS_points_count(S_POINT_BUFF *point_OCS, short max)
+short  DCP::DCP06CommonC::get_OCS_points_count(S_POINT_BUFF *point_OCS, short max)
 {
 short i,ret=0;
 
@@ -214,7 +214,7 @@ short i,ret=0;
 
 /************************************************************************
 *************************************************************************/
-void DCP::DCP05CommonC::empty_xyz_buffers(char *x, char *y, char *z, short pit)
+void DCP::DCP06CommonC::empty_xyz_buffers(char *x, char *y, char *z, short pit)
 {
 	if(x != NULL){ sprintf(x,"%-*.*s",pit,pit,""); x[pit] = '\0'; }
 	if(y != NULL){ sprintf(y,"%-*.*s",pit,pit,""); y[pit] = '\0'; }
@@ -223,7 +223,7 @@ void DCP::DCP05CommonC::empty_xyz_buffers(char *x, char *y, char *z, short pit)
 
 /************************************************************************
 *************************************************************************/
-void DCP::DCP05CommonC::empty_buffer(char *xyz, short pit)
+void DCP::DCP06CommonC::empty_buffer(char *xyz, short pit)
 {
 
 	if(xyz != NULL)
@@ -234,7 +234,7 @@ void DCP::DCP05CommonC::empty_buffer(char *xyz, short pit)
 }
 /************************************************************************
 *************************************************************************/
-short DCP::DCP05CommonC::strblank(char *s)
+short DCP::DCP06CommonC::strblank(char *s)
 {
    char *p = s;
 
@@ -245,7 +245,7 @@ short DCP::DCP05CommonC::strblank(char *s)
 }  /* strblank() */
 
 
-void DCP::DCP05CommonC::delete_point(S_POINT_BUFF *points)
+void DCP::DCP06CommonC::delete_point(S_POINT_BUFF *points)
 {
 	/*
 	show_message(points->point_id);
@@ -275,14 +275,14 @@ void DCP::DCP05CommonC::delete_point(S_POINT_BUFF *points)
 /**************************************************************
 		  check how many points are defined
 ***************************************************************/
-short DCP::DCP05CommonC::defined_pom_points(S_POINT_BUFF *point_OCS, short *lastpoint)
+short DCP::DCP06CommonC::defined_pom_points(S_POINT_BUFF *point_OCS, short *lastpoint)
 {
 short points_defined=0,i;
 	
 	if(lastpoint != NULL)
 		*lastpoint = 0;
 
-	for(i=0; i < MAX_POM_POINTS; i++)
+	for(i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
 		if(point_OCS[i].sta == 1 || point_OCS[i].sta == 2 /* && point_DCS[i].sta != 0 */)
 			points_defined++;
@@ -299,7 +299,7 @@ short points_defined=0,i;
 /*************************************************************************
 *************************************************************************/
 
-char *DCP::DCP05CommonC::strltrim(char *s)
+char *DCP::DCP06CommonC::strltrim(char *s)
 {
    char *p;
    char *q;
@@ -317,7 +317,7 @@ char *DCP::DCP05CommonC::strltrim(char *s)
 /*************************************************************************
 *************************************************************************/
 
-char *DCP::DCP05CommonC::strtrim(char *s)
+char *DCP::DCP06CommonC::strtrim(char *s)
 {
    short  i;
 
@@ -330,7 +330,7 @@ char *DCP::DCP05CommonC::strtrim(char *s)
 /*************************************************************************
 *************************************************************************/
 
-char *DCP::DCP05CommonC::strbtrim(char *s)
+char *DCP::DCP06CommonC::strbtrim(char *s)
 {
 	strltrim(s);
 	strtrim(s);
@@ -338,7 +338,7 @@ char *DCP::DCP05CommonC::strbtrim(char *s)
 	return (s);
 }
 
-short DCP::DCP05CommonC::get_OCS_SCS_points_count(S_POINT_BUFF *point_OCS,S_POINT_BUFF *point_DCS, short max)
+short DCP::DCP06CommonC::get_OCS_SCS_points_count(S_POINT_BUFF *point_OCS,S_POINT_BUFF *point_DCS, short max)
 {
 short i,ret=0;
 
@@ -353,9 +353,9 @@ short i,ret=0;
 }
 
 
-short DCP::DCP05CommonC::overwrite_point(StringC sPid)
+short DCP::DCP06CommonC::overwrite_point(StringC sPid)
 {
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
 	
 	msg.LoadTxt(AT_DCP05,M_DCP_OVERWRITE_POINT_TOK);
@@ -367,7 +367,7 @@ short DCP::DCP05CommonC::overwrite_point(StringC sPid)
 	}
 }
 
-unsigned int DCP::DCP05CommonC::get_free_space()
+unsigned int DCP::DCP06CommonC::get_free_space()
 {
 	if(card_status())
 	{
@@ -376,7 +376,7 @@ unsigned int DCP::DCP05CommonC::get_free_space()
 #ifdef CS35
 		ABL::AppSystemInfoC::eDevicesT device;
 		
-		if(m_pDCP05Model->FILE_STORAGE1 == CPI::deviceLocalMemory)
+		if(m_pDCP06Model->FILE_STORAGE1 == CPI::deviceLocalMemory)
 			device =  ABL::AppSystemInfoC::eLocalMemory;
 		else
 			device = ABL::AppSystemInfoC::eUSB;
@@ -385,7 +385,7 @@ unsigned int DCP::DCP05CommonC::get_free_space()
 #else
 		ABL::AppSystemInfoC::eDevicesT device;
 		
-		if(m_pDCP05Model->FILE_STORAGE1 == CPI::deviceSdCard)
+		if(m_pDCP06Model->FILE_STORAGE1 == CPI::deviceSdCard)
 			device =  ABL::AppSystemInfoC::eSDCard;
 		else
 			device = ABL::AppSystemInfoC::eUSB;
@@ -397,7 +397,7 @@ unsigned int DCP::DCP05CommonC::get_free_space()
 	return 0;
 }   
 
-short DCP::DCP05CommonC::check_free_space(unsigned int si)
+short DCP::DCP06CommonC::check_free_space(unsigned int si)
 {
 	//ABL::AppSystemInfoC::eDevicesT eRet = ABL::AppSystemInfoC::Instance()->GetAvailableDevices();
 
@@ -409,7 +409,7 @@ short DCP::DCP05CommonC::check_free_space(unsigned int si)
 #ifdef CS35
 		ABL::AppSystemInfoC::eDevicesT device;
 		
-		if(m_pDCP05Model->FILE_STORAGE1 == CPI::deviceLocalMemory)
+		if(m_pDCP06Model->FILE_STORAGE1 == CPI::deviceLocalMemory)
 			device =  ABL::AppSystemInfoC::eLocalMemory;
 		else
 			device = ABL::AppSystemInfoC::eUSB;
@@ -418,7 +418,7 @@ short DCP::DCP05CommonC::check_free_space(unsigned int si)
 #else
 		ABL::AppSystemInfoC::eDevicesT device;
 		
-		if(m_pDCP05Model->FILE_STORAGE1 == CPI::deviceSdCard)
+		if(m_pDCP06Model->FILE_STORAGE1 == CPI::deviceSdCard)
 			device =  ABL::AppSystemInfoC::eSDCard;
 		else
 			device = ABL::AppSystemInfoC::eUSB;
@@ -427,7 +427,7 @@ short DCP::DCP05CommonC::check_free_space(unsigned int si)
 #endif
 		if(uiFreeSpace <= si)
 		{
-			DCP05MsgBoxC msgbox;
+			DCP06MsgBoxC msgbox;
 			StringC msg;
 			msg.LoadTxt(AT_DCP05,M_DCP_NOT_FREE_SPACE_TOK);
 			msgbox.ShowMessageOk(msg);
@@ -438,13 +438,13 @@ short DCP::DCP05CommonC::check_free_space(unsigned int si)
 	return false;
 }
 
-short DCP::DCP05CommonC::card_status()
+short DCP::DCP06CommonC::card_status()
 {
 #ifdef CS35
 		//return 1;
 	ABL::AppSystemInfoC::eDevicesT eRet = ABL::AppSystemInfoC::Instance()->GetAvailableDevices();
 
-	if(m_pDCP05Model->FILE_STORAGE1 == CPI::deviceLocalMemory)
+	if(m_pDCP06Model->FILE_STORAGE1 == CPI::deviceLocalMemory)
 	{
 		if((eRet & ABL::AppSystemInfoC::eLocalMemory))
 			return 1;
@@ -458,7 +458,7 @@ short DCP::DCP05CommonC::card_status()
 #else
 	ABL::AppSystemInfoC::eDevicesT eRet = ABL::AppSystemInfoC::Instance()->GetAvailableDevices();
 		
-	if(m_pDCP05Model->FILE_STORAGE1 == CPI::deviceSdCard)
+	if(m_pDCP06Model->FILE_STORAGE1 == CPI::deviceSdCard)
 	{
 		if((eRet & ABL::AppSystemInfoC::eSDCard))
 			return 1;
@@ -477,12 +477,12 @@ short DCP::DCP05CommonC::card_status()
 #endif
 }
 
-short DCP::DCP05CommonC::read_allow_edit()
+short DCP::DCP06CommonC::read_allow_edit()
 {
 	return 1;
 }
 
-short DCP::DCP05CommonC::GetDate(int* iDay, int* iMonth, int* iYear)
+short DCP::DCP06CommonC::GetDate(int* iDay, int* iMonth, int* iYear)
 {
 	//static?DateTime?GUI::EditTimeCtrlC::GetActualTime() 
 	DateTime oDateTime = GUI::GetActualTime();
@@ -503,7 +503,7 @@ short DCP::DCP05CommonC::GetDate(int* iDay, int* iMonth, int* iYear)
 	return 1;
 }
 
-short DCP::DCP05CommonC::GetTime(int* iHour, int* iMin, int* iSec)
+short DCP::DCP06CommonC::GetTime(int* iHour, int* iMin, int* iSec)
 {
 	
 	//DateTime oDateTime = GUI::EditTimeCtrlC::GetActualTime();
@@ -526,11 +526,11 @@ short DCP::DCP05CommonC::GetTime(int* iHour, int* iMin, int* iSec)
 }
 
 
-short DCP::DCP05CommonC::GetUserName(char *name)
+short DCP::DCP06CommonC::GetUserName(char *name)
 {
-	if(m_pDCP05Model)
+	if(m_pDCP06Model)
 	{
-		StringC sUser = m_pDCP05Model->m_sUser;
+		StringC sUser = m_pDCP06Model->m_sUser;
 		//UTL::UnicodeToAscii(name, sUser);
 		BSS::UTI::BSS_UTI_WCharToAscii(sUser, name);
 
@@ -541,7 +541,7 @@ short DCP::DCP05CommonC::GetUserName(char *name)
 	return 1;
 }
 
-short DCP::DCP05CommonC::GetInstrumentNo(int* no)
+short DCP::DCP06CommonC::GetInstrumentNo(int* no)
 {
 	TPI::InstrumentInfoC oInstrumentInfo;
 	TPI::SensorC::Instance()->GetInstrumentInfo(oInstrumentInfo);
@@ -555,7 +555,7 @@ short DCP::DCP05CommonC::GetInstrumentNo(int* no)
 	return 1;
 }
 
-short DCP::DCP05CommonC::GetInstrumentName(char* intrument_name)
+short DCP::DCP06CommonC::GetInstrumentName(char* intrument_name)
 {
 	TPI::InstrumentInfoC oInstrumentInfo;
 	TPI::SensorC::Instance()->GetInstrumentInfo(oInstrumentInfo);
@@ -571,13 +571,13 @@ short DCP::DCP05CommonC::GetInstrumentName(char* intrument_name)
 
 /************************************************************************
 *************************************************************************/
-void DCP::DCP05CommonC::get_dist_(char *act, char *des, char *dist)
+void DCP::DCP06CommonC::get_dist_(char *act, char *des, char *dist)
 {
 char temp[20];
 
 	if(!strblank(act) && !strblank(des))
 	{
-		sprintf(temp,"%8.*f", m_pDCP05Model->m_nDecimals, atof(act) - atof(des));
+		sprintf(temp,"%8.*f", m_pDCP06Model->m_nDecimals, atof(act) - atof(des));
 		if(strlen(temp) > 8 || act[0] =='*' || des[0] =='*')
 		{
 			sprintf(temp,"%8.8s", "*******");
@@ -593,7 +593,7 @@ char temp[20];
 
 /************************************************************************
 *************************************************************************/
-void DCP::DCP05CommonC::copy_xyz_to_buffer(double *x, double *y, double *z, char *bX, char *bY, char *bZ, short pit, short dec)
+void DCP::DCP06CommonC::copy_xyz_to_buffer(double *x, double *y, double *z, char *bX, char *bY, char *bZ, short pit, short dec)
 {
 		sprintf(bX,"%*.*f",pit,dec, *x); bX[pit] = '\0';
 		sprintf(bY,"%*.*f",pit,dec, *y); bY[pit] = '\0';
@@ -602,7 +602,7 @@ void DCP::DCP05CommonC::copy_xyz_to_buffer(double *x, double *y, double *z, char
 
 /************************************************************************
 *************************************************************************/
-void DCP::DCP05CommonC::copy_xyz_to_buffer_f(float *x, float *y, float *z, char *bX, char *bY, char *bZ, short pit, short dec)
+void DCP::DCP06CommonC::copy_xyz_to_buffer_f(float *x, float *y, float *z, char *bX, char *bY, char *bZ, short pit, short dec)
 {
 		sprintf(bX,"%*.*f",pit,dec, *x);
 		sprintf(bY,"%*.*f",pit,dec, *y);
@@ -610,7 +610,7 @@ void DCP::DCP05CommonC::copy_xyz_to_buffer_f(float *x, float *y, float *z, char 
 }
 
 
-short DCP::DCP05CommonC::convert_to_ascii(StringC from, char *to, short iLen)
+short DCP::DCP06CommonC::convert_to_ascii(StringC from, char *to, short iLen)
 {
 	//UTL::UnicodeToAscii(to, iLen, from);
 	BSS::UTI::BSS_UTI_WCharToAscii(from, to,iLen);
@@ -619,7 +619,7 @@ short DCP::DCP05CommonC::convert_to_ascii(StringC from, char *to, short iLen)
 }
 
 
-StringC DCP::DCP05CommonC::get_info_text(short& ind)
+StringC DCP::DCP06CommonC::get_info_text(short& ind)
 {
 		StringC ret;
 		StringC ret2;
@@ -635,7 +635,7 @@ StringC DCP::DCP05CommonC::get_info_text(short& ind)
 		{
 			// CID
 			case 0:
-					cid = m_pDCP05Model->active_coodinate_system;
+					cid = m_pDCP06Model->active_coodinate_system;
 					if(cid == DCS)
 					{
 						ret = L"SCS";
@@ -663,7 +663,7 @@ StringC DCP::DCP05CommonC::get_info_text(short& ind)
 						//sprintf(buff1,"%-8.8s","OCSc");
 					}
 
-					cid = m_pDCP05Model->m_nUnit;//get_ACTIVE_UNIT();
+					cid = m_pDCP06Model->m_nUnit;//get_ACTIVE_UNIT();
 
 					if(cid == MM)
 					{
@@ -695,7 +695,7 @@ StringC DCP::DCP05CommonC::get_info_text(short& ind)
 			case 1:  	
 				ret.LoadTxt(AT_DCP05, K_DCP_USER_TOK);
 				ret += "   ";
-				ret += m_pDCP05Model->m_sUser;
+				ret += m_pDCP06Model->m_sUser;
 				//sprintf(buff1,"%-8.8s",   TextTokenToString(AppID,TXT_USER_TOK));
 				//get_active_user(buff2);
 				ind++;
@@ -721,14 +721,14 @@ StringC DCP::DCP05CommonC::get_info_text(short& ind)
 			// TOOL
 			case 3:     
 						#ifndef AMS_DCP05
-						iActivetool = m_pDCP05Model->active_tool;
+						iActivetool = m_pDCP06Model->active_tool;
 						if(iActivetool)
 						//if(isToolActive() == TRUE)
 						{
 							//get_toolname(tmp);
 							ret.LoadTxt(AT_DCP05,V_DCP_TOOL_TEXT_TOK);
 							ret = ret + L":";
-							ret += StringC(m_pDCP05Model->tool_table[iActivetool-1].tool_id);
+							ret += StringC(m_pDCP06Model->tool_table[iActivetool-1].tool_id);
 						}
 						else
 						{
@@ -744,7 +744,7 @@ StringC DCP::DCP05CommonC::get_info_text(short& ind)
 
 			// AVERAGE MEAS
 			case 4:
-						if(m_pDCP05Model->m_nAverageCount > 1)
+						if(m_pDCP06Model->m_nAverageCount > 1)
 						//if(get_AVERAGE_ON_OFF() == TRUE)
 						{
 							ret.LoadTxt(AT_DCP05,V_DCP_AVERAGE_TEXT_TOK);
@@ -758,7 +758,7 @@ StringC DCP::DCP05CommonC::get_info_text(short& ind)
 }
 
 
-void DCP::DCP05CommonC::to_xyz(double dis, double hor, double ver, double *x, double *y, double *z, short tool, double *x_scs, double *y_scs, double *z_scs)
+void DCP::DCP06CommonC::to_xyz(double dis, double hor, double ver, double *x, double *y, double *z, short tool, double *x_scs, double *y_scs, double *z_scs)
 {
 double x_new, y_new, z_new;
 double dist,theta,fii;
@@ -807,7 +807,7 @@ double point1[4], point2[4];
 		}
 
 		//if(get_LEFT_HAND_COORDINATE()== FALSE)
-		if(m_pDCP05Model->m_nLeftRightHand == RIGHTHAND)
+		if(m_pDCP06Model->m_nLeftRightHand == RIGHTHAND)
 		{
 			xyz.x = -xyz.x;	
 		}
@@ -821,13 +821,13 @@ double point1[4], point2[4];
 		****************************/
 
 		//if(get_ACTIVE_UNIT() == INCH)
-		if(m_pDCP05Model->m_nUnit == INCH)
+		if(m_pDCP06Model->m_nUnit == INCH)
 		{
 			xyz.x = xyz.x / 25.400051;
 			xyz.y = xyz.y / 25.400051;
 			xyz.z = xyz.z / 25.400051;
 		}
-		else if(m_pDCP05Model->m_nUnit == FEET)
+		else if(m_pDCP06Model->m_nUnit == FEET)
 		//else if(get_ACTIVE_UNIT() == FEET)
 		{
 			xyz.x = xyz.x / 304.800612;
@@ -840,17 +840,17 @@ double point1[4], point2[4];
 		point1[2] = xyz.z;
 		point1[3] = 1;
 
-		if (m_pDCP05Model->active_coodinate_system == OCSP)
+		if (m_pDCP06Model->active_coodinate_system == OCSP)
 		//if (get_ACTIVE_CID() == OCSP)
 		{
-			ptrans(point1, m_pDCP05Model->ocsp_matrix, &point2);
+			ptrans(point1, m_pDCP06Model->ocsp_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
 		}
 
 		//else if (get_ACTIVE_CID() == OCSD)
-		else if (m_pDCP05Model->active_coodinate_system  == OCSD)
+		else if (m_pDCP06Model->active_coodinate_system  == OCSD)
 		{
 			/*
 			Ovalues[0] = ocsd_matrix[0][3];
@@ -858,24 +858,24 @@ double point1[4], point2[4];
 			Ovalues[2] = ocsd_matrix[2][3];
 			Ovalues[3] = ocsd_matrix[3][3];
 			*/
-			ptrans(point1,m_pDCP05Model->ocsd_matrix, &point2);
+			ptrans(point1,m_pDCP06Model->ocsd_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
 		}
 		
 		//else if (get_ACTIVE_CID() == OCSC)
-		else if (m_pDCP05Model->active_coodinate_system == OCSC)
+		else if (m_pDCP06Model->active_coodinate_system == OCSC)
 		{
-			ptrans(point1, m_pDCP05Model->ocsc_matrix, &point2);
+			ptrans(point1, m_pDCP06Model->ocsc_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
 		}
 		//else if (get_ACTIVE_CID() == OCSU)
-		else if (m_pDCP05Model->active_coodinate_system == OCSU)
+		else if (m_pDCP06Model->active_coodinate_system == OCSU)
 		{
-			ptrans(point1,m_pDCP05Model->ocsu_matrix, &point2);
+			ptrans(point1,m_pDCP06Model->ocsu_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
@@ -884,7 +884,7 @@ double point1[4], point2[4];
 		else
 		{							  //DCS
 
-			ptrans(point1,m_pDCP05Model->dcs_matrix, &point2);
+			ptrans(point1,m_pDCP06Model->dcs_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
@@ -895,9 +895,9 @@ double point1[4], point2[4];
     #ifndef AMS_DCP05
 	if(tool)
 	{
-		x_new = x_new - m_pDCP05Model->active_tool_x;
-		y_new = y_new - m_pDCP05Model->active_tool_y;
-		z_new = z_new - m_pDCP05Model->active_tool_z;
+		x_new = x_new - m_pDCP06Model->active_tool_x;
+		y_new = y_new - m_pDCP06Model->active_tool_y;
+		z_new = z_new - m_pDCP06Model->active_tool_z;
 		
 		/*
 		x_new = x_new - get_TOOL_X_TOT();
@@ -913,7 +913,7 @@ double point1[4], point2[4];
 }
 
 
-void DCP::DCP05CommonC::to_AMS_xyz(double x_in, double y_in, double z_in, double *x_out, double *y_out, double *z_out)
+void DCP::DCP06CommonC::to_AMS_xyz(double x_in, double y_in, double z_in, double *x_out, double *y_out, double *z_out)
 {
 double x_new, y_new, z_new;
 //double dist,theta,fii;
@@ -968,7 +968,7 @@ double point1[4], point2[4];
 		z_in = z_in * 1000.0;
 		
 		//if(get_LEFT_HAND_COORDINATE()== FALSE)
-		if(m_pDCP05Model->m_nLeftRightHand == RIGHTHAND)
+		if(m_pDCP06Model->m_nLeftRightHand == RIGHTHAND)
 		{
 			x_in = -x_in;
 			//xyz.x = -xyz.x;	
@@ -983,13 +983,13 @@ double point1[4], point2[4];
 		****************************/
 
 		//if(get_ACTIVE_UNIT() == INCH)
-		if(m_pDCP05Model->m_nUnit == INCH)
+		if(m_pDCP06Model->m_nUnit == INCH)
 		{
 			x_in = x_in / 25.400051;
 			y_in = y_in / 25.400051;
 			z_in = z_in / 25.400051;
 		}
-		else if(m_pDCP05Model->m_nUnit == FEET)
+		else if(m_pDCP06Model->m_nUnit == FEET)
 		//else if(get_ACTIVE_UNIT() == FEET)
 		{
 			x_in = x_in / 304.800612;
@@ -1002,37 +1002,37 @@ double point1[4], point2[4];
 		point1[2] = z_in;
 		point1[3] = 1;
 
-		if (m_pDCP05Model->active_coodinate_system == OCSP)
+		if (m_pDCP06Model->active_coodinate_system == OCSP)
 		//if (get_ACTIVE_CID() == OCSP)
 		{
-			ptrans(point1, m_pDCP05Model->ocsp_matrix, &point2);
+			ptrans(point1, m_pDCP06Model->ocsp_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
 		}
 
 		//else if (get_ACTIVE_CID() == OCSD)
-		else if (m_pDCP05Model->active_coodinate_system  == OCSD)
+		else if (m_pDCP06Model->active_coodinate_system  == OCSD)
 		{
 
-			ptrans(point1,m_pDCP05Model->ocsd_matrix, &point2);
+			ptrans(point1,m_pDCP06Model->ocsd_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
 		}
 		
 		//else if (get_ACTIVE_CID() == OCSC)
-		else if (m_pDCP05Model->active_coodinate_system == OCSC)
+		else if (m_pDCP06Model->active_coodinate_system == OCSC)
 		{
-			ptrans(point1, m_pDCP05Model->ocsc_matrix, &point2);
+			ptrans(point1, m_pDCP06Model->ocsc_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
 		}
 		//else if (get_ACTIVE_CID() == OCSU)
-		else if (m_pDCP05Model->active_coodinate_system == OCSU)
+		else if (m_pDCP06Model->active_coodinate_system == OCSU)
 		{
-			ptrans(point1,m_pDCP05Model->ocsu_matrix, &point2);
+			ptrans(point1,m_pDCP06Model->ocsu_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
@@ -1041,20 +1041,20 @@ double point1[4], point2[4];
 		else
 		{							  //DCS
 
-			ptrans(point1,m_pDCP05Model->dcs_matrix, &point2);
+			ptrans(point1,m_pDCP06Model->dcs_matrix, &point2);
 			x_new = point2[0];
 			y_new = point2[1];
 			z_new = point2[2];
 		}
 
 	//convert back to m unit
-	if(m_pDCP05Model->m_nUnit == INCH)
+	if(m_pDCP06Model->m_nUnit == INCH)
 	{
 		x_new = x_new * 25.400051;
 		y_new = y_new * 25.400051;
 		z_new = z_new * 25.400051;
 	}
-	else if(m_pDCP05Model->m_nUnit == FEET)
+	else if(m_pDCP06Model->m_nUnit == FEET)
 	//else if(get_ACTIVE_UNIT() == FEET)
 	{
 		x_new = x_new * 304.800612;
@@ -1075,22 +1075,22 @@ double point1[4], point2[4];
 
 /************************************************************************
 *************************************************************************/
-short DCP::DCP05CommonC::get_rotation_status()
+short DCP::DCP06CommonC::get_rotation_status()
 {
 double deg;
 short ACTIVE_PLANE, rotation=false;
 
-		ACTIVE_PLANE = m_pDCP05Model->dom_active_plane; //get_active_plane_dom();
+		ACTIVE_PLANE = m_pDCP06Model->dom_active_plane; //get_active_plane_dom();
 
 		if(ACTIVE_PLANE == XY_PLANE)
 		{
-			deg = m_pDCP05Model->dom_rot_plane_buff.x;//get_x_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.x;//get_x_plane_rot();
 			if(deg != 0.0)
 			{
 			  rotation = true;
 			} 
 
-			deg = m_pDCP05Model->dom_rot_plane_buff.y;//get_y_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.y;//get_y_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -1098,13 +1098,13 @@ short ACTIVE_PLANE, rotation=false;
 		} 
 		else if(ACTIVE_PLANE == ZX_PLANE)
 		{
-			deg = m_pDCP05Model->dom_rot_plane_buff.x;//get_x_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.x;//get_x_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
 			}
 
-			deg = m_pDCP05Model->dom_rot_plane_buff.z; //get_z_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.z; //get_z_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -1112,13 +1112,13 @@ short ACTIVE_PLANE, rotation=false;
 		}
 		else if(ACTIVE_PLANE == YZ_PLANE)
 		{
-			deg = m_pDCP05Model->dom_rot_plane_buff.y; //get_y_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.y; //get_y_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
 			}
 
-			deg = m_pDCP05Model->dom_rot_plane_buff.z;//get_z_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.z;//get_z_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -1129,9 +1129,9 @@ short ACTIVE_PLANE, rotation=false;
 }
 
 // *********************************************************************
-// Laskee monta pistettä oetetaan laskentaan	
+// Laskee monta pistettï¿½ oetetaan laskentaan	
 // *********************************************************************
-short DCP::DCP05CommonC::defined_points_count_in_line(S_LINE_BUFF *line, short *lastpoint)
+short DCP::DCP06CommonC::defined_points_count_in_line(S_LINE_BUFF *line, short *lastpoint)
 {
 short count=0,i,sta;
 
@@ -1159,7 +1159,7 @@ short count=0,i,sta;
 // *********************************************************************
 //
 // *********************************************************************
-short DCP::DCP05CommonC::get_max_defined_point_line(S_LINE_BUFF *lines)
+short DCP::DCP06CommonC::get_max_defined_point_line(S_LINE_BUFF *lines)
 {
 short ret=0,i;
 
@@ -1176,7 +1176,7 @@ short ret=0,i;
 }
 
 
-short  DCP::DCP05CommonC::defined_points_count_in_plane(S_PLANE_BUFF *plane,short *lastpoint)
+short  DCP::DCP06CommonC::defined_points_count_in_plane(S_PLANE_BUFF *plane,short *lastpoint)
 {
 	short count=0,i,sta;
 
@@ -1202,14 +1202,14 @@ short  DCP::DCP05CommonC::defined_points_count_in_plane(S_PLANE_BUFF *plane,shor
 
 /************************************************************************
 *************************************************************************/
-void DCP::DCP05CommonC::get_dist_len1(char *act, char *des, char *dist, short len)
+void DCP::DCP06CommonC::get_dist_len1(char *act, char *des, char *dist, short len)
 {
 char temp[20];
 short i;
 
 	if(!strblank(act) && !strblank(des))
 	{
-		sprintf(temp,"%*.*f", len, m_pDCP05Model->m_nDecimals, fabs(atof(act) - atof(des)));
+		sprintf(temp,"%*.*f", len, m_pDCP06Model->m_nDecimals, fabs(atof(act) - atof(des)));
 		if(strlen(temp) > (unsigned) len || act[0] =='*' || des[0] =='*')
 		{
 			for(i=1;i<=len;i++)
@@ -1226,14 +1226,14 @@ short i;
 
 /************************************************************************
 *************************************************************************/
-void DCP::DCP05CommonC::get_dist_len(char *act, char *des, char *dist, short len)
+void DCP::DCP06CommonC::get_dist_len(char *act, char *des, char *dist, short len)
 {
 char temp[20];
 short i;
 
 	if(!strblank(act) && !strblank(des))
 	{
-		sprintf(temp,"%*.*f", len, m_pDCP05Model->m_nDecimals, atof(act) - atof(des));
+		sprintf(temp,"%*.*f", len, m_pDCP06Model->m_nDecimals, atof(act) - atof(des));
 		if(strlen(temp) > (unsigned) len || act[0] =='*' || des[0] =='*')
 		{
 			for(i=1;i<=len;i++)
@@ -1250,7 +1250,7 @@ short i;
 
 // ************************************************************************
 // ************************************************************************
-void DCP::DCP05CommonC::calc_di(char *tulos,char *x1, char *y1, char *z1,char *x2, char *y2, char *z2)
+void DCP::DCP06CommonC::calc_di(char *tulos,char *x1, char *y1, char *z1,char *x2, char *y2, char *z2)
 {
 double dist;
 struct ams_vector m,n;
@@ -1270,14 +1270,14 @@ struct ams_vector m,n;
 
 			/* Calculate distance */
 				dist = calc_point_dist_from_point(&m, &n);
-				sprintf(tulos,"%10.*f",m_pDCP05Model->m_nDecimals,dist);
+				sprintf(tulos,"%10.*f",m_pDCP06Model->m_nDecimals,dist);
 			}
 }
 
 
 // ************************************************************************
 // ************************************************************************
-short DCP::DCP05CommonC::defined_circle_points(S_CIRCLE_BUFF *circles, short *lastpoint)
+short DCP::DCP06CommonC::defined_circle_points(S_CIRCLE_BUFF *circles, short *lastpoint)
 {
 short i,count,sta;
 	
@@ -1305,7 +1305,7 @@ short i,count,sta;
 // *********************************************************************
 //
 // *********************************************************************
-short DCP::DCP05CommonC::get_max_defined_point_circle(S_CIRCLE_BUFF *circles)
+short DCP::DCP06CommonC::get_max_defined_point_circle(S_CIRCLE_BUFF *circles)
 {
 short ret=0,i;
 
@@ -1323,7 +1323,7 @@ short ret=0,i;
 
 /************************************************************************
 *************************************************************************/
-void DCP::DCP05CommonC::inc_id(char *id)
+void DCP::DCP06CommonC::inc_id(char *id)
 {
 char apu[10],apu2[10],numstr[10];
 short last,first,i,j,length,pit;
@@ -1406,7 +1406,7 @@ short last,first,i,j,length,pit;
 }
 /************************************************************************
 *************************************************************************/
-char* DCP::DCP05CommonC::strlower(char *s)
+char* DCP::DCP06CommonC::strlower(char *s)
 {
 short a;
 
@@ -1421,7 +1421,7 @@ short a;
 
 /************************************************************************
 *************************************************************************/
-bool DCP::DCP05CommonC::check_edm_mode()
+bool DCP::DCP06CommonC::check_edm_mode()
 {
 	bool ret = true;
 
@@ -1439,7 +1439,7 @@ bool DCP::DCP05CommonC::check_edm_mode()
 	}
 	else
 	{
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		StringC sMsg;
 
 		sMsg.LoadTxt(AT_DCP05, M_DCP_WRONG_EDM_MODE_TOK);
@@ -1455,7 +1455,7 @@ bool DCP::DCP05CommonC::check_edm_mode()
 	return ret;	
 }
 
-void DCP::DCP05CommonC::delay()
+void DCP::DCP06CommonC::delay()
 {
 	GUI::ModalDelayC* delay = new GUI::ModalDelayC();
 	delay->SetDelay(1);
@@ -1463,7 +1463,7 @@ void DCP::DCP05CommonC::delay()
 	//delete delay;
 }
 
-short  DCP::DCP05CommonC::find_first_file(const char* file_name, boost::filesystem::path* FileInfo)
+short  DCP::DCP06CommonC::find_first_file(const char* file_name, boost::filesystem::path* FileInfo)
 {
 	boost::filesystem::path oDirPath = file_name;
 	boost::system::error_code errCode;
@@ -1478,7 +1478,7 @@ short  DCP::DCP05CommonC::find_first_file(const char* file_name, boost::filesyst
 	return 1;
 }
 
-short DCP::DCP05CommonC::calc_mid_point(S_POINT_BUFF *p1, S_POINT_BUFF *p2, double *x, double *y, double *z)
+short DCP::DCP06CommonC::calc_mid_point(S_POINT_BUFF *p1, S_POINT_BUFF *p2, double *x, double *y, double *z)
 {
 	short ret = 1; 
 
@@ -1493,7 +1493,7 @@ short DCP::DCP05CommonC::calc_mid_point(S_POINT_BUFF *p1, S_POINT_BUFF *p2, doub
 	return ret;
 }
 
-short DCP::DCP05CommonC::calc_mid_point(S_POINT_BUFF *points ,double *x, double *y, double *z)
+short DCP::DCP06CommonC::calc_mid_point(S_POINT_BUFF *points ,double *x, double *y, double *z)
 {
 	short ret = 1; 
 	

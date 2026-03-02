@@ -26,7 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/init/DCP_DCP05Init.hpp>
+#include <dcp06/init/DCP_DCP06Init.hpp>
 #include <dcp06/measurement/DCP_ScanMeasXYZ.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
@@ -58,7 +58,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05MeasDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06MeasDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -71,12 +71,12 @@
 
 
 //-------------------------------------------------------------------------------------------------
-// DCP05UserControllerC
+// DCP06UserControllerC
 
-DCP::DCP05DoScanMeasXYZControllerC::DCP05DoScanMeasXYZControllerC()
+DCP::DCP06DoScanMeasXYZControllerC::DCP06DoScanMeasXYZControllerC()
     :TBL::MeasurementC(),poSurveyModel(0),poErrorHandler(0)
 {
-	DCP05Log("DCP05DoScanMeasXYZControllerC::DCP05DoScanMeasXYZControllerC");
+	DCP06Log("DCP06DoScanMeasXYZControllerC::DCP06DoScanMeasXYZControllerC");
 
 	poSurveyModel = new DCPSurveyModelC(/*m_poConfigModel*/);
 	//TPI::MeasDataC oMesData(poSurveyModel->GetMeas());
@@ -89,16 +89,16 @@ DCP::DCP05DoScanMeasXYZControllerC::DCP05DoScanMeasXYZControllerC()
 
 
 	//poErrorHandler = new TBL::MeasErrorHandlerC();
-	poErrorHandler = new DCP05ScanErrorHandlerC();
+	poErrorHandler = new DCP06ScanErrorHandlerC();
 	//poErrorHandler->pOwnerController = this;
 
 	 USER_APP_VERIFY( AddGuardController( DEFINE_MEAS_START_CONTROLLER, CreateMeasStartController() ) );
 	
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05DoScanMeasXYZControllerC::~DCP05DoScanMeasXYZControllerC()
+DCP::DCP06DoScanMeasXYZControllerC::~DCP06DoScanMeasXYZControllerC()
 {
-	DCP05Log("DCP05DoScanMeasXYZControllerC::~DCP05DoScanMeasXYZControllerC");
+	DCP06Log("DCP06DoScanMeasXYZControllerC::~DCP06DoScanMeasXYZControllerC");
 		if(poErrorHandler)
 	{
 		delete poErrorHandler;
@@ -106,7 +106,7 @@ DCP::DCP05DoScanMeasXYZControllerC::~DCP05DoScanMeasXYZControllerC()
 	}
 }
 // Description: Route model to everybody else
-bool DCP::DCP05DoScanMeasXYZControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06DoScanMeasXYZControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -114,10 +114,10 @@ bool DCP::DCP05DoScanMeasXYZControllerC::SetModel( GUI::ModelC* pModel )
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
-     return false;//m_pDCP05MeasDlg->SetModel( pModel );
+     return false;//m_pDCP06MeasDlg->SetModel( pModel );
 }
 
-TBL::MeasErrorHandlerC::HandlingKindT DCP::DCP05ScanErrorHandlerC::HandleMeasError(MeasErrorT eMeasError, MeasErrorSourceT eSource, unsigned int ulErrorCodeSensor)
+TBL::MeasErrorHandlerC::HandlingKindT DCP::DCP06ScanErrorHandlerC::HandleMeasError(MeasErrorT eMeasError, MeasErrorSourceT eSource, unsigned int ulErrorCodeSensor)
 {
 
 	 //StopDist(); //Removed 20122014
@@ -153,20 +153,20 @@ TBL::MeasErrorHandlerC::HandlingKindT DCP::DCP05ScanErrorHandlerC::HandleMeasErr
 }
 
 // Description: React on close of controller
-void DCP::DCP05DoScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06DoScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
-	DCP05Log("DCP05DoScanMeasXYZControllerC::OnActiveControllerClosed",lCtrlID,lExitCode);
+	DCP06Log("DCP06DoScanMeasXYZControllerC::OnActiveControllerClosed",lCtrlID,lExitCode);
 	// Call base class
     /*GUI::*/ControllerC::OnControllerClosed(lExitCode);
 	
 	DestroyController( lCtrlID );
 }
 
-void DCP::DCP05DoScanMeasXYZControllerC::OnControllerActivated(void)
+void DCP::DCP06DoScanMeasXYZControllerC::OnControllerActivated(void)
 {
 	ControllerC::OnControllerActivated();
 
-	DCP05Log("DCP05DoScanMeasXYZControllerC::OnControllerActivated / ActivateMeasurement");
+	DCP06Log("DCP06DoScanMeasXYZControllerC::OnControllerActivated / ActivateMeasurement");
 
 	poErrorHandler->Attach();
 	
@@ -174,21 +174,21 @@ void DCP::DCP05DoScanMeasXYZControllerC::OnControllerActivated(void)
 	
 	//OnF1Pressed();
 
-	DCP05Log("DCP05DoScanMeasXYZControllerC /ExecuteAll");
+	DCP06Log("DCP06DoScanMeasXYZControllerC /ExecuteAll");
 	TBL::MeasurementC::ExecuteAll();
 }
-void DCP::DCP05DoScanMeasXYZControllerC::OnControllerClosed(int lExitCode)
+void DCP::DCP06DoScanMeasXYZControllerC::OnControllerClosed(int lExitCode)
 {
-	DCP05Log("DCP05DoScanMeasXYZControllerC::OnControllerClosed",lExitCode);
-	//DCP05MsgBoxC msgBox;
-	//msgBox.ShowMessageOk(L"DCP05DoMeasXYZControllerC::OnControllerClosed");
+	DCP06Log("DCP06DoScanMeasXYZControllerC::OnControllerClosed",lExitCode);
+	//DCP06MsgBoxC msgBox;
+	//msgBox.ShowMessageOk(L"DCP06DoMeasXYZControllerC::OnControllerClosed");
 
 	poErrorHandler->Detach();
 
 	DeactivateMeasurement(lExitCode);
 }
 
-void DCP::DCP05DoScanMeasXYZControllerC::OnPeriodicInclineValidation(int ulParam1, int ulParam2)
+void DCP::DCP06DoScanMeasXYZControllerC::OnPeriodicInclineValidation(int ulParam1, int ulParam2)
 {	
 	TBL::CompensatorStatusT oStat = TBL::GetCompensatorStatus();
 	if(oStat == TBL::CS_OFF || oStat == TBL::CS_IN_RANGE)
@@ -197,35 +197,35 @@ void DCP::DCP05DoScanMeasXYZControllerC::OnPeriodicInclineValidation(int ulParam
 	}
 	else
 	{
-		//DCP05MsgBoxC MsgBox;
+		//DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"OnPeriodicInclineValidation");
-		//DCP05Log("GetCompensatorStatus", (int ) oStat);
+		//DCP06Log("GetCompensatorStatus", (int ) oStat);
 
 		Close(EC_KEY_ESC);
 	}
 
 	/*
-	DCP05MsgBoxC MsgBox;
+	DCP06MsgBoxC MsgBox;
 	MsgBox.ShowMessageOk(L"OnPeriodicInclineValidation");
-	DCP05Log("DCP05DoMeasXYZControllerC::OnPeriodicInclineValidation",ulParam1,ulParam2);
+	DCP06Log("DCP06DoMeasXYZControllerC::OnPeriodicInclineValidation",ulParam1,ulParam2);
 	*/
 	
 }
 
 
-void DCP::DCP05DoScanMeasXYZControllerC::OnFinish()
+void DCP::DCP06DoScanMeasXYZControllerC::OnFinish()
 {
-	//DCP05MsgBoxC MsgBox;
+	//DCP06MsgBoxC MsgBox;
 	//MsgBox.ShowMessageOk(L"Finish");		
 }
 
-void  DCP::DCP05DoScanMeasXYZControllerC::OnStopDistEvent(int unParam1,  int ulParam2)
+void  DCP::DCP06DoScanMeasXYZControllerC::OnStopDistEvent(int unParam1,  int ulParam2)
  {
 	Close(EC_KEY_ESC);
  }
 
 // Samalainen sitten searchille
-void DCP::DCP05DoScanMeasXYZControllerC::OnOperationDistEvent(int unNotifyCode,  int ulOperationId)
+void DCP::DCP06DoScanMeasXYZControllerC::OnOperationDistEvent(int unNotifyCode,  int ulOperationId)
 {
 	double dSlopeDist=0.0,dH=0.0,dV=0.0;
 	
@@ -234,19 +234,19 @@ void DCP::DCP05DoScanMeasXYZControllerC::OnOperationDistEvent(int unNotifyCode, 
 
 	if(unNotifyCode == TBL::DistanceMeasProcedureC::NC_ON_START)
 	{
-		DCP05Log("DCP05DoScanMeasXYZControllerC::OnOperationDistEvent NC_ON_START");
+		DCP06Log("DCP06DoScanMeasXYZControllerC::OnOperationDistEvent NC_ON_START");
 
-		//DCP05MsgBoxC MsgBox;
+		//DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"NC ON START");
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_SUCCESS)
 	{
-		SetMeasData(GetDistanceProc()->GetMeasDataHandle()); // MUISTA TÄMÄ
+		SetMeasData(GetDistanceProc()->GetMeasDataHandle()); // MUISTA Tï¿½Mï¿½
 		dSlopeDist = /*GetModel()*/poSurveyModel->GetMeas().GetSlopeDistance();
 		dH = poSurveyModel->GetMeas().GetHorizontalAngle();
 		dV = poSurveyModel->GetMeas().GetVerticalAngle();
 
-		DCP::DCP05MeasXYZModelC* pModel = (DCP::DCP05MeasXYZModelC*) GetModel();
+		DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetModel();
 
 		pModel->m_dD = dSlopeDist;
 		pModel->m_dH = dH;
@@ -261,35 +261,35 @@ void DCP::DCP05DoScanMeasXYZControllerC::OnOperationDistEvent(int unNotifyCode, 
 		pModel->m_iAverageDistCount = poSurveyModel->GetMeas().GetAveragedDistCount();
 		pModel->m_dAveragedDistStdDev = poSurveyModel->GetMeas().GetAveragedDistStdDev ();
 
-		//DCP05MsgBoxC MsgBox;
+		//DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"NC_SUCCESS");
-		DCP05Log("DCP05DoScanMeasXYZControllerC::OnOperationDistEvent NC_SUCCESS");
+		DCP06Log("DCP06DoScanMeasXYZControllerC::OnOperationDistEvent NC_SUCCESS");
 		Close(EC_KEY_CONT); 
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_STOP)
 	{
-		DCP05Log("DCP05DoScanMeasXYZControllerC::OnOperationDistEvent NC ON STOP");
-		//DCP05MsgBoxC MsgBox;
+		DCP06Log("DCP06DoScanMeasXYZControllerC::OnOperationDistEvent NC ON STOP");
+		//DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"NC ON STOP");
 		Close(EC_KEY_ESC);
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_FAIL)
 	{
-		DCP05Log("DCP05DoScanMeasXYZControllerC::OnOperationDistEvent NC_ON_FAIL");
+		DCP06Log("DCP06DoScanMeasXYZControllerC::OnOperationDistEvent NC_ON_FAIL");
 		
-		//DCP05MsgBoxC MsgBox;
+		//DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"Error measurement!");
 		Close(EC_KEY_ESC);
 	}
 	else
 	{
-		//DCP05MsgBoxC MsgBox;
+		//DCP06MsgBoxC MsgBox;
 		//MsgBox.ShowMessageOk(L"Jokin muu");
 		Close(EC_KEY_ESC);
 	}
 }
 
-void DCP::DCP05DoScanMeasXYZControllerC::OnOperationSearchEvent(int unNotifyCode, int ulOperationId)
+void DCP::DCP06DoScanMeasXYZControllerC::OnOperationSearchEvent(int unNotifyCode, int ulOperationId)
 {
 		// call base class
 	TBL::MeasurementC::OnOperationSearchEvent(unNotifyCode,ulOperationId);
@@ -310,7 +310,7 @@ void DCP::DCP05DoScanMeasXYZControllerC::OnOperationSearchEvent(int unNotifyCode
 }
 
 
-short DCP::DCP05DoScanMeasXYZControllerC::get_xyz_values(double* x, double* y, double* z)
+short DCP::DCP06DoScanMeasXYZControllerC::get_xyz_values(double* x, double* y, double* z)
 {
 	*x = m_dX;
 	*y = m_dY;
@@ -319,10 +319,10 @@ short DCP::DCP05DoScanMeasXYZControllerC::get_xyz_values(double* x, double* y, d
 	return 1;
 }
 // ======================================================================================== 
-DCP::DCP05ScanMeasXYZControllerC::DCP05ScanMeasXYZControllerC(DCP::DCP05ModelC* pDCP05Model)
-    :TBL::MeasurementC(),poSurveyModel(0), poDCP05Model(pDCP05Model),m_iCount(0),m_iCount2(0),m_iUseTool(0),poHourGlass(0)
+DCP::DCP06ScanMeasXYZControllerC::DCP06ScanMeasXYZControllerC(DCP::DCP06ModelC* pDCP06Model)
+    :TBL::MeasurementC(),poSurveyModel(0), poDCP06Model(pDCP06Model),m_iCount(0),m_iCount2(0),m_iUseTool(0),poHourGlass(0)
 {
-	DCP05Log("DCP05MeasXYZControllerC::DCP05MeasXYZControllerC");
+	DCP06Log("DCP06MeasXYZControllerC::DCP06MeasXYZControllerC");
 
 	poHourGlass = new GUI::HourGlassC();
 	poHourGlass->Pause();
@@ -356,8 +356,8 @@ DCP::DCP05ScanMeasXYZControllerC::DCP05ScanMeasXYZControllerC(DCP::DCP05ModelC* 
 
 
     // Create a dialog
-    //m_pDCP05MeasDlg = new DCP::DCP05MeasDlgC(pMeasModel);  //lint !e1524 new in constructor for class 
-    //(void)AddDialog( 0, m_pDCP05MeasDlg, true );
+    //m_pDCP06MeasDlg = new DCP::DCP06MeasDlgC(pMeasModel);  //lint !e1524 new in constructor for class 
+    //(void)AddDialog( 0, m_pDCP06MeasDlg, true );
 
     // Set the function key
 
@@ -377,13 +377,13 @@ DCP::DCP05ScanMeasXYZControllerC::DCP05ScanMeasXYZControllerC(DCP::DCP05ModelC* 
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05ScanMeasXYZControllerC::~DCP05ScanMeasXYZControllerC()
+DCP::DCP06ScanMeasXYZControllerC::~DCP06ScanMeasXYZControllerC()
 {
 
-	//DCP05MsgBoxC MsgBox;
-	//MsgBox.ShowMessageOk(L"Close DCP05MeasXYZControllerC!");
+	//DCP06MsgBoxC MsgBox;
+	//MsgBox.ShowMessageOk(L"Close DCP06MeasXYZControllerC!");
 
-	DCP05Log("DCP05ScanMeasXYZControllerC::~DCP05ScanMeasXYZControllerC");
+	DCP06Log("DCP06ScanMeasXYZControllerC::~DCP06ScanMeasXYZControllerC");
 
 	if(poHourGlass)
 	{
@@ -392,7 +392,7 @@ DCP::DCP05ScanMeasXYZControllerC::~DCP05ScanMeasXYZControllerC()
 	}
 }
 // Description: Route model to everybody else
-bool DCP::DCP05ScanMeasXYZControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ScanMeasXYZControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -400,16 +400,16 @@ bool DCP::DCP05ScanMeasXYZControllerC::SetModel( GUI::ModelC* pModel )
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
-     //return false;//m_pDCP05MeasDlg->SetModel( pModel ); 220807
+     //return false;//m_pDCP06MeasDlg->SetModel( pModel ); 220807
 	return true;
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -421,10 +421,10 @@ bool DCP::DCP05ScanMeasXYZControllerC::SetModel( GUI::ModelC* pModel )
 
 
 // Description: React on close of controller
-void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
-	DCP05Log("DCP05ScanMeasXYZControllerC::OnActiveControllerClosed", lCtrlID,lExitCode);
-	//DCP::DCP05MeasXYZModelC* pModel = (DCP::DCP05MeasXYZModelC*)GetModel();
+	DCP06Log("DCP06ScanMeasXYZControllerC::OnActiveControllerClosed", lCtrlID,lExitCode);
+	//DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*)GetModel();
 
 	// Handle averaging and 2 face measurement
 	if(lCtrlID == DO_MEAS_XYZ_FACE1_CONTROLLER)// && lExitCode == EC_KEY_CONT)
@@ -432,7 +432,7 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 		if(lExitCode == EC_KEY_CONT)
 		{
 			m_iCount++;
-			DCP::DCP05MeasXYZModelC* pModel1 = (DCP::DCP05MeasXYZModelC*) GetController( DO_MEAS_XYZ_FACE1_CONTROLLER )->GetModel();		
+			DCP::DCP06MeasXYZModelC* pModel1 = (DCP::DCP06MeasXYZModelC*) GetController( DO_MEAS_XYZ_FACE1_CONTROLLER )->GetModel();		
 			
 			dist_tot	+=	pModel1->m_dD;
 			ver_tot		+=	pModel1->m_dV;
@@ -453,25 +453,25 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 			m_dVer_tot +=  pModel->m_dVer;
 			*/
 			/*
-			if(poDCP05Model->m_nAverageCount > m_iCount)
+			if(poDCP06Model->m_nAverageCount > m_iCount)
 			{	
 				// activate measurement
 
 				//DestroyController( lCtrlID );
 				if(GetController(DO_MEAS_XYZ_FACE1_CONTROLLER) == NULL)
 				{
-					(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DCP05DoMeasXYZControllerC );
+					(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DCP06DoMeasXYZControllerC );
 				}
 				(void)GetController( DO_MEAS_XYZ_FACE1_CONTROLLER )->SetModel(GetModel());
 				SetActiveController(DO_MEAS_XYZ_FACE1_CONTROLLER, true);
 			}
-			else if(poDCP05Model->m_nAverageCount == m_iCount)
+			else if(poDCP06Model->m_nAverageCount == m_iCount)
 			{
 			*/
 				/*
-				x_new1 = x_tot /poDCP05Model->m_nAverageCount;
-				y_new1 = y_tot /poDCP05Model->m_nAverageCount;
-				z_new1 = z_tot /poDCP05Model->m_nAverageCount;
+				x_new1 = x_tot /poDCP06Model->m_nAverageCount;
+				y_new1 = y_tot /poDCP06Model->m_nAverageCount;
+				z_new1 = z_tot /poDCP06Model->m_nAverageCount;
 				*/
 				dist1 = dist_tot / 1;
 				hor1  = hor_tot / 1;
@@ -487,7 +487,7 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 					y_new = y_new1;
 					z_new = z_new1;
 
-					DCP::DCP05MeasXYZModelC* pModel = (DCP::DCP05MeasXYZModelC*)GetModel();
+					DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*)GetModel();
 					pModel->m_dX = x_new;
 					pModel->m_dY = y_new;
 					pModel->m_dZ = z_new;
@@ -511,9 +511,9 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 		DestroyController( lCtrlID );
 		if(lExitCode == EC_KEY_CONT)
 		{
-			if(poDCP05Model->m_n2FaceMeas == ALL_MANUAL || poDCP05Model->m_n2FaceMeas == DIST_MANUAL)
+			if(poDCP06Model->m_n2FaceMeas == ALL_MANUAL || poDCP06Model->m_n2FaceMeas == DIST_MANUAL)
 			{
-				DCP05MsgBoxC msgbox;
+				DCP06MsgBoxC msgbox;
 				StringC msg;
 				msg.LoadTxt(AT_DCP05,M_DCP_AIM_TO_POINT_TOK);
 				if(!msgbox.ShowMessageOkAbort(msg))
@@ -522,7 +522,7 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 				// start 2. face measurement
 				if(GetController(DO_MEAS_XYZ_FACE2_CONTROLLER) == NULL)
 				{
-					(void)AddController( DO_MEAS_XYZ_FACE2_CONTROLLER, new DCP::DCP05DoMeasXYZControllerC );
+					(void)AddController( DO_MEAS_XYZ_FACE2_CONTROLLER, new DCP::DCP06DoMeasXYZControllerC );
 				}
 				(void)GetController( DO_MEAS_XYZ_FACE2_CONTROLLER )->SetModel(GetModel());
 				SetActiveController(DO_MEAS_XYZ_FACE2_CONTROLLER, true);
@@ -536,7 +536,7 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 		if(lExitCode == EC_KEY_CONT)
 		{
 			m_iCount2++;
-			DCP::DCP05MeasXYZModelC* pModel = (DCP::DCP05MeasXYZModelC*) GetController( DO_MEAS_XYZ_FACE2_CONTROLLER )->GetModel();		
+			DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( DO_MEAS_XYZ_FACE2_CONTROLLER )->GetModel();		
 
 			dist_tot2		+=	pModel->m_dD;
 			ver_tot2		+=	pModel->m_dV;
@@ -551,28 +551,28 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 			y_tot2 += y_temp;
 			z_tot2 += z_temp;
 			*/
-			if(poDCP05Model->m_nAverageCount > m_iCount2)
+			if(poDCP06Model->m_nAverageCount > m_iCount2)
 			{
 				//DestroyController( lCtrlID );
 				if(GetController(DO_MEAS_XYZ_FACE2_CONTROLLER) == NULL)
 				{
-					(void)AddController( DO_MEAS_XYZ_FACE2_CONTROLLER, new DCP::DCP05DoMeasXYZControllerC );
+					(void)AddController( DO_MEAS_XYZ_FACE2_CONTROLLER, new DCP::DCP06DoMeasXYZControllerC );
 				}
 				(void)GetController( DO_MEAS_XYZ_FACE2_CONTROLLER )->SetModel(GetModel());
 				SetActiveController(DO_MEAS_XYZ_FACE2_CONTROLLER, true);
 			}
-			else if(poDCP05Model->m_nAverageCount == m_iCount2)
+			else if(poDCP06Model->m_nAverageCount == m_iCount2)
 			{
-				dist2 = dist_tot2 / poDCP05Model->m_nAverageCount;
-				hor2 = hor_tot2 / poDCP05Model->m_nAverageCount;
-				ver2 = ver_tot2 / poDCP05Model->m_nAverageCount;
+				dist2 = dist_tot2 / poDCP06Model->m_nAverageCount;
+				hor2 = hor_tot2 / poDCP06Model->m_nAverageCount;
+				ver2 = ver_tot2 / poDCP06Model->m_nAverageCount;
 				/*
-				x_new2 = x_tot2 /poDCP05Model->m_nAverageCount;
-				y_new2 = y_tot2 /poDCP05Model->m_nAverageCount;
-				z_new2 = z_tot2 /poDCP05Model->m_nAverageCount;
+				x_new2 = x_tot2 /poDCP06Model->m_nAverageCount;
+				y_new2 = y_tot2 /poDCP06Model->m_nAverageCount;
+				z_new2 = z_tot2 /poDCP06Model->m_nAverageCount;
 				*/
 				// average all
-				if(poDCP05Model->m_n2FaceMeas == ALL || poDCP05Model->m_n2FaceMeas == ALL_MANUAL)
+				if(poDCP06Model->m_n2FaceMeas == ALL || poDCP06Model->m_n2FaceMeas == ALL_MANUAL)
 				{
 					to_xyz(dist2, hor2, ver2, &x_new2, &y_new2, &z_new2, m_iUseTool, &x_scs2, &y_scs2, &z_scs2);
 					x_new = (x_new1 + x_new2) / 2;
@@ -600,7 +600,7 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 				y_new = y_new2;
 				z_new = z_new2;
 
-				DCP::DCP05MeasXYZModelC* pModel = (DCP::DCP05MeasXYZModelC*)GetModel();
+				DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*)GetModel();
 				pModel->m_dX = x_new;
 				pModel->m_dY = y_new;
 				pModel->m_dZ = z_new;
@@ -610,20 +610,20 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 				pModel->z_scs = z_scs_tot;
 		
 	    		// save log
-				if(poDCP05Model->m_nAmsLog == 1)
+				if(poDCP06Model->m_nAmsLog == 1)
 				{
 						// save log
 						if(	m_iUseTool ==1)
 						{
-							short iActivetool = poDCP05Model->active_tool;
+							short iActivetool = poDCP06Model->active_tool;
 							if(iActivetool)
 							{
-								sprintf(pModel->tool_name,"%-10.10s",poDCP05Model->tool_table[iActivetool-1].tool_id);
+								sprintf(pModel->tool_name,"%-10.10s",poDCP06Model->tool_table[iActivetool-1].tool_id);
 								m_pCommon->strbtrim(pModel->tool_name);
 							}
 						}
 
-						DCP05AmsLogC AmsLog(pModel, poDCP05Model);
+						DCP06AmsLogC AmsLog(pModel, poDCP06Model);
 				}
 
 
@@ -659,30 +659,30 @@ void DCP::DCP05ScanMeasXYZControllerC::OnActiveControllerClosed( int lCtrlID, in
 	//DestroyController( lCtrlID );
 }
 
-void DCP::DCP05ScanMeasXYZControllerC::Run()
+void DCP::DCP06ScanMeasXYZControllerC::Run()
 {
-	DCP05Log("DCP05MeasXYZControllerC::Run()");
+	DCP06Log("DCP06MeasXYZControllerC::Run()");
 
-	//DCP::DCP05MeasXYZModelC* pModel = (DCP::DCP05MeasXYZModelC*)GetModel();
+	//DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*)GetModel();
 
-	m_pCommon = new DCP05CommonC(poDCP05Model);
+	m_pCommon = new DCP06CommonC(poDCP06Model);
 	
 		poHourGlass->Continue();
 		if(GetController(DO_MEAS_XYZ_FACE1_CONTROLLER) == NULL)
 		{
-			DCP05Log("(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DCP05DoMeasXYZControllerC );");		
-			(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DCP05DoScanMeasXYZControllerC );
+			DCP06Log("(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DCP06DoMeasXYZControllerC );");		
+			(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DCP06DoScanMeasXYZControllerC );
 		}
 		(void)GetController( DO_MEAS_XYZ_FACE1_CONTROLLER )->SetModel(GetModel());
 		SetActiveController(DO_MEAS_XYZ_FACE1_CONTROLLER, true);
 }
-void DCP::DCP05ScanMeasXYZControllerC::OnControllerActivated(void)
+void DCP::DCP06ScanMeasXYZControllerC::OnControllerActivated(void)
 {
 
 }
-void DCP::DCP05ScanMeasXYZControllerC::OnControllerClosed(int lExitCode)
+void DCP::DCP06ScanMeasXYZControllerC::OnControllerClosed(int lExitCode)
 {
-	DCP05Log( "DCP05MeasXYZControllerC::OnControllerClosed" );
+	DCP06Log( "DCP06MeasXYZControllerC::OnControllerClosed" );
 	if(m_pCommon)
 	{
 		delete m_pCommon;
@@ -691,7 +691,7 @@ void DCP::DCP05ScanMeasXYZControllerC::OnControllerClosed(int lExitCode)
 	//	DeactivateMeasurement(lExitCode);
 }
 
-short DCP::DCP05ScanMeasXYZControllerC::get_xyz_values(double* x, double* y, double* z)
+short DCP::DCP06ScanMeasXYZControllerC::get_xyz_values(double* x, double* y, double* z)
 {
 	*x = x_new;
 	*y = y_new;
@@ -699,7 +699,7 @@ short DCP::DCP05ScanMeasXYZControllerC::get_xyz_values(double* x, double* y, dou
 
 	return 1;
 }
-void DCP::DCP05ScanMeasXYZControllerC::to_xyz(double dis, double hor, double ver, double *x, double *y, double *z, short tool, double *x_scs, double *y_scs, double *z_scs)
+void DCP::DCP06ScanMeasXYZControllerC::to_xyz(double dis, double hor, double ver, double *x, double *y, double *z, short tool, double *x_scs, double *y_scs, double *z_scs)
 {
 	m_pCommon->to_xyz(dis, hor, ver, x, y,  z,  m_iUseTool, x_scs, y_scs, z_scs);
 }

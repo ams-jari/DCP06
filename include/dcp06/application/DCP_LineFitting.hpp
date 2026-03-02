@@ -39,7 +39,7 @@
 #include <GUI_TextCtrl.hpp>
 #include <dcp06/calculation/DCP_CalcLineFit.hpp>
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/orientation/DCP_DCP05Dom.hpp>
+#include <dcp06/orientation/DCP_DCP06Alignment321.hpp>
 
 // Description: The Hello World application
 //
@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05LineFitDlgC;
-	class DCP05LineFitModelC;
+    class DCP06ModelC;
+	class DCP06LineFitDlgC;
+	class DCP06LineFitModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05LineFitControllerC : public GUI::ControllerC
+    class DCP06LineFitControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05LineFitControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05LineFitControllerC();
+            DCP06LineFitControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06LineFitControllerC();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -79,29 +79,29 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-			DCP05LineFitControllerC( const DCP05LineFitControllerC& oDCP05LineFitController )
+			DCP06LineFitControllerC( const DCP06LineFitControllerC& oDCP05LineFitController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05LineFitControllerC& operator=( const DCP05LineFitControllerC& oDCP05LineFitController )
+            DCP06LineFitControllerC& operator=( const DCP06LineFitControllerC& oDCP05LineFitController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05LineFitDlgC* m_pDlg;
-			DCP05LineFitModelC* m_pLineFitModel;
-			DCP05ModelC* m_pDCP05Model;
-			DCP05CalcLineFitC* calcLineFit;
+            DCP06LineFitDlgC* m_pDlg;
+			DCP06LineFitModelC* m_pLineFitModel;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06CalcLineFitC* calcLineFit;
 			short SaveLineFitting(char *fname);
-			DCP05CommonC* common;
+			DCP06CommonC* common;
     };
 
 
-    class DCP05LineFitDlgC:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
+    class DCP06LineFitDlgC:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -117,10 +117,10 @@ namespace DCP
 				eRotateValue
 			};
 
-		   DCP05LineFitDlgC(DCP05LineFitModelC* pModel,DCP05CalcLineFitC* calcLineFit);
+		   DCP06LineFitDlgC(DCP06LineFitModelC* pModel,DCP06CalcLineFitC* calcLineFit);
 
             // Description: Destructor
-            virtual ~DCP05LineFitDlgC();
+            virtual ~DCP06LineFitDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -134,7 +134,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05ModelC* GetDCP05Model() const;
+            DCP06ModelC* GetDCP06Model() const;
 			virtual void RefreshControls();
 
 			virtual void delete_line();
@@ -153,13 +153,13 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pRotateLine;
 			GUI::ComboLineCtrlC* m_pRotateValue;
 
-			OBS_DECLARE_EXECUTE(DCP05LineFitDlgC);
+			OBS_DECLARE_EXECUTE(DCP06LineFitDlgC);
 
 			//GUI::TextCtrlC* m_pLineInfo3;
 
-			//DCP::DCP05ModelC* m_pDCP05Model;
+			//DCP::DCP06ModelC* m_pDCP06Model;
 
-			//OBS_DECLARE_EXECUTE(DCP05DomDlgC);
+			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
 
 			// Description: add all controls
             
@@ -184,21 +184,21 @@ namespace DCP
 			StringC m_strYLine;
 			StringC m_strZLine;
 			StringC m_strMeasLine;
-			DCP05LineFitModelC* m_pLineFitModel;
-			DCP05CalcLineFitC* m_pCalcLineFit;
+			DCP06LineFitModelC* m_pLineFitModel;
+			DCP06CalcLineFitC* m_pCalcLineFit;
 
 	};
-    class DCP05LineFitModelC : public GUI::ModelC
+    class DCP06LineFitModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05LineFitModelC();
+            DCP06LineFitModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05LineFitModelC();
+            virtual ~DCP06LineFitModelC();
 			
 			//short active_line; 
 			S_LINE_BUFF	line_buff[1];
@@ -213,7 +213,7 @@ namespace DCP
 			int selectedShift;
 			int selectedRotate;
 			StringC fileName;
-			DCP05DomModelC* domModel;
+			DCP06DomModelC* domModel;
 
 			S_LINE_BUFF line_ocs[1];
 			S_POINT_BUFF points_in_line[MAX_LINEFIT_POINTS];

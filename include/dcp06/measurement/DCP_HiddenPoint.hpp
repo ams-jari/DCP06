@@ -50,17 +50,17 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05HiddenPointDlgC;
+	class DCP06ModelC;
+	class DCP06HiddenPointDlgC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05HiddenPointControllerC : public GUI::ControllerC
+    class DCP06HiddenPointControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05HiddenPointControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05HiddenPointControllerC();
+            DCP06HiddenPointControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06HiddenPointControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -86,29 +86,29 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05HiddenPointControllerC( const DCP05HiddenPointControllerC& oDCP05HiddenPointController )
+            DCP06HiddenPointControllerC( const DCP06HiddenPointControllerC& oDCP06HiddenPointController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05HiddenPointControllerC& operator=( const DCP05HiddenPointControllerC& oDCP05HiddenPointController )
+            DCP06HiddenPointControllerC& operator=( const DCP06HiddenPointControllerC& oDCP06HiddenPointController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05HiddenPointDlgC* m_pDlg;
-			DCP05ModelC *m_pDCP05Model;
-			DCP05CommonC* m_pCommon;
+            DCP06HiddenPointDlgC* m_pDlg;
+			DCP06ModelC *m_pDCP06Model;
+			DCP06CommonC* m_pCommon;
 			bool m_bCamera;
 			GSV::GeospatialViewDialogC* poVideoDlg;
 			bool isATR;
     };
 
 
-	class DCP05HiddenPointDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class DCP06HiddenPointDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -122,10 +122,10 @@ namespace DCP
 				eInfo
 			};
 
-		   DCP05HiddenPointDlgC(DCP05ModelC *pDCP05Model);
+		   DCP06HiddenPointDlgC(DCP06ModelC *pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05HiddenPointDlgC();
+            virtual ~DCP06HiddenPointDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -137,7 +137,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05PointBuffModelC* GetDataModel() const;
+			DCP06PointBuffModelC* GetDataModel() const;
 
 
 			virtual void PointNext();
@@ -156,7 +156,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pY;
 			GUI::ComboLineCtrlC* m_pZ;
 			//GUI::TextCtrlC* m_pInfo;
-			DCP05ModelC *m_pDCP05Model;
+			DCP06ModelC *m_pDCP06Model;
 	private:
 			S_POINT_BUFF measured_points[MAX_POINTS_IN_HIDDENPOINT_BAR];
 			short m_iCurrentPoint;
@@ -167,13 +167,13 @@ namespace DCP
 			StringC strInfoText;
 			//virtual void OnTimer(void);
 			//GUI::TimerC m_pTimer;
-			DCP05CommonC* m_pCommon;
+			DCP06CommonC* m_pCommon;
 	};
 
-	class DCP05HiddenPointDlgBaseC: public GUI::ControllerC
+	class DCP06HiddenPointDlgBaseC: public GUI::ControllerC
 	{
 	public:
-			DCP05HiddenPointDlgBaseC(int iCtrlId, DCP05ModelC* pDCP50Model ,DCP05PointBuffModelC* pDCPPointBuffModel);
+			DCP06HiddenPointDlgBaseC(int iCtrlId, DCP06ModelC* pDCP06Model ,DCP06PointBuffModelC* pDCPPointBuffModel);
 			
 	};
 };

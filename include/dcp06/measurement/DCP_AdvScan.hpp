@@ -76,7 +76,7 @@ namespace DCP
             };
 
             // Description: Constructor
-            DCPScanningControllerC(DCP05ModelC* pDCP05Model);
+            DCPScanningControllerC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
             virtual ~DCPScanningControllerC(void);
@@ -155,8 +155,8 @@ namespace DCP
             // Description: survey model, used for TBL::MeasurementC
             TBL::SurveyModelC* m_poSurveyModel;
 
-			DCP05ModelC* m_pDCP05Model;
-			DCP05CommonC* m_pCommon;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06CommonC* m_pCommon;
             //double m_dHorizScanV;
 
     }; // end of SurveyControllerC

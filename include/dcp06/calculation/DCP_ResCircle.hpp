@@ -51,20 +51,20 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05ResCircleDlgC;
-	//class DCP05ResCircleModelC;
-	//class DCP05SelectOnePointModelC;
+    class DCP06ModelC;
+	class DCP06ResCircleDlgC;
+	//class DCP06ResCircleModelC;
+	//class DCP06SelectOnePointModelC;
 
     // Description: Tabbed controller for the Hello World application
 	
-    class DCP05ResCircleControllerC : public GUI::ControllerC
+    class DCP06ResCircleControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05ResCircleControllerC(DCP05ModelC *pDCP05Model, short m_iDisplay = 0);
-			~DCP05ResCircleControllerC();
+            DCP06ResCircleControllerC(DCP06ModelC *pDCP06Model, short m_iDisplay = 0);
+			~DCP06ResCircleControllerC();
 
             // Description: Handle change of position values
             //virtual void OnF1Pressed();
@@ -87,27 +87,27 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05ResCircleControllerC( const DCP05ResCircleControllerC& oDCP05ResCircleController )
+            DCP06ResCircleControllerC( const DCP06ResCircleControllerC& oDCP06ResCircleController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05ResCircleControllerC& operator=( const DCP05ResCircleControllerC& oDCP05ResCircleController )
+            DCP06ResCircleControllerC& operator=( const DCP06ResCircleControllerC& oDCP06ResCircleController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05ResCircleDlgC* m_pDlg;
-			DCP05ModelC* m_pDCP05Model;
-			DCP05CircleModelC* pDataModel;
+            DCP06ResCircleDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06CircleModelC* pDataModel;
 			short m_iDisplay;
     };
 	
 
-	class DCP05ResCircleDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
+	class DCP06ResCircleDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
 	{
 	 public:
 
@@ -133,10 +133,10 @@ namespace DCP
 				CI_Deviation
 			};
 
-		   DCP05ResCircleDlgC(DCP05ModelC *pDCP05Model);
+		   DCP06ResCircleDlgC(DCP06ModelC *pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05ResCircleDlgC();
+            virtual ~DCP06ResCircleDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -153,7 +153,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05CircleModelC* GetDataModel() const;
+            DCP06CircleModelC* GetDataModel() const;
 
 			//OBS::ObserverC m_pMultiColCtrlObserver;
 			//virtual void OnChanged(int unNotifyCode, int ulParam2);
@@ -161,11 +161,11 @@ namespace DCP
 		protected:
 			GUI::TextCtrlC* m_pInfo1;
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 			// Description: add all controls
        
 
-			//OBS_DECLARE_EXECUTE(DCP05SelectOnePointDlgC);
+			//OBS_DECLARE_EXECUTE(DCP06SelectOnePointDlgC);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -175,29 +175,29 @@ namespace DCP
 				StringC sDesignNonSelected;
 				//virtual void OnTimer(void);
 
-				DCP05CommonC* m_pCommon;
+				DCP06CommonC* m_pCommon;
 				double calc_pdist(S_LINE_BUFF *line, short pno);
 				double get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/);
 
 				StringC sTitle;
 				
 
-				//void DCP::DCP05SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP05SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
+				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
  	};
 
 	/*
-	class DCP05ResCircleModelC : public GUI::ModelC
+	class DCP06ResCircleModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05ResCircleModelC();
+            DCP06ResCircleModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05ResCircleModelC();
+            virtual ~DCP06ResCircleModelC();
 			S_CIRCLE_BUFF circle_points[1];
 			S_CIRCLE_BUFF circle_in_plane[1];
 			StringC sCaption;

@@ -16,7 +16,7 @@ DCP06/
 ├── include/dcp06/           # Public headers (domain subdirs)
 │   ├── core/               # Core types, models, UI base
 │   ├── init/               # Initialization, user, units
-│   ├── orientation/        # DOM, POM, CHST, plane/line
+│   ├── orientation/        # 321 Alignment, Best Fit, CHST, plane/line
 │   ├── measurement/        # 3D meas, circle, scan
 │   ├── calculation/        # Calc dist/angle, view CDF/AGF
 │   ├── file/               # File I/O, ADF, select file
@@ -24,7 +24,7 @@ DCP06/
 ├── src/                     # C++ source (same domain subdirs)
 │   ├── core/               # stdafx, CS35, common
 │   ├── init/               # DCP05 init, user, unit
-│   ├── orientation/        # DOM, POM, CHST, define plane/line
+│   ├── orientation/        # 321 Alignment, Best Fit, CHST, define plane/line
 │   ├── measurement/       # 3D meas, circle, scan
 │   ├── calculation/       # Calc dist/angle, view
 │   ├── application/       # DCP06, shaft, line setting

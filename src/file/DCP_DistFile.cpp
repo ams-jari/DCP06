@@ -60,19 +60,19 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP05DistFileDlgC::DCP05DistFileDlgC(DCP05DistFileModelC* pModel):
+DCP06DistFileDlgC::DCP06DistFileDlgC(DCP06DistFileModelC* pModel):
 	m_pFile(0), m_pNumberOfPoints(0), m_pSize(0), m_pDate(0), m_pTime(0),m_pFreeSpace(0),
 	m_pDataModel(pModel)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 }
 // Description: Destructor
-DCP05DistFileDlgC::~DCP05DistFileDlgC()
+DCP06DistFileDlgC::~DCP06DistFileDlgC()
 {
 
 }
 
-void DCP05DistFileDlgC::OnInitDialog(void)
+void DCP06DistFileDlgC::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	//SetColonPosLong( GUI::StandardDialogC::CP_20 );
@@ -81,42 +81,42 @@ void DCP05DistFileDlgC::OnInitDialog(void)
 
 	m_pFile = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pFile->SetId(eFile);
-	m_pFile->SetText(StringC(AT_DCP05,P_DCP_DISTANCE_FILE_TOK));
+	m_pFile->SetText(StringC(AT_DCP06,P_DCP_DISTANCE_FILE_TOK));
 	void(m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	AddCtrl(m_pFile);
 
 	m_pNumberOfPoints = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pNumberOfPoints->SetId(eNumberOfPoints);
-	m_pNumberOfPoints->SetText(StringC(AT_DCP05,P_DCP_NUMBER_OF_POINTS_TOK));
+	m_pNumberOfPoints->SetText(StringC(AT_DCP06,P_DCP_NUMBER_OF_POINTS_TOK));
 	void(m_pNumberOfPoints->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pNumberOfPoints->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	AddCtrl(m_pNumberOfPoints);
 
 	m_pSize = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pSize->SetId(eSize);
-	m_pSize->SetText(StringC(AT_DCP05,P_DCP_SIZE_OF_FILE_TOK));
+	m_pSize->SetText(StringC(AT_DCP06,P_DCP_SIZE_OF_FILE_TOK));
 	void(m_pSize->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pSize->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	AddCtrl(m_pSize);
 
 	m_pDate = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDate->SetId(eDate);
-	m_pDate->SetText(StringC(AT_DCP05,P_DCP_DATE_OF_FILE_TOK));
+	m_pDate->SetText(StringC(AT_DCP06,P_DCP_DATE_OF_FILE_TOK));
 	void(m_pDate->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pDate->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	AddCtrl(m_pDate);
 
 	m_pTime = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pTime->SetId(eTime);
-	m_pTime->SetText(StringC(AT_DCP05,P_DCP_TIME_OF_FILE_TOK));
+	m_pTime->SetText(StringC(AT_DCP06,P_DCP_TIME_OF_FILE_TOK));
 	void(m_pTime->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pTime->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	AddCtrl(m_pTime);
 
 	m_pFreeSpace = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pFreeSpace->SetId(eFreeSpace);
-	m_pFreeSpace->SetText(StringC(AT_DCP05,P_DCP_FREE_SPACE_TOK));
+	m_pFreeSpace->SetText(StringC(AT_DCP06,P_DCP_FREE_SPACE_TOK));
 	void(m_pFreeSpace->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pFreeSpace->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	AddCtrl(m_pFreeSpace);
@@ -124,24 +124,24 @@ void DCP05DistFileDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_DIST_FILE_TOK, 0);
 }
 
-void DCP05DistFileDlgC::OnDialogActivated()
+void DCP06DistFileDlgC::OnDialogActivated()
 {
-	if(!GetDCP05Model()->sCalcDistFile.IsEmpty())
-		m_pDataModel->m_pFileFunc->setFile(GetDCP05Model()->sCalcDistFile);
+	if(!GetDCP06Model()->sCalcDistFile.IsEmpty())
+		m_pDataModel->m_pFileFunc->setFile(GetDCP06Model()->sCalcDistFile);
 
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP05DistFileDlgC::RefreshControls()
+void DCP::DCP06DistFileDlgC::RefreshControls()
 {	
 	if(m_pFile && m_pNumberOfPoints && m_pSize && m_pDate && m_pTime && m_pFreeSpace)
 	{
-		//m_pFileModel->m_pAdfFile->setFile(sSelectedFile/*GetDCP05Model()->ADFFileName*/);
+		//m_pFileModel->m_pAdfFile->setFile(sSelectedFile/*GetDCP06Model()->ADFFileName*/);
 
 		if(m_pDataModel->m_pFileFunc->IsOpen())
 		{
-			m_pFile->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getFileName());//GetDCP05Model()->ADFFileName);	
+			m_pFile->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getFileName());//GetDCP06Model()->ADFFileName);	
 			m_pNumberOfPoints->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getPointsCountString());
 			m_pSize->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getFileSizeString());
 			m_pDate->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getModDate());
@@ -163,27 +163,27 @@ void DCP::DCP05DistFileDlgC::RefreshControls()
 	}
 }
 
-void DCP::DCP05DistFileDlgC::UpdateData()
+void DCP::DCP06DistFileDlgC::UpdateData()
 {
 	if(m_pDataModel->m_pFileFunc->IsOpen())
 	{	
-        GetDCP05Model()->sCalcDistFile = m_pDataModel->m_pFileFunc->getFileName();
-		GetDCP05Model()->sCalcDistFile.RTrim();
+        GetDCP06Model()->sCalcDistFile = m_pDataModel->m_pFileFunc->getFileName();
+		GetDCP06Model()->sCalcDistFile.RTrim();
 	}
 	else
-		GetDCP05Model()->sCalcDistFile = L"";
+		GetDCP06Model()->sCalcDistFile = L"";
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP05DistFileDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06DistFileDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -193,56 +193,56 @@ bool DCP::DCP05DistFileDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP05ModelC* DCP::DCP05DistFileDlgC::GetDCP05Model() const
+DCP::DCP06ModelC* DCP::DCP06DistFileDlgC::GetDCP06Model() const
 {
-    return (DCP::DCP05ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ******************************************************************************
 
-DCP::DCP05DistFileControllerC::DCP05DistFileControllerC(DCP05ModelC* pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model)
+DCP::DCP06DistFileControllerC::DCP06DistFileControllerC(DCP06ModelC* pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_DIST_FILE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_DIST_FILE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// FileModel
-	m_pDataModel = new DCP::DCP05DistFileModelC(m_pDCP05Model); 
+	m_pDataModel = new DCP::DCP06DistFileModelC(m_pDCP06Model); 
  
     // Create a dialog
-    m_pDlg = new DCP::DCP05DistFileDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06DistFileDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( DIST_FILE_DLG, m_pDlg, true );
 
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_OPEN_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_OPEN_TOK);
 	SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_NEW_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_NEW_TOK);
 	SetFunctionKey( FK2, vDef );
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CLOSE_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CLOSE_TOK);
 	SetFunctionKey( FK5, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 	
 	// SHIFT
-	vDef.strLable = StringC(AT_DCP05,K_DCP_DEL_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
 	SetFunctionKey( SHFK2, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_VIEW_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_VIEW_TOK);
 	SetFunctionKey( SHFK5, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -251,13 +251,13 @@ DCP::DCP05DistFileControllerC::DCP05DistFileControllerC(DCP05ModelC* pDCP05Model
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP05DistFileControllerC::~DCP05DistFileControllerC()
+DCP::DCP06DistFileControllerC::~DCP06DistFileControllerC()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP05DistFileControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06DistFileControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -268,12 +268,12 @@ bool DCP::DCP05DistFileControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -284,7 +284,7 @@ bool DCP::DCP05DistFileControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // OPEN
-void DCP::DCP05DistFileControllerC::OnF1Pressed()
+void DCP::DCP06DistFileControllerC::OnF1Pressed()
 {
 		if (m_pDlg == NULL)
 	    {
@@ -292,12 +292,12 @@ void DCP::DCP05DistFileControllerC::OnF1Pressed()
 			return;
 		}
 		
-		DCP::DCP05SelectFileModelC* pModel = new DCP05SelectFileModelC;
+		DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
 
 		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP05SelectFileControllerC(CALCDIST_FILE, sTitle,m_pDCP05Model) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(CALCDIST_FILE, sTitle,m_pDCP06Model) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
@@ -305,7 +305,7 @@ void DCP::DCP05DistFileControllerC::OnF1Pressed()
 }
 
 // NEW
-void DCP::DCP05DistFileControllerC::OnF2Pressed()
+void DCP::DCP06DistFileControllerC::OnF2Pressed()
 {
 		if (m_pDlg == NULL)
 	    {
@@ -313,8 +313,8 @@ void DCP::DCP05DistFileControllerC::OnF2Pressed()
 			return;
 		}
 		
-		DCP::DCP05InputTextModelC* pModel = new DCP05InputTextModelC;
-		pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_NEW_FILENAME_TOK);
+		DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+		pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_NEW_FILENAME_TOK);
 		pModel->m_StrTitle = GetTitle();
 		pModel->m_iTextLength = 8;
 		pModel->m_StrText = L" ";
@@ -327,17 +327,17 @@ void DCP::DCP05DistFileControllerC::OnF2Pressed()
 
 		if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
 		{
-			(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP05InputTextControllerC(m_pDCP05Model ));
+			(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC(m_pDCP06Model ));
 		}
 
-		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDCP05FileDlg->GetDCP05Model());
+		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDCP06FileDlg->GetDCP06Model());
 		(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(INPUT_TEXT_CONTROLLER, true);
 
 }
 
 // CLOSE
-void DCP::DCP05DistFileControllerC::OnF5Pressed()
+void DCP::DCP06DistFileControllerC::OnF5Pressed()
 {	
 	if(m_pDataModel->m_pFileFunc->IsOpen())
 		m_pDataModel->m_pFileFunc->CloseFile();
@@ -347,7 +347,7 @@ void DCP::DCP05DistFileControllerC::OnF5Pressed()
 }
 
 // CONT
-void DCP::DCP05DistFileControllerC::OnF6Pressed()
+void DCP::DCP06DistFileControllerC::OnF6Pressed()
 {
     if (m_pDlg == NULL)
     {
@@ -364,7 +364,7 @@ void DCP::DCP05DistFileControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 // DEL
-void DCP::DCP05DistFileControllerC::OnSHF2Pressed()
+void DCP::DCP06DistFileControllerC::OnSHF2Pressed()
 {
 	if(!m_pDataModel->m_pFileFunc->IsOpen())
 		return;
@@ -374,41 +374,41 @@ void DCP::DCP05DistFileControllerC::OnSHF2Pressed()
 }
 
 // VIEW
-void DCP::DCP05DistFileControllerC::OnSHF5Pressed()
+void DCP::DCP06DistFileControllerC::OnSHF5Pressed()
 {
 	if(!m_pDataModel->m_pFileFunc->IsOpen())
 		return;
 
 	if(GetController(VIEWCDF_CONTROLLER) == NULL)
 	{
-		(void)AddController( VIEWCDF_CONTROLLER, new DCP::DCP05ViewCdfControllerC(m_pDataModel->m_pFileFunc, m_pDlg->GetDCP05Model()) );
+		(void)AddController( VIEWCDF_CONTROLLER, new DCP::DCP06ViewCdfControllerC(m_pDataModel->m_pFileFunc, m_pDlg->GetDCP06Model()) );
 	}
-	(void)GetController( VIEWCDF_CONTROLLER )->SetModel(m_pDlg->GetDCP05Model());
+	(void)GetController( VIEWCDF_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
 	SetActiveController(VIEWCDF_CONTROLLER, true);
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP05DistFileControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06DistFileControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP05DistFileControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06DistFileControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectFileModelC* pModel = (DCP::DCP05SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		StringC strSelectedFile = pModel->m_strSelectedFile;
 		m_pDataModel->m_pFileFunc->setFile(strSelectedFile);
 	}
 
 		if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP05InputTextModelC* pModel = (DCP::DCP05InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 	
 			char fname[CPI::LEN_PATH_MAX];
-			//DCP05MsgBoxC msgbox;
+			//DCP06MsgBoxC msgbox;
 			//msgbox.ShowMessageOk(strNewFile);
 			//UTL::UnicodeToAscii(fname, strNewFile);
 			BSS::UTI::BSS_UTI_WCharToAscii( strNewFile, fname );
@@ -416,7 +416,7 @@ void DCP::DCP05DistFileControllerC::OnActiveControllerClosed( int lCtrlID, int l
 			m_pDataModel->m_pFileFunc->create_new_file(fname);
 			m_pDataModel->m_pFileFunc->setFile(strNewFile);
 		
-			 //m_pDCP05FileDlg->CreateFile(sFileToCreate, pModel->m_StrText);
+			 //m_pDCP06FileDlg->CreateFile(sFileToCreate, pModel->m_StrText);
 	}
 
 	m_pDlg->RefreshControls();
@@ -424,22 +424,22 @@ void DCP::DCP05DistFileControllerC::OnActiveControllerClosed( int lCtrlID, int l
 }
 
 // ================================================================================================
-// ======================================  DCP05AngleFileModelC====================================
+// ======================================  DCP06AngleFileModelC====================================
 // ================================================================================================
 
 
 // ===========================================================================================
-// DCP05AngleFileModelC
+// DCP06AngleFileModelC
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP05DistFileModelC::DCP05DistFileModelC(DCP05ModelC* pDCP05Model)
+DCP::DCP06DistFileModelC::DCP06DistFileModelC(DCP06ModelC* pDCP06Model)
 {
-	m_pFileFunc = new CdfFileFunc(pDCP05Model);
-	pCommon = new DCP05CommonC(pDCP05Model);
+	m_pFileFunc = new CdfFileFunc(pDCP06Model);
+	pCommon = new DCP06CommonC(pDCP06Model);
 
 }
-DCP::DCP05DistFileModelC::~DCP05DistFileModelC()
+DCP::DCP06DistFileModelC::~DCP06DistFileModelC()
 {
 	if(m_pFileFunc)
 	{
@@ -454,7 +454,7 @@ DCP::DCP05DistFileModelC::~DCP05DistFileModelC()
 }
 
 // ================================================================================================
-// ======================================  DCP05AngleFileModelC====================================
+// ======================================  DCP06AngleFileModelC====================================
 // ================================================================================================
 
 // ================================================================================================
@@ -473,25 +473,25 @@ DCP::DCP05DistFileModelC::~DCP05DistFileModelC()
 //	// get path
 //	getPath();
 //
-//	m_pCommon = new DCP05CommonC();
+//	m_pCommon = new DCP06CommonC();
 //}
 
-DCP::CdfFileFunc::CdfFileFunc(DCP05ModelC* pDCP05Model): m_pFile(0), points(0), m_bExists(false),opened(0),
-				m_pDCP05Model(pDCP05Model),file_updated(0)
+DCP::CdfFileFunc::CdfFileFunc(DCP06ModelC* pDCP06Model): m_pFile(0), points(0), m_bExists(false),opened(0),
+				m_pDCP06Model(pDCP06Model),file_updated(0)
 {
 	m_cPath[0] = '\0';
 	m_cPathAndFileName[0] = '\0';
 	m_cFileName[0] = '\0';
 
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 
 	// get path
 	getPath();
 }
 // ****************************************************************************************
-DCP::CdfFileFunc::CdfFileFunc(boost::filesystem::path* FileInfo,DCP05ModelC* pDCP05Model):m_pFile(0), points(0), m_bExists(false),file_updated(0),m_pDCP05Model(pDCP05Model)
+DCP::CdfFileFunc::CdfFileFunc(boost::filesystem::path* FileInfo,DCP06ModelC* pDCP06Model):m_pFile(0), points(0), m_bExists(false),file_updated(0),m_pDCP06Model(pDCP06Model)
 {
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 
 	m_cPath[0] = '\0';
 	m_cPathAndFileName[0] = '\0';
@@ -524,7 +524,7 @@ DCP::CdfFileFunc::~CdfFileFunc()
 // ****************************************************************************************
 void DCP::CdfFileFunc::getPath()
 {
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	//CPI::FileUtilitiesC::MakeDir(m_cPath);
 	boost::filesystem::path filePath= m_cPath;
     boost::system::error_code errCode;
@@ -671,7 +671,7 @@ int Result;
 	if(!m_pCommon->card_status())//(1) != 0)
 		return -1;
 
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	
 	ret = -1;
 
@@ -681,7 +681,7 @@ int Result;
 	if(!fopen1(mode))// /*FIL_ACC_RDWR */,&fp) != TRUE)
 	{
 		StringC msg;
-		msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 		msg.Format(msg,(const wchar_t*)StringC(m_cPathAndFileName/*m_cFileName*/));
 		msgbox.ShowMessageOk(msg);
 		//msgbox1(TXT_NIL_TOKEN,M_DCP_FILE_OPEN_ERROR_TOK,(void *) fname,MB_OK);
@@ -737,9 +737,9 @@ short DCP::CdfFileFunc::fopen1(const char* mode)
 	{
 		return true;		
 	}
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
-	msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
+	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(m_cPathAndFileName));
 			msgbox.ShowMessageOk(msg);
 	return false;
@@ -891,12 +891,12 @@ FILE* fp_out=0;
 char buff[CPI::LEN_PATH_MAX];
 char temp_pno[10];
 StringC msg;		
-DCP05MsgBoxC msgbox;
+DCP06MsgBoxC msgbox;
 char temp[CPI::LEN_PATH_MAX];
 
 		if(points <=1)
 		{	
-			msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_DELETE_POINT_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_POINT_TOK);
 			msgbox.ShowMessageOk(msg);
 			return 0;
 		}	
@@ -912,7 +912,7 @@ char temp[CPI::LEN_PATH_MAX];
 				sprintf(out_name, "%-s","temp.tmp");
 				if(!(fp_out = fopen2(fp_out,out_name,"wb+")))
 				{
-					msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 					msg.Format(msg,(const wchar_t*)StringC(out_name));
 					msgbox.ShowMessageOk(msg);
 					return 0;
@@ -1044,9 +1044,9 @@ FILE* DCP::CdfFileFunc::fopen2(FILE *pFile , char* fname, const char* mode)
 	{
 		return pFile;		
 	}
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
-	msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
+	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(temp));
 			msgbox.ShowMessageOk(msg);
 
@@ -1059,7 +1059,7 @@ short DCP::CdfFileFunc::remove1(char *fname)
 {
 char apu[CPI::LEN_PATH_MAX];
 bool Result;
-	DCP05CommonC common(m_pDCP05Model);
+	DCP06CommonC common(m_pDCP06Model);
 
     sprintf(apu,"%s%-s",m_cPath,common.strbtrim(fname));
 
@@ -1086,7 +1086,7 @@ short DCP::CdfFileFunc::save_calcdist_to_file(char *dist,char *refname,char *ref
 {
 char temp1[100];
 StringC msg;
-DCP05MsgBoxC msgbox;
+DCP06MsgBoxC msgbox;
 
 	if(!opened)
 	{
@@ -1129,7 +1129,7 @@ DCP05MsgBoxC msgbox;
 	//if(FIL_Write(fs->f,ROW_LENGTH,1,temp1, w) != RC_OK)
 	{
 		 points--;
-		 msg.LoadTxt(AT_DCP05,M_DCP_ERR_WRITE_TO_FILE_TOK);
+		 msg.LoadTxt(AT_DCP06,M_DCP_ERR_WRITE_TO_FILE_TOK);
 		 msgbox.ShowMessageOk(msg);
 		 return 0;
 	}
@@ -1230,7 +1230,7 @@ short DCP::CdfFileFunc::is_id_exists(char *id, short Ind)
 {
 short ret = 0, i=0; 
 char apu1[20],apu[20];
-DCP05MsgBoxC msgbox;
+DCP06MsgBoxC msgbox;
 StringC msg;
 
 	if(!opened)
@@ -1266,7 +1266,7 @@ StringC msg;
 
 			if(strcmp(apu,apu1) == 0)
 			{
-				msg.LoadTxt(AT_DCP05,M_DCP_DIST_ID_IN_USE_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_DIST_ID_IN_USE_TOK);
 
 				msg.Format(msg,(const wchar_t*)StringC(apu1));
 				msgbox.ShowMessageOk(msg);
@@ -1282,7 +1282,7 @@ StringC msg;
 *************************************************************************/
 short DCP::CdfFileFunc::delete_file(void)
 {
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
 
 	short result=-1;
@@ -1296,7 +1296,7 @@ short DCP::CdfFileFunc::delete_file(void)
 		return false;
 
 	//if(msgbox(TXT_NIL_TOKEN,M_DELETE_FILE_TOK, MB_YESNO) == TRUE)
-	msg.LoadTxt(AT_DCP05,M_DCP_DELETE_FILE_TOK);
+	msg.LoadTxt(AT_DCP06,M_DCP_DELETE_FILE_TOK);
 	msg.Format(msg,(const wchar_t*)StringC(m_cFileName));
 	if(msgbox.ShowMessageYesNo(msg))
 	//if(msgbox1(TXT_NIL_TOKEN,M_DELETE_FILE_TOK, (void *) fstruct->name, MB_YESNO) == TRUE)
@@ -1306,7 +1306,7 @@ short DCP::CdfFileFunc::delete_file(void)
 		result = remove1(Temp);
 		if(result == -1)
 		{
-			msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_DELETE_FILE_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_FILE_TOK);
 			msgbox.ShowMessageOk(msg);
 			ret = false;
 		}
@@ -1322,7 +1322,7 @@ short DCP::CdfFileFunc::create_new_file(char* filename)
 char fname[13];
 short ret;
 StringC msg;
-DCP05MsgBoxC msgbox;
+DCP06MsgBoxC msgbox;
 char temp[CPI::LEN_PATH_MAX];
 
 	if(!m_pCommon->check_free_space(30000L))
@@ -1348,7 +1348,7 @@ char temp[CPI::LEN_PATH_MAX];
 		
 		if(access1(fname) == 1)
 		{
-			msg.LoadTxt(AT_DCP05,M_DCP_DELETE_OLD_FILE_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_DELETE_OLD_FILE_TOK);
 			msg.Format(msg,(const wchar_t*)StringC(fname/*m_cFileName*/));
 			if(msgbox.ShowMessageYesNo(msg))
 			{
@@ -1357,7 +1357,7 @@ char temp[CPI::LEN_PATH_MAX];
 
 			if(remove1(fname) != 0)
 			{
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_DELETE_FILE_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_FILE_TOK);
 				msgbox.ShowMessageOk(msg);
 				return 0;
 			}

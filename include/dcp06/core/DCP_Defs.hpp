@@ -12,9 +12,7 @@
 namespace DCP
 {
 	//#define AMS_DEBUG 1
-	#define DCP05_CUSTOMER 1
-	// DCP06: Use AT_DCP06 for app ID 15751; alias AT_DCP05 for backward-compat in token lookups
-	#define AT_DCP05 AT_DCP06
+	#define DCP06_CUSTOMER 1
 	
 	// Do not use these (Captivate 8)
     //#define TS16 // WITHOUT SCANNING
@@ -69,7 +67,7 @@ namespace DCP
 	#define  RES_LINE_DLG				133
 	#define  CHST_DLG					134
 	#define  RES_PLANE_DLG				135
-	#define  RES_POM_DLG				136
+	#define  RES_BESTFIT_DLG				136
 	#define  CALC_2_POINTS_DLG			137
 	#define INFO_DLG					138
 	#define SELECT_TOOL_DLG				139
@@ -100,7 +98,7 @@ namespace DCP
 	#define CALC_CIRCLE_DLG				163
 	#define PLANE_USERDEF_DLG			164
 	#define LINE_USERDEF_DLG			165
-	#define DOM_USERDEF_STATUS_DLG		166
+	#define A321_USERDEF_STATUS_DLG		166
 	
 	#define CAMERA_DLG					167
 	#define SCAN_DLG					168 
@@ -114,12 +112,12 @@ namespace DCP
 	#define INIT_CONTROLLER					2
 	#define INIT_USER_CONTROLLER			3
 	#define INIT_UNIT_CONTROLLER			4
-	#define DOM_CONTROLLER					5
+	#define A321_CONTROLLER					5
 	#define DEFINE_PLANE_CONTROLLER			6
 	#define DEFINE_LINE_CONTROLLER			7
 	#define MEAS_CONTROLLER					8
 	#define SPECIAL_MENU_CONTROLLER			9
-	#define POM_CONTROLLER					10
+	#define BESTFIT_CONTROLLER					10
 	#define CHST_CONTROLLER					11
 	#define CALCULATION_CONTROLLER			12
 	#define APPLICATION_MENU_CONTROLLER		13
@@ -139,7 +137,7 @@ namespace DCP
 	#define CIRCLE_CONTROLLER				27
 	#define CALC_DIST_CONTROLLER			28
 	#define CALC_ANGLE_CONTROLLER			29 
-	#define POM_POINT_CONTROLLER			30
+	#define BESTFIT_POINT_CONTROLLER			30
 	#define SELECT_FILE_CONTROLLER			31
 	#define SELECT_MULTIPOINTS_CONTROLLER	32
 	#define SELECT_POINT_CONTROLLER			33
@@ -164,7 +162,7 @@ namespace DCP
 	#define	RES_LINE_CONTROLLER				52	
 	#define	CHST_POINT_CONTROLLER			53
 	#define	RES_PLANE_CONTROLLER			54	
-	#define	RES_POM_CONTROLLER				55	
+	#define	RES_BESTFIT_CONTROLLER				55	
 	#define	CALC_2_POINTS_CONTROLLER		56	
 	#define SELECT_REF_POINT_CONTROLLER		57
 	#define SELECT_TARGET_POINT_CONTROLLER	58
@@ -198,14 +196,14 @@ namespace DCP
 	#define	RES_SHAFT_CONTROLLER					85
 	#define	CALCULATION_CIRCLE_CONTROLLER			86
 	#define DO_AIM_CONTROLLER						87
-	#define DOM_USERDEF_CONTROLLER					88
+	#define A321_USERDEF_CONTROLLER					88
 	#define DEFINE_PLANE_USERDEF_CONTROLLER		89
 	#define DEFINE_LINE_USERDEF_CONTROLLER		90
 
 	#define DEFINE_MEAS_START_CONTROLLER		91
 	#define DEFINE_DIST_MEAS_START_CONTROLLER		92
 	#define SCAN_CONTROLLER							93
-	#define FILE_CONTROLLER_POM						94
+	#define FILE_CONTROLLER_BESTFIT						94
 	#define FILE_CONTROLLER_CHST					95
 	#define SIMPLE_SCAN_CONTROLLER							96
 	#define LINE_FITTING_CONTROLLER							97
@@ -298,9 +296,9 @@ namespace DCP
 	#define SIMPLE_SCANNING 14
 	#define LINE_FITTING	15
 
-	// ORIENTATION
-	#define DCP_DOM_MENU			11
-	#define DCP_POM_MENU			12
+	// ORIENTATION (321 Alignment / Best Fit - legacy DOM/POM)
+	#define DCP_A321_MENU			11
+	#define DCP_BESTFIT_MENU			12
 	#define DCP_CHANGE_STATION_MENU 13
 	#define DCP_USER_DEFINED_MENU	14
 
@@ -314,9 +312,9 @@ namespace DCP
 
 	#define MAX_POINTS_IN_FILE	500
 	#define MAX_HOME_POINTS		10
-	// POM
-	#define MAX_POM_POINTS		20
-	#define MIN_POM_POINTS		3
+	// Best Fit point limits (legacy POM)
+	#define MAX_BESTFIT_POINTS		20
+	#define MIN_BESTFIT_POINTS		3
 
 	#define MAX_MID_POINTS 20
 	// userdef
@@ -331,6 +329,8 @@ namespace DCP
 	#define	CIRCLE_FILE	5
 	#define SHAFT_FILE	6
 	#define ADF_BF_STA 7
+	#define DCP06_JOBS 8
+	#define IMPORT_ADF 9
 
 	#define ACTUAL	1
 	#define DESIGN	2

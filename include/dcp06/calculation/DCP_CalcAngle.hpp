@@ -48,19 +48,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05CalcAngleDlgC;
-	class DCP05CalcAngleModelC;
+	class DCP06ModelC;
+	class DCP06CalcAngleDlgC;
+	class DCP06CalcAngleModelC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CalcAngleControllerC : public GUI::ControllerC
+    class DCP06CalcAngleControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05CalcAngleControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05CalcAngleControllerC();
+            DCP06CalcAngleControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06CalcAngleControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -88,27 +88,27 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05CalcAngleControllerC( const DCP05CalcAngleControllerC& oDCP05CalcAngleController )
+            DCP06CalcAngleControllerC( const DCP06CalcAngleControllerC& oDCP06CalcAngleController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05CalcAngleControllerC& operator=( const DCP05CalcAngleControllerC& oDCP05CalcAngleController )
+            DCP06CalcAngleControllerC& operator=( const DCP06CalcAngleControllerC& oDCP06CalcAngleController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05CalcAngleDlgC* m_pDlg;
-			DCP05CalcAngleModelC * m_pDataModel;
+            DCP06CalcAngleDlgC* m_pDlg;
+			DCP06CalcAngleModelC * m_pDataModel;
 			void change_function_keys();
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
     };
 
 
-	class DCP05CalcAngleDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class DCP06CalcAngleDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -126,10 +126,10 @@ namespace DCP
 
 			};
 
-		   DCP05CalcAngleDlgC(DCP05CalcAngleModelC * pCalcAngleModel);
+		   DCP06CalcAngleDlgC(DCP06CalcAngleModelC * pCalcAngleModel);
 
             // Description: Destructor
-            virtual ~DCP05CalcAngleDlgC();
+            virtual ~DCP06CalcAngleDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -141,7 +141,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05ModelC* GetDCP05Model() const;
+			DCP06ModelC* GetDCP06Model() const;
 
 	protected:
 			GUI::ComboLineCtrlC* m_p3DFile;
@@ -153,10 +153,10 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pNote;
 			GUI::ComboLineCtrlC* m_pRefType;
 			GUI::ComboLineCtrlC* m_pTargetType;
-			OBS_DECLARE_EXECUTE(DCP05CalcAngleDlgC);
+			OBS_DECLARE_EXECUTE(DCP06CalcAngleDlgC);
 
 		private:
-			DCP05CalcAngleModelC * m_pDataModel;
+			DCP06CalcAngleModelC * m_pDataModel;
 			OBS::ObserverC m_pAngleIdObserver;
 			OBS::ObserverC m_pNoteObserver;
 			OBS::ObserverC m_pRefIdObserver;
@@ -164,19 +164,19 @@ namespace DCP
 			virtual void OnValueChanged(int unNotifyCode, int ulParam2);
 	};
 
-	class DCP05CalcAngleModelC : public GUI::ModelC
+	class DCP06CalcAngleModelC : public GUI::ModelC
 
     {
         public:
 
             // Description: Constructor
             //
-            DCP05CalcAngleModelC(DCP05ModelC* pDCP05Model);
-			//DCP05DomModelC(DCP05DomModelC* pModel);
+            DCP06CalcAngleModelC(DCP06ModelC* pDCP06Model);
+			//DCP06DomModelC(DCP06DomModelC* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP05CalcAngleModelC();
+            virtual ~DCP06CalcAngleModelC();
 
 			enum eDisplayMode
 			{
@@ -199,8 +199,8 @@ namespace DCP
 			StringC sSelectedAngleFile;
 			AdfFileFunc* pAdfFileFunc;
 			AgfFileFunc* pAgfFileFunc;
-			DCP05CommonC* pCommon;
-			DCP05MsgBoxC* pMsgBox;
+			DCP06CommonC* pCommon;
+			DCP06MsgBoxC* pMsgBox;
 			short iPointCount3dfile;
 			S_SELECT_POINTS point_list[MAX_POINTS_IN_FILE];
 			short REF_ACTDES;

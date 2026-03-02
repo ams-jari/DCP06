@@ -28,7 +28,7 @@
 #include "calc.h"
 #include <math.h>
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/core/DCP_DCP05Meas.hpp>
+#include <dcp06/core/DCP_DCP06Meas.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/measurement/DCP_MidPointController.hpp>
 //#include <dcp06/calculation/DCP_CalcLine.hpp>
@@ -63,27 +63,27 @@ using namespace DCP;
 // ================================================================================================
 
 // ================================================================================================
-// ====================================  DCP053DMeasControllerC ===================================
+// ====================================  DCP063DMeasControllerC ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
 
-DCP::DCP05MidPointControllerC::DCP05MidPointControllerC(DCP::DCP05ModelC *pDCP05Model):
-	m_pDCP05Model(pDCP05Model)
+DCP::DCP06MidPointControllerC::DCP06MidPointControllerC(DCP::DCP06ModelC *pDCP06Model):
+	m_pDCP06Model(pDCP06Model)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-	//m_pCommon = new DCP05CommonC();
+	//m_pCommon = new DCP06CommonC();
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05MidPointControllerC::~DCP05MidPointControllerC()
+DCP::DCP06MidPointControllerC::~DCP06MidPointControllerC()
 {
 	if(m_pCommon)
 	{
@@ -95,30 +95,30 @@ DCP::DCP05MidPointControllerC::~DCP05MidPointControllerC()
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP05MidPointControllerC::OnControllerActivated(void)
+void DCP::DCP06MidPointControllerC::OnControllerActivated(void)
 {
 }
 
-void DCP::DCP05MidPointControllerC::Run(void)
+void DCP::DCP06MidPointControllerC::Run(void)
 {
 		
-		DCP::DCP05MeasModelC* pModel = new DCP05MeasModelC;
+		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
 		pModel->m_iPointsCount = MAX_MID_POINTS;
 		pModel->m_iMaxPoint = MAX_MID_POINTS;
 		pModel->m_iMinPoint = MAX_MID_POINTS;
 	
 		memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * MAX_MID_POINTS);
-		memcpy(&pModel->point_table[0],  &m_pDCP05Model->mid_points[0], sizeof(S_POINT_BUFF) * MAX_MID_POINTS);
+		memcpy(&pModel->point_table[0],  &m_pDCP06Model->mid_points[0], sizeof(S_POINT_BUFF) * MAX_MID_POINTS);
 
 		//memcpy(&pModel->point_table[0],&m_pDataModel->planes[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
 
 	
 		if(GetController(MEAS_MID_POINT_CONTROLLER) == NULL)
 		{
-			(void)AddController( MEAS_MID_POINT_CONTROLLER, new DCP::DCP05MeasControllerC(m_pDCP05Model) );
+			(void)AddController( MEAS_MID_POINT_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDCP06Model) );
 		}
 
-		(void)GetController(MEAS_MID_POINT_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_MID_POINT_TOK));
+		(void)GetController(MEAS_MID_POINT_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_MID_POINT_TOK));
 
 		(void)GetController( MEAS_MID_POINT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(MEAS_MID_POINT_CONTROLLER, true);
@@ -127,16 +127,16 @@ void DCP::DCP05MidPointControllerC::Run(void)
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05MidPointControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06MidPointControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     //(void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	//m_pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
-	m_pPointBuffModel = (DCP05PointBuffModelC*) pModel;
+	//m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pPointBuffModel = (DCP06PointBuffModelC*) pModel;
 	return /*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
@@ -146,7 +146,7 @@ bool DCP::DCP05MidPointControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP05MidPointControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP06MidPointControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	/*
 	if(m_bPointMenu && lExitCode == 2)
@@ -155,26 +155,26 @@ void DCP::DCP05MidPointControllerC::OnActiveDialogClosed( int lDlgID, int lExitC
 
 }
 
-DCP::DCP05PointBuffModelC* DCP::DCP05MidPointControllerC::GetDataModel() const
+DCP::DCP06PointBuffModelC* DCP::DCP06MidPointControllerC::GetDataModel() const
 {
-    return (DCP::DCP05PointBuffModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06PointBuffModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP05MidPointControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06MidPointControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == MEAS_MID_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05MeasModelC* pModel = (DCP::DCP05MeasModelC*) GetController( MEAS_MID_POINT_CONTROLLER )->GetModel();	
+		DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_MID_POINT_CONTROLLER )->GetModel();	
 		
 		double x_mid = 0.0;
 		double y_mid = 0.0;
 		double z_mid = 0.0;
 
 
-		memcpy(&m_pDCP05Model->mid_points[0], &pModel->point_table[0],sizeof(S_POINT_BUFF) * MAX_MID_POINTS);	
+		memcpy(&m_pDCP06Model->mid_points[0], &pModel->point_table[0],sizeof(S_POINT_BUFF) * MAX_MID_POINTS);	
 
 		//if(m_pCommon->calc_mid_point(&pModel->point_table[0], &pModel->point_table[1],&x_mid, &y_mid, &z_mid) == 0)
 		if(m_pCommon->calc_mid_point(&pModel->point_table[0], &x_mid, &y_mid, &z_mid) == 0)

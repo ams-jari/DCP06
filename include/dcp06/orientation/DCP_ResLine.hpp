@@ -49,19 +49,19 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05ResLineDlgC;
-	//class DCP05SelectOnePointModelC;
+    class DCP06ModelC;
+	class DCP06ResLineDlgC;
+	//class DCP06SelectOnePointModelC;
 
     // Description: Tabbed controller for the Hello World application
 	
-    class DCP05ResLineControllerC : public GUI::ControllerC
+    class DCP06ResLineControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05ResLineControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05ResLineControllerC();
+            DCP06ResLineControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06ResLineControllerC();
 
             // Description: Handle change of position values
             //virtual void OnF1Pressed();
@@ -83,25 +83,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05ResLineControllerC( const DCP05ResLineControllerC& oDCP05ResLineController )
+            DCP06ResLineControllerC( const DCP06ResLineControllerC& oDCP06ResLineController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05ResLineControllerC& operator=( const DCP05ResLineControllerC& oDCP05ResLineController )
+            DCP06ResLineControllerC& operator=( const DCP06ResLineControllerC& oDCP06ResLineController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05ResLineDlgC* m_pDlg;
-			DCP05ModelC* m_pDCP05Model;
+            DCP06ResLineDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
     };
 	
 
-	class DCP05ResLineDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
+	class DCP06ResLineDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
 	{
 	 public:
 
@@ -127,10 +127,10 @@ namespace DCP
 				CI_Deviation
 			};
 
-		   DCP05ResLineDlgC(DCP05ModelC *pDCP05Model);
+		   DCP06ResLineDlgC(DCP06ModelC *pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05ResLineDlgC();
+            virtual ~DCP06ResLineDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -147,7 +147,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05DefineLineModelC* GetDataModel() const;
+            DCP06DefineLineModelC* GetDataModel() const;
 
 			//OBS::ObserverC m_pMultiColCtrlObserver;
 			//virtual void OnChanged(int unNotifyCode, int ulParam2);
@@ -155,11 +155,11 @@ namespace DCP
 		protected:
 			GUI::TextCtrlC* m_pInfo1;
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 			// Description: add all controls
        
 
-			//OBS_DECLARE_EXECUTE(DCP05SelectOnePointDlgC);
+			//OBS_DECLARE_EXECUTE(DCP06SelectOnePointDlgC);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -169,31 +169,31 @@ namespace DCP
 				StringC sDesignNonSelected;
 				//virtual void OnTimer(void);
 
-				DCP05CommonC* m_pCommon;
+				DCP06CommonC* m_pCommon;
 				double calc_pdist(S_LINE_BUFF *line, short pno);
 				double get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/);
 
 				StringC sTitle;
 				
 
-				//void DCP::DCP05SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP05SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
+				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
  	};
 
 
 	
 	
-	class DCP05ResLineModelC : public GUI::ModelC
+	class DCP06ResLineModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05ResLineModelC();
+            DCP06ResLineModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05ResLineModelC();
+            virtual ~DCP06ResLineModelC();
 			S_LINE_BUFF line[1];
 			StringC sCaption;
 			/*			

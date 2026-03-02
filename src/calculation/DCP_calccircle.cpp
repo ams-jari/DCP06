@@ -64,32 +64,32 @@
 
 
 // ================================================================================================
-// ====================================  DCP05CalcCircleC  ========================================
+// ====================================  DCP06CalcCircleC  ========================================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP05CalcCircleC::DCP05CalcCircleC(short plane_type,
+DCP::DCP06CalcCircleC::DCP06CalcCircleC(short plane_type,
 										S_CIRCLE_BUFF *circle_points, 
 										 S_PLANE_BUFF* planes,
 										S_CIRCLE_BUFF *circle_points_in_plane,
-										double dToolRadius,DCP05ModelC* pDCP05Model ): 
+										double dToolRadius,DCP06ModelC* pDCP06Model ): 
 				m_iPlaneType(plane_type),
 				m_pCircle_points(circle_points),
 				m_pCircle_points_in_plane(circle_points_in_plane),
 				m_pPlanes(planes),
 				m_dToolRadius(dToolRadius)
 {
-	m_pMsgBox = new DCP05MsgBoxC;
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pMsgBox = new DCP06MsgBoxC;
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 }
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05CalcCircleC::~DCP05CalcCircleC()
+DCP::DCP06CalcCircleC::~DCP06CalcCircleC()
 {
 	if(m_pMsgBox)
 	{
@@ -107,7 +107,7 @@ DCP::DCP05CalcCircleC::~DCP05CalcCircleC()
 // ================================================================================================
 // Description: calc_center_of_circle
 // ================================================================================================
-short DCP::DCP05CalcCircleC::calc_center_of_circle(/*S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane*/)
+short DCP::DCP06CalcCircleC::calc_center_of_circle(/*S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane*/)
 {
 //short ret;
 double cx_,cy_,cz_;
@@ -115,7 +115,7 @@ double mea1[4];
 double point1[4];
 short i,count,ret1,count1;
 StringC sMsg;
-DCP05CalcPlaneC temp_calc_plane;
+DCP06CalcPlaneC temp_calc_plane;
 S_PLANE_BUFF temp_plane_buffer[1];
 
 	if(m_iPlaneType == 0)
@@ -279,7 +279,7 @@ S_PLANE_BUFF temp_plane_buffer[1];
 			sMsg.LoadTxt(AT_DCP05,M_DCP_POINTS_ARE_IN_LINE_TOK);
 			m_pMsgBox->ShowMessageOk(sMsg);
 		}
-		else if(ret1 == -1) // Käänteismatriisi ei onninstunut   ret ->ret1 171000
+		else if(ret1 == -1) // Kï¿½ï¿½nteismatriisi ei onninstunut   ret ->ret1 171000
 		{
 			sMsg.LoadTxt(AT_DCP05, M_DCP_CANNOT_CALC_TOK);
 			m_pMsgBox->ShowMessageOk(sMsg);
@@ -300,7 +300,7 @@ S_PLANE_BUFF temp_plane_buffer[1];
 // ================================================================================================
 // Description: calc_matrix
 // ================================================================================================
-short DCP::DCP05CalcCircleC::calc_matrix(S_POINT_BUFF *points)
+short DCP::DCP06CalcCircleC::calc_matrix(S_POINT_BUFF *points)
 {
 short i,ret,count,cc;
 double mea1[4],mea2[4],mea3[4], uni[4];
@@ -339,7 +339,7 @@ double dist;
 		// ********************************************************
 		// Lasketaan taso
 		// ********************************************************
-		DCP05CalcPlaneC calc_plane;
+		DCP06CalcPlaneC calc_plane;
 		if(calc_plane.calc(&temp_plane_table[0], ACTUAL))
 		{
 			//PrintLn("Tason normaali");
@@ -355,7 +355,7 @@ double dist;
 				if(temp_plane_table[0].points[i].sta == 1 ||temp_plane_table[0].points[i].sta == 2)
 				{	
 					// ***************************************************
-					// Pisteen etäisyys tasosta
+					// Pisteen etï¿½isyys tasosta
 					// ***************************************************
 					m.x = temp_plane_table[0].points[i].x;
 					m.y = temp_plane_table[0].points[i].y;
@@ -368,13 +368,13 @@ double dist;
 					wplane.nx = temp_plane_table[0].nx;
 					wplane.ny = temp_plane_table[0].ny;
 					wplane.nz = temp_plane_table[0].nz;
-					// JMA: tutki tämä
+					// JMA: tutki tï¿½mï¿½
 				
 					dist = calc_point_dist_from_plane(&m,&wplane);
 					// PrintLn("Dist=%.5f",dist); 	
 				
 					// *********************************
-					// Tason normaali yksikkövektoriksi 
+					// Tason normaali yksikkï¿½vektoriksi 
 					// *********************************
 
 					mea1[0] = temp_plane_table[0].nx;
@@ -392,7 +392,7 @@ double dist;
 					c.z = dist * uni[2];
 										
 					// *********************************
-					//	Lasketaan 3 ensinmäisen pisteen
+					//	Lasketaan 3 ensinmï¿½isen pisteen
 					//  koordinaatit lasketulle tasolle
 					// *********************************
 					if(cc==0)
@@ -488,7 +488,7 @@ double dist;
 // ================================================================================================
 // Description: convert_points_to_plane
 // ================================================================================================
-short DCP::DCP05CalcCircleC::convert_points_to_plane(S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane, short count)
+short DCP::DCP06CalcCircleC::convert_points_to_plane(S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane, short count)
 {
 short i;
 double mea1[4],point1[4];
@@ -607,7 +607,7 @@ short count1;
 // ================================================================================================
 // Description: get_results
 // ================================================================================================
-void DCP::DCP05CalcCircleC::get_results(double* dCx, double* dCy, double* dCz, double* dVi, double* dVj, double* dVk, double* dDiameter, double* rms, short* iPno)
+void DCP::DCP06CalcCircleC::get_results(double* dCx, double* dCy, double* dCz, double* dVi, double* dVj, double* dVk, double* dDiameter, double* rms, short* iPno)
 {
 	
 	*dCx = cx;
@@ -625,7 +625,7 @@ void DCP::DCP05CalcCircleC::get_results(double* dCx, double* dCy, double* dCz, d
 // ================================================================================================
 // Description: get_max_dist_and_rms_circle
 // ================================================================================================
-double DCP::DCP05CalcCircleC::get_max_dist_and_rms_circle(S_CIRCLE_BUFF *circle_, short *pno, double *rms_diameter)
+double DCP::DCP06CalcCircleC::get_max_dist_and_rms_circle(S_CIRCLE_BUFF *circle_, short *pno, double *rms_diameter)
 {
 
 short i, count=0;
@@ -687,7 +687,7 @@ double max=0.0, dist, dist2=0.0, dist3;
 // ================================================================================================
 // Description: calc_circle
 // ================================================================================================
-short DCP::DCP05CalcCircleC::calc_circle(S_CIRCLE_BUFF *points, int count, double *cxtod,double *cytod, double *diameter)
+short DCP::DCP06CalcCircleC::calc_circle(S_CIRCLE_BUFF *points, int count, double *cxtod,double *cytod, double *diameter)
 {
 	short i,a,j,k,ret;
 	double cx,cy,sx=0,sy=0,x1,x2,x3,y1,y2,y3,radius,srad=0.0,dist;
@@ -748,8 +748,8 @@ short DCP::DCP05CalcCircleC::calc_circle(S_CIRCLE_BUFF *points, int count, doubl
 }
 
 
-//double DCP::DCP05CalcCircleC::pns_ymp(double x[], double y[], double& x0,double& y0,int ndata)
-short DCP::DCP05CalcCircleC::pns_ymp(S_CIRCLE_BUFF *points, int count, double *cxtod,double *cytod, double *diameter)
+//double DCP::DCP06CalcCircleC::pns_ymp(double x[], double y[], double& x0,double& y0,int ndata)
+short DCP::DCP06CalcCircleC::pns_ymp(S_CIRCLE_BUFF *points, int count, double *cxtod,double *cytod, double *diameter)
 {
 	double AtA[3][3];
 	//Matrix AtA(3,3);
@@ -767,7 +767,7 @@ short DCP::DCP05CalcCircleC::pns_ymp(S_CIRCLE_BUFF *points, int count, double *c
 	reset_matrix (&AtA[0][0], 3, 3);
 	reset_matrix (&invAtA[0][0], 3, 3);
 
-	// Täytetään matriisit	
+	// Tï¿½ytetï¿½ï¿½n matriisit	
 	/* ORIG
 	for (int i=0;i<ndata;i++)
 	{		
@@ -786,10 +786,10 @@ short DCP::DCP05CalcCircleC::pns_ymp(S_CIRCLE_BUFF *points, int count, double *c
 	AtA(3,2) = AtA(2,3);
 	AtA(3,3) = ndata;
 
-	// Käänteismatriisi
+	// Kï¿½ï¿½nteismatriisi
 	determi = inv(AtA, invAtA);
 
-	// Ratkaistaan ympyrän parametrit
+	// Ratkaistaan ympyrï¿½n parametrit
 	for (i=1;i<4;i++)
 	{		
 		x0 += invAtA(1,i)*Atb[i-1];
@@ -827,11 +827,11 @@ short DCP::DCP05CalcCircleC::pns_ymp(S_CIRCLE_BUFF *points, int count, double *c
 		AtA[2][1] = AtA[1][2];
 		AtA[2][2] = lask;
 		
-	// Käänteismatriisi
+	// Kï¿½ï¿½nteismatriisi
 	//determi = inv(AtA, invAtA);
 	matinv_n (&AtA[0][0], 3,3, &invAtA[0][0]);
 
-	// Ratkaistaan ympyrän parametrit
+	// Ratkaistaan ympyrï¿½n parametrit
 	for (i=1;i<4;i++)
 	{		
 		x0 += invAtA[0][i-1]*Atb[i-1];

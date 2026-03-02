@@ -43,18 +43,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05AddToolDlgC;
-	class DCP05AddToolModelC;
+	class DCP06ModelC;
+	class DCP06AddToolDlgC;
+	class DCP06AddToolModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05AddToolControllerC : public GUI::ControllerC,public OBS::CommandC
+    class DCP06AddToolControllerC : public GUI::ControllerC,public OBS::CommandC
     {
         public:
 
             // Description: Constructor
-            DCP05AddToolControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05AddToolControllerC();
+            DCP06AddToolControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06AddToolControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -83,29 +83,29 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-           /* DCP05AddToolControllerC( const DCP05AddToolControllerC& oDCP05AddToolController )
+           /* DCP06AddToolControllerC( const DCP06AddToolControllerC& oDCP06AddToolController )
             {
                 USER_APP_VERIFY( false );
             }*/
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05AddToolControllerC& operator=( const DCP05AddToolControllerC& oDCP05AddToolController )
+            DCP06AddToolControllerC& operator=( const DCP06AddToolControllerC& oDCP06AddToolController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05AddToolDlgC* m_pDlg;
-			DCP::DCP05ModelC * m_pDCP05Model;
+            DCP06AddToolDlgC* m_pDlg;
+			DCP::DCP06ModelC * m_pDCP06Model;
 
-			OBS_DECLARE_EXECUTE(DCP05AddToolControllerC);
+			OBS_DECLARE_EXECUTE(DCP06AddToolControllerC);
 			OBS::ObserverC m_pOnApplicationClosedObserver;
 			virtual void OnApplicationClosed(int unNewApp,  int ulAppOwner);
     };
 
 
-	class DCP05AddToolDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class DCP06AddToolDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -119,10 +119,10 @@ namespace DCP
 				eToolZ
 			};
 
-		   DCP05AddToolDlgC(DCP05ModelC *pDCP05Model);
+		   DCP06AddToolDlgC(DCP06ModelC *pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05AddToolDlgC();
+            virtual ~DCP06AddToolDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -134,7 +134,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP::DCP05AddToolModelC* GetDataModel() const;
+			DCP::DCP06AddToolModelC* GetDataModel() const;
 
 	protected:
   			
@@ -145,18 +145,18 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pToolY;
 			GUI::ComboLineCtrlC* m_pToolZ;
 	private:
-			DCP::DCP05ModelC * m_pDCP05Model;
+			DCP::DCP06ModelC * m_pDCP06Model;
 	};
 
-   class DCP05AddToolModelC : public GUI::ModelC
+   class DCP06AddToolModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
-            DCP05AddToolModelC();
+            DCP06AddToolModelC();
 
 			// Description: Destructor
-			~DCP05AddToolModelC();
+			~DCP06AddToolModelC();
             
 			S_TOOL tool;
 			/*

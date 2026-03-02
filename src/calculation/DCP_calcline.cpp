@@ -61,18 +61,18 @@
 *                                                                              *
 \******************************************************************************/
 
-DCP::DCP05CalcLineC::DCP05CalcLineC()
+DCP::DCP06CalcLineC::DCP06CalcLineC()
 {
 
 }
-DCP::DCP05CalcLineC::~DCP05CalcLineC()
+DCP::DCP06CalcLineC::~DCP06CalcLineC()
 {
 
 }
 // *********************************************************************
 //
 // *********************************************************************
-short DCP::DCP05CalcLineC::calc(S_LINE_BUFF *line, short actdes)
+short DCP::DCP06CalcLineC::calc(S_LINE_BUFF *line, short actdes)
 {
 short points_defined,i, ret1,lastpoint;
 struct ams_vector a,b,a_des,b_des;
@@ -84,7 +84,7 @@ double p_mat[MAX_POINTS_IN_LINE*3];
 double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 
 
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 
 	line->des_calc = 0;
 	line->des_sta =LINE_NOT_DEFINED;
@@ -332,7 +332,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 // *********************************************************************
 //
 // *********************************************************************
-short DCP::DCP05CalcLineC::points_count_in_line(S_LINE_BUFF *line)
+short DCP::DCP06CalcLineC::points_count_in_line(S_LINE_BUFF *line)
 {
 short count=0,i;
 
@@ -348,7 +348,7 @@ short count=0,i;
 // *********************************************************************
 // Laskee monta pistettä oetetaan laskentaan	
 // *********************************************************************
-short DCP::DCP05CalcLineC::defined_points_count_in_line(S_LINE_BUFF *line,short *lastpoint)
+short DCP::DCP06CalcLineC::defined_points_count_in_line(S_LINE_BUFF *line,short *lastpoint)
 {
 short count=0,i,sta;
 

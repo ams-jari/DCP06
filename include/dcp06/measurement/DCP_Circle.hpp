@@ -46,19 +46,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05CircleDlgC;
-	class DCP05CircleModelC;
+	class DCP06ModelC;
+	class DCP06CircleDlgC;
+	class DCP06CircleModelC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CircleControllerC : public GUI::ControllerC
+    class DCP06CircleControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05CircleControllerC(DCP05ModelC *pDCP05Model, short iDisplay = 0);
-			~DCP05CircleControllerC();
+            DCP06CircleControllerC(DCP06ModelC *pDCP06Model, short iDisplay = 0);
+			~DCP06CircleControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -85,22 +85,22 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05CircleControllerC( const DCP05CircleControllerC& oDCP05CircleController )
+            DCP06CircleControllerC( const DCP06CircleControllerC& oDCP05CircleController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05CircleControllerC& operator=( const DCP05CircleControllerC& oDCP05CircleController )
+            DCP06CircleControllerC& operator=( const DCP06CircleControllerC& oDCP05CircleController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05CircleDlgC* m_pDlg;
-			DCP05ModelC* m_pDCP05Model;
-			DCP05CircleModelC* m_pDataModel;
+            DCP06CircleDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06CircleModelC* m_pDataModel;
 
 			short PLANE_KEYS;
 			void set_function_keys();
@@ -109,7 +109,7 @@ namespace DCP
     };
 
 
-	class DCP05CircleDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class DCP06CircleDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -122,10 +122,10 @@ namespace DCP
 				eCirclePoints
 			};
 
-		   DCP05CircleDlgC(DCP05ModelC *pDCP05Model, DCP05CircleModelC* pCircleModel, short iDisplay);
+		   DCP06CircleDlgC(DCP06ModelC *pDCP06Model, DCP06CircleModelC* pCircleModel, short iDisplay);
 
             // Description: Destructor
-            virtual ~DCP05CircleDlgC();
+            virtual ~DCP06CircleDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -137,11 +137,11 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05PointBuffModelC* GetPointBuffModelModel() const;
+			DCP06PointBuffModelC* GetPointBuffModelModel() const;
 			
 	protected:
   			
-			DCP05ModelC * m_pDCP05Model;
+			DCP06ModelC * m_pDCP06Model;
 			
 			GUI::TextCtrlC*  m_pDefinePlaneInfo;
 			GUI::ComboLineCtrlC* m_pPlane;
@@ -149,10 +149,10 @@ namespace DCP
 			GUI::TextCtrlC*  m_pMeasureCirclePoints;
 			GUI::ComboLineCtrlC* m_pCirclePoints;
 
-			OBS_DECLARE_EXECUTE(DCP05CircleDlgC);
+			OBS_DECLARE_EXECUTE(DCP06CircleDlgC);
 
 	private:
-			DCP05CircleModelC* m_pDataModel;
+			DCP06CircleModelC* m_pDataModel;
 
 			StringC sXY_plane, sZX_plane, sYZ_plane, sCIRCLEPOINTS_plane, sMeasPlane;
 
@@ -162,21 +162,21 @@ namespace DCP
 			short m_iDisplay;
 	};
 
-	 class DCP05CircleModelC : public GUI::ModelC
+	 class DCP06CircleModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
-            DCP05CircleModelC(DCP05ModelC* pDCP05Model);
+            DCP06CircleModelC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05CircleModelC();
+            virtual ~DCP06CircleModelC();
 
 			void delete_circle();
 			short show_circle_points();
-			DCP05ModelC* m_pDCP05Model;
-			DCP05CommonC* pCommon;
-			DCP05MsgBoxC* pMsgBox;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06CommonC* pCommon;
+			DCP06MsgBoxC* pMsgBox;
 			StringC sTitle;
 			S_PLANE_BUFF temp_plane_table[1];
 			S_PLANE_BUFF planes[1];

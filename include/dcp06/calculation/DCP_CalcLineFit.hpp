@@ -37,25 +37,25 @@
 #include <GUI_AppBase.hpp>
 
 #include <dcp06/core/DCP_Common.hpp>
-#include <dcp06/orientation/DCP_DCP05Dom.hpp>
+#include <dcp06/orientation/DCP_DCP06Alignment321.hpp>
 #include <dcp06/core/DCP_Model.hpp>
 // Description: The Hello World application
 //
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	//class DCP05ToolDlgC;
+	class DCP06ModelC;
+	//class DCP06ToolDlgC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CalcLineFitC
+    class DCP06CalcLineFitC
     {
         public:
 
             // Description: Constructor
-			DCP05CalcLineFitC(DCP05ModelC* pDCP05Model);//S_LINE_BUFF* line, S_POINT_BUFF* points, S_LINE_FITTING_RESULTS* results,  DCP::DCP05ModelC* pDCP05Model);//, DCP::DCP05ModelC* pDCP05Model);
-			~DCP05CalcLineFitC();
+			DCP06CalcLineFitC(DCP06ModelC* pDCP06Model);//S_LINE_BUFF* line, S_POINT_BUFF* points, S_LINE_FITTING_RESULTS* results,  DCP::DCP06ModelC* pDCP06Model);//, DCP::DCP06ModelC* pDCP06Model);
+			~DCP06CalcLineFitC();
 			
 			//bool calc();
 			short CalcAllPoints( S_LINE_BUFF* line_buff,
@@ -67,7 +67,7 @@ namespace DCP
 								int selectedHeight,
 								int selectedShift,
 								int selectedRotate,
-								DCP05DomModelC* domModel,
+								DCP06DomModelC* domModel,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* pointsInLine,
 								int selectedRefLine);
@@ -80,23 +80,23 @@ namespace DCP
 								double rotateAngle,
 								int selectedHeight,
 								int selectedShift,
-								int selectedRotate,DCP05DomModelC* domModel,
+								int selectedRotate,DCP06DomModelC* domModel,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* pointsInLine,int selectedRefLine);//(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/);
 
-			short CalcLineFitDom(DCP05DomModelC* domModel, S_LINE_BUFF* line_buff, int refLine);
-			void delete_dom_values(DCP05DomModelC* domModel);
+			short CalcLineFitDom(DCP06DomModelC* domModel, S_LINE_BUFF* line_buff, int refLine);
+			void delete_dom_values(DCP06DomModelC* domModel);
 	private:
-		DCP05CommonC* common;
-		short set_horizontal_plane(DCP05DomModelC* domModel);
-		short set_hz_plane1(DCP05DomModelC* domModel,short actualdesign);
+		DCP06CommonC* common;
+		short set_horizontal_plane(DCP06DomModelC* domModel);
+		short set_hz_plane1(DCP06DomModelC* domModel,short actualdesign);
 		short calc_plane(S_PLANE_BUFF *plane, short actdes);
 		
-		short convert_point_to_ocs(S_POINT_BUFF* points, short index, DCP05DomModelC* domModel, double (*p_out)[4]);
-		short convert_point_to_ocs(double p_in[4], DCP05DomModelC* domModel, double (*p_out)[4]);
-		short convert_point_to_scs(double p_in[4], DCP05DomModelC* domModel, double (*p_out)[4]);
-	//	//DCP::DCP05PomModelC *m_pDCP05PomModel;
-		DCP05ModelC* m_pDCP05Model;
+		short convert_point_to_ocs(S_POINT_BUFF* points, short index, DCP06DomModelC* domModel, double (*p_out)[4]);
+		short convert_point_to_ocs(double p_in[4], DCP06DomModelC* domModel, double (*p_out)[4]);
+		short convert_point_to_scs(double p_in[4], DCP06DomModelC* domModel, double (*p_out)[4]);
+	//	//DCP::DCP06PomModelC *m_pDCP06PomModel;
+		DCP06ModelC* m_pDCP06Model;
     };
 };
 

@@ -62,27 +62,27 @@ using namespace DCP;
 // ================================================================================================
 
 // ================================================================================================
-// ====================================  DCP053DMeasControllerC ===================================
+// ====================================  DCP063DMeasControllerC ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
 
-DCP::DCP05CalcPlaneControllerC::DCP05CalcPlaneControllerC(S_PLANE_BUFF* oLineBuff, short actdes, short iAskId):
+DCP::DCP06CalcPlaneControllerC::DCP06CalcPlaneControllerC(S_PLANE_BUFF* oLineBuff, short actdes, short iAskId):
 	m_pPlaneBuff(oLineBuff),m_iActDes(actdes), m_iAskId(iAskId)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-	//m_pCommon = new DCP05CommonC();
+	//m_pCommon = new DCP06CommonC();
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05CalcPlaneControllerC::~DCP05CalcPlaneControllerC()
+DCP::DCP06CalcPlaneControllerC::~DCP06CalcPlaneControllerC()
 {
 	if(m_pCommon)
 	{
@@ -94,13 +94,13 @@ DCP::DCP05CalcPlaneControllerC::~DCP05CalcPlaneControllerC()
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP05CalcPlaneControllerC::OnControllerActivated(void)
+void DCP::DCP06CalcPlaneControllerC::OnControllerActivated(void)
 {
 }
 
-void DCP::DCP05CalcPlaneControllerC::Run(void)
+void DCP::DCP06CalcPlaneControllerC::Run(void)
 {
-	DCP05CalcPlaneC calcplane;
+	DCP06CalcPlaneC calcplane;
 	if(calcplane.calc(m_pPlaneBuff,m_iActDes))
 	{
 		m_pPlaneBuff->calc = 1;
@@ -110,8 +110,8 @@ void DCP::DCP05CalcPlaneControllerC::Run(void)
 		{
 			if(m_iAskId)
 			{
-				DCP::DCP05InputTextModelC* pModel = new DCP05InputTextModelC;
-				pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_PLANE_ID_TOK);
+				DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_PLANE_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = L" ";//StringC(buffer);
@@ -124,7 +124,7 @@ void DCP::DCP05CalcPlaneControllerC::Run(void)
 
 				if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
 				{
-					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP05InputTextControllerC( m_pDCP05Model));
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC( m_pDCP06Model));
 				}
 
 				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -136,14 +136,14 @@ void DCP::DCP05CalcPlaneControllerC::Run(void)
 		
 		else if(m_pCommon->defined_points_count_in_plane(&m_pPlaneBuff[0],0) > 2)
 		{
-				DCP::DCP05DefinePlaneModelC* pModel = new DCP::DCP05DefinePlaneModelC;
+				DCP::DCP06DefinePlaneModelC* pModel = new DCP::DCP06DefinePlaneModelC;
 				memcpy(&pModel->plane_buff[0],&m_pPlaneBuff[0], sizeof(S_PLANE_BUFF));
 				if(GetController(RES_PLANE_CONTROLLER) == NULL)
 				{
-					(void)AddController( RES_PLANE_CONTROLLER, new DCP::DCP05ResPlaneControllerC(m_pDCP05Model));
+					(void)AddController( RES_PLANE_CONTROLLER, new DCP::DCP06ResPlaneControllerC(m_pDCP06Model));
 				}
 	
-				(void)GetController(RES_PLANE_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_DOM_LINE_MEAS_TOK));
+				(void)GetController(RES_PLANE_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK));
 	
 				(void)GetController( RES_PLANE_CONTROLLER )->SetModel(pModel);
 				SetActiveController(RES_PLANE_CONTROLLER, true);
@@ -156,15 +156,15 @@ void DCP::DCP05CalcPlaneControllerC::Run(void)
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05CalcPlaneControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06CalcPlaneControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     //(void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	m_pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 	return/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
@@ -174,7 +174,7 @@ bool DCP::DCP05CalcPlaneControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP05CalcPlaneControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP06CalcPlaneControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	/*
 	if(m_bPointMenu && lExitCode == 2)
@@ -186,17 +186,17 @@ void DCP::DCP05CalcPlaneControllerC::OnActiveDialogClosed( int lDlgID, int lExit
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP05CalcPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06CalcPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == RES_PLANE_CONTROLLER)// && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05DefinePlaneModelC* pModel = (DCP::DCP05DefinePlaneModelC*) GetController( RES_PLANE_CONTROLLER )->GetModel();		
+		DCP::DCP06DefinePlaneModelC* pModel = (DCP::DCP06DefinePlaneModelC*) GetController( RES_PLANE_CONTROLLER )->GetModel();		
 		memcpy(&m_pPlaneBuff[0],&pModel->plane_buff[0], sizeof(S_PLANE_BUFF));
 		
 		if(m_iAskId)
 		{
-				DCP::DCP05InputTextModelC* pModel = new DCP05InputTextModelC;
-				pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_PLANE_ID_TOK);
+				DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_PLANE_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = L" ";//StringC(buffer);
@@ -209,7 +209,7 @@ void DCP::DCP05CalcPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int 
 
 				if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
 				{
-					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP05InputTextControllerC(m_pDCP05Model ));
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC(m_pDCP06Model ));
 				}
 
 				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -227,7 +227,7 @@ void DCP::DCP05CalcPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int 
 	// ask line id
 	if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05InputTextModelC* pModel = (DCP::DCP05InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+		DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 		StringC strNewFile = pModel->m_StrText;
 		char buffer[10]; buffer[0] = '\0';
 		m_pCommon->convert_to_ascii(strNewFile, buffer,7); // 6->7 280508

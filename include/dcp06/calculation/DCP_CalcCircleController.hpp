@@ -47,13 +47,13 @@ namespace DCP
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CalcCircleControllerC : public GUI::ControllerC
+    class DCP06CalcCircleControllerC : public GUI::ControllerC
 	{
 	public:
 
             // Description: Constructor
-            DCP05CalcCircleControllerC(DCP05CircleModelC* pCircleModel, short iDisplay = 0);
-			~DCP05CalcCircleControllerC();
+            DCP06CalcCircleControllerC(DCP06CircleModelC* pCircleModel, short iDisplay = 0);
+			~DCP06CalcCircleControllerC();
 
 
             // Description: Handle change of position values
@@ -80,22 +80,22 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05CalcCircleControllerC( const DCP05CalcCircleControllerC& oDCP05CalcCircleController )
+            DCP06CalcCircleControllerC( const DCP06CalcCircleControllerC& oDCP06CalcCircleController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05CalcCircleControllerC& operator=( const DCP05CalcCircleControllerC& oDCP05CalcCircleController )
+            DCP06CalcCircleControllerC& operator=( const DCP06CalcCircleControllerC& oDCP06CalcCircleController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP05CommonC* m_pCommon;
-			DCP05ModelC* m_pDCP05Model;
-			DCP05CircleModelC* m_pDataModel;
+			DCP06CommonC* m_pCommon;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06CircleModelC* m_pDataModel;
 			
 			S_LINE_BUFF* m_pLineBuff;
 			short m_iActDes;

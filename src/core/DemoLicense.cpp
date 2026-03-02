@@ -53,7 +53,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -67,17 +67,17 @@
 
 // USER DIALOG
 
-DCP::DCP05DemoLicenseC::DCP05DemoLicenseC(DCP::DCP05ModelC* pDCP05Model): m_pDCP05Model(pDCP05Model)
+DCP::DCP06DemoLicenseC::DCP06DemoLicenseC(DCP::DCP06ModelC* pDCP06Model): m_pDCP06Model(pDCP06Model)
 {
 	
 }
 
-//DCP::DCP05CommonC::DCP05CommonC(): m_pDCP05Model(0)
+//DCP::DCP06CommonC::DCP06CommonC(): m_pDCP06Model(0)
 //{
 //	
 //}
 // ****************************************************************************************
-DCP::DCP05DemoLicenseC::~DCP05DemoLicenseC()
+DCP::DCP06DemoLicenseC::~DCP06DemoLicenseC()
 {
 	
 }
@@ -104,7 +104,7 @@ DCP::DCP05DemoLicenseC::~DCP05DemoLicenseC()
 
 
 // ****************************************************************************************
-int DCP::DCP05DemoLicenseC::find_keycode(char* keycode)
+int DCP::DCP06DemoLicenseC::find_keycode(char* keycode)
 {
 	int ret = 0;
 	char tempCode[21];
@@ -123,7 +123,7 @@ int DCP::DCP05DemoLicenseC::find_keycode(char* keycode)
 }
  
 // ****************************************************************************************
-bool DCP::DCP05DemoLicenseC::is_license_ok(char* keycode, DateTime startDate)
+bool DCP::DCP06DemoLicenseC::is_license_ok(char* keycode, DateTime startDate)
 {
 	if(keycode[0] == '\0')
 		return false;
@@ -159,7 +159,7 @@ bool DCP::DCP05DemoLicenseC::is_license_ok(char* keycode, DateTime startDate)
 
 		get_code_demo(demoNumber,tempCode);
 
-		if(strcmp(oldCode, m_pDCP05Model->sKeyCodeDemo1) == 0) // last one  is ok
+		if(strcmp(oldCode, m_pDCP06Model->sKeyCodeDemo1) == 0) // last one  is ok
 		{
 			if(strcmp(tempCode, keycode) == 0) // check new one
 			{
@@ -172,7 +172,7 @@ bool DCP::DCP05DemoLicenseC::is_license_ok(char* keycode, DateTime startDate)
 }
 
 // ****************************************************************************************
-int DCP::DCP05DemoLicenseC::get_available_days(char* keycode, DateTime startDate)
+int DCP::DCP06DemoLicenseC::get_available_days(char* keycode, DateTime startDate)
 {
 	int days  = 0;
 
@@ -213,7 +213,7 @@ int DCP::DCP05DemoLicenseC::get_available_days(char* keycode, DateTime startDate
 }
 
 // ****************************************************************************************
-void DCP::DCP05DemoLicenseC::get_code_demo(int demoNumber, char *sCode)
+void DCP::DCP06DemoLicenseC::get_code_demo(int demoNumber, char *sCode)
 {
 int nro=1L;
 char *p, *p1,*p2;
@@ -223,7 +223,7 @@ short temp2[20];
 
 unsigned int code = 0L;
 
-	//DCP05CommonC common(m_pDCP05Model);
+	//DCP06CommonC common(m_pDCP06Model);
 	//int year, month, day;
 
 	//common.GetDate(&day, &month, &year);
@@ -239,7 +239,7 @@ unsigned int code = 0L;
 	sprintf(temp,"%-lu",snro);
 
 #elif defined(CS20)
-	DCP05MsgBoxC msgBox;
+	DCP06MsgBoxC msgBox;
 
 	StringC ss1 = L"";
 	RcT ret= CPI::SensorC::GetInstance()->GetSerialNumber(ss1);
@@ -254,7 +254,7 @@ unsigned int code = 0L;
 	//msgBox.ShowMessageOk(StringC(ssName), StringC(temp));
  
 #elif defined(CS35)
-	DCP05CS35C cs35;
+	DCP06CS35C cs35;
 	cs35.get_serialnumber(temp);
 #endif
 

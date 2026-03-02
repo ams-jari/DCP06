@@ -43,18 +43,18 @@
 namespace DCP
 {
    // Forward declaration
-	class DCP05ModelC;
-	class DCP05SpecialMenuDlgC;
+	class DCP06ModelC;
+	class DCP06SpecialMenuDlgC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05SpecialMenuControllerC : public GUI::ControllerC
+    class DCP06SpecialMenuControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05SpecialMenuControllerC(DCP05ModelC* pDCP05Model, int showItems = 0);
-			~DCP05SpecialMenuControllerC();
+            DCP06SpecialMenuControllerC(DCP06ModelC* pDCP06Model, int showItems = 0);
+			~DCP06SpecialMenuControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -70,31 +70,31 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05SpecialMenuControllerC( const DCP05SpecialMenuControllerC& oDCP05SpecialMenuControllerC )
+            DCP06SpecialMenuControllerC( const DCP06SpecialMenuControllerC& oDCP06SpecialMenuControllerC )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05SpecialMenuControllerC& operator=( const DCP05SpecialMenuControllerC& oDCP05SpecialMenuControllerC )
+            DCP06SpecialMenuControllerC& operator=( const DCP06SpecialMenuControllerC& oDCP06SpecialMenuControllerC )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
-			DCP05ModelC* m_pDCP05Model;
-            DCP05SpecialMenuDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
+            DCP06SpecialMenuDlgC* m_pDlg;
     };
 
 
-  	class DCP05SpecialMenuDlgC:public GUI::GraphMenuDialogC
+  	class DCP06SpecialMenuDlgC:public GUI::GraphMenuDialogC
 	{
 		 public:
 
-		   DCP05SpecialMenuDlgC(DCP05ModelC* pDCP05Model,int showItems);
+		   DCP06SpecialMenuDlgC(DCP06ModelC* pDCP06Model,int showItems);
 
             // Description: Destructor
-            virtual ~DCP05SpecialMenuDlgC();
+            virtual ~DCP06SpecialMenuDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -103,12 +103,12 @@ namespace DCP
 			virtual void OnSelectionDone(void);
 			
 			// virtual bool SetModel( GUI::ModelC* pModel );
-			// DCP::DCP05ModelC* DCP::DCP05SpecialMenuDlgC::GetDCP05Model() const;
+			// DCP::DCP06ModelC* DCP::DCP06SpecialMenuDlgC::GetDCP06Model() const;
 
 			virtual void OnF1Pressed(void);
 
 	private:
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 			int m_pShowItems;
 
 	};

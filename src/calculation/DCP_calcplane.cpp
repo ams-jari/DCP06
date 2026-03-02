@@ -28,7 +28,11 @@
 #include <dcp06/calculation/DCP_CalcPlane.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
 #include "calc.h"
+#include "core/geometry/PlaneFitting.h"
+#include "geometry/Point.h"
+#include "geometry/Plane.h"
 #include <math.h>
+#include <vector>
 
 
 /******************************************************************************\
@@ -60,18 +64,18 @@
 *                                                                              *
 \******************************************************************************/
 
-DCP::DCP05CalcPlaneC::DCP05CalcPlaneC()
+DCP::DCP06CalcPlaneC::DCP06CalcPlaneC()
 {
 
 }
-DCP::DCP05CalcPlaneC::~DCP05CalcPlaneC()
+DCP::DCP06CalcPlaneC::~DCP06CalcPlaneC()
 {
 
 }
 // *********************************************************************
 //
 // *********************************************************************
-short DCP::DCP05CalcPlaneC::calc(S_PLANE_BUFF *plane, short actdes)
+short DCP::DCP06CalcPlaneC::calc(S_PLANE_BUFF *plane, short actdes)
 {
 short points_defined,i, ret=true;
 struct ams_vector a,b,c,a_des,b_des,c_des;
@@ -83,7 +87,7 @@ double /*e[3],*/ n[3];
 double dist;
 double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 
 	plane[0].calc = 0;
 	plane[0].sta = PLANE_NOT_DEFINED;
@@ -174,43 +178,37 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			}
 		}
 
-		equation_of_plane(&a, &b, &c, &d);
-
-		if(d.nx == 0.0 && d.ny == 0.0 && d.nz == 0.0)
+		DCP9::Geometry::Point p1(a.x, a.y, a.z), p2(b.x, b.y, b.z), p3(c.x, c.y, c.z);
+		DCP9::Geometry::Plane dcp9Plane(p1, p2, p3);
+		const std::vector<double>& normal = dcp9Plane.normal();
+		if(normal[0] == 0.0 && normal[1] == 0.0 && normal[2] == 0.0)
 		{
-			//sprintf(msgstr,"%-s",CANNOT_CALCULATE_TEXT);
 			StringC msg;
 			msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
 			msgbox.ShowMessageOk(msg);
 			ret = false;
 		}
-
 		else
 		{
-			plane[0].px = d.px; plane[0].py = d.py; plane[0].pz = d.pz;
-			plane[0].nx = d.nx; plane[0].ny = d.ny; plane[0].nz = d.nz;
-
-			para = d.nx; parb = d.ny; parc = d.nz;
+			plane[0].px = dcp9Plane.point().x(); plane[0].py = dcp9Plane.point().y(); plane[0].pz = dcp9Plane.point().z();
+			plane[0].nx = normal[0]; plane[0].ny = normal[1]; plane[0].nz = normal[2];
+			para = normal[0]; parb = normal[1]; parc = normal[2];
 			plane->calc = 1;
 			plane->sta = PLANE_DEFINED;
 		}
-
-		if(actdes == BOTH && des_ok)// == true)
+		if(actdes == BOTH && des_ok)
 		{
-			equation_of_plane(&a_des, &b_des, &c_des, &d_des);
-
-			if(d_des.nx == 0.0 && d_des.ny == 0.0 && d_des.nz == 0.0)
+			DCP9::Geometry::Point pd1(a_des.x, a_des.y, a_des.z), pd2(b_des.x, b_des.y, b_des.z), pd3(c_des.x, c_des.y, c_des.z);
+			DCP9::Geometry::Plane dcp9PlaneDes(pd1, pd2, pd3);
+			const std::vector<double>& normalDes = dcp9PlaneDes.normal();
+			if(normalDes[0] != 0.0 || normalDes[1] != 0.0 || normalDes[2] != 0.0)
 			{
-			}
-			else
-			{
-				plane[0].des_px = d_des.px; plane[0].des_py = d_des.py; plane[0].des_pz = d_des.pz;
-				plane[0].des_nx = d_des.nx; plane[0].des_ny = d_des.ny; plane[0].des_nz = d_des.nz;
+				plane[0].des_px = dcp9PlaneDes.point().x(); plane[0].des_py = dcp9PlaneDes.point().y(); plane[0].des_pz = dcp9PlaneDes.point().z();
+				plane[0].des_nx = normalDes[0]; plane[0].des_ny = normalDes[1]; plane[0].des_nz = normalDes[2];
 				plane[0].des_calc = 1;
 				plane[0].des_sta = PLANE_DEFINED;
 			}
 		}
-
 	}
 	else
 	{
@@ -281,42 +279,31 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 
 			//keyclr();
 
-			if((ff=FitPlane(p_mat, points_defined, &para, &parb, &parc))== -1)
+			std::vector<DCP9::Geometry::Point> pts;
+			for(int idx=0; idx<points_defined; idx++)
+				pts.push_back(DCP9::Geometry::Point(p_mat[idx*3+0], p_mat[idx*3+1], p_mat[idx*3+2]));
+			auto planeResult = DCP9::Core::Geometry::bestFitPlane(pts);
+			ff = planeResult.isValid ? 1 : -1;
+			if(ff == -1)
 			{
-				//sprintf(msgstr,"%-s",CANNOT_CALCULATE_TEXT);
 				StringC msg;
 				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
 				ret = false;
 			}
-			else if(ff == -2)
-			{
-				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_ABORTED_TOK);
-				msgbox.ShowMessageOk(msg);
-
-				ret = false;
-			}
 			else
 			{
-				n[0] = para;
-				n[1] = parb;
-				n[2] = parc; //-1.0;
-
-				// to unit vector
-
-				dist = sqrt(n[0] *n[0] + n[1]*n[1] + n[2] *n[2]);
-
+				const std::vector<double>& normal = planeResult.plane.normal();
+				n[0] = para = normal[0];
+				n[1] = parb = normal[1];
+				n[2] = parc = normal[2];
+				dist = sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
 				if(dist != 0.0)
 				{
-
-					plane[0].px = x_tot; // *(p_mat + 0);
-					plane[0].py = y_tot; // *(p_mat + 1);
-					plane[0].pz = z_tot; // *(p_mat + 2);
-
-					plane[0].nx = n[0];
-					plane[0].ny = n[1];
-					plane[0].nz = n[2];
+					plane[0].px = planeResult.plane.point().x();
+					plane[0].py = planeResult.plane.point().y();
+					plane[0].pz = planeResult.plane.point().z();
+					plane[0].nx = n[0]; plane[0].ny = n[1]; plane[0].nz = n[2];
 					plane[0].calc = 1;
 					plane[0].sta = PLANE_DEFINED;
 				}
@@ -397,40 +384,31 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 					break;
 				}
 			}
-			if((ff=FitPlane(p_mat, points_defined, &para, &parb, &parc))== -1)
+			std::vector<DCP9::Geometry::Point> ptsDes;
+			for(int idx=0; idx<points_defined; idx++)
+				ptsDes.push_back(DCP9::Geometry::Point(p_mat[idx*3+0], p_mat[idx*3+1], p_mat[idx*3+2]));
+			auto planeResultDes = DCP9::Core::Geometry::bestFitPlane(ptsDes);
+			ff = planeResultDes.isValid ? 1 : -1;
+			if(ff == -1)
 			{
 				StringC msg;
 				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
 				ret = false;
 			}
-			else if(ff == -2)
-			{
-				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_ABORTED_TOK);
-				msgbox.ShowMessageOk(msg);
-				ret = false;
-			}
 			else
 			{
-				n[0] = para;
-				n[1] = parb;
-				n[2] = parc; //-1.0;
-
-				// to unit vector
-
-				dist = sqrt(n[0] *n[0] + n[1]*n[1] + n[2] *n[2]);
-
+				const std::vector<double>& normalDes = planeResultDes.plane.normal();
+				n[0] = para = normalDes[0];
+				n[1] = parb = normalDes[1];
+				n[2] = parc = normalDes[2];
+				dist = sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
 				if(dist != 0.0)
 				{
-
-					plane[0].des_px = x_tot; // *(p_mat + 0);
-					plane[0].des_py = y_tot; // *(p_mat + 1);
-					plane[0].des_pz = z_tot; // *(p_mat + 2);
-
-					plane[0].des_nx = n[0];
-					plane[0].des_ny = n[1];
-					plane[0].des_nz = n[2];
+					plane[0].des_px = planeResultDes.plane.point().x();
+					plane[0].des_py = planeResultDes.plane.point().y();
+					plane[0].des_pz = planeResultDes.plane.point().z();
+					plane[0].des_nx = n[0]; plane[0].des_ny = n[1]; plane[0].des_nz = n[2];
 					plane[0].des_calc = 1;
 					plane[0].des_sta = PLANE_DEFINED;
 				}
@@ -442,8 +420,6 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 					ret = false;
 				}
 			}
-
-			//if(p_mat != NULL) free(p_mat);
 		}
 		else
 		{
@@ -466,7 +442,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 // *********************************************************************
 //
 // *********************************************************************
-short DCP::DCP05CalcPlaneC::defined_points_count_in_plane(S_PLANE_BUFF *plane,short *lastpoint)
+short DCP::DCP06CalcPlaneC::defined_points_count_in_plane(S_PLANE_BUFF *plane,short *lastpoint)
 {
 	short count=0,i,sta;
 
@@ -491,5 +467,5 @@ short DCP::DCP05CalcPlaneC::defined_points_count_in_plane(S_PLANE_BUFF *plane,sh
 
 
 // *********************************************************************
-// Laskee monta pistett‰ oetetaan laskentaan	
+// Laskee monta pistettù oetetaan laskentaan	
 // *********************************************************************

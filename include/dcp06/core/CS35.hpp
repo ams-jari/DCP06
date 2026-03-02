@@ -28,11 +28,11 @@ namespace DCP
 {
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CS35C
+    class DCP06CS35C
     {
         public:
-		   DCP05CS35C();	
-		   ~DCP05CS35C();
+		   DCP06CS35C();	
+		   ~DCP06CS35C();
            void get_serialnumber(char* serialNumber);
     };
 };

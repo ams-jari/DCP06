@@ -46,13 +46,13 @@ namespace DCP
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CalcLineControllerC : public GUI::ControllerC
+    class DCP06CalcLineControllerC : public GUI::ControllerC
 	{
 	public:
 
             // Description: Constructor
-            DCP05CalcLineControllerC(S_LINE_BUFF* oLine, short actdes,short iAskId);
-			~DCP05CalcLineControllerC();
+            DCP06CalcLineControllerC(S_LINE_BUFF* oLine, short actdes,short iAskId);
+			~DCP06CalcLineControllerC();
 
 
             // Description: Handle change of position values
@@ -79,21 +79,21 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05CalcLineControllerC( const DCP05CalcLineControllerC& oDCP05CalcLineController )
+            DCP06CalcLineControllerC( const DCP06CalcLineControllerC& oDCP06CalcLineController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05CalcLineControllerC& operator=( const DCP05CalcLineControllerC& oDCP05CalcLineController )
+            DCP06CalcLineControllerC& operator=( const DCP06CalcLineControllerC& oDCP06CalcLineController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP05CommonC* m_pCommon;
-			DCP05ModelC* m_pDCP05Model;
+			DCP06CommonC* m_pCommon;
+			DCP06ModelC* m_pDCP06Model;
 			
 			S_LINE_BUFF* m_pLineBuff;
 			short m_iActDes;

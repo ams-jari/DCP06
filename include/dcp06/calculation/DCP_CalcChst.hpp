@@ -34,8 +34,8 @@
 #include <dcp06/core/DCP_Types.hpp>
 #include <dcp06/core/DCP_Model.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
-#include <dcp06/orientation/DCP_DCP05Pom.hpp>
-#include <dcp06/orientation/DCP_DCP05ChSt.hpp>
+#include <dcp06/orientation/DCP_DCP06BestFit.hpp>
+#include <dcp06/orientation/DCP_DCP06Chst.hpp>
 #include <GUI_AppBase.hpp>
 
 
@@ -44,18 +44,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	//class DCP05ToolDlgC;
+	class DCP06ModelC;
+	//class DCP06ToolDlgC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CalcChStC
+    class DCP06CalcChStC
     {
         public:
 
             // Description: Constructor
-			DCP05CalcChStC(DCP05PomModelC* pDCP05PomModel, DCP05ModelC* pDCP05Model, short active_plane_);//, DCP::DCP05ModelC* pDCP05Model);
-			~DCP05CalcChStC();
+			DCP06CalcChStC(DCP06PomModelC* pDCP06PomModel, DCP06ModelC* pDCP06Model, short active_plane_);//, DCP::DCP06ModelC* pDCP06Model);
+			~DCP06CalcChStC();
 			
 			//bool calc();
 			short defined_pom_points(/*point_buff_ *point_OCS,*/ short *lastpoint);
@@ -71,8 +71,8 @@ namespace DCP
 			short calculate_3points_not_levelled();
 
 	private:
-		DCP05PomModelC *m_pDCP05PomModel;
-		DCP05ModelC *m_pDCP05Model;
+		DCP06PomModelC *m_pDCP06PomModel;
+		DCP06ModelC *m_pDCP06Model;
 
 		short active_plane;
     };

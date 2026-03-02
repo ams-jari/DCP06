@@ -51,7 +51,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05SelectOnePointDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectOnePointDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -63,10 +63,10 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP::DCP05ResShaftDlgC::DCP05ResShaftDlgC(DCP::DCP05ModelC *pDCP05Model,DCP05ShaftModelC* pShaftModel):poMultiColCtrl(NULL),m_pInfo1(NULL),
+DCP::DCP06ResShaftDlgC::DCP06ResShaftDlgC(DCP::DCP06ModelC *pDCP06Model,DCP06ShaftModelC* pShaftModel):poMultiColCtrl(NULL),m_pInfo1(NULL),
 	//m_pDist(NULL),poMultiColCtrlDist(NULL),poMultiColCtrlAngle(NULL),
-	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP05SelectOnePointDlgC, OnChanged), this),
-	m_pDCP05Model(pDCP05Model), m_pShaftModel(pShaftModel)
+	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06SelectOnePointDlgC, OnChanged), this),
+	m_pDCP06Model(pDCP06Model), m_pShaftModel(pShaftModel)
 {
 	//SetTxtApplicationId(AT_DCP05);
 	
@@ -76,7 +76,7 @@ DCP::DCP05ResShaftDlgC::DCP05ResShaftDlgC(DCP::DCP05ModelC *pDCP05Model,DCP05Sha
 	
 }
 // Description: Destructor
-DCP::DCP05ResShaftDlgC::~DCP05ResShaftDlgC()
+DCP::DCP06ResShaftDlgC::~DCP06ResShaftDlgC()
 {
 	 if(m_pCommon)
 	 {
@@ -85,7 +85,7 @@ DCP::DCP05ResShaftDlgC::~DCP05ResShaftDlgC()
 	 }
 }
 
-void DCP::DCP05ResShaftDlgC::OnInitDialog(void)
+void DCP::DCP06ResShaftDlgC::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
@@ -174,12 +174,12 @@ void DCP::DCP05ResShaftDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_SHAFT_RESIDUALS_TOK,0);
 	//m_pMultiColCtrlObserver.Attach(poMultiColCtrl->GetSubject());
 
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 }
 
 
 /*
-void DCP::DCP05ResShaftDlgC::OnF1Pressed(void)
+void DCP::DCP06ResShaftDlgC::OnF1Pressed(void)
 {
 	
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
@@ -193,7 +193,7 @@ void DCP::DCP05ResShaftDlgC::OnF1Pressed(void)
 		{
 			StringC strText;
 			strText.LoadTxt(AT_DCP05,M_DCP_CANNOT_REJECT_PNT_TOK);
-			DCP05MsgBoxC msgbox;
+			DCP06MsgBoxC msgbox;
 			
 			msgbox.ShowMessageOk(strText);
 			return;
@@ -222,7 +222,7 @@ void DCP::DCP05ResShaftDlgC::OnF1Pressed(void)
 	}
 	
 	
-	DCP05CalcCircleC circle(GetDataModel()->PLANE_TYPE, 
+	DCP06CalcCircleC circle(GetDataModel()->PLANE_TYPE, 
 								&GetDataModel()->circle_points[0],
 								&GetDataModel()->planes[0],
 								&GetDataModel()->circle_points_in_plane[0],
@@ -234,20 +234,20 @@ void DCP::DCP05ResShaftDlgC::OnF1Pressed(void)
 			circle.get_results(&GetDataModel()->cx, &GetDataModel()->cy,&GetDataModel()->cz, &GetDataModel()->diameter, &GetDataModel()->rms_diameter,&GetDataModel()->max_dev_in_point);
 			GetDataModel()->show_circle_points();
 	}
-	//DCP05CalcLineC calcline;
+	//DCP06CalcLineC calcline;
 	//calcline.calc(&GetDataModel()->line_buff[0],ACTUAL);
 	
 	RefreshControls();		
 }
 */
 
-void DCP::DCP05ResShaftDlgC::OnDialogActivated()
+void DCP::DCP06ResShaftDlgC::OnDialogActivated()
 {
 	RefreshControls();
 } 
 
 // Description: refresh all controls
-void DCP::DCP05ResShaftDlgC::RefreshControls()
+void DCP::DCP06ResShaftDlgC::RefreshControls()
 {
 	int iMax=0;
 	int i;
@@ -276,14 +276,14 @@ void DCP::DCP05ResShaftDlgC::RefreshControls()
 
 	poMultiColCtrl->DestroyAll();
 
-	sprintf(temp,"%9.*f",m_pDCP05Model->m_nDecimals, m_pShaftModel->centerOfCircleDist); 
+	sprintf(temp,"%9.*f",m_pDCP06Model->m_nDecimals, m_pShaftModel->centerOfCircleDist); 
 
 	USER_APP_VERIFY(poMultiColCtrl->AddRow((short) 0));
 	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) 0, L"Distance (to ref line)"));
 	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) 0, StringC(temp)));
 	//USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) 0, L"Dis"));
 
-	sprintf(temp,"%9.*f",m_pDCP05Model->m_nDecimals, m_pShaftModel->angleLines); 
+	sprintf(temp,"%9.*f",m_pDCP06Model->m_nDecimals, m_pShaftModel->angleLines); 
 
 	USER_APP_VERIFY(poMultiColCtrl->AddRow((short) 1));
 	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) 1, L"Angle (to ref line)"));
@@ -307,7 +307,7 @@ void DCP::DCP05ResShaftDlgC::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+9.*f", m_pDCP05Model->m_nDecimals, calc_pdist(i));
+			sprintf(temp,"%+9.*f", m_pDCP06Model->m_nDecimals, calc_pdist(i));
 			sDev = temp;
 		}
 		else if (sta == 0)
@@ -322,7 +322,7 @@ void DCP::DCP05ResShaftDlgC::RefreshControls()
 		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) i+3, sDev));
 	}
 
-	// ja valitse piste missä max dev
+	// ja valitse piste missï¿½ max dev
 	short pno=1;
 	double rms=0.0;
 	/*
@@ -332,7 +332,7 @@ void DCP::DCP05ResShaftDlgC::RefreshControls()
 	// set title with rms and point count
 	short iCount = m_pCommon->defined_points_count_in_line(&GetDataModel()->line_buff[0],0);
 	StringC sTemp = sTitle;
-	sTemp.Format(sTemp, m_pDCP05Model->m_nDecimals,rms,iCount);
+	sTemp.Format(sTemp, m_pDCP06Model->m_nDecimals,rms,iCount);
 	SetTitleStr(sTemp);
 	*/
 	//EndDraw();
@@ -352,7 +352,7 @@ void DCP::DCP05ResShaftDlgC::RefreshControls()
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP05ResShaftDlgC::calc_pdist(short pno)
+double DCP::DCP06ResShaftDlgC::calc_pdist(short pno)
 {
 struct ams_vector m;
 struct plane wplane;
@@ -376,7 +376,7 @@ double dist;
 			return dist;
 }
 
-void DCP::DCP05ResShaftDlgC::UpdateData()
+void DCP::DCP06ResShaftDlgC::UpdateData()
 {
 	/*
 	StringC sSelected;
@@ -388,14 +388,14 @@ void DCP::DCP05ResShaftDlgC::UpdateData()
 		
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP05ResShaftDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ResShaftDlgC::SetModel( GUI::ModelC* pModel )
 {
 	  // Verify type
-    DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -406,17 +406,17 @@ bool DCP::DCP05ResShaftDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP05ModelC* DCP::DCP05ResShaftDlgC::GetDataModel() const
+DCP::DCP06ModelC* DCP::DCP06ResShaftDlgC::GetDataModel() const
 {
-    return (DCP::DCP05ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP05ResShaftControllerC::DCP05ResShaftControllerC(DCP::DCP05ModelC *pDCP05Model,DCP05ShaftModelC* pShaftModel)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model), m_pShaftModel(pShaftModel)
+DCP::DCP06ResShaftControllerC::DCP06ResShaftControllerC(DCP::DCP06ModelC *pDCP06Model,DCP06ShaftModelC* pShaftModel)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model), m_pShaftModel(pShaftModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -429,7 +429,7 @@ DCP::DCP05ResShaftControllerC::DCP05ResShaftControllerC(DCP::DCP05ModelC *pDCP05
 	//SetTitleStr(sTitle);
 
     // Create a dialog
-     m_pDlg = new DCP::DCP05ResShaftDlgC(pDCP05Model, m_pShaftModel);  //lint !e1524 new in constructor for class 
+     m_pDlg = new DCP::DCP06ResShaftDlgC(pDCP06Model, m_pShaftModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( RES_SHAFT_DLG, m_pDlg, true );
 
     // Set the function key
@@ -470,13 +470,13 @@ DCP::DCP05ResShaftControllerC::DCP05ResShaftControllerC(DCP::DCP05ModelC *pDCP05
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP05ResShaftControllerC::~DCP05ResShaftControllerC()
+DCP::DCP06ResShaftControllerC::~DCP06ResShaftControllerC()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP05ResShaftControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ResShaftControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -488,7 +488,7 @@ bool DCP::DCP05ResShaftControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // SAVE
-void DCP::DCP05ResShaftControllerC::OnF3Pressed() 
+void DCP::DCP06ResShaftControllerC::OnF3Pressed() 
 {
     if (m_pDlg == NULL)
     {
@@ -498,18 +498,18 @@ void DCP::DCP05ResShaftControllerC::OnF3Pressed()
 	
 	if(GetController(SHAFT_SAVE_CONTROLLER) == NULL)
 	{
-		(void)AddController( SHAFT_SAVE_CONTROLLER, new DCP::DCP05SaveShaftControllerC(m_pShaftModel,m_pDCP05Model) );
+		(void)AddController( SHAFT_SAVE_CONTROLLER, new DCP::DCP06SaveShaftControllerC(m_pShaftModel,m_pDCP06Model) );
 	}
 
 	(void)GetController(SHAFT_SAVE_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_SHAFT_SAVE_TOK));
-	(void)GetController( SHAFT_SAVE_CONTROLLER )->SetModel(m_pDCP05Model);
+	(void)GetController( SHAFT_SAVE_CONTROLLER )->SetModel(m_pDCP06Model);
 	SetActiveController(SHAFT_SAVE_CONTROLLER, true);
 	
 }
 
 
 // CONT
-void DCP::DCP05ResShaftControllerC::OnF6Pressed() 
+void DCP::DCP06ResShaftControllerC::OnF6Pressed() 
 {
     if (m_pDlg == NULL)
     {
@@ -528,12 +528,12 @@ void DCP::DCP05ResShaftControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP05ResShaftControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06ResShaftControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP05ResShaftControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06ResShaftControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SHAFT_SAVE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{

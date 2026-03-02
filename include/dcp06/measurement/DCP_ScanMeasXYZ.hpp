@@ -59,23 +59,23 @@ namespace ABL
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	//class DCP05MeasDlgC;
-	class DCP05MeasXYZModelC;
+	class DCP06ModelC;
+	//class DCP06MeasDlgC;
+	class DCP06MeasXYZModelC;
 	class DCPSurveyModelC;
-	class DCP05ScanErrorHandlerC;
-	class DCP05AmsLogC;
-	class DCP05Log;
-	class DCP05DoScanMeasXYZControllerC;
+	class DCP06ScanErrorHandlerC;
+	class DCP06AmsLogC;
+	class DCP06Log;
+	class DCP06DoScanMeasXYZControllerC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05ScanMeasXYZControllerC : public GUI::ControllerC, public TBL::MeasurementC
+    class DCP06ScanMeasXYZControllerC : public GUI::ControllerC, public TBL::MeasurementC
     {
         public:
 
             // Description: Constructor
-            DCP05ScanMeasXYZControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05ScanMeasXYZControllerC();
+            DCP06ScanMeasXYZControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06ScanMeasXYZControllerC();
 
 
 			// Description: Route model to everybody else
@@ -93,27 +93,27 @@ namespace DCP
 			short get_xyz_values(double* x, double* y, double* z);
 
 			DCPSurveyModelC*   poSurveyModel;
-			DCP05ModelC*   poDCP05Model;
+			DCP06ModelC*   poDCP06Model;
 		protected:
 
 		private:
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05ScanMeasXYZControllerC( const DCP05ScanMeasXYZControllerC& oDCP05ScanMeasXYZController )
+            DCP06ScanMeasXYZControllerC( const DCP06ScanMeasXYZControllerC& oDCP05ScanMeasXYZController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05ScanMeasXYZControllerC& operator=( const DCP05ScanMeasXYZControllerC& oDCP05ScanMeasXYZController )
+            DCP06ScanMeasXYZControllerC& operator=( const DCP06ScanMeasXYZControllerC& oDCP05ScanMeasXYZController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP05MeasXYZModelC *m_pMeasXYZModel;
+			DCP06MeasXYZModelC *m_pMeasXYZModel;
 
 			double m_dDist;
 			double m_dHor;
@@ -142,19 +142,19 @@ namespace DCP
 			double x_scs1, y_scs1, z_scs1, x_scs2, y_scs2, z_scs2, x_scs_tot, y_scs_tot, z_scs_tot;
 
 			void to_xyz(double dis, double hor, double ver, double *x, double *y, double *z, short tool, double *x_scs, double *y_scs, double *z_scs);
-			DCP05CommonC* m_pCommon;
+			DCP06CommonC* m_pCommon;
 			GUI::HourGlassC* poHourGlass;
 
     };
 
 	  // Description: Tabbed controller for the Hello World application
-    class DCP05DoScanMeasXYZControllerC : public GUI::ControllerC, public TBL::MeasurementC
+    class DCP06DoScanMeasXYZControllerC : public GUI::ControllerC, public TBL::MeasurementC
     {
         public:
 
             // Description: Constructor
-            DCP05DoScanMeasXYZControllerC();
-			~DCP05DoScanMeasXYZControllerC();
+            DCP06DoScanMeasXYZControllerC();
+			~DCP06DoScanMeasXYZControllerC();
 
 
 			// Description: Route model to everybody else
@@ -172,7 +172,7 @@ namespace DCP
 			short get_xyz_values(double* x, double* y, double* z);
 
 			DCPSurveyModelC*   poSurveyModel;
-			DCP05ModelC*   poDCP05Model;
+			DCP06ModelC*   poDCP06Model;
 		protected:
 			virtual void OnOperationDistEvent(int unNotifyCode,  int ulOperationId);
 			virtual void OnOperationSearchEvent(int unNotifyCode, int ulOperationId);
@@ -184,39 +184,39 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05DoScanMeasXYZControllerC( const DCP05DoScanMeasXYZControllerC& oDCP05DoScanMeasXYZController )
+            DCP06DoScanMeasXYZControllerC( const DCP06DoScanMeasXYZControllerC& oDCP05DoScanMeasXYZController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05DoScanMeasXYZControllerC& operator=( const DCP05DoScanMeasXYZControllerC& oDCP05DoScanMeasXYZController )
+            DCP06DoScanMeasXYZControllerC& operator=( const DCP06DoScanMeasXYZControllerC& oDCP05DoScanMeasXYZController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP05MeasXYZModelC *m_pMeasXYZModel;
+			DCP06MeasXYZModelC *m_pMeasXYZModel;
 
 			double m_dX;
 			double m_dY;
 			double m_dZ;
 			//TBL::MeasErrorHandlerC* poErrorHandler;
-			DCP05ScanErrorHandlerC* poErrorHandler;
+			DCP06ScanErrorHandlerC* poErrorHandler;
 	};
 
-	class DCP05ScanMeasXYZModelC : public GUI::ModelC
+	class DCP06ScanMeasXYZModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05ScanMeasXYZModelC();
+            DCP06ScanMeasXYZModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05ScanMeasXYZModelC();
+            virtual ~DCP06ScanMeasXYZModelC();
 						
 			double m_dX;
 			double m_dY;
@@ -246,7 +246,7 @@ namespace DCP
     };
 
 
-class DCP05ScanErrorHandlerC:public TBL::MeasErrorHandlerC,public GUI::ControllerC, public TBL::MeasurementC //, public OBS::SubjectC
+class DCP06ScanErrorHandlerC:public TBL::MeasErrorHandlerC,public GUI::ControllerC, public TBL::MeasurementC //, public OBS::SubjectC
 {
 public:
 	 virtual HandlingKindT HandleMeasError(MeasErrorT eMeasError, MeasErrorSourceT eSource, unsigned int ulErrorCodeSensor);

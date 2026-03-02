@@ -43,7 +43,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -57,30 +57,30 @@
 
 // USER DIALOG
 
-DCP::AdfFileFunc::AdfFileFunc(ADF_TYPE type,DCP05ModelC* pDCP05Model): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pDCP05Model(pDCP05Model)
+DCP::AdfFileFunc::AdfFileFunc(ADF_TYPE type,DCP06ModelC* pDCP06Model): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pDCP06Model(pDCP06Model)
 {
 	// get path
 	adf_type = type;
 	
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 
 	getPath();
 }
 
-//DCP::AdfFileFunc::AdfFileFunc(DCP05ModelC* pDCP05Model): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pDCP05Model(pDCP05Model)
+//DCP::AdfFileFunc::AdfFileFunc(DCP06ModelC* pDCP06Model): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pDCP06Model(pDCP06Model)
 //{
 //	adf_type = ADF;
 //	// get path
 //	getPath();
 //
-//	m_pCommon = new DCP05CommonC(pDCP05Model);
+//	m_pCommon = new DCP06CommonC(pDCP06Model);
 //}
 
-DCP::AdfFileFunc::AdfFileFunc(DCP05ModelC* pDCP05Model): m_pFile(0), points(0), m_bExists(false),opened(0),	m_pDCP05Model(pDCP05Model),file_updated(0)
+DCP::AdfFileFunc::AdfFileFunc(DCP06ModelC* pDCP06Model): m_pFile(0), points(0), m_bExists(false),opened(0),	m_pDCP06Model(pDCP06Model),file_updated(0)
 {
 	adf_type = ADF;
 	
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 
 	// get path
 	getPath();
@@ -92,7 +92,7 @@ DCP::AdfFileFunc::AdfFileFunc(const char* filename, bool bCreate):m_pFile(0), po
 	CPI::FileIteratorC FileIterator;
 	CPI::FileInfoC FileInfo;
 
-	m_pCommon = new DCP05CommonC();
+	m_pCommon = new DCP06CommonC();
 
 	m_cPathAndFileName[0] = '\0';
 	m_cPath[0] = '\0';
@@ -118,11 +118,11 @@ DCP::AdfFileFunc::AdfFileFunc(const char* filename, bool bCreate):m_pFile(0), po
 */
 // ****************************************************************************************
 
-DCP::AdfFileFunc::AdfFileFunc(boost::filesystem::path* FileInfo, DCP05ModelC* pDCP05Model):m_pFile(0), points(0), m_bExists(false),m_pDCP05Model(pDCP05Model)
+DCP::AdfFileFunc::AdfFileFunc(boost::filesystem::path* FileInfo, DCP06ModelC* pDCP06Model):m_pFile(0), points(0), m_bExists(false),m_pDCP06Model(pDCP06Model)
 {
 	adf_type = ADF;
 
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 
 	m_cPath[0] = '\0';
 	m_cPathAndFileName[0] = '\0';
@@ -167,7 +167,7 @@ bool DCP::AdfFileFunc::setFile(const char* filename)
 		m_pFile = 0;
 	}
 	
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	
 	char temp[CPI::LEN_PATH_MAX];
@@ -242,7 +242,7 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 	if(m_pCommon->strblank(filename_temp))
 		return false;
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	char temp[CPI::LEN_PATH_MAX];
 		char temp_name[CPI::LEN_PATH_MAX];	
@@ -279,7 +279,7 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 
 	//int rr = FileIterator.FindFirst(pSearch, FileInfo);
 	int rr = m_pCommon->find_first_file(pSearch, &FileInfo);
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	// for test
 	/*
 	StringC ss;
@@ -296,7 +296,7 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 		points = ReadPointsCount(m_cPathAndFileName);
 		m_bExists = true;
 		/*
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		msgbox.ShowMessageOk(L"File opened!");
 		*/
 		return true;
@@ -304,7 +304,7 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 	else
 	{	
 		/*
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		msgbox.ShowMessageOk(StringC(temp));
 		*/
 	}
@@ -313,9 +313,52 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 }
 
 // ****************************************************************************************
+bool DCP::AdfFileFunc::setFileFromFullPath(const char* fullPath)
+{
+	if (!fullPath || !fullPath[0]) return false;
+	CloseFile();
+	m_cPathAndFileName[0] = '\0';
+	m_cFileName[0] = '\0';
+	strncpy(m_cPathAndFileName, fullPath, CPI::LEN_PATH_MAX - 1);
+	m_cPathAndFileName[CPI::LEN_PATH_MAX - 1] = '\0';
+	const char* lastSlash = strrchr(fullPath, '/');
+	if (!lastSlash) lastSlash = strrchr(fullPath, '\\');
+	if (lastSlash && lastSlash[1]) {
+		strncpy(m_cFileName, lastSlash + 1, FILENAME_BUFF_LEN - 1);
+		m_cFileName[FILENAME_BUFF_LEN - 1] = '\0';
+		size_t dirLen = (lastSlash - fullPath) + 1;
+		if (dirLen < (size_t)CPI::LEN_PATH_MAX) {
+			strncpy(m_cPath, fullPath, dirLen);
+			m_cPath[dirLen] = '\0';
+		}
+	} else {
+		strncpy(m_cFileName, fullPath, FILENAME_BUFF_LEN - 1);
+		m_cFileName[FILENAME_BUFF_LEN - 1] = '\0';
+		m_cPath[0] = '\0';
+	}
+	boost::filesystem::path fp(m_cPathAndFileName);
+	if (!boost::filesystem::exists(fp) || !boost::filesystem::is_regular_file(fp))
+		return false;
+	m_lSize = (uint32_t)boost::filesystem::file_size(fp);
+	std::time_t t = boost::filesystem::last_write_time(fp);
+	struct tm* tt = localtime(&t);
+	if (tt) {
+		sprintf(m_cDate, "%02d.%02d.%04d", tt->tm_mday, tt->tm_mon + 1, tt->tm_year + 1900);
+		sprintf(m_cTime, "%02d:%02d", tt->tm_hour, tt->tm_min);
+	}
+	short ret = open_ADF_file_name("rb+");
+	if (ret > 0) {
+		m_bExists = true;
+		return true;
+	}
+	m_bExists = false;
+	return false;
+}
+
+// ****************************************************************************************
 void DCP::AdfFileFunc::getPath()
 {
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	//TODO EI OLE VIVASSA
 	//CPI::SensorC::GetInstance()->MakeDir(m_cPath);
@@ -362,6 +405,11 @@ void DCP::AdfFileFunc::ParseFileNameAndPath(boost::filesystem::path* FileInfo)
 char* DCP::AdfFileFunc::getFileName()
 {
 	return m_cFileName;
+}
+// ****************************************************************************************
+const char* DCP::AdfFileFunc::getFullPath() const
+{
+	return m_cPathAndFileName;
 }
 // ****************************************************************************************
 char* DCP::AdfFileFunc::getModDate()
@@ -546,7 +594,7 @@ int Result;
 	if(!m_pCommon->card_status())//(1) != 0)
 		return -1;
 
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	
 	ret = -1;
 
@@ -556,7 +604,7 @@ int Result;
 	if(!fopen1(mode))// /*FIL_ACC_RDWR */,&fp) != TRUE)
 	{
 		StringC msg;
-		msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 		msg.Format(msg,(const wchar_t*)StringC(m_cPathAndFileName/*m_cFileName*/));
 		msgbox.ShowMessageOk(msg);
 		//msgbox1(TXT_NIL_TOKEN,M_DCP_FILE_OPEN_ERROR_TOK,(void *) fname,MB_OK);
@@ -645,14 +693,14 @@ int Result;
 			else
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05, M_DCP_RECLENGTH_ERROR_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_RECLENGTH_ERROR_TOK);
 				msgbox.ShowMessageOk(msg);
 			}
 		}
 		else
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05, M_DCP_RECLENGTH_ERROR_TOK);
+			msg.LoadTxt(AT_DCP06, M_DCP_RECLENGTH_ERROR_TOK);
 			msgbox.ShowMessageOk(msg);
 		}
 	}
@@ -701,7 +749,7 @@ short DCP::AdfFileFunc::close_adf_file()
 short DCP::AdfFileFunc::fopen1(const char* mode)
 {
 	
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	//StringC sT;
 	//sT = L"fopen1  ";
 	//sT += StringC(m_cPathAndFileName);
@@ -712,7 +760,7 @@ short DCP::AdfFileFunc::fopen1(const char* mode)
 		return true;		
 	}
 	StringC msg;
-	msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
+	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(m_cPathAndFileName));
 			msgbox.ShowMessageOk(msg);
 	return false;
@@ -734,9 +782,9 @@ FILE* DCP::AdfFileFunc::fopen2(FILE *pFile , char* fname, const char* mode)
 	{
 		return pFile;		
 	}
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
-	msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
+	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(temp));
 			msgbox.ShowMessageOk(msg);
 
@@ -828,7 +876,7 @@ int Result;
 				note_front[6] = '\0';
 
 
-				// ETSITŽŽN PARI
+				// ETSITï¿½ï¿½N PARI
 				apu[pp-1] = 'B';
 				if((pair = seek_pid(apu)) == 0)
 				{
@@ -947,7 +995,7 @@ int Result;
 				note_back[6] = '\0';
 
 
-				// ETSITŽŽN PARI
+				// ETSITï¿½ï¿½N PARI
 				apu[pp-1] = 'F';
 				if((pair = seek_pid(apu)) == 0)
 				{
@@ -1032,7 +1080,7 @@ int Result;
 			point_type = 0;
 
 			// ******************************
-			// Tyhj„t„„n BACK-point bufferi
+			// Tyhjï¿½tï¿½ï¿½n BACK-point bufferi
 			// ******************************
 
 			active_point_back = 0;
@@ -1160,7 +1208,7 @@ short DCP::AdfFileFunc::GetPointList(S_SELECT_POINTS* pList, short iMaxPoints, s
 
 	if(m_pFile)
 	{
-		DCP05CommonC common(m_pDCP05Model);
+		DCP06CommonC common(m_pDCP06Model);
 		short i;
 		bool mea,des;
 		char pid[7];
@@ -1248,8 +1296,8 @@ short DCP::AdfFileFunc::GetPointList(S_SELECT_POINT* pList, short iMaxPoints)
 	short iCount = 0;
 	StringC sActualSelected,sDesignSelected;
 
-	sActualSelected.LoadTxt(AT_DCP05,P_DCP_ACTUAL_SELECTED_TOK);
-	sDesignSelected.LoadTxt(AT_DCP05,P_DCP_DESIGN_SELECTED_TOK);
+	sActualSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_SELECTED_TOK);
+	sDesignSelected.LoadTxt(AT_DCP06,P_DCP_DESIGN_SELECTED_TOK);
 
     char cActSelected[10];
 	char cDesSelected[10];
@@ -1264,7 +1312,7 @@ short DCP::AdfFileFunc::GetPointList(S_SELECT_POINT* pList, short iMaxPoints)
     
 	if(m_pFile)
 	{
-		DCP05CommonC common(m_pDCP05Model);
+		DCP06CommonC common(m_pDCP06Model);
 		short i;
 		bool mea,des;
 		char pid[7];
@@ -1320,7 +1368,7 @@ short DCP::AdfFileFunc::create_adf_file(char *fname, char* pointid,bool showOKMe
 {
 unsigned int new_file_size;
 char filename[FILENAME_BUFF_LEN];
-DCP05MsgBoxC msgbox;		
+DCP06MsgBoxC msgbox;		
 		
 
 	if(!m_pCommon->card_status())//card_status(1) != 0)
@@ -1352,7 +1400,7 @@ DCP05MsgBoxC msgbox;
 		if(access1(filename) == 1)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_DELETE_OLD_FILE_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_DELETE_OLD_FILE_TOK);
 			msg.Format(msg,StringC(filename));
 			if(!msgbox.ShowMessageYesNo(msg))
 				return -1;
@@ -1364,7 +1412,7 @@ DCP05MsgBoxC msgbox;
 			if(remove1(filename) != 0)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_DELETE_FILE_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_FILE_TOK);
 				msgbox.ShowMessageOk(msg);
 				
 				return -1;
@@ -1374,7 +1422,7 @@ DCP05MsgBoxC msgbox;
 		{
 			remove1(filename);
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg,(const wchar_t*) StringC(filename));
 			msgbox.ShowMessageOk(msg);
 			//msgbox1(TXT_NIL_TOKEN,M_FILE_OPEN_ERROR_TOK,(void *) filename,MB_OK);
@@ -1429,13 +1477,82 @@ DCP05MsgBoxC msgbox;
 		if(showOKMessage)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_CREATE_3DF_OK_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_CREATE_3DF_OK_TOK);
 			msgbox.ShowMessageOk(msg);
 		}
 
 		//msgbox(TXT_NIL_TOKEN,M_CREATE_3DF_OK_TOK,MB_OK);
 
 		return 0;
+}
+
+short DCP::AdfFileFunc::create_adf_file_at_path(const char* fullPath, char* pointid, bool showOKMessage)
+{
+	if (!fullPath || !pointid) return -1;
+	DCP06MsgBoxC msgbox;
+	CloseFile();
+	boost::filesystem::path fp(fullPath);
+	boost::system::error_code ec;
+	if (boost::filesystem::exists(fp, ec))
+	{
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_DELETE_OLD_FILE_TOK);
+		msg.Format(msg, StringC(fullPath));
+		if (!msgbox.ShowMessageYesNo(msg))
+			return -1;
+		boost::filesystem::remove(fp, ec);
+	}
+	strncpy(m_cPathAndFileName, fullPath, CPI::LEN_PATH_MAX - 1);
+	m_cPathAndFileName[CPI::LEN_PATH_MAX - 1] = '\0';
+	const char* lastSlash = strrchr(fullPath, '/');
+	if (!lastSlash) lastSlash = strrchr(fullPath, '\\');
+	if (lastSlash && lastSlash[1])
+	{
+		strncpy(m_cFileName, lastSlash + 1, FILENAME_BUFF_LEN - 1);
+		m_cFileName[FILENAME_BUFF_LEN - 1] = '\0';
+		size_t dirLen = (lastSlash - fullPath) + 1;
+		if (dirLen < (size_t)CPI::LEN_PATH_MAX)
+		{
+			strncpy(m_cPath, fullPath, dirLen);
+			m_cPath[dirLen] = '\0';
+		}
+	}
+	else
+	{
+		strncpy(m_cFileName, fullPath, FILENAME_BUFF_LEN - 1);
+		m_cFileName[FILENAME_BUFF_LEN - 1] = '\0';
+		m_cPath[0] = '\0';
+	}
+	m_pFile = fopen(m_cPathAndFileName, "wb+");
+	if (!m_pFile)
+	{
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_FILE_OPEN_ERROR_TOK);
+		msg.Format(msg, (const wchar_t*)StringC(m_cPathAndFileName));
+		msgbox.ShowMessageOk(msg);
+		return -1;
+	}
+	char linebuff[256];
+	sprintf(linebuff, "%-10.10s %19.19s %-9.9s %-9.9s %28.28s\r\n", "3D-FORM", m_cFileName, " ", " ", " ");
+	fputs(linebuff, m_pFile);
+	sprintf(linebuff, "1%-77.77s1\r\n", " ");
+	fputs(linebuff, m_pFile);
+	sprintf(linebuff, "%-6.6s %c %9.9s %9.9s %c %9.9s %9.9s %c %9.9s %9.9s %-6.6s\r\n",
+		"PID", 'X', "X_ACTUAL", "X_DESIGN", 'Y', "Y_ACTUAL", "Y_DESIGN", 'Z', "Z_ACTUAL", "Z_DESIGN", "NOTE");
+	fputs(linebuff, m_pFile);
+	sprintf(linebuff, "%-6.6s %c %-9.9s %-9.9s %c %-9.9s %-9.9s %c %-9.9s %-9.9s %-6.6s\r\n",
+		pointid, '_', " ", " ", '_', " ", " ", '_', " ", " ", "      ");
+	fputs(linebuff, m_pFile);
+	fflush(m_pFile);
+	fclose(m_pFile);
+	m_pFile = 0;
+	if (showOKMessage)
+	{
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_CREATE_3DF_OK_TOK);
+		msgbox.ShowMessageOk(msg);
+	}
+	return 0;
 }
 
 /**************************************************************
@@ -1451,7 +1568,7 @@ int attr = 0;
 	//char filename_temp[20];
 	//UTL::UnicodeToAscii(filename_temp, fname);
 	
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP05Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	char temp[CPI::LEN_PATH_MAX];
 	temp[0] = '\0';
@@ -1473,7 +1590,7 @@ short  DCP::AdfFileFunc::remove1(char *fname)
 {
 char apu[CPI::LEN_PATH_MAX];
 bool Result;
-	DCP05CommonC common(m_pDCP05Model);
+	DCP06CommonC common(m_pDCP06Model);
 
     sprintf(apu,"%s%-s",m_cPath,common.strbtrim(fname));
 
@@ -1499,7 +1616,7 @@ short DCP::AdfFileFunc::copy_adf_file(char *to_fname)
 int filpos;
 char temp1[20],temp2[20];
 
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		if(!m_pCommon->card_status()) ///*1*/) != 0)
 			return false;
 		
@@ -1516,7 +1633,7 @@ char temp1[20],temp2[20];
 		if(strcmp(temp1,temp2) == 0)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_SAME_FILE_NAME_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_SAME_FILE_NAME_TOK);
 			msgbox.ShowMessageOk(msg);
 			//msgbox(TXT_NIL_TOKEN, M_SAME_NAME_TOK,MB_OK);
 			return false;	
@@ -1534,7 +1651,7 @@ char temp1[20],temp2[20];
 		if(access1(to_fname/*temp2*/) == 1)
 		{	
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_DELETE_OLD_FILE_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_DELETE_OLD_FILE_TOK);
 			msg.Format(msg,to_fname);
 			if(!msgbox.ShowMessageYesNo(msg))
 					return false;
@@ -1542,7 +1659,7 @@ char temp1[20],temp2[20];
 		if(!(ffo=fopen2(ffo,to_fname/*temp*/,"wb+")))
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
+			msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(to_fname));
 			msgbox.ShowMessageOk(msg);
 			//msgbox1(TXT_NIL_TOKEN,M_FILE_OPEN_ERROR_TOK,(void *) to_fname,MB_OK);
@@ -1613,7 +1730,7 @@ char temp1[20],temp2[20];
 		fclose(ffo);
 		//FIL_Close(ffo);
 		StringC msg;
-		msg.LoadTxt(AT_DCP05,M_DCP_COPYING_OK_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_COPYING_OK_TOK);
 		msgbox.ShowMessageOk(msg);
 		//msgbox(TXT_NIL_TOKEN,M_COPYING_OK_TOK,MB_OK);
 
@@ -1630,21 +1747,21 @@ short DCP::AdfFileFunc::swap_meas_design()
 	int pntnum;
 	char x_sta, y_sta, z_sta, x_act[10], y_act[10], z_act[10];
 	char x_des[10], y_des[10],z_des[10], Pid[7], Note[7];
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
 
 	//
 	//	          01234567890123456789
 	if(!opened)
 	{
-		msg.LoadTxt(AT_DCP05,M_DCP_3DFILE_ISNOT_OPEN_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_3DFILE_ISNOT_OPEN_TOK);
 		msgbox.ShowMessageOk(msg);
 		return 0;
 	}
 
 	if(!m_pCommon->read_allow_edit())
 	{
-		msg.LoadTxt(AT_DCP05, M_DCP_EDIT_NOT_ALLOWED_TOK);
+		msg.LoadTxt(AT_DCP06, M_DCP_EDIT_NOT_ALLOWED_TOK);
 		msgbox.ShowMessageOk(msg);
 		return 0;
 	}
@@ -1652,7 +1769,7 @@ short DCP::AdfFileFunc::swap_meas_design()
 	if(!m_pCommon->card_status())// (1) != 0)
 		return 1;
 
-	msg.LoadTxt(AT_DCP05,M_DCP_SWAP_FILE_TOK);
+	msg.LoadTxt(AT_DCP06,M_DCP_SWAP_FILE_TOK);
 	if(msgbox.ShowMessageYesNo(msg))
 	{
 		fseek(m_pFile,0,SEEK_SET);
@@ -1764,7 +1881,7 @@ short DCP::AdfFileFunc::swap_meas_design()
 		add_header_to_adf();	
 		form_pnt(1L);
 
-		msg.LoadTxt(AT_DCP05,M_DCP_SWAPPING_OK_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_SWAPPING_OK_TOK);
 		msgbox.ShowMessageOk(msg);
 	}
 	return 1;
@@ -1797,7 +1914,7 @@ S_HEADER_INFO header_info;
 		fputs(linebuff,m_pFile);
 		//FIL_Write(fstruct->f, 81, 1, linebuff,w); 
 
-		// PÄIVÄ
+		// Pï¿½IVï¿½
 		m_pCommon->GetDate(&day, &month,&year);
 		//CSV_GetDate(da);
 		sprintf(header_info.date,"%02d/%02d/%4d", day, month, year);
@@ -1843,7 +1960,7 @@ S_HEADER_INFO header_info;
 ************************************************************************/
 short DCP::AdfFileFunc::delete_adf_file(bool showMsg)
 {
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
 
 	short result=-1;
@@ -1857,7 +1974,7 @@ short DCP::AdfFileFunc::delete_adf_file(bool showMsg)
 		return false;
 
 	//if(msgbox(TXT_NIL_TOKEN,M_DELETE_FILE_TOK, MB_YESNO) == TRUE)
-	msg.LoadTxt(AT_DCP05,M_DCP_DELETE_FILE_TOK);
+	msg.LoadTxt(AT_DCP06,M_DCP_DELETE_FILE_TOK);
 	msg.Format(msg,(const wchar_t*)StringC(m_cFileName));
 	if(msgbox.ShowMessageYesNo(msg))
 	//if(msgbox1(TXT_NIL_TOKEN,M_DELETE_FILE_TOK, (void *) fstruct->name, MB_YESNO) == TRUE)
@@ -1869,7 +1986,7 @@ short DCP::AdfFileFunc::delete_adf_file(bool showMsg)
 		{
 			if(showMsg)
 			{
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_DELETE_FILE_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_FILE_TOK);
 				msgbox.ShowMessageOk(msg);
 			}
 			ret = false;
@@ -1893,7 +2010,7 @@ short i,temp,Err1, write_ref, write_dat;
 int length;
 int Result;
 
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		StringC msg;
 
 		Err1 = 0;
@@ -1919,7 +2036,7 @@ int Result;
 			m_pCommon->strbtrim(dat_name);
 			m_pCommon->strbtrim(ref_name);
 		
-			msg.LoadTxt(AT_DCP05, M_DCP_SAVE_ADF_TO_REF_DAT_TOK);
+			msg.LoadTxt(AT_DCP06, M_DCP_SAVE_ADF_TO_REF_DAT_TOK);
 			msg.Format(msg,(const wchar_t*)StringC(m_cFileName),(const wchar_t*)StringC(dat_name), (const wchar_t*)StringC(ref_name));
 			if(!msgbox.ShowMessageYesNo(msg))
 			//if(msgbox3(TXT_NIL_TOKEN, M_SAVE_ADF_TO_REF_DAT_TOK, (void *)fstruct->name, (void *) dat_name, (void *) ref_name,MB_YESNO) != TRUE)
@@ -1929,7 +2046,7 @@ int Result;
 
 			if(access1(dat_name) == 1)
 			{
-				msg.LoadTxt(AT_DCP05, M_DCP_DELETE_OLD_FILE_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_DELETE_OLD_FILE_TOK);
 				msg.Format(msg,(const wchar_t*)StringC(dat_name));
 				if(!msgbox.ShowMessageYesNo(msg))
 				//if(msgbox1(TXT_NIL_TOKEN, M_DELETE_OLD_FILE_TOK,(void *) dat_name, MB_YESNO) != TRUE)
@@ -1944,7 +2061,7 @@ int Result;
 
 			if(access1(ref_name) == 1)
 			{
-				msg.LoadTxt(AT_DCP05, M_DCP_DELETE_OLD_FILE_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_DELETE_OLD_FILE_TOK);
 				msg.Format(msg,(const wchar_t*)StringC(ref_name));
 				if(!msgbox.ShowMessageYesNo(msg))
 
@@ -1969,7 +2086,7 @@ int Result;
 				if(!(f_dat= fopen2(f_dat,dat_name,"wb+")))
 			//if(fopen1(dat_name,FIL_ACC_CREATE|FIL_ACC_WRONLY, &f_dat) != TRUE)
 				{
-					msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 					msg.Format(msg,(const wchar_t*)StringC(dat_name));
 					msgbox.ShowMessageOk(msg);
 					//msgbox1(TXT_NIL_TOKEN,M_FILE_OPEN_ERROR_TOK,(void *) dat_name,MB_OK);
@@ -1987,7 +2104,7 @@ int Result;
 				if(!(f_ref = fopen2(f_ref, ref_name,"wb+")))
 				//if(fopen1(ref_name,FIL_ACC_CREATE|FIL_ACC_WRONLY, &f_ref) != TRUE)
 				{
-					msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 					msg.Format(msg,(const wchar_t*)StringC(ref_name));
 					msgbox.ShowMessageOk(msg);
 					//msgbox1(TXT_NIL_TOKEN,M_FILE_OPEN_ERROR_TOK,(void *) ref_name,MB_OK);
@@ -2042,7 +2159,7 @@ int Result;
 
 		if(Err1)
 		{
-			msg.LoadTxt(AT_DCP05, M_DCP_ERR_ADF_TO_DATREF_TOK);
+			msg.LoadTxt(AT_DCP06, M_DCP_ERR_ADF_TO_DATREF_TOK);
 			msgbox.ShowMessageOk(msg);
 			//msgbox(TXT_NIL_TOKEN, M_ERR_ADF_TO_DATREF_TOK,MB_OK);	
 			remove1(ref_name);
@@ -2066,7 +2183,7 @@ char bPid[30], bNote[40];
 char bXdes[25], bYdes[25], bZdes[25];
 //int pos;
 
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 	StringC msg;
 
 	sprintf(ref_name,"%-s",filename);
@@ -2093,7 +2210,7 @@ char bXdes[25], bYdes[25], bZdes[25];
 
 	if(access1(adf_name) == 1)
 	{
-		msg.LoadTxt(AT_DCP05,M_DCP_DELETE_OLD_FILE_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_DELETE_OLD_FILE_TOK);
 		msg.Format(msg,(const wchar_t*)StringC(adf_name));
 
 		//if(msgbox1(TXT_NIL_TOKEN, M_DELETE_OLD_FILE_TOK,(void *) adf_name, MB_YESNO) != TRUE)
@@ -2411,10 +2528,10 @@ short ret;
 	// **********************************************************
 	else  if(point_type == 1  && cpoint == 1)
 	{
-		// Järjestys : front, back
+		// Jï¿½rjestys : front, back
 		if(active_point_front < active_point_back)
 		{
-			// Onko peräkkäin
+			// Onko perï¿½kkï¿½in
 			if((active_point_back - active_point_front) == 1)
 			{
 				if(active_point_back < points)
@@ -2431,7 +2548,7 @@ short ret;
 				ret = 1;
 			}
 		}
-		// Järjestys: back,front
+		// Jï¿½rjestys: back,front
 		else
 		{
 			if(active_point_front < points)
@@ -2448,7 +2565,7 @@ short ret;
 	// **********************************************************
 	else if(point_type == 1  && cpoint == 2)
 	{
-		// Järjestys : front, back
+		// Jï¿½rjestys : front, back
 		if(active_point_front < active_point_back)
 		{
 				if(active_point_back < points)
@@ -2458,10 +2575,10 @@ short ret;
 					 ret = 1;	
 				}
 		}
-		// Järjestys : back,front
+		// Jï¿½rjestys : back,front
 		else
 		{
-			// Onko peräkkäin
+			// Onko perï¿½kkï¿½in
 			if((active_point_front - active_point_back) == 1)
 			{
 				if(active_point_front < points)
@@ -2523,7 +2640,7 @@ short newpnt;
 
 		else  if(point_type == 1  && cpoint == 1)   
 		{
-			// Järjestys: front,back
+			// Jï¿½rjestys: front,back
 			if(active_point_front < active_point_back)
 			{
 					if(active_point_front > 1)
@@ -2532,20 +2649,20 @@ short newpnt;
 						form_pnt(newpnt);
 					}
 			}
-			// Järjestys: back,front
+			// Jï¿½rjestys: back,front
 			else
 			{
-				//  back,front peräkkäin
+				//  back,front perï¿½kkï¿½in
 				if( (active_point_front - active_point_back) == 1)
 				{
-					// ***********Onko piste ensinmäinen lomakkeella
+					// ***********Onko piste ensinmï¿½inen lomakkeella
 					if(active_point_back > 1)
 					{
 						newpnt = active_point_back-1;
 						form_pnt(newpnt);
 					}
 				}
-				// ************pisteet eivät ole peräkkäin ******************
+				// ************pisteet eivï¿½t ole perï¿½kkï¿½in ******************
 				else
 				{
 						newpnt = active_point_front-1;
@@ -2560,10 +2677,10 @@ short newpnt;
 		// **********************************************************
 		else  if(point_type == 1  && cpoint == 2)
 		{
-			// Järjestys: front,back
+			// Jï¿½rjestys: front,back
 			if(active_point_front < active_point_back)
 			{
-				//  front,back peräkkäin
+				//  front,back perï¿½kkï¿½in
 				if( (active_point_back -active_point_front) == 1)
 				{
 					if(active_point_front > 1)
@@ -2582,10 +2699,10 @@ short newpnt;
 				}
 			}
 
-			// Järjestys: back,front
+			// Jï¿½rjestys: back,front
 			else
 			{
-					// ***********Onko piste ensinmäinen lomakkeella
+					// ***********Onko piste ensinmï¿½inen lomakkeella
 					if(active_point_back > 1)
 					{
 						newpnt = active_point_back-1;
@@ -2612,11 +2729,11 @@ char temp[CPI::LEN_PATH_MAX];
 //unsigned short w;
 //int filpos;
 //int Result;
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		StringC msg;
 		if(points <=1)
 		{
-			msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_DELETE_POINT_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_POINT_TOK);
 			msg.Format(msg,(const wchar_t*)StringC(L""));
 			msgbox.ShowMessageOk(msg);
 			//msgbox(TXT_NIL_TOKEN,M_CANNOT_DELETE_PNT_TOK,MB_OK);
@@ -2633,7 +2750,7 @@ char temp[CPI::LEN_PATH_MAX];
 				sprintf(out_name, "%-s","temp.tmp");
 				if(!(fp_out = fopen2(fp_out,out_name,"wb+"))) //FIL_ACC_CREATE|FIL_ACC_WRONLY,&fp_out)!= TRUE)
 				{
-					msg.LoadTxt(AT_DCP05,M_DCP_FILE_OPEN_ERROR_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_FILE_OPEN_ERROR_TOK);
 					msg.Format(msg,(const wchar_t*)StringC(out_name));
 					msgbox.ShowMessageOk(msg);
 					//msgbox1(TXT_NIL_TOKEN,M_FILE_OPEN_ERROR_TOK, (void *) out_name,MB_OK);
@@ -2837,7 +2954,7 @@ char apu[7];
 //int new_filpos;
 //int Result;
 	
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 
 	if(!m_pCommon->card_status())
 		return false;
@@ -2887,10 +3004,10 @@ char apu[7];
 	
 	// Auto increment checking added 220399
 
-	// siirrä tämä sinne mistä kutsutaan addpoint -funktiota
+	// siirrï¿½ tï¿½mï¿½ sinne mistï¿½ kutsutaan addpoint -funktiota
 	//if(get_AUTO_INCREMENT() == TRUE) 
 	/*
-	if(m_pDCP05Model->m_nAutoIncrement)
+	if(m_pDCP06Model->m_nAutoIncrement)
 	{
 		ret2 = true;
 	}
@@ -2923,11 +3040,11 @@ char apu[7];
 
 		if(ret1 == BACK)  
 		{
-			if(seek_pid(id) != 0)  // Etsitään BACK-piste
+			if(seek_pid(id) != 0)  // Etsitï¿½ï¿½n BACK-piste
 			{			
-				// Jos löytyi ei lisätä mitään	
+				// Jos lï¿½ytyi ei lisï¿½tï¿½ mitï¿½ï¿½n	
 				StringC msg;
-				msg.LoadTxt(AT_DCP05, M_DCP_POINT_ID_EXISTS_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_POINT_ID_EXISTS_TOK);
 				msg.Format(msg,(const wchar_t*)StringC(id));
 				msgbox.ShowMessageOk(msg);
 				//msgbox1(TXT_NIL_TOKEN,M_PID_IN_USE_TOK,(void *) id,MB_OK);
@@ -2936,22 +3053,22 @@ char apu[7];
 		}
 		else if(ret1 == FRONT)
 		{
-			// Etsitään Ensiksi Back-piste
+			// Etsitï¿½ï¿½n Ensiksi Back-piste
 
 			strncpy(apu,id,6);apu[6] = '\0';	
 			apu[strlen(id)-1] = 'B';
 					
-			if(seek_pid(apu) == 0) // Ei löytynyt, lisätään back
+			if(seek_pid(apu) == 0) // Ei lï¿½ytynyt, lisï¿½tï¿½ï¿½n back
 			{
 				
 				sprintf(id,"%-6.6s",apu);
 			}
 			else 
 			{	
-				if(seek_pid(id) != 0) // Etsitään FRONT-piste				
+				if(seek_pid(id) != 0) // Etsitï¿½ï¿½n FRONT-piste				
 				{
 					StringC msg;
-					msg.LoadTxt(AT_DCP05, M_DCP_POINT_ID_EXISTS_TOK);
+					msg.LoadTxt(AT_DCP06, M_DCP_POINT_ID_EXISTS_TOK);
 					msg.Format(msg,(const wchar_t*)StringC(id));
 					msgbox.ShowMessageOk(msg);
 					//msgbox1(TXT_NIL_TOKEN,M_PID_IN_USE_TOK,(void *) id,MB_OK);
@@ -2964,7 +3081,7 @@ char apu[7];
 			if(seek_pid(id) != 0)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05, M_DCP_POINT_ID_EXISTS_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_POINT_ID_EXISTS_TOK);
 				msg.Format(msg,(const wchar_t*)StringC(id));
 				msgbox.ShowMessageOk(msg);
 				return false;
@@ -3170,7 +3287,7 @@ struct ams_vector cur_xyz,xyz;
 double dist, min;
 double xdsg,ydsg,zdsg;
 	
-	DCP05MsgBoxC msgbox;
+	DCP06MsgBoxC msgbox;
 
 	min = -999999.0;
 	pno = -1;
@@ -3211,7 +3328,7 @@ double xdsg,ydsg,zdsg;
 	else
 	{	
 		StringC msg;
-		msg.LoadTxt(AT_DCP05, M_DCP_AUTOMATCH_FAILED_TOK);
+		msg.LoadTxt(AT_DCP06, M_DCP_AUTOMATCH_FAILED_TOK);
 		msgbox.ShowMessageOk(msg);
 		//msgbox(TXT_NIL_TOKEN, M_AUTOMATCH_FAILED_TOK,MB_OK);
 	}

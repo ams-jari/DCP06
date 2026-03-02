@@ -42,19 +42,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05RotateLineDlgC;
-	class DCP05RotateLineModelC;
+	class DCP06ModelC;
+	class DCP06RotateLineDlgC;
+	class DCP06RotateLineModelC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05RotateLineControllerC : public GUI::ControllerC
+    class DCP06RotateLineControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05RotateLineControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05RotateLineControllerC();
+            DCP06RotateLineControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06RotateLineControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -82,25 +82,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05RotateLineControllerC( const DCP05RotateLineControllerC& oDCP05RotateLineController )
+            DCP06RotateLineControllerC( const DCP06RotateLineControllerC& oDCP05RotateLineController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05RotateLineControllerC& operator=( const DCP05RotateLineControllerC& oDCP05RotateLineController )
+            DCP06RotateLineControllerC& operator=( const DCP06RotateLineControllerC& oDCP05RotateLineController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05RotateLineDlgC* m_pDlg;
-			DCP05ModelC *m_pDCP05Model;
+            DCP06RotateLineDlgC* m_pDlg;
+			DCP06ModelC *m_pDCP06Model;
     };
 
 
-	class DCP05RotateLineDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class DCP06RotateLineDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -119,10 +119,10 @@ namespace DCP
 				*/
 			};
 
-		   DCP05RotateLineDlgC(DCP05ModelC *pDCP05Model);
+		   DCP06RotateLineDlgC(DCP06ModelC *pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05RotateLineDlgC();
+            virtual ~DCP06RotateLineDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -134,7 +134,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05RotateLineModelC* GetDataModel() const;
+			DCP06RotateLineModelC* GetDataModel() const;
 
 	protected:
 			GUI::TextCtrlC* m_pInfo1;
@@ -142,20 +142,20 @@ namespace DCP
 			GUI::TextCtrlC* m_pInfo2;
 
 	private:
-		DCP05ModelC *m_pDCP05Model;
+		DCP06ModelC *m_pDCP06Model;
 	};
 	
-	class DCP05RotateLineModelC : public GUI::ModelC
+	class DCP06RotateLineModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05RotateLineModelC();
+            DCP06RotateLineModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05RotateLineModelC();
+            virtual ~DCP06RotateLineModelC();
 						
 			short/*DCP_PLANE_TYPE*/ plane_type;
 			S_POINT_BUFF point_buff;

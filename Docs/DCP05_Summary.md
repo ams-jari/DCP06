@@ -101,8 +101,8 @@ DCP05/
 
 | Method | Description |
 |--------|--------------|
-| **DOM** | Define Orientation Method: Plane (XY/ZX/YZ, horizontal, 3–20 points), Line (X/Y/Z, 2–20 points), Point Offset, Point Measure, Rotate Plane/Line, Calculation |
-| **POM** | Point Orientation Method: Select object points in OCS, measure in SCS, calculation, file or point input, RMS/residuals display |
+| **321 Alignment** | Define Orientation Method: Plane (XY/ZX/YZ, horizontal, 3–20 points), Line (X/Y/Z, 2–20 points), Point Offset, Point Measure, Rotate Plane/Line, Calculation |
+| **Best Fit Alignment** | Point Orientation Method: Select object points in OCS, measure in SCS, calculation, file or point input, RMS/residuals display |
 | **CHST** | Change Station: Define transfer points, select file or measure points |
 | **User Defined** | Custom orientation workflows |
 
@@ -204,7 +204,7 @@ DCP05/
 | Group | Role | Main Components |
 |-------|------|-----------------|
 | **Init** | User, unit, target, atm, face, tools | DCP_DCP05Init, DCP_DCP05User, DCP_DCP05Unit |
-| **Orientation** | DOM, POM, change station | DCP_DCP05Dom, DCP_DCP05Pom, DCP_DCP05Chst |
+| **Orientation** | 321 Alignment, Best Fit, change station | DCP_DCP05Dom, DCP_DCP05Pom, DCP_DCP05Chst |
 | **Measurement** | XYZ, Dist, Angle, special modes | DCP_MeasXYZ, DCP_ScanMeasXYZ, DCP_Circle |
 | **Calculation** | Dist, Angle, Line/Plane/Circle fit | DCP_CalcDist, DCP_CalcAngle, DCP_CalcLineFit |
 | **Application** | Line setting, shaft, scanning | DCP_LineSetting, DCP_Shaft, DCP_PlaneScanning |
@@ -270,7 +270,7 @@ DCP05/
 
 ## 11. Key Takeaways for DCP06
 
-1. **Preserve all user functionality** – Init, Orientation (DOM/POM/CHST), Measurement, Calculation, Application, File.
+1. **Preserve all user functionality** – Init, Orientation (321 Alignment, Best Fit, CHST), Measurement, Calculation, Application, File.
 2. **ASCII → Database** – DCP05 file system is marked for total redesign; DCP06 should use database concept.
 3. **ADF compatibility** – Maintain ADF import/export for backward compatibility.
 4. **Coordinate systems** – Keep DCS, OCSP, OCSD, OCSC, OCSU and 4×4 matrices.

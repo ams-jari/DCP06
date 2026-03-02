@@ -39,12 +39,12 @@
 #include <dcp06/core/DCP_MsgBox.hpp>
 
 
-#include <dcp06/init/DCP_DCP05Init.hpp>
-#include <dcp06/init/DCP_DCP05Unit.hpp>
-#include <dcp06/orientation/DCP_DCP05Dom.hpp>
-#include <dcp06/orientation/DCP_DCP05DomUserDef.hpp>
-#include <dcp06/orientation/DCP_DCP05Pom.hpp>
-#include <dcp06/orientation/DCP_DCP05Chst.hpp>
+#include <dcp06/init/DCP_DCP06Init.hpp>
+#include <dcp06/init/DCP_DCP06Unit.hpp>
+#include <dcp06/orientation/DCP_DCP06Alignment321.hpp>
+#include <dcp06/orientation/DCP_DCP06Alignment321UserDef.hpp>
+#include <dcp06/orientation/DCP_DCP06BestFit.hpp>
+#include <dcp06/orientation/DCP_DCP06Chst.hpp>
 #include <dcp06/measurement/DCP_3DMeas.hpp>
 #include <dcp06/measurement/DCP_3DFbs.hpp>
 #include <dcp06/calculation/DCP_CalcMenu.hpp>
@@ -102,7 +102,7 @@
 
 namespace DCP
 {
-    APP_ENTRY_POINT( AT_DCP06, 15751, DCP::DCP05ApplicationC ) // DCP06: App.Id 15751
+    APP_ENTRY_POINT( AT_DCP06, 15751, DCP::DCP06ApplicationC ) // DCP06: App.Id 15751
 }     
    
 using namespace DCP;
@@ -110,7 +110,7 @@ using namespace DCP;
 namespace ABL
 {
 //lint -save -e19 Useless Declaration
-REGISTER_COMMAND_FACTORY_APPLICATION(DCP05ApplicationC, AT_DCP06,
+REGISTER_COMMAND_FACTORY_APPLICATION(DCP06ApplicationC, AT_DCP06,
                                      C_DCP_APPLICATION_NAME_TOK, 
                                      L_DCP_APPLICATION_NAME_TOK, AT_DCP06);
 }
@@ -122,57 +122,57 @@ REGISTER_COMMAND_FACTORY_APPLICATION(DCP05ApplicationC, AT_DCP06,
 
 
 // ================================================================================================
-// ====================================  DCP05ApplicationC  =======================================
+// ====================================  DCP06ApplicationC  =======================================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP05ApplicationC::DCP05ApplicationC():m_pDCP05Model(0),poConfigController(0)
+DCP::DCP06ApplicationC::DCP06ApplicationC():m_pDCP06Model(0),poConfigController(0)
 {
 	m_pCode[0] = '\0';
 
     // The appropriate application ID has to be set because 'C_DCP_HEW_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTxtApplicationId( AT_DCP05 ); //lint !e1506 Call to virtual function within a contructor or destructor
+    SetTxtApplicationId( AT_DCP06 ); //lint !e1506 Call to virtual function within a contructor or destructor
     // TODO EI OLE VIVA
 	//SetCaptionTok( C_DCP_APPLICATION_NAME_TOK );
 	
-	//DCP::DCP05ModelC* pModel = new DCP05ModelC;
-	//(void)/*DCP::*/DCP05ApplicationC::SetModel( pModel );
+	//DCP::DCP06ModelC* pModel = new DCP06ModelC;
+	//(void)/*DCP::*/DCP06ApplicationC::SetModel( pModel );
 
 	  //lint -save -e1732 -e1733 new in constructor for class which has no assignment operator
     // Create and set the model
 
-	//DCP::DCP05MenuDlgC* m_pDCP05Dlg = new DCP::DCP05MenuDlgC();
-	//AddDialog(MAIN_MENU,m_pDCP05Dlg,true); 
+	//DCP::DCP06MenuDlgC* m_pDCP06Dlg = new DCP::DCP06MenuDlgC();
+	//AddDialog(MAIN_MENU,m_pDCP06Dlg,true); 
 
 		
 		
 	StringC serialNumber = get_code(m_pCode);
 
-	DCP::DCP05ControllerC* pDCP05Controller = new DCP::DCP05ControllerC(m_pCode);
-	(void)AddController( 1, pDCP05Controller );
+	DCP::DCP06ControllerC* pDCP06Controller = new DCP::DCP06ControllerC(m_pCode);
+	(void)AddController( 1, pDCP06Controller );
 	//(void)GetController( 1 )->SetModel( pModel );
 	
 	
     //lint -save -e1732 -e1733 new in constructor for class which has no assignment operator
     // Create and set the model
-    /*DCP05ConfigControllerC**/ poConfigController = new DCP05ConfigControllerC(pDCP05Controller/*, pModel*/);
+    /*DCP06ConfigControllerC**/ poConfigController = new DCP06ConfigControllerC(pDCP06Controller/*, pModel*/);
 	//AddConfigPanelController(poConfigController);
 
-	//DCP::DCP05ModelC* pModel = new DCP05ModelC;
+	//DCP::DCP06ModelC* pModel = new DCP06ModelC;
 		
     // Removed namespace for eVC compability (WinCE Compiler) 
-    //(void)/*DCP::*/DCP05ApplicationC::SetModel( pModel );
-	 (void)/*DCP::*/DCP05ApplicationC::SetModel( poConfigController->GetModel()/*pModel*/ );
+    //(void)/*DCP::*/DCP06ApplicationC::SetModel( pModel );
+	 (void)/*DCP::*/DCP06ApplicationC::SetModel( poConfigController->GetModel()/*pModel*/ );
 	 (void)GetController( 1 )->SetModel( poConfigController->GetModel() );
 
 	 poConfigController->GetModel()->poConfigController = 	poConfigController;
 
      // Mind config model
-     m_pDCP05Model = poConfigController->GetModel();
+     m_pDCP06Model = poConfigController->GetModel();
 	
  	// is Motorized
      TPI::InstrumentInfoC instInfo;
@@ -184,24 +184,24 @@ DCP::DCP05ApplicationC::DCP05ApplicationC():m_pDCP05Model(0),poConfigController(
 
 	 if(devConf & TPI::InstrumentInfoC::DC_IsMotorized)
 	 {
-		 m_pDCP05Model->isMotorized = true;
+		 m_pDCP06Model->isMotorized = true;
 	 }
 	 if(devConf & TPI::InstrumentInfoC::DC_HasATR)
 	 {
-		 m_pDCP05Model->isATR = true;
+		 m_pDCP06Model->isATR = true;
 	 }
  
-	m_pDCP05Model->SerialNumber = serialNumber;
+	m_pDCP06Model->SerialNumber = serialNumber;
 
 	
 	/*
 	 if(devConf & TPI::InstrumentInfoC::DC_HasScanning)
 	 {
-		m_pDCP05Model->isScanning = true;
+		m_pDCP06Model->isScanning = true;
 	 }
 	 if(devConf & TPI::InstrumentInfoC::InstrumentModelT::IMO_MS60)
 	 {
-		m_pDCP05Model->isScanning = true;
+		m_pDCP06Model->isScanning = true;
 	 }
 	 */
 }  //lint !e429 Custodial pointer has not been freed or returned
@@ -210,7 +210,7 @@ DCP::DCP05ApplicationC::DCP05ApplicationC():m_pDCP05Model(0),poConfigController(
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05ApplicationC::~DCP05ApplicationC()
+DCP::DCP06ApplicationC::~DCP06ApplicationC()
 {
 	//bool ret = poConfigController->StoreConfigData();		
 	int x;
@@ -222,10 +222,10 @@ DCP::DCP05ApplicationC::~DCP05ApplicationC()
 		poConfigController = 0;
 	}
 	/*
-	if(m_pDCP05Model)
+	if(m_pDCP06Model)
 	{
-		delete m_pDCP05Model;
-		m_pDCP05Model = 0;
+		delete m_pDCP06Model;
+		m_pDCP06Model = 0;
 	}
 */
 }	
@@ -233,7 +233,7 @@ DCP::DCP05ApplicationC::~DCP05ApplicationC()
 // ================================================================================================
 // Description: // Description: Start application
 // ================================================================================================
-void DCP::DCP05ApplicationC::Run(/* bool bShowStartDialog NOT CAPTIVATE*/ )
+void DCP::DCP06ApplicationC::Run(/* bool bShowStartDialog NOT CAPTIVATE*/ )
 {
     (void)SetActiveController( 1, true );
 
@@ -244,7 +244,7 @@ void DCP::DCP05ApplicationC::Run(/* bool bShowStartDialog NOT CAPTIVATE*/ )
 
 	if(oDateTime == 0.0)
 	{
-		DCP05MsgBoxC msgBox;
+		DCP06MsgBoxC msgBox;
 		StringC sTemp = L"Reading current date/time failed!";
 		msgBox.ShowMessageOk(sTemp);
 		Close(EC_KEY_CONT);
@@ -257,7 +257,7 @@ void DCP::DCP05ApplicationC::Run(/* bool bShowStartDialog NOT CAPTIVATE*/ )
 	//poConfigController->StoreConfigData();*/
 
 
-	DCP::DCP05InfoDlgC* poInfoDlg = new DCP::DCP05InfoDlgC(dynamic_cast< DCP::DCP05ModelC* >( GetModel()));
+	DCP::DCP06InfoDlgC* poInfoDlg = new DCP::DCP06InfoDlgC(dynamic_cast< DCP::DCP06ModelC* >( GetModel()));
 	AddDialog(INFO_DLG,poInfoDlg); 	
 	SetActiveDialog(INFO_DLG, true);
 
@@ -268,20 +268,20 @@ void DCP::DCP05ApplicationC::Run(/* bool bShowStartDialog NOT CAPTIVATE*/ )
     }  
 }
 
-bool DCP::DCP05ApplicationC::ConfirmClose(bool bEsc)
+bool DCP::DCP06ApplicationC::ConfirmClose(bool bEsc)
 {
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		StringC msg;
-		msg.LoadTxt(AT_DCP05,M_DCP_QUIT_PROGRAM_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_QUIT_PROGRAM_TOK);
 		if(msgbox.ShowMessageYesNo(msg))
 		{
 			poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
 			poConfigController->StoreConfigData();
 			
-			poConfigController->GetModel()->SetConfigKey(CNF_KEY_DOM);
+			poConfigController->GetModel()->SetConfigKey(CNF_KEY_A321);
 			poConfigController->StoreConfigData();
 
-			poConfigController->GetModel()->SetConfigKey(CNF_KEY_POM);
+			poConfigController->GetModel()->SetConfigKey(CNF_KEY_BESTFIT);
 			poConfigController->StoreConfigData();
 
 			poConfigController->GetModel()->SetConfigKey(CNF_KEY_CHST);
@@ -311,7 +311,7 @@ bool DCP::DCP05ApplicationC::ConfirmClose(bool bEsc)
 // ================================================================================================
 // Description:  OnActiveControllerClosed
 // ================================================================================================
-void DCP::DCP05ApplicationC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06ApplicationC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {	
 	Close(lExitCode,true);
 }
@@ -319,7 +319,7 @@ void DCP::DCP05ApplicationC::OnActiveControllerClosed( int lCtrlID, int lExitCod
 // ================================================================================================
 // Description: OnActiveDialogClosed
 // ================================================================================================
-void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
+void DCP::DCP06ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 {
 
 	if(lDlgID == INFO_DLG)
@@ -340,9 +340,9 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 
 			if(poConfigController->GetModel()->lastStartedDate > oDateTime)
 			{
-				DCP05MsgBoxC msgBox;
+				DCP06MsgBoxC msgBox;
 				StringC sTemp;
-				sTemp = L"The current date is < the latest startup date of the DCP05!!!";
+				sTemp = L"The current date is < the latest startup date of the DCP06!!!";
 				msgBox.ShowMessageOk(sTemp);
 				DestroyDialog(lDlgID);
 				Close(EC_KEY_CONT);
@@ -350,7 +350,7 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 			}
 		}
 
-		DCP05DemoLicenseC demo(poConfigController->GetModel());
+		DCP06DemoLicenseC demo(poConfigController->GetModel());
 
 		// FULL MODE
 		if(strcmp(poConfigController->GetModel()->sKeyCode,temp) == 0 && temp[0] != '\0')
@@ -361,13 +361,13 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 		{
 			if(poConfigController->GetModel()->startDate == 0.0) // keycode not entered correctly -> show license dialog
 			{
-				DCP::DCP05LisenceDlgC* poLisDlg = new DCP::DCP05LisenceDlgC(dynamic_cast< DCP::DCP05ModelC* >( GetModel()));
+				DCP::DCP06LisenceDlgC* poLisDlg = new DCP::DCP06LisenceDlgC(dynamic_cast< DCP::DCP06ModelC* >( GetModel()));
 				AddDialog(REG_DLG,poLisDlg); 	
 				SetActiveDialog(REG_DLG, true);
 			}
 			else if(demo.get_available_days(poConfigController->GetModel()->sKeyCodeDemo1, poConfigController->GetModel()->startDate) <= 0)
 			{
-				DCP::DCP05LisenceDlgC* poLisDlg = new DCP::DCP05LisenceDlgC(dynamic_cast< DCP::DCP05ModelC* >( GetModel()));
+				DCP::DCP06LisenceDlgC* poLisDlg = new DCP::DCP06LisenceDlgC(dynamic_cast< DCP::DCP06ModelC* >( GetModel()));
 				AddDialog(REG_DLG,poLisDlg); 	
 				SetActiveDialog(REG_DLG, true);					
 			}
@@ -388,7 +388,7 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 
 		if(lExitCode != EC_KEY_CONT)
 		{
-			DCP05MsgBoxC msgBox;
+			DCP06MsgBoxC msgBox;
 			StringC sTemp;
 			sTemp = L"The license key was not accepted, restart program and try again!";
 			msgBox.ShowMessageOk(sTemp);
@@ -419,7 +419,7 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 
 		else 
 		{
-			DCP05DemoLicenseC demo(poConfigController->GetModel());
+			DCP06DemoLicenseC demo(poConfigController->GetModel());
 
 			// first run, check demo mode 1
 			if(poConfigController->GetModel()->startDate == 0.0) // keycode not entered correctly -> show license dialog
@@ -439,7 +439,7 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 				}
 				else
 				{ 
-					DCP05MsgBoxC msgBox;
+					DCP06MsgBoxC msgBox;
 					StringC sTemp;
 					sTemp = L"The license key was not accepted, restart program and try again!";
 					msgBox.ShowMessageOk(sTemp);
@@ -459,7 +459,7 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 			}
 			else 
 			{ 
-				DCP05MsgBoxC msgBox;
+				DCP06MsgBoxC msgBox;
 				StringC sTemp;
 				sTemp = L"The license key was not accepted, restart program and try again!";
 				msgBox.ShowMessageOk(sTemp);
@@ -475,7 +475,7 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 	return;
 }
 
-//bool DCP::DCP05ApplicationC::check_demo_mode(char *code)
+//bool DCP::DCP06ApplicationC::check_demo_mode(char *code)
 //{
 //	// if key not entered	
 //	return true;
@@ -492,7 +492,7 @@ void DCP::DCP05ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 
 
 
-StringC DCP::DCP05ApplicationC::get_code(char *sCode)
+StringC DCP::DCP06ApplicationC::get_code(char *sCode)
 {
 int nro=1L;
 char *p, *p1,*p2;
@@ -514,7 +514,7 @@ StringC ret = L"";
 	 sprintf(temp,"%-lu",snro);
 	
 #elif defined(CS20)
-	DCP05MsgBoxC msgBox;
+	DCP06MsgBoxC msgBox;
 
 	StringC ss1 = L"";
 	RcT ret1= CPI::SensorC::GetInstance()->GetSerialNumber(ss1);
@@ -529,7 +529,7 @@ StringC ret = L"";
 	//msgBox.ShowMessageOk(StringC(ssName), StringC(temp));
 
 #elif defined(CS35)
-	DCP05CS35C cs35;
+	DCP06CS35C cs35;
 	cs35.get_serialnumber(temp);
 #endif
 	//snro = 235063;
@@ -577,15 +577,15 @@ StringC ret = L"";
 
 
 // ================================================================================================
-// ====================================  DCP05MenuDlgC  ===========================================
+// ====================================  DCP06MenuDlgC  ===========================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP05MenuDlgC::DCP05MenuDlgC()
+DCP06MenuDlgC::DCP06MenuDlgC()
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 } 
 
 
@@ -593,41 +593,41 @@ DCP05MenuDlgC::DCP05MenuDlgC()
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP05MenuDlgC::~DCP05MenuDlgC()
+DCP06MenuDlgC::~DCP06MenuDlgC()
 {
 }
 
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP05MenuDlgC::OnInitDialog(void)
+void DCP06MenuDlgC::OnInitDialog(void)
 {
 	GUI::GraphMenuDialogC::OnInitDialog(); 
 
 	FKDef vDef;
 	vDef.poOwner = this;
-	//vDef.nAppId = AT_DCP05;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	//vDef.nAppId = AT_DCP06;
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey(FK1, vDef);
 
 	
-	SetTitle(StringC(AT_DCP05,T_DCP_MAIN_MENU_TOK ));
+	SetTitle(StringC(AT_DCP06,T_DCP_MAIN_MENU_TOK ));
 	//SetHelpTok(H_DCP_MAIN_MENU_TOK,0);
 	
-	//AddItem(StringC(AT_DCP05,L_DCP_INITIALIZATION_TOK),11);
-	/*AddItem(L"", L"", StringC(AT_DCP05,L_DCP_INITIALIZATION_TOK),L"", NULL, 11);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_ORIENTATION_TOK),L"",NULL,12);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_FILE_TOK),L"",NULL,13);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_MEASUREMENT_TOK),L"",NULL,		14);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_CALCULATION_TOK),L"",NULL,		15);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_APPLICATION_TOK),L"",NULL,		16);*/
+	//AddItem(StringC(AT_DCP06,L_DCP_INITIALIZATION_TOK),11);
+	/*AddItem(L"", L"", StringC(AT_DCP06,L_DCP_INITIALIZATION_TOK),L"", NULL, 11);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_ORIENTATION_TOK),L"",NULL,12);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_FILE_TOK),L"",NULL,13);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_MEASUREMENT_TOK),L"",NULL,		14);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_CALCULATION_TOK),L"",NULL,		15);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_APPLICATION_TOK),L"",NULL,		16);*/
 
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Settings_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Settings_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_INITIALIZATION_TOK),L"", NULL, 11);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Orientation_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Orientation_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_ORIENTATION_TOK),L"",NULL,12);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"File_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"File_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_FILE_TOK),L"",NULL,13);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Measurement_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Measurement_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_MEASUREMENT_TOK),L"",NULL,14);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Calculation_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Calculation_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_CALCULATION_TOK),L"",NULL,15);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Application_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Application_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_APPLICATION_TOK),L"",NULL,16);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Settings_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Settings_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_INITIALIZATION_TOK),L"", NULL, 11);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Orientation_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Orientation_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_ORIENTATION_TOK),L"",NULL,12);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"File_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"File_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_FILE_TOK),L"",NULL,13);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Measurement_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Measurement_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_MEASUREMENT_TOK),L"",NULL,14);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Calculation_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Calculation_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_CALCULATION_TOK),L"",NULL,15);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Application_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Application_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_APPLICATION_TOK),L"",NULL,16);
 
 
 	//DisableMenuItem(11);
@@ -636,7 +636,7 @@ void DCP05MenuDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: Called if selection is completed (by ENTER, mouse click or numeric keys)
 // ================================================================================================
-void DCP05MenuDlgC::OnSelectionDone(void)
+void DCP06MenuDlgC::OnSelectionDone(void)
 {
 	short unId = GetSelected();
 
@@ -661,14 +661,14 @@ void DCP05MenuDlgC::OnSelectionDone(void)
 // ================================================================================================
 // Description: SetModel
 // ================================================================================================
-bool DCP::DCP05MenuDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06MenuDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -678,18 +678,18 @@ bool DCP::DCP05MenuDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // ================================================================================================
-// Description: GetDCP05Model
+// Description: GetDCP06Model
 // ================================================================================================
-DCP::DCP05ModelC* DCP::DCP05MenuDlgC::GetDCP05Model() const
+DCP::DCP06ModelC* DCP::DCP06MenuDlgC::GetDCP06Model() const
 {
-    return (DCP::DCP05ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
 // Description: F1
 // ================================================================================================
-void DCP05MenuDlgC::OnF1Pressed(void)
+void DCP06MenuDlgC::OnF1Pressed(void)
 {
 	if(GetSelected() ==  2)
 		;
@@ -710,50 +710,50 @@ void DCP05MenuDlgC::OnF1Pressed(void)
 
 
 // ================================================================================================
-// ====================================  DCP05ControllerC  ===================================
+// ====================================  DCP06ControllerC  ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP05ControllerC::DCP05ControllerC(char* code) 
-    : m_pDCP05Dlg( NULL ),m_pCode(code)
+DCP::DCP06ControllerC::DCP06ControllerC(char* code) 
+    : m_pDCP06Dlg( NULL ),m_pCode(code)
 {
-	SetTxtApplicationId( AT_DCP05 ); 
+	SetTxtApplicationId( AT_DCP06 ); 
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle( StringC(AT_DCP05, C_DCP_APPLICATION_NAME_TOK ));
+    SetTitle( StringC(AT_DCP06, C_DCP_APPLICATION_NAME_TOK ));
 
     // Create a dialog
-	/*DCP::DCP05MenuDlgC**/ m_pDCP05Dlg = new DCP::DCP05MenuDlgC();
-	AddDialog(MAIN_MENU,m_pDCP05Dlg,true); 
+	/*DCP::DCP06MenuDlgC**/ m_pDCP06Dlg = new DCP::DCP06MenuDlgC();
+	AddDialog(MAIN_MENU,m_pDCP06Dlg,true); 
 
     // Set the function key
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     //vDef.nLable = K_SET_TOK;
     vDef.poOwner = this;
     //SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_INFO_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_INFO_TOK);
 	SetFunctionKey(SHFK2, vDef);
 
 	
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05ControllerC::~DCP05ControllerC()
+DCP::DCP06ControllerC::~DCP06ControllerC()
 {
 
 }
 /*
-bool DCP::DCP05ControllerC::ConfirmClose(bool bEsc)
+bool DCP::DCP06ControllerC::ConfirmClose(bool bEsc)
 {
 
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		StringC msg;
-		msg.LoadTxt(AT_DCP05,M_DCP_QUIT_PROGRAM_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_QUIT_PROGRAM_TOK);
 		if(msgbox.ShowMessageYesNo(msg))
 		{
 			return true;
@@ -764,7 +764,7 @@ bool DCP::DCP05ControllerC::ConfirmClose(bool bEsc)
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05ControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ControllerC::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
@@ -772,29 +772,29 @@ bool DCP::DCP05ControllerC::SetModel( GUI::ModelC* pModel )
 	
 
 	// check if demo mode -> show REGISTRATION BUTTON
-	//DCP05ModelC* dcp05Model = dynamic_cast< DCP::DCP05ModelC* >(pModel());
+	//DCP06ModelC* dcp05Model = dynamic_cast< DCP::DCP06ModelC* >(pModel());
 	
-	DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+	DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
-	if(pDCP05Model->startDate != 0.0) // = Demo mode
+	if(pDCP06Model->startDate != 0.0) // = Demo mode
 	{
 		FKDef vDef;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP05,K_DCP_REGISTRATION_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_REGISTRATION_TOK);
 		SetFunctionKey(SHFK4, vDef);
 	}
 
     // Set it to hello world dialog
-    return m_pDCP05Dlg->SetModel( pModel );
+    return m_pDCP06Dlg->SetModel( pModel );
 }
 
 
 // ================================================================================================
 // Description: F1
 // ================================================================================================
-void DCP::DCP05ControllerC::OnF1Pressed()
+void DCP::DCP06ControllerC::OnF1Pressed()
 {
-    if (m_pDCP05Dlg == NULL)
+    if (m_pDCP06Dlg == NULL)
     {
         USER_APP_VERIFY( false );
         return;
@@ -802,7 +802,7 @@ void DCP::DCP05ControllerC::OnF1Pressed()
 
     // Update model
     // Set it to hello world dialog
-    m_pDCP05Dlg->UpdateData();
+    m_pDCP06Dlg->UpdateData();
 
     // Remove the following statement if you don't want an exit
     // to the main menu
@@ -812,23 +812,23 @@ void DCP::DCP05ControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: SHF2 Info
 // ================================================================================================
-void DCP05ControllerC::OnSHF2Pressed(void)
+void DCP06ControllerC::OnSHF2Pressed(void)
 {
-	DCP::DCP05InfoDlgC* poInfoDlg = new DCP::DCP05InfoDlgC(dynamic_cast< DCP::DCP05ModelC* >( GetModel()));
+	DCP::DCP06InfoDlgC* poInfoDlg = new DCP::DCP06InfoDlgC(dynamic_cast< DCP::DCP06ModelC* >( GetModel()));
 	AddDialog(INFO_DLG,poInfoDlg); 	
 	SetActiveDialog(INFO_DLG, true);
 }
 
-void DCP05ControllerC::OnSHF4Pressed(void)
+void DCP06ControllerC::OnSHF4Pressed(void)
 {
-	DCP::DCP05LisenceDlgC* poLisDlg = new DCP::DCP05LisenceDlgC(dynamic_cast< DCP::DCP05ModelC* >( GetModel()));
+	DCP::DCP06LisenceDlgC* poLisDlg = new DCP::DCP06LisenceDlgC(dynamic_cast< DCP::DCP06ModelC* >( GetModel()));
 	AddDialog(REG_DLG,poLisDlg); 	
 	SetActiveDialog(REG_DLG, true);
 }
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DCP06ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == REG_DLG)
 	{
@@ -836,22 +836,22 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		if(lExitCode == EC_KEY_CONT)
 		{
 
-			DCP::DCP05ModelC* pDcp05Model = dynamic_cast< DCP::DCP05ModelC* >(GetModel());
+			DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >(GetModel());
 
-			if(strcmp(pDcp05Model->sEnteredKeyCode, m_pCode) == 0 && m_pCode[0] != '\0')
+			if(strcmp(pDCP06Model->sEnteredKeyCode, m_pCode) == 0 && m_pCode[0] != '\0')
 			{	
-				sprintf(pDcp05Model->sKeyCode,"%s", pDcp05Model->sEnteredKeyCode);
-				pDcp05Model->startDate = 0.0; // reset demo start date
-				memset(pDcp05Model->sKeyCodeDemo1, '\0', 10);
+				sprintf(pDCP06Model->sKeyCode,"%s", pDCP06Model->sEnteredKeyCode);
+				pDCP06Model->startDate = 0.0; // reset demo start date
+				memset(pDCP06Model->sKeyCodeDemo1, '\0', 10);
 				
-				pDcp05Model->SetConfigKey(CNF_KEY_DEMO_LICENSES);
-				pDcp05Model->poConfigController->StoreConfigData();
+				pDCP06Model->SetConfigKey(CNF_KEY_DEMO_LICENSES);
+				pDCP06Model->poConfigController->StoreConfigData();
 				
 				//poConfigController->GetModel()->bDemoMode = false;
 			}
 			else
 			{
-				DCP05MsgBoxC msgBox;
+				DCP06MsgBoxC msgBox;
 				StringC sTemp;
 				sTemp = L"The license key was not accepted!";
 				msgBox.ShowMessageOk(sTemp);
@@ -871,9 +871,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(INIT_CONTROLLER) == NULL)
 			{
-				(void)AddController( INIT_CONTROLLER, new DCP::DCP05InitControllerC(false) );
+				(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC(false) );
 			}
-			(void)GetController( INIT_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( INIT_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(INIT_CONTROLLER, true);
 			
 		}
@@ -885,7 +885,7 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		// Orientation
 		else if(lExitCode == 12) 
 		{
-			DCP::DCP05OrientationMenuDlgC* poMenuDlg = new DCP::DCP05OrientationMenuDlgC(dynamic_cast< DCP::DCP05ModelC* >(GetModel()));
+			DCP::DCP06OrientationMenuDlgC* poMenuDlg = new DCP::DCP06OrientationMenuDlgC(dynamic_cast< DCP::DCP06ModelC* >(GetModel()));
 			AddDialog(ORIENTATION_MENU,poMenuDlg); 	
 			// TODO VIVA
 			//poMenuDlg->SetTxtApplicationId( GetTxtApplicationId());
@@ -896,7 +896,7 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 
 			
-			DCP::DCP05FileMenuDlgC* poMenuDlg = new DCP::DCP05FileMenuDlgC();
+			DCP::DCP06FileMenuDlgC* poMenuDlg = new DCP::DCP06FileMenuDlgC();
 			AddDialog(FILE_MENU,poMenuDlg); 	
 			// TODO VIVA	
 			//poMenuDlg->SetTxtApplicationId( GetTxtApplicationId());
@@ -908,16 +908,16 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(_3DMEAS_CONTROLLER) == NULL)
 			{
-				(void)AddController( _3DMEAS_CONTROLLER, new DCP::DCP053DMeasControllerC(false, dynamic_cast< DCP::DCP05ModelC* >(GetModel())));
+				(void)AddController( _3DMEAS_CONTROLLER, new DCP::DCP063DMeasControllerC(false, dynamic_cast< DCP::DCP06ModelC* >(GetModel())));
 			}
-			(void)GetController( _3DMEAS_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( _3DMEAS_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(_3DMEAS_CONTROLLER, true);
 
 		}
 		// Calculation
 		else if(lExitCode == 15) 
 		{
-			DCP::DCP05CalcMenuDlgC* poMenuDlg = new DCP::DCP05CalcMenuDlgC(dynamic_cast< DCP::DCP05ModelC* >(GetModel()));
+			DCP::DCP06CalcMenuDlgC* poMenuDlg = new DCP::DCP06CalcMenuDlgC(dynamic_cast< DCP::DCP06ModelC* >(GetModel()));
 			AddDialog(CALCULATION_MENU,poMenuDlg); 	
 			// TODO VIVA
 			//poMenuDlg->SetTxtApplicationId( GetTxtApplicationId());
@@ -927,7 +927,7 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		// Application
 		else if(lExitCode == 16) 
 		{
-			DCP::DCP05ApplicationMenuDlgC* poMenuDlg = new DCP::DCP05ApplicationMenuDlgC(dynamic_cast< DCP::DCP05ModelC* >(GetModel()));
+			DCP::DCP06ApplicationMenuDlgC* poMenuDlg = new DCP::DCP06ApplicationMenuDlgC(dynamic_cast< DCP::DCP06ModelC* >(GetModel()));
 			AddDialog(APPLICATION_MENU,poMenuDlg); 	
 			// TODO VIVA
 			//poMenuDlg->SetTxtApplicationId( GetTxtApplicationId());
@@ -936,7 +936,7 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		}
 		else
 		{
-			//DCP05MsgBoxC msgbox;
+			//DCP06MsgBoxC msgbox;
 			//msgbox.ShowMessageOk(L"Joo");
 			//SetActiveDialog(MAIN_MENU, true);	
 		}
@@ -949,79 +949,79 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			SetActiveDialog(MAIN_MENU, true);
 		}
-		else if(lExitCode == DCP_DOM_MENU)
+		else if(lExitCode == DCP_A321_MENU)
 		{
 			//SetActiveDialog(1, true);
 			
-			if(GetController(DOM_CONTROLLER) == NULL)
+			if(GetController(A321_CONTROLLER) == NULL)
 			{
-				(void)AddController( DOM_CONTROLLER, new DCP::DCP05DomControllerC );
+				(void)AddController( A321_CONTROLLER, new DCP::DCP06DomControllerC );
 			}
-			(void)GetController( DOM_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
-			SetActiveController(DOM_CONTROLLER, true);
+			(void)GetController( A321_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
+			SetActiveController(A321_CONTROLLER, true);
 		}
-		else if(lExitCode == DCP_POM_MENU)
+		else if(lExitCode == DCP_BESTFIT_MENU)
 		{
-			if(dynamic_cast< DCP::DCP05ModelC* >(GetModel())->ADFFileName.GetLength() == 0)
+			if(dynamic_cast< DCP::DCP06ModelC* >(GetModel())->ADFFileName.GetLength() == 0)
 			{
-				DCP05MsgBoxC msgbox;		
+				DCP06MsgBoxC msgbox;		
 				StringC msg;
-				msg.LoadTxt(AT_DCP05, M_DCP_ADF_NOT_OPEN_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_ADF_NOT_OPEN_TOK);
 
 				if(msgbox.ShowMessageYesNo(msg))
 				{
-					if(GetController(FILE_CONTROLLER_POM) == NULL)
+					if(GetController(FILE_CONTROLLER_BESTFIT) == NULL)
 					{
-						(void)AddController( FILE_CONTROLLER_POM, new DCP::DCP05FileControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+						(void)AddController( FILE_CONTROLLER_BESTFIT, new DCP::DCP06FileControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 					}
-					(void)GetController( FILE_CONTROLLER_POM)->SetModel( DCP05ControllerC::GetModel());
-					SetActiveController(FILE_CONTROLLER_POM, true);
+					(void)GetController( FILE_CONTROLLER_BESTFIT)->SetModel( DCP06ControllerC::GetModel());
+					SetActiveController(FILE_CONTROLLER_BESTFIT, true);
 				}
 				else
 				{
-					if(GetController(POM_CONTROLLER) == NULL)
+					if(GetController(BESTFIT_CONTROLLER) == NULL)
 					{
-						(void)AddController( POM_CONTROLLER, new DCP::DCP05PomControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+						(void)AddController( BESTFIT_CONTROLLER, new DCP::DCP06PomControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 					}
-					(void)GetController( POM_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
-					SetActiveController(POM_CONTROLLER, true);
+					(void)GetController( BESTFIT_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
+					SetActiveController(BESTFIT_CONTROLLER, true);
 				}
 			}
 			else
 			{
-				if(GetController(POM_CONTROLLER) == NULL)
+				if(GetController(BESTFIT_CONTROLLER) == NULL)
 				{
-					(void)AddController( POM_CONTROLLER, new DCP::DCP05PomControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+					(void)AddController( BESTFIT_CONTROLLER, new DCP::DCP06PomControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 				}
-				(void)GetController( POM_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
-				SetActiveController(POM_CONTROLLER, true);
+				(void)GetController( BESTFIT_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
+				SetActiveController(BESTFIT_CONTROLLER, true);
 			}
 
 		}
 		else if(lExitCode == DCP_CHANGE_STATION_MENU)
 		{
-			if(dynamic_cast< DCP::DCP05ModelC* >(GetModel())->ADFFileName.GetLength() == 0)
+			if(dynamic_cast< DCP::DCP06ModelC* >(GetModel())->ADFFileName.GetLength() == 0)
 			{
-				DCP05MsgBoxC msgbox;		
+				DCP06MsgBoxC msgbox;		
 				StringC msg;
-				msg.LoadTxt(AT_DCP05, M_DCP_ADF_NOT_OPEN_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_ADF_NOT_OPEN_TOK);
 
 				if(msgbox.ShowMessageYesNo(msg))
 				{
 					if(GetController(FILE_CONTROLLER_CHST) == NULL)
 					{
-						(void)AddController( FILE_CONTROLLER_CHST, new DCP::DCP05FileControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+						(void)AddController( FILE_CONTROLLER_CHST, new DCP::DCP06FileControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 					}
-					(void)GetController( FILE_CONTROLLER_CHST)->SetModel( DCP05ControllerC::GetModel());
+					(void)GetController( FILE_CONTROLLER_CHST)->SetModel( DCP06ControllerC::GetModel());
 					SetActiveController(FILE_CONTROLLER_CHST, true);
 				}
 				else
 				{
 					if(GetController(CHST_CONTROLLER) == NULL)
 					{
-						(void)AddController( CHST_CONTROLLER, new DCP::DCP05ChangeStationControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+						(void)AddController( CHST_CONTROLLER, new DCP::DCP06ChangeStationControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 					}
-					(void)GetController( CHST_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+					(void)GetController( CHST_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 					SetActiveController(CHST_CONTROLLER, true);
 				}
 			}
@@ -1029,21 +1029,21 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 			{
 				if(GetController(CHST_CONTROLLER) == NULL)
 				{
-					(void)AddController( CHST_CONTROLLER, new DCP::DCP05ChangeStationControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+					(void)AddController( CHST_CONTROLLER, new DCP::DCP06ChangeStationControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 				}
-				(void)GetController( CHST_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+				(void)GetController( CHST_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 				SetActiveController(CHST_CONTROLLER, true);
 			}
 
 		}
 		else if(lExitCode == DCP_USER_DEFINED_MENU)
 		{
-			if(GetController(DOM_USERDEF_CONTROLLER) == NULL)
+			if(GetController(A321_USERDEF_CONTROLLER) == NULL)
 			{
-				(void)AddController( DOM_USERDEF_CONTROLLER, new DCP::DCP05DomUserDefControllerC(dynamic_cast< DCP::DCP05ModelC* >( DCP05ControllerC::GetModel())));
+				(void)AddController( A321_USERDEF_CONTROLLER, new DCP::DCP06DomUserDefControllerC(dynamic_cast< DCP::DCP06ModelC* >( DCP06ControllerC::GetModel())));
 			}
-			(void)GetController( DOM_USERDEF_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
-			SetActiveController(DOM_USERDEF_CONTROLLER, true);
+			(void)GetController( A321_USERDEF_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
+			SetActiveController(A321_USERDEF_CONTROLLER, true);
 		}
 	}	
 	// FILE MENU
@@ -1057,27 +1057,27 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(FILE_CONTROLLER) == NULL)
 			{
-				(void)AddController( FILE_CONTROLLER, new DCP::DCP05FileControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( FILE_CONTROLLER, new DCP::DCP06FileControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( FILE_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( FILE_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(FILE_CONTROLLER, true);
 		}
 		else if(lExitCode == DCP_DIST_FILE_MENU)
 		{
 			if(GetController(DIST_FILE_CONTROLLER) == NULL)
 			{
-				(void)AddController( DIST_FILE_CONTROLLER, new DCP::DCP05DistFileControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( DIST_FILE_CONTROLLER, new DCP::DCP06DistFileControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( DIST_FILE_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( DIST_FILE_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(DIST_FILE_CONTROLLER, true);
 		}
 		else if(lExitCode == DCP_ANGLE_FILE_MENU)
 		{
 			if(GetController(ANGLE_FILE_CONTROLLER) == NULL)
 			{
-				(void)AddController( ANGLE_FILE_CONTROLLER, new DCP::DCP05AngleFileControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( ANGLE_FILE_CONTROLLER, new DCP::DCP06AngleFileControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( ANGLE_FILE_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( ANGLE_FILE_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(ANGLE_FILE_CONTROLLER, true);
 
 		}
@@ -1085,9 +1085,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(CIRCLE_FILE_CONTROLLER) == NULL)
 			{
-				(void)AddController( CIRCLE_FILE_CONTROLLER, new DCP::DCP05CircleFileControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( CIRCLE_FILE_CONTROLLER, new DCP::DCP06CircleFileControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( CIRCLE_FILE_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( CIRCLE_FILE_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(CIRCLE_FILE_CONTROLLER, true);
 
 		}
@@ -1095,9 +1095,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(SHAFT_FILE_CONTROLLER) == NULL)
 			{
-				(void)AddController( SHAFT_FILE_CONTROLLER, new DCP::DCP05ShaftFileControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( SHAFT_FILE_CONTROLLER, new DCP::DCP06ShaftFileControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( SHAFT_FILE_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( SHAFT_FILE_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(SHAFT_FILE_CONTROLLER, true);
 
 		}
@@ -1112,24 +1112,24 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		}
 		else if(lExitCode == LINE_SETTING)
 		{
-			DCP05MsgBoxC msgBox;
+			DCP06MsgBoxC msgBox;
 			short ret=1;
 			
-			DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( DCP05ControllerC::GetModel() );
+			DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( DCP06ControllerC::GetModel() );
 
 			// check if dom/line and horizontal plane is defined	
-			if(pDCP05Model->dom_line_buff[0].sta == 0)
+			if(pDCP06Model->dom_line_buff[0].sta == 0)
 			{
 				StringC sMsg;
-				sMsg.LoadTxt(AT_DCP05,M_DCP_DEFINE_LINE_LSET_TOK);
+				sMsg.LoadTxt(AT_DCP06,M_DCP_DEFINE_LINE_LSET_TOK);
 				msgBox.ShowMessageOk(sMsg);
 				ret = 0;
 			}
 			
-			if(ret==1 && !pDCP05Model->dom_hz_plane)
+			if(ret==1 && !pDCP06Model->dom_hz_plane)
 			{
 				StringC sMsg;
-				sMsg.LoadTxt(AT_DCP05,M_DCP_HZ_PLANE_NOT_DEFINED_TOK);
+				sMsg.LoadTxt(AT_DCP06,M_DCP_HZ_PLANE_NOT_DEFINED_TOK);
 				msgBox.ShowMessageOk(sMsg);
 				ret = 0;
 			}
@@ -1139,9 +1139,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 
 				if(GetController(LINE_SETTING_CONTROLLER) == NULL)
 				{
-					(void)AddController( LINE_SETTING_CONTROLLER, new DCP::DCP05LineSettingControllerC );
+					(void)AddController( LINE_SETTING_CONTROLLER, new DCP::DCP06LineSettingControllerC );
 				}
-				(void)GetController( LINE_SETTING_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+				(void)GetController( LINE_SETTING_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 				SetActiveController(LINE_SETTING_CONTROLLER, true);
 			}
 			else
@@ -1151,9 +1151,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(_3DFBS_CONTROLLER) == NULL)
 			{
-				(void)AddController( _3DFBS_CONTROLLER, new DCP::DCP053DFbsControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( _3DFBS_CONTROLLER, new DCP::DCP063DFbsControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( _3DFBS_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( _3DFBS_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(_3DFBS_CONTROLLER, true);
 		}
 
@@ -1161,9 +1161,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(SHAFT_ALIGMENT_CONTROLLER) == NULL)
 			{
-				(void)AddController( SHAFT_ALIGMENT_CONTROLLER, new DCP::DCP05ShaftControllerC(dynamic_cast< DCP::DCP05ModelC* >( DCP05ControllerC::GetModel())));
+				(void)AddController( SHAFT_ALIGMENT_CONTROLLER, new DCP::DCP06ShaftControllerC(dynamic_cast< DCP::DCP06ModelC* >( DCP06ControllerC::GetModel())));
 			}
-			(void)GetController( SHAFT_ALIGMENT_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( SHAFT_ALIGMENT_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(SHAFT_ALIGMENT_CONTROLLER, true);
 
 		}
@@ -1171,9 +1171,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(SIMPLE_SCAN_CONTROLLER) == NULL)
 			{
-				(void)AddController(SIMPLE_SCAN_CONTROLLER, new DCP::DCP05PlaneScanControllerC(dynamic_cast< DCP::DCP05ModelC* >( DCP05ControllerC::GetModel())));
+				(void)AddController(SIMPLE_SCAN_CONTROLLER, new DCP::DCP06PlaneScanControllerC(dynamic_cast< DCP::DCP06ModelC* >( DCP06ControllerC::GetModel())));
 			}
-			(void)GetController( SIMPLE_SCAN_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( SIMPLE_SCAN_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(SIMPLE_SCAN_CONTROLLER, true);
 		}
 		
@@ -1181,9 +1181,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(LINE_FITTING_CONTROLLER) == NULL)
 			{
-				(void)AddController( LINE_FITTING_CONTROLLER, new DCP::DCP05LineFitControllerC(dynamic_cast< DCP::DCP05ModelC* >( DCP05ControllerC::GetModel())));
+				(void)AddController( LINE_FITTING_CONTROLLER, new DCP::DCP06LineFitControllerC(dynamic_cast< DCP::DCP06ModelC* >( DCP06ControllerC::GetModel())));
 			}
-			(void)GetController( LINE_FITTING_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( LINE_FITTING_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(LINE_FITTING_CONTROLLER, true);
 		}
 
@@ -1193,9 +1193,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(SCAN_CONTROLLER) == NULL)
 			{
-				(void)AddController(SCAN_CONTROLLER, new DCP::DCPScanningControllerC(dynamic_cast< DCP::DCP05ModelC* >( DCP05ControllerC::GetModel())));
+				(void)AddController(SCAN_CONTROLLER, new DCP::DCPScanningControllerC(dynamic_cast< DCP::DCP06ModelC* >( DCP06ControllerC::GetModel())));
 			}
-			//(void)GetController(SCAN_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			//(void)GetController(SCAN_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(SCAN_CONTROLLER, true);
 		}
 		
@@ -1214,9 +1214,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 						
 			if(GetController(CALC_DIST_CONTROLLER) == NULL)
 			{
-				(void)AddController( CALC_DIST_CONTROLLER, new DCP::DCP05CalcDistControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( CALC_DIST_CONTROLLER, new DCP::DCP06CalcDistControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( CALC_DIST_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( CALC_DIST_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(CALC_DIST_CONTROLLER, true);
 			
 		}
@@ -1224,9 +1224,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(CALC_ANGLE_CONTROLLER) == NULL)
 			{
-				(void)AddController( CALC_ANGLE_CONTROLLER, new DCP::DCP05CalcAngleControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( CALC_ANGLE_CONTROLLER, new DCP::DCP06CalcAngleControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( CALC_ANGLE_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( CALC_ANGLE_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(CALC_ANGLE_CONTROLLER, true);
 
 		}
@@ -1234,9 +1234,9 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		{
 			if(GetController(CALCULATION_CIRCLE_CONTROLLER) == NULL)
 			{
-				(void)AddController( CALCULATION_CIRCLE_CONTROLLER, new DCP::DCP05CalculationCircleControllerC(dynamic_cast< DCP::DCP05ModelC* >( DCP05ControllerC::GetModel())));
+				(void)AddController( CALCULATION_CIRCLE_CONTROLLER, new DCP::DCP06CalculationCircleControllerC(dynamic_cast< DCP::DCP06ModelC* >( DCP06ControllerC::GetModel())));
 			}
-			(void)GetController( CALCULATION_CIRCLE_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( CALCULATION_CIRCLE_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(CALCULATION_CIRCLE_CONTROLLER, true);
 
 		}
@@ -1253,7 +1253,7 @@ void DCP::DCP05ControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 // ================================================================================================
 // Description: OnActiveControllerClosed
 // ================================================================================================
-void DCP::DCP05ControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06ControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	DestroyController(lCtrlID);
 	
@@ -1270,22 +1270,22 @@ void DCP::DCP05ControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode
 
 			//DestroyController(1);
 		}
-		else if(lCtrlID == FILE_CONTROLLER_POM)
+		else if(lCtrlID == FILE_CONTROLLER_BESTFIT)
 		{
-			if(GetController(POM_CONTROLLER) == NULL)
+			if(GetController(BESTFIT_CONTROLLER) == NULL)
 			{
-				(void)AddController( POM_CONTROLLER, new DCP::DCP05PomControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( BESTFIT_CONTROLLER, new DCP::DCP06PomControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( POM_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
-			SetActiveController(POM_CONTROLLER, true);
+			(void)GetController( BESTFIT_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
+			SetActiveController(BESTFIT_CONTROLLER, true);
 		}
 		else if(lCtrlID == FILE_CONTROLLER_CHST)
 		{
 			if(GetController(CHST_CONTROLLER) == NULL)
 			{
-				(void)AddController( CHST_CONTROLLER, new DCP::DCP05ChangeStationControllerC(dynamic_cast< DCP::DCP05ModelC* >(GetModel())) );
+				(void)AddController( CHST_CONTROLLER, new DCP::DCP06ChangeStationControllerC(dynamic_cast< DCP::DCP06ModelC* >(GetModel())) );
 			}
-			(void)GetController( CHST_CONTROLLER )->SetModel( DCP05ControllerC::GetModel());
+			(void)GetController( CHST_CONTROLLER )->SetModel( DCP06ControllerC::GetModel());
 			SetActiveController(CHST_CONTROLLER, true);
 		}
 		else
@@ -1296,42 +1296,42 @@ void DCP::DCP05ControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode
 
 
 // ================================================================================================
-// ====================================  DCP05OrientationMenuDlgC  ================================
+// ====================================  DCP06OrientationMenuDlgC  ================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP05OrientationMenuDlgC::DCP05OrientationMenuDlgC(DCP05ModelC* pDCP05Model): m_pDCP05Model(pDCP05Model)
+DCP06OrientationMenuDlgC::DCP06OrientationMenuDlgC(DCP06ModelC* pDCP06Model): m_pDCP06Model(pDCP06Model)
 {
 
-	//SetTxtApplicationId( AT_DCP05 );
+	//SetTxtApplicationId( AT_DCP06 );
 }
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP05OrientationMenuDlgC::~DCP05OrientationMenuDlgC()
+DCP06OrientationMenuDlgC::~DCP06OrientationMenuDlgC()
 {
 }
 
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP05OrientationMenuDlgC::OnInitDialog(void)
+void DCP06OrientationMenuDlgC::OnInitDialog(void)
 {
 	ResetFunctionKeys();
 
 	FKDef vDef;
 	vDef.poOwner = this;
-	//vDef.nAppId = AT_DCP05;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	//vDef.nAppId = AT_DCP06;
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey(FK1, vDef);
 	
 	// HIDE SHIFT F2/F6
     FKDef vDef1;
 	vDef1.poOwner = this;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
 	vDef1.strLable =L"";
 	SetFunctionKey( SHFK2, vDef1 );
 	SetFunctionKey( SHFK6, vDef1 );
@@ -1339,23 +1339,24 @@ void DCP05OrientationMenuDlgC::OnInitDialog(void)
 	
 	//SetHelpTok(H_DCP_ORIENTATION_TOK,0);
 	
-	SetTitle(StringC(AT_DCP05,T_DCP_ORIENTATION_MENU_TOK ));
+	SetTitle(StringC(AT_DCP06,T_DCP_ORIENTATION_MENU_TOK ));
 	/*
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_DOM_TOK),L"", NULL, DCP_DOM_MENU);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_POM_TOK),L"", NULL, DCP_POM_MENU);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_CHANGE_STATION_TOK),L"", NULL,	DCP_CHANGE_STATION_MENU);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_USER_DEFINED_TOK),L"", NULL, DCP_USER_DEFINED_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_DOM_TOK),L"", NULL, DCP_A321_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_POM_TOK),L"", NULL, DCP_BESTFIT_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_CHANGE_STATION_TOK),L"", NULL,	DCP_CHANGE_STATION_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_USER_DEFINED_TOK),L"", NULL, DCP_USER_DEFINED_MENU);
 	*/
 
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"DOM_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"DOM_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_DOM_TOK),L"", NULL, DCP_DOM_MENU);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"POM_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"POM_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_POM_TOK),L"",NULL, DCP_POM_MENU);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Change_Station_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Change_Station_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_CHANGE_STATION_TOK),L"",NULL, DCP_CHANGE_STATION_MENU);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"User_Def_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"User_Def_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_USER_DEFINED_TOK),L"",NULL, DCP_USER_DEFINED_MENU);
+	// TODO: Rename icons DOM_*.png and POM_*.png to Alignment321_*.png and BestFitAlignment_*.png in SWXRes when DCP06 icon set is updated
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"DOM_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"DOM_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_DOM_TOK),L"", NULL, DCP_A321_MENU);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"POM_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"POM_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_POM_TOK),L"",NULL, DCP_BESTFIT_MENU);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Change_Station_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Change_Station_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_CHANGE_STATION_TOK),L"",NULL, DCP_CHANGE_STATION_MENU);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"User_Def_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"User_Def_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_USER_DEFINED_TOK),L"",NULL, DCP_USER_DEFINED_MENU);
 	
 	/* CAPTIVATE TBD
-	if(m_pDCP05Model->bDemoMode)
+	if(m_pDCP06Model->bDemoMode)
 	{	
-		DisableMenuItem(DCP_POM_MENU);
+		DisableMenuItem(DCP_BESTFIT_MENU);
 		DisableMenuItem(DCP_CHANGE_STATION_MENU);
 		DisableMenuItem(DCP_USER_DEFINED_MENU);
 	}
@@ -1369,7 +1370,7 @@ void DCP05OrientationMenuDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnSelectionDone
 // ================================================================================================
-void DCP05OrientationMenuDlgC::OnSelectionDone(void)
+void DCP06OrientationMenuDlgC::OnSelectionDone(void)
 {
 	short unId = GetSelected();
 	
@@ -1379,12 +1380,12 @@ void DCP05OrientationMenuDlgC::OnSelectionDone(void)
 // ================================================================================================
 // Description: OnF1Pressed
 // ================================================================================================
-void DCP05OrientationMenuDlgC::OnF1Pressed(void)
+void DCP06OrientationMenuDlgC::OnF1Pressed(void)
 {
-/*	if(m_pDCP05Model->bDemoMode && GetSelected() != DCP_DOM_MENU)
+/*	if(m_pDCP06Model->bDemoMode && GetSelected() != DCP_A321_MENU)
 	{
-		DCP05MsgBoxC msgBox;
-		msgBox.ShowMessageOk(StringC(AT_DCP05,M_DCP_NOT_AVAILABLE_IN_DEMO_TOK ));
+		DCP06MsgBoxC msgBox;
+		msgBox.ShowMessageOk(StringC(AT_DCP06,M_DCP_NOT_AVAILABLE_IN_DEMO_TOK ));
 		Close(EC_KEY_ESC);
 	}
 	else
@@ -1400,13 +1401,13 @@ void DCP05OrientationMenuDlgC::OnF1Pressed(void)
 
 
 // ================================================================================================
-// ====================================  DCP05FileMenuDlgC ========================================
+// ====================================  DCP06FileMenuDlgC ========================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP05FileMenuDlgC::DCP05FileMenuDlgC()
+DCP06FileMenuDlgC::DCP06FileMenuDlgC()
 {
 	//SetTxtApplicationId( GetTxtApplicationId() );
 }
@@ -1415,47 +1416,47 @@ DCP05FileMenuDlgC::DCP05FileMenuDlgC()
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP05FileMenuDlgC::~DCP05FileMenuDlgC()
+DCP06FileMenuDlgC::~DCP06FileMenuDlgC()
 {
 }
 
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP05FileMenuDlgC::OnInitDialog(void)
+void DCP06FileMenuDlgC::OnInitDialog(void)
 {
 	
 	FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey(FK1, vDef);
 	
 	// HIDE SHIFT F2/F6
     FKDef vDef1;
 	vDef1.poOwner = this;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
 	vDef1.strLable =L"";
 	SetFunctionKey( SHFK6, vDef1 );
 	SetFunctionKey( SHFK2, vDef1 );
 
 	//SetHelpTok(H_DCP_FILE_MENU_TOK,0);
-	SetTitle(StringC(AT_DCP05,T_DCP_FILE_MENU_TOK ));
+	SetTitle(StringC(AT_DCP06,T_DCP_FILE_MENU_TOK ));
 
 	/*
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_3DFILE_TOK),L"", NULL,		DCP_3DFILE_MENU);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_DIST_FILE_TOK), L"", NULL,	DCP_DIST_FILE_MENU);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_ANGLE_FILE_TOK),L"", NULL,	DCP_ANGLE_FILE_MENU);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_CIRCLE_FILE_TOK),L"", NULL,DCP_CIRCLE_FILE_MENU);
-	AddItem(L"", L"", StringC(AT_DCP05,L_DCP_SHAFT_FILE_TOK),L"", NULL,	DCP_SHAFT_FILE_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_3DFILE_TOK),L"", NULL,		DCP_3DFILE_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_DIST_FILE_TOK), L"", NULL,	DCP_DIST_FILE_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_ANGLE_FILE_TOK),L"", NULL,	DCP_ANGLE_FILE_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_CIRCLE_FILE_TOK),L"", NULL,DCP_CIRCLE_FILE_MENU);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_SHAFT_FILE_TOK),L"", NULL,	DCP_SHAFT_FILE_MENU);
 	*/
 
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"3D_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"3D_file_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_3DFILE_TOK),L"", NULL, DCP_3DFILE_MENU);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Distace_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Distace_file_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_DIST_FILE_TOK),L"",NULL,DCP_DIST_FILE_MENU);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Angle_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Angle_file_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_ANGLE_FILE_TOK),L"",NULL,DCP_ANGLE_FILE_MENU);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Circle_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Circle_file_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_CIRCLE_FILE_TOK),L"",NULL,DCP_CIRCLE_FILE_MENU);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Shaft_align_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Shaft_align_file_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_SHAFT_FILE_TOK),L"",NULL,DCP_SHAFT_FILE_MENU);
-	//AddItem(GUI::GetAppResourceUrl(AT_DCP05,"Leica_data_formats_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP05,"Leica_data_formats_$SCALEFACTOR$.png"), StringC(AT_DCP05,L_DCP_MEASUREMENT_TOK),L"",NULL,DCP_LEICA_DATA_FORMATS_MENU);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"3D_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"3D_file_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_3DFILE_TOK),L"", NULL, DCP_3DFILE_MENU);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Distace_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Distace_file_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_DIST_FILE_TOK),L"",NULL,DCP_DIST_FILE_MENU);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Angle_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Angle_file_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_ANGLE_FILE_TOK),L"",NULL,DCP_ANGLE_FILE_MENU);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Circle_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Circle_file_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_CIRCLE_FILE_TOK),L"",NULL,DCP_CIRCLE_FILE_MENU);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Shaft_align_file_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Shaft_align_file_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_SHAFT_FILE_TOK),L"",NULL,DCP_SHAFT_FILE_MENU);
+	//AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Leica_data_formats_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Leica_data_formats_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_MEASUREMENT_TOK),L"",NULL,DCP_LEICA_DATA_FORMATS_MENU);
 	
 }
 
@@ -1464,7 +1465,7 @@ void DCP05FileMenuDlgC::OnInitDialog(void)
 // Description: Called if selection is completed (by ENTER, mouse click or numeric keys)
 // ================================================================================================
 
-void DCP05FileMenuDlgC::OnSelectionDone(void)
+void DCP06FileMenuDlgC::OnSelectionDone(void)
 {
 	short unId = GetSelected();
 	
@@ -1474,7 +1475,7 @@ void DCP05FileMenuDlgC::OnSelectionDone(void)
 // ================================================================================================
 // Description: OnF1Pressed
 // ================================================================================================
-void DCP05FileMenuDlgC::OnF1Pressed(void)
+void DCP06FileMenuDlgC::OnF1Pressed(void)
 {
 	/*
 	if(GetSelected() == 12)
@@ -1492,39 +1493,39 @@ void DCP05FileMenuDlgC::OnF1Pressed(void)
 // ================================================================================================
 // Description: OnF1Pressed
 // ================================================================================================
-DCP::DCP05LisenceDlgC::DCP05LisenceDlgC(DCP05ModelC* pDCP05Model):m_pText(0),m_pDCP05Model(pDCP05Model)
+DCP::DCP06LisenceDlgC::DCP06LisenceDlgC(DCP06ModelC* pDCP06Model):m_pText(0),m_pDCP06Model(pDCP06Model)
 {
-	//SetTxtApplicationId(AT_DCP05);
-	m_pDCP05Model->sEnteredKeyCode[0] = '\0';
+	//SetTxtApplicationId(AT_DCP06);
+	m_pDCP06Model->sEnteredKeyCode[0] = '\0';
 }
 
-DCP::DCP05LisenceDlgC::~DCP05LisenceDlgC()
+DCP::DCP06LisenceDlgC::~DCP06LisenceDlgC()
 {
 
 }
-void DCP::DCP05LisenceDlgC::OnInitDialog(void)
+void DCP::DCP06LisenceDlgC::OnInitDialog(void)
 {
 	ResetFunctionKeys();
 
 	FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK1, vDef );
 
 
-	/*vDef.strLable = StringC(AT_DCP05,K_DCP_EXIT_TOK);
+	/*vDef.strLable = StringC(AT_DCP06,K_DCP_EXIT_TOK);
 	SetFunctionKey( FK6, vDef );*/
 
-	/*if(m_pDCP05Model->iStartCount >= 30)
+	/*if(m_pDCP06Model->iStartCount >= 30)
 	{
 		DisableFunctionKey(FK4);
 	}*/
 
   // Hide quit 
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -1536,7 +1537,7 @@ void DCP::DCP05LisenceDlgC::OnInitDialog(void)
 	m_pText = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pText->SetId(1);
 	//m_pText->GetStringInputCtrl()->SetAllowedCharsDef(GUI::EditCtrlC::AC_NumInt);
-	m_pText->SetText(StringC(AT_DCP05,P_DCP_REGISTRATION_TOK));
+	m_pText->SetText(StringC(AT_DCP06,P_DCP_REGISTRATION_TOK));
 	m_pText->GetStringInputCtrl()->SetAllowedCharsDef(GUI::EditStringCtrlC::AC_NumInt);
 	//m_pText->SetAutoColon(false);
 	//m_pText->SetColonPosition(9 * 11);
@@ -1545,12 +1546,12 @@ void DCP::DCP05LisenceDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_REGISTRATION_TOK,0);
 }
 
-void DCP::DCP05LisenceDlgC::OnDialogActivated()
+void DCP::DCP06LisenceDlgC::OnDialogActivated()
 {
 	RefreshControls();
 } 
 
-void DCP::DCP05LisenceDlgC::OnF1Pressed()
+void DCP::DCP06LisenceDlgC::OnF1Pressed()
 {
 	int ret = 0;
 	if(!m_pText->GetStringInputCtrl()->IsEmpty())
@@ -1560,61 +1561,61 @@ void DCP::DCP05LisenceDlgC::OnF1Pressed()
 		char temp[21];
 		//UTL::UnicodeToAscii(temp,20, sNo);
 		BSS::UTI::BSS_UTI_WCharToAscii(sNo, temp,20);
-		sprintf(m_pDCP05Model->sEnteredKeyCode,"%s", temp); // was sKeyCode...
+		sprintf(m_pDCP06Model->sEnteredKeyCode,"%s", temp); // was sKeyCode...
 
-		//m_pDCP05Model->lKeyCode = (unsigned int) atol((const char*) temp);
+		//m_pDCP06Model->lKeyCode = (unsigned int) atol((const char*) temp);
 		Close(1);
 
 	}
 	else
-		m_pDCP05Model->sEnteredKeyCode[0] = '\0'; // was sKeyCode...
+		m_pDCP06Model->sEnteredKeyCode[0] = '\0'; // was sKeyCode...
 }
 
-void DCP::DCP05LisenceDlgC::OnF6Pressed()
+void DCP::DCP06LisenceDlgC::OnF6Pressed()
 {
-	m_pDCP05Model->sEnteredKeyCode[0] = '\0'; 
+	m_pDCP06Model->sEnteredKeyCode[0] = '\0'; 
 	Close(0);
 }
 
-void DCP::DCP05LisenceDlgC::RefreshControls()
+void DCP::DCP06LisenceDlgC::RefreshControls()
 {
 	if(m_pText)
 	{	
 	}
 }
 
-DCP::DCP05InfoDlgC::DCP05InfoDlgC(DCP05ModelC* pDCP05Model):m_pText(0),m_pDCP05Model(pDCP05Model)
+DCP::DCP06InfoDlgC::DCP06InfoDlgC(DCP06ModelC* pDCP06Model):m_pText(0),m_pDCP06Model(pDCP06Model)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 }
 
-DCP::DCP05InfoDlgC::~DCP05InfoDlgC()
+DCP::DCP06InfoDlgC::~DCP06InfoDlgC()
 {
 
 }
-void DCP::DCP05InfoDlgC::OnInitDialog(void)
+void DCP::DCP06InfoDlgC::OnInitDialog(void)
 { 
 // CAPTIVATE TBD
 	ResetFunctionKeys();
 
 	FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	StringC s = "";
 	StringC s1 = "";
 	//int heigth=0, width= 0;
 	GUI::RectT rect;
 
-	s = StringC(AT_DCP05,K_DCP_OK_TOK);
+	s = StringC(AT_DCP06,K_DCP_OK_TOK);
 	s1 = StringC(0,K_DCP_OK_TOK);
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_OK_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_OK_TOK);
 
 	SetFunctionKey( FK5, vDef );
 
   // Hide quit 
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -1628,38 +1629,38 @@ void DCP::DCP05InfoDlgC::OnInitDialog(void)
 	//m_pText->SetAlign(AlignmentT::AL_CENTER);CAPTIVATE
 	AddCtrl(m_pText);
 	
-	SetTitle(StringC(AT_DCP05,T_DCP_ABOUT_TOK));
+	SetTitle(StringC(AT_DCP06,T_DCP_ABOUT_TOK));
 }
 
-void DCP::DCP05InfoDlgC::OnDialogActivated()
+void DCP::DCP06InfoDlgC::OnDialogActivated()
 {
 	RefreshControls();
 } 
 
-void DCP::DCP05InfoDlgC::OnF5Pressed()
+void DCP::DCP06InfoDlgC::OnF5Pressed()
 {
 	Close(1);
 }  
 
-void DCP::DCP05InfoDlgC::RefreshControls()
+void DCP::DCP06InfoDlgC::RefreshControls()
 {
 	if(m_pText)
 	{	  
 		// 3.x
-		/*StringC sVers(m_pDCP05Model->sProgramVersion);
-		StringC sDate(m_pDCP05Model->sProgramDate);*/
+		/*StringC sVers(m_pDCP06Model->sProgramVersion);
+		StringC sDate(m_pDCP06Model->sProgramDate);*/
 		StringC sMsg;
 //#ifdef DCP05_LEICA_DEMO
 //		sMsg = L"             DEMO\n ";
 //#else       
 
-		if(m_pDCP05Model->sKeyCode[0] == '\0' && m_pDCP05Model->startDate > 0)
+		if(m_pDCP06Model->sKeyCode[0] == '\0' && m_pDCP06Model->startDate > 0)
 		{
-			DCP05DemoLicenseC demo(m_pDCP05Model);
+			DCP06DemoLicenseC demo(m_pDCP06Model);
 			
 			double mjd = GMAT::GetMjd(2018, 6,1,1,0,0);
 
-			int days = demo.get_available_days(m_pDCP05Model->sKeyCodeDemo1, m_pDCP05Model->startDate);
+			int days = demo.get_available_days(m_pDCP06Model->sKeyCodeDemo1, m_pDCP06Model->startDate);
 			if(days <= 0)
 				sMsg.Format(L"          Demo license expired.\n ", days);
 			else
@@ -1693,7 +1694,7 @@ void DCP::DCP05InfoDlgC::RefreshControls()
 		sMsg +=L"      All rights reserved";
 		*/
 		sMsg += "\n\n(sn:";
-		sMsg += m_pDCP05Model->SerialNumber;
+		sMsg += m_pDCP06Model->SerialNumber;
 		sMsg += ")";
 
 		m_pText->SetText(sMsg);

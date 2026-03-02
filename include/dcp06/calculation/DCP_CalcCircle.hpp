@@ -42,18 +42,18 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP05ModelC;
-	//class DCP05ToolDlgC;
+	//class DCP06ModelC;
+	//class DCP06ToolDlgC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CalcCircleC
+    class DCP06CalcCircleC
     {
         public:
 
             // Description: Constructor
-			DCP05CalcCircleC(short plane_type,S_CIRCLE_BUFF *circle_points, S_PLANE_BUFF* planes,S_CIRCLE_BUFF *circle_points_in_plane, double dToolRadius,DCP05ModelC* pDCP05Model);
-			~DCP05CalcCircleC();
+			DCP06CalcCircleC(short plane_type,S_CIRCLE_BUFF *circle_points, S_PLANE_BUFF* planes,S_CIRCLE_BUFF *circle_points_in_plane, double dToolRadius,DCP06ModelC* pDCP06Model);
+			~DCP06CalcCircleC();
 
 			short calc_center_of_circle(/*S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane*/);
 						
@@ -63,8 +63,8 @@ namespace DCP
 			double get_max_dist_and_rms_circle(S_CIRCLE_BUFF *circle_, short *pno, double *rms_diameter);
 
 	private:
-			DCP05CommonC* m_pCommon;
-			DCP05MsgBoxC* m_pMsgBox;
+			DCP06CommonC* m_pCommon;
+			DCP06MsgBoxC* m_pMsgBox;
 			short m_iPlaneType;	//XY, YZ, ZX, MEAS or using circle points
 			S_CIRCLE_BUFF* m_pCircle_points;
 			S_CIRCLE_BUFF* m_pCircle_points_in_plane;

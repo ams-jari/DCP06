@@ -41,8 +41,8 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP05ModelC;
-	//class DCP05ToolDlgC;
+	//class DCP06ModelC;
+	//class DCP06ToolDlgC;
 
 
     // Description: Tabbed controller for the Hello World application
@@ -51,16 +51,17 @@ namespace DCP
         public:
 
             // Description: Constructor
-            AdfFileFunc(DCP05ModelC* pDCP05Model);
-			AdfFileFunc(ADF_TYPE type,DCP05ModelC* pDCP05Model);
+            AdfFileFunc(DCP06ModelC* pDCP06Model);
+			AdfFileFunc(ADF_TYPE type,DCP06ModelC* pDCP06Model);
 			//AdfFileFunc(const char* filename, bool bCreate=false);
 			
-			AdfFileFunc(boost::filesystem::path* FileInfo,DCP05ModelC* pDCP05Model);
-			//AdfFileFunc(DCP05ModelC* pDCP05Model);
+			AdfFileFunc(boost::filesystem::path* FileInfo,DCP06ModelC* pDCP06Model);
+			//AdfFileFunc(DCP06ModelC* pDCP06Model);
 			
 
 			~AdfFileFunc();
 			char* getFileName();
+			const char* getFullPath() const;
 			char* getModDate();
 			char* getModTime();
 			char* getPointsCountString();
@@ -69,6 +70,7 @@ namespace DCP
 		
 			bool setFile(const char* filename);
 			bool setFile(StringC filename);
+			bool setFileFromFullPath(const char* fullPath);
 			bool isExists();
 			void CloseFile();
 			short select_pnt1(int newpnt, char *pid,char *xsta, char *xact, char *xdes,
@@ -88,6 +90,7 @@ namespace DCP
 			short GetPointList(S_SELECT_POINTS* pList, short iMaxPoints, short iDef);
 			short GetPointList(S_SELECT_POINT* pList, short iMaxPoints);
 			short create_adf_file(char *fname, char* pointid, bool showOKMessage=true);
+			short create_adf_file_at_path(const char* fullPath, char* pointid, bool showOKMessage = true);
 
 			//int lCurrentPoint;
 			short close_adf_file();
@@ -149,7 +152,7 @@ namespace DCP
 			FILE* get_file_pointer();
 
 	private:
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 			int fstpnt,filpos;
 			char trow[0xFF];
 			char linebuff[255];
@@ -192,7 +195,7 @@ namespace DCP
 			short opened;
 			short file_updated;
 			
-			DCP05CommonC* m_pCommon;
+			DCP06CommonC* m_pCommon;
 			ADF_TYPE adf_type;
     };
 };

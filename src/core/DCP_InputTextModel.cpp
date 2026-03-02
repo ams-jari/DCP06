@@ -50,11 +50,11 @@
 // ================================================================================================
 
 // Instantiate template classes
-DCP::DCP05InputTextModelC::DCP05InputTextModelC()
+DCP::DCP06InputTextModelC::DCP06InputTextModelC()
 {
 	m_StrInfoText = L" TTTTTT";
 }
-DCP::DCP05InputTextModelC::~DCP05InputTextModelC()
+DCP::DCP06InputTextModelC::~DCP06InputTextModelC()
 {
 }
 

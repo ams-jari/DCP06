@@ -17,7 +17,7 @@
 #include <exception>
 #endif
 
-#if defined( WIN32 ) || defined( WIN64 )
+#if defined( _WIN32 ) || defined( _WIN64 )
 
 	// Default include
 #include <windows.h>
@@ -58,7 +58,7 @@ using std::exception;  // for the exception class
 // Global GUI includes
 #include <UTL_Macro.hpp>
 #include <Onboard_Tok.hpp>
-#include <DCP05_TOK.HPP>
+#include <DCP06_TOK.HPP>
 
 #endif  // HEW_STDAFX_H
 

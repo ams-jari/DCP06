@@ -27,8 +27,8 @@
 #include "stdafx.h"
 #include "calc.h"
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/init/DCP_DCP05Init.hpp>
-#include <dcp06/core/DCP_DCP05Meas.hpp>
+#include <dcp06/init/DCP_DCP06Init.hpp>
+#include <dcp06/core/DCP_DCP06Meas.hpp>
 #include <dcp06/core/DCP_SpecialMenu.hpp>
 #include <dcp06/core/DCP_xyz.hpp>
 #include <dcp06/measurement/DCP_HiddenPoint.hpp>
@@ -58,7 +58,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP05CalcDistDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::DCP06CalcDistDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -74,15 +74,15 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP05CalcDistDlgC);
 // ================================================================================================
 // Description: constructor
 // ================================================================================================
-DCP::DCP05CalcDistDlgC::DCP05CalcDistDlgC(DCP05CalcDistModelC * pCalcDistModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
+DCP::DCP06CalcDistDlgC::DCP06CalcDistDlgC(DCP06CalcDistModelC * pCalcDistModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
 			,m_p3DFile(0),m_pDistFile(0),m_pRefId(0),m_pTargetId(0),m_pDistId(0),m_pRefType(0),m_pTargetType(0),
 			m_pDist(0),m_pNote(0),m_pDataModel(pCalcDistModel),
-			m_pRefIdObserver(OBS_METHOD_TO_PARAM0(DCP05CalcDistDlgC, OnValueChanged), this),
-			m_pTrgtIdObserver(OBS_METHOD_TO_PARAM0(DCP05CalcDistDlgC, OnValueChanged), this),
-			m_pDistIdObserver(OBS_METHOD_TO_PARAM0(DCP05CalcDistDlgC, OnValueChanged), this),
-			m_pNoteObserver(OBS_METHOD_TO_PARAM0(DCP05CalcDistDlgC, OnValueChanged), this)
+			m_pRefIdObserver(OBS_METHOD_TO_PARAM0(DCP06CalcDistDlgC, OnValueChanged), this),
+			m_pTrgtIdObserver(OBS_METHOD_TO_PARAM0(DCP06CalcDistDlgC, OnValueChanged), this),
+			m_pDistIdObserver(OBS_METHOD_TO_PARAM0(DCP06CalcDistDlgC, OnValueChanged), this),
+			m_pNoteObserver(OBS_METHOD_TO_PARAM0(DCP06CalcDistDlgC, OnValueChanged), this)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 }
 
 
@@ -90,20 +90,20 @@ DCP::DCP05CalcDistDlgC::DCP05CalcDistDlgC(DCP05CalcDistModelC * pCalcDistModel):
 // Description: destructor
 // ================================================================================================
 
-DCP::DCP05CalcDistDlgC::~DCP05CalcDistDlgC()
+DCP::DCP06CalcDistDlgC::~DCP06CalcDistDlgC()
 {
 }
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
+void DCP::DCP06CalcDistDlgC::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	// Add fields to dialog
 	
 	m_p3DFile = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_p3DFile->SetId(e3DFile);
-	m_p3DFile->SetText(StringC(AT_DCP05,P_DCP_3DFILE_SK_TOK));
+	m_p3DFile->SetText(StringC(AT_DCP06,P_DCP_3DFILE_SK_TOK));
 	m_p3DFile->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_p3DFile->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	//m_p3DFile->SetAutoColon(false);
@@ -113,7 +113,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 
 	m_pDistFile = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDistFile->SetId(eDistFile);
-	m_pDistFile->SetText(StringC(AT_DCP05,P_DCP_DISTFILE_SK_TOK));
+	m_pDistFile->SetText(StringC(AT_DCP06,P_DCP_DISTFILE_SK_TOK));
 	m_pDistFile->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pDistFile->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	//m_pDistFile->SetAutoColon(false);
@@ -123,7 +123,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 
 	m_pRefType = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pRefType->SetId(eRefType);
-	m_pRefType->SetText(StringC(AT_DCP05,P_DCP_REFTYPE_SK_TOK));
+	m_pRefType->SetText(StringC(AT_DCP06,P_DCP_REFTYPE_SK_TOK));
 	m_pRefType->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pRefType->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	//m_pRefType->SetAutoColon(false);
@@ -133,7 +133,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 
 	m_pTargetType = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pTargetType->SetId(eTargetType);
-	m_pTargetType->SetText(StringC(AT_DCP05,P_DCP_TARGETTYPE_SK_TOK));
+	m_pTargetType->SetText(StringC(AT_DCP06,P_DCP_TARGETTYPE_SK_TOK));
 	m_pTargetType->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pTargetType->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	//m_pTargetType->SetAutoColon(false);
@@ -143,7 +143,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 
 	m_pRefId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pRefId->SetId(eRefId);
-	m_pRefId->SetText(StringC(AT_DCP05,P_DCP_REF_ID_TOK));
+	m_pRefId->SetText(StringC(AT_DCP06,P_DCP_REF_ID_TOK));
 	m_pRefId->GetStringInputCtrl()->SetCharsCountMax(6);
 	m_pRefId->GetStringInputCtrl()->SetEmptyAllowed(true);
 	//m_pRefId->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
@@ -155,7 +155,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 
 	m_pTargetId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pTargetId->SetId(eTargetId);
-	m_pTargetId->SetText(StringC(AT_DCP05,P_DCP_TARGET_ID_TOK));
+	m_pTargetId->SetText(StringC(AT_DCP06,P_DCP_TARGET_ID_TOK));
 	m_pTargetId->GetStringInputCtrl()->SetCharsCountMax(6);
 	m_pTargetId->GetStringInputCtrl()->SetEmptyAllowed(true);
 	//m_pTargetId->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
@@ -182,7 +182,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 */
 	m_pDistId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDistId->SetId(eDistId);
-	m_pDistId->SetText(StringC(AT_DCP05,P_DCP_DISTANCE_ID_TOK));
+	m_pDistId->SetText(StringC(AT_DCP06,P_DCP_DISTANCE_ID_TOK));
 	m_pDistId->GetStringInputCtrl()->SetCharsCountMax(6);
 	//m_pDistId->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	//m_pDistId->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
@@ -193,7 +193,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 
 	m_pDist = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDist->SetId(eDist);
-	m_pDist->SetText(StringC(AT_DCP05,P_DCP_DIST_TOK));
+	m_pDist->SetText(StringC(AT_DCP06,P_DCP_DIST_TOK));
 	m_pDist->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pDist->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	//m_pDist->SetAutoColon(false);
@@ -203,7 +203,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 
 	m_pNote = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pNote->SetId(eNote);
-	m_pNote->SetText(StringC(AT_DCP05,P_DCP_NOTE_TOK));
+	m_pNote->SetText(StringC(AT_DCP06,P_DCP_NOTE_TOK));
 	m_pNote->GetStringInputCtrl()->SetCharsCountMax(8);
 	//m_pDistId->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	//m_pDistId->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
@@ -225,7 +225,7 @@ void DCP::DCP05CalcDistDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP::DCP05CalcDistDlgC::OnDialogActivated()
+void DCP::DCP06CalcDistDlgC::OnDialogActivated()
 {
 	RefreshControls();
 }
@@ -233,7 +233,7 @@ void DCP::DCP05CalcDistDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP05CalcDistDlgC::UpdateData()
+void DCP::DCP06CalcDistDlgC::UpdateData()
 {
 
 }
@@ -242,7 +242,7 @@ void DCP::DCP05CalcDistDlgC::UpdateData()
 // ================================================================================================
 // Description: refresh all controls
 // ================================================================================================
-void DCP::DCP05CalcDistDlgC::RefreshControls()
+void DCP::DCP06CalcDistDlgC::RefreshControls()
 {
 	if(m_p3DFile && m_pDistFile && m_pRefId && m_pTargetId && m_pDistId && 	m_pDist && m_pNote && m_pRefType && m_pTargetType)
 	{
@@ -257,13 +257,13 @@ void DCP::DCP05CalcDistDlgC::RefreshControls()
 
 		if(m_pDataModel->active_reftype == POINT)
 		{
-			sRefType.LoadTxt(AT_DCP05,P_DCP_REF_POINT_TOK);
+			sRefType.LoadTxt(AT_DCP06,P_DCP_REF_POINT_TOK);
 			m_pRefId->GetStringInputCtrl()->SetString(StringC(m_pDataModel->refpoint.point_id));
 
 		}
 		else if(m_pDataModel->active_reftype == LINE)
 		{
-			sRefType.LoadTxt(AT_DCP05,P_DCP_REF_LINE_TOK);
+			sRefType.LoadTxt(AT_DCP06,P_DCP_REF_LINE_TOK);
 			m_pRefId->GetStringInputCtrl()->SetString(StringC(m_pDataModel->rline_buff[0].id));
 			
 			//m_pRefId->
@@ -271,21 +271,21 @@ void DCP::DCP05CalcDistDlgC::RefreshControls()
 
 		else if(m_pDataModel->active_reftype == PLANE)
 		{
-			sRefType.LoadTxt(AT_DCP05,P_DCP_REF_PLANE_TOK);
+			sRefType.LoadTxt(AT_DCP06,P_DCP_REF_PLANE_TOK);
 			m_pRefId->GetStringInputCtrl()->SetString(StringC(m_pDataModel->rplane_buff[0].id));
 		}
 		m_pRefType->GetStringInputCtrl()->SetString(sRefType);
 
 		// target
 		StringC sTargetType;
-		sTargetType.LoadTxt(AT_DCP05,P_DCP_REF_POINT_TOK);
+		sTargetType.LoadTxt(AT_DCP06,P_DCP_REF_POINT_TOK);
 		m_pTargetType->GetStringInputCtrl()->SetString(sTargetType);
 		m_pTargetId->GetStringInputCtrl()->SetString(StringC(m_pDataModel->trgtpoint.point_id));
 
 		if(m_pDataModel->iDistanceCalculated)
 		{
-			sDist.Format(L"%10.*f", GetDCP05Model()->m_nDecimals,m_pDataModel->dCalculatedDist);
-			sprintf(m_pDataModel->cDist,"%10.*f", GetDCP05Model()->m_nDecimals,m_pDataModel->dCalculatedDist);
+			sDist.Format(L"%10.*f", GetDCP06Model()->m_nDecimals,m_pDataModel->dCalculatedDist);
+			sprintf(m_pDataModel->cDist,"%10.*f", GetDCP06Model()->m_nDecimals,m_pDataModel->dCalculatedDist);
 		}
 		else
 		{
@@ -321,12 +321,12 @@ void DCP::DCP05CalcDistDlgC::RefreshControls()
 // ================================================================================================
 // Description: OnValueChanged
 // ================================================================================================
-void DCP::DCP05CalcDistDlgC::OnValueChanged( int unNotifyCode, int ulParam2)
+void DCP::DCP06CalcDistDlgC::OnValueChanged( int unNotifyCode, int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
-		//short iCurrentPno = GetDCP05Model()->iCurrentPoint;
+		//short iCurrentPno = GetDCP06Model()->iCurrentPoint;
 		if(ulParam2 == eRefId)
 		{
 			StringC sTemp;
@@ -400,14 +400,14 @@ void DCP::DCP05CalcDistDlgC::OnValueChanged( int unNotifyCode, int ulParam2)
 // ================================================================================================
 // Description: only accept hello world Model objects
 // ================================================================================================
-bool DCP::DCP05CalcDistDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06CalcDistDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -419,35 +419,35 @@ bool DCP::DCP05CalcDistDlgC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: only accept hello world Model objects
 // ================================================================================================
-DCP::DCP05ModelC* DCP::DCP05CalcDistDlgC::GetDCP05Model() const
+DCP::DCP06ModelC* DCP::DCP06CalcDistDlgC::GetDCP06Model() const
 {
-    return (DCP::DCP05ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP05CalcDistControllerC  ===================================
+// ====================================  DCP06CalcDistControllerC  ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: constructor
 // ================================================================================================
-DCP::DCP05CalcDistControllerC::DCP05CalcDistControllerC(DCP05ModelC* pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model)
+DCP::DCP06CalcDistControllerC::DCP06CalcDistControllerC(DCP06ModelC* pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_CALC_DIST_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_CALC_DIST_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 
 	// create model 
-	m_pDataModel = new DCP05CalcDistModelC(m_pDCP05Model);
+	m_pDataModel = new DCP06CalcDistModelC(m_pDCP06Model);
     // Create a dialog
-    m_pDlg = new DCP::DCP05CalcDistDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06CalcDistDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( CALC_DIST_DLG, m_pDlg, true );
 
     // Set the function key
-	m_pDataModel->dspMode = DCP05CalcDistModelC::eNormal;
+	m_pDataModel->dspMode = DCP06CalcDistModelC::eNormal;
 
 	change_function_keys();
 
@@ -456,7 +456,7 @@ DCP::DCP05CalcDistControllerC::DCP05CalcDistControllerC(DCP05ModelC* pDCP05Model
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP05CalcDistControllerC::~DCP05CalcDistControllerC()
+DCP::DCP06CalcDistControllerC::~DCP06CalcDistControllerC()
 {
 	if(m_pDataModel)
 	{
@@ -467,7 +467,7 @@ DCP::DCP05CalcDistControllerC::~DCP05CalcDistControllerC()
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05CalcDistControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06CalcDistControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -478,12 +478,12 @@ bool DCP::DCP05CalcDistControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -496,7 +496,7 @@ bool DCP::DCP05CalcDistControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: OnF1Pressed
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnF1Pressed()
+void DCP::DCP06CalcDistControllerC::OnF1Pressed()
 {
 	
     if (m_pDlg == NULL)
@@ -504,14 +504,14 @@ void DCP::DCP05CalcDistControllerC::OnF1Pressed()
         USER_APP_VERIFY( false );
         return;
     }
-	if(m_pDataModel->dspMode == DCP05CalcDistModelC::eNormal)
+	if(m_pDataModel->dspMode == DCP06CalcDistModelC::eNormal)
 	{
 		// SELECT FILE
-		DCP::DCP05SelectFileModelC* pModel = new DCP05SelectFileModelC;
+		DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
 		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP05SelectFileControllerC(ONLY_ADF, sTitle, m_pDCP05Model) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ONLY_ADF, sTitle, m_pDCP06Model) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
@@ -520,7 +520,7 @@ void DCP::DCP05CalcDistControllerC::OnF1Pressed()
 	else
 	{
 		// POINT SELECTED
-		DCP05SelectOnePointModelC* pModel = new DCP05SelectOnePointModelC;
+		DCP06SelectOnePointModelC* pModel = new DCP06SelectOnePointModelC;
 		pModel->m_iCurrentPoint = 1;
 		pModel->m_iDef = ACTUAL;
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
@@ -528,14 +528,14 @@ void DCP::DCP05CalcDistControllerC::OnF1Pressed()
 
 		if(GetController(SELECT_REF_POINT_CONTROLLER) == NULL)
 		{
-			(void)AddController( SELECT_REF_POINT_CONTROLLER, new DCP::DCP05SelectOnePointControllerC(m_pDlg->GetDCP05Model()) );
+			(void)AddController( SELECT_REF_POINT_CONTROLLER, new DCP::DCP06SelectOnePointControllerC(m_pDlg->GetDCP06Model()) );
 		}
 		(void)GetController( SELECT_REF_POINT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_REF_POINT_CONTROLLER, true);
 
 
 
-		m_pDataModel->dspMode = DCP05CalcDistModelC::eNormal;
+		m_pDataModel->dspMode = DCP06CalcDistModelC::eNormal;
 		change_function_keys();
 		m_pDataModel->active_reftype = POINT;
 		m_pDlg->RefreshControls();
@@ -543,7 +543,7 @@ void DCP::DCP05CalcDistControllerC::OnF1Pressed()
 	/*
     // Update model
     // Set it to hello world dialog
-    m_pDCP05CalcDistDlg->UpdateData();
+    m_pDCP06CalcDistDlg->UpdateData();
 
     // Remove the following statement if you don't want an exit
     // to the main menu
@@ -554,24 +554,24 @@ void DCP::DCP05CalcDistControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: OnF2Pressed
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnF2Pressed()
+void DCP::DCP06CalcDistControllerC::OnF2Pressed()
 {
-	if(m_pDataModel->dspMode == DCP05CalcDistModelC::eNormal)
+	if(m_pDataModel->dspMode == DCP06CalcDistModelC::eNormal)
 	{
 		// SELECT caldisrtfile
-		//DCP::DCP05DistFileModelC* pModel = new DCP05DistFileModelC;
+		//DCP::DCP06DistFileModelC* pModel = new DCP06DistFileModelC;
 			if(GetController(DIST_FILE_CONTROLLER) == NULL)
 			{
-				(void)AddController( DIST_FILE_CONTROLLER, new DCP::DCP05DistFileControllerC(m_pDCP05Model) );
+				(void)AddController( DIST_FILE_CONTROLLER, new DCP::DCP06DistFileControllerC(m_pDCP06Model) );
 			}
-			(void)GetController( DIST_FILE_CONTROLLER )->SetModel( m_pDlg->GetDCP05Model());
+			(void)GetController( DIST_FILE_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
 			SetActiveController(DIST_FILE_CONTROLLER, true);
 	
 	}
 	else
 	{
 		// line SELECTED
-		m_pDataModel->dspMode = DCP05CalcDistModelC::eNormal;
+		m_pDataModel->dspMode = DCP06CalcDistModelC::eNormal;
 		change_function_keys();
 		m_pDataModel->active_reftype = LINE;
 		m_pDlg->RefreshControls();
@@ -579,7 +579,7 @@ void DCP::DCP05CalcDistControllerC::OnF2Pressed()
 		// define line
 	
 		// SELECT MULTIPOINTS
-		DCP::DCP05SelectMultiPointsModelC* pModel = new DCP05SelectMultiPointsModelC;
+		DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
 		memcpy(&pModel->sel_points[0],&m_pDataModel->point_list[0], sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
 	
@@ -590,7 +590,7 @@ void DCP::DCP05CalcDistControllerC::OnF2Pressed()
 	
 		// set info text....
 		StringC sInfo;
-		sInfo.LoadTxt(AT_DCP05, T_DCP_SELECT_POINTS_TOK);
+		sInfo.LoadTxt(AT_DCP06, T_DCP_SELECT_POINTS_TOK);
 		sInfo += L"  ";
 		sInfo += pModel->sSelectedFile;
 		pModel->sInfo = sInfo;
@@ -603,7 +603,7 @@ void DCP::DCP05CalcDistControllerC::OnF2Pressed()
 
 		if(GetController(SELECT_MULTIPOINTS_LINE_CONTROLLER) == NULL)
 		{
-			(void)AddController( SELECT_MULTIPOINTS_LINE_CONTROLLER, new DCP::DCP05SelectMultiPointsControllerC(m_pDlg->GetDCP05Model()) );
+			(void)AddController( SELECT_MULTIPOINTS_LINE_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDlg->GetDCP06Model()) );
 		}
 
 	(void)GetController( SELECT_MULTIPOINTS_LINE_CONTROLLER )->SetModel(pModel);
@@ -617,22 +617,22 @@ void DCP::DCP05CalcDistControllerC::OnF2Pressed()
 // ================================================================================================
 // Description: OnF3Pressed
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnF3Pressed()
+void DCP::DCP06CalcDistControllerC::OnF3Pressed()
 {
-	if(m_pDataModel->dspMode ==DCP05CalcDistModelC::eNormal)
+	if(m_pDataModel->dspMode ==DCP06CalcDistModelC::eNormal)
 	{	
 		// plane selected
-		m_pDataModel->dspMode =DCP05CalcDistModelC::eRef;
+		m_pDataModel->dspMode =DCP06CalcDistModelC::eRef;
 	}
 	else
 	{
 		m_pDataModel->active_reftype = PLANE;
-		m_pDataModel->dspMode = DCP05CalcDistModelC::eNormal;
+		m_pDataModel->dspMode = DCP06CalcDistModelC::eNormal;
 
 		// define plane
 	
 		// SELECT MULTIPOINTS
-		DCP::DCP05SelectMultiPointsModelC* pModel = new DCP05SelectMultiPointsModelC;
+		DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
 		memcpy(&pModel->sel_points[0],&m_pDataModel->point_list[0], sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
 	
@@ -644,7 +644,7 @@ void DCP::DCP05CalcDistControllerC::OnF3Pressed()
 	
 		// set info text....
 		StringC sInfo;
-		sInfo.LoadTxt(AT_DCP05, T_DCP_SELECT_POINTS_TOK);
+		sInfo.LoadTxt(AT_DCP06, T_DCP_SELECT_POINTS_TOK);
 		sInfo += L"  ";
 		sInfo += pModel->sSelectedFile;
 		pModel->sInfo = sInfo;
@@ -657,7 +657,7 @@ void DCP::DCP05CalcDistControllerC::OnF3Pressed()
 
 		if(GetController(SELECT_MULTIPOINTS_PLANE_CONTROLLER) == NULL)
 		{
-			(void)AddController( SELECT_MULTIPOINTS_PLANE_CONTROLLER, new DCP::DCP05SelectMultiPointsControllerC(m_pDlg->GetDCP05Model()) );
+			(void)AddController( SELECT_MULTIPOINTS_PLANE_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDlg->GetDCP06Model()) );
 		}
 
 	(void)GetController( SELECT_MULTIPOINTS_PLANE_CONTROLLER )->SetModel(pModel);
@@ -673,11 +673,11 @@ void DCP::DCP05CalcDistControllerC::OnF3Pressed()
 // ================================================================================================
 // Description: OnF4Pressed
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnF4Pressed()
+void DCP::DCP06CalcDistControllerC::OnF4Pressed()
 {
 	// target point
 	// POINT SELECTED
-	DCP05SelectOnePointModelC* pModel = new DCP05SelectOnePointModelC;
+	DCP06SelectOnePointModelC* pModel = new DCP06SelectOnePointModelC;
 	pModel->m_iCurrentPoint = 1;
 	pModel->m_iDef = ACTUAL;
 	pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
@@ -685,7 +685,7 @@ void DCP::DCP05CalcDistControllerC::OnF4Pressed()
 
 	if(GetController(SELECT_TARGET_POINT_CONTROLLER) == NULL)
 	{
-		(void)AddController( SELECT_TARGET_POINT_CONTROLLER, new DCP::DCP05SelectOnePointControllerC(m_pDlg->GetDCP05Model()) );
+		(void)AddController( SELECT_TARGET_POINT_CONTROLLER, new DCP::DCP06SelectOnePointControllerC(m_pDlg->GetDCP06Model()) );
 	}
 	(void)GetController( SELECT_TARGET_POINT_CONTROLLER )->SetModel(pModel);
 	SetActiveController(SELECT_TARGET_POINT_CONTROLLER, true);
@@ -696,7 +696,7 @@ void DCP::DCP05CalcDistControllerC::OnF4Pressed()
 // ================================================================================================
 // Description: OnF5Pressed / SAVE
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnF5Pressed()
+void DCP::DCP06CalcDistControllerC::OnF5Pressed()
 {
 		
 	if(m_pDataModel->pCdfFileFunc->IsOpen())
@@ -706,23 +706,23 @@ void DCP::DCP05CalcDistControllerC::OnF5Pressed()
 	else
 	{
 		StringC sMsg;
-		sMsg.LoadTxt(AT_DCP05,M_DCP_DISTFILE_ISNOT_OPEN_TOK);
+		sMsg.LoadTxt(AT_DCP06,M_DCP_DISTFILE_ISNOT_OPEN_TOK);
 		m_pDataModel->pMsgBox->ShowMessageOk(sMsg);
 	}
 }
 // ================================================================================================
 // Description: OnSHF5Pressed / VIEW
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnSHF5Pressed()
+void DCP::DCP06CalcDistControllerC::OnSHF5Pressed()
 {
 	if(!m_pDataModel->pCdfFileFunc->IsOpen())
 		return;
 
 	if(GetController(VIEWCDF_CONTROLLER) == NULL)
 	{
-		(void)AddController( VIEWCDF_CONTROLLER, new DCP::DCP05ViewCdfControllerC(m_pDataModel->pCdfFileFunc, m_pDCP05Model) );
+		(void)AddController( VIEWCDF_CONTROLLER, new DCP::DCP06ViewCdfControllerC(m_pDataModel->pCdfFileFunc, m_pDCP06Model) );
 	}
-	(void)GetController( VIEWCDF_CONTROLLER )->SetModel(m_pDlg->GetDCP05Model());
+	(void)GetController( VIEWCDF_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
 	SetActiveController(VIEWCDF_CONTROLLER, true);
 
 }
@@ -730,15 +730,15 @@ void DCP::DCP05CalcDistControllerC::OnSHF5Pressed()
 // ================================================================================================
 // Description: OnF6Pressed
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnF6Pressed()
+void DCP::DCP06CalcDistControllerC::OnF6Pressed()
 {
-	if(m_pDataModel->dspMode == DCP05CalcDistModelC::eNormal)
+	if(m_pDataModel->dspMode == DCP06CalcDistModelC::eNormal)
 	{
 		(void)Close(EC_KEY_CONT);
 	}
 	else
 	{
-		m_pDataModel->dspMode = DCP05CalcDistModelC::eNormal;
+		m_pDataModel->dspMode = DCP06CalcDistModelC::eNormal;
 		change_function_keys();
 	}
 }
@@ -746,7 +746,7 @@ void DCP::DCP05CalcDistControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: OnSHF2Pressed
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnSHF2Pressed()
+void DCP::DCP06CalcDistControllerC::OnSHF2Pressed()
 {
 	m_pDataModel->clear_buffers();
 	m_pDlg->RefreshControls();
@@ -755,7 +755,7 @@ void DCP::DCP05CalcDistControllerC::OnSHF2Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06CalcDistControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
@@ -763,11 +763,11 @@ void DCP::DCP05CalcDistControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*
 // Description: React on close of controller
 // ================================================================================================
 
-void DCP::DCP05CalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06CalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectFileModelC* pModel = (DCP::DCP05SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		m_pDataModel->sSelected3DFile = pModel->m_strSelectedFile;
 		m_pDataModel->pAdfFileFunc->setFile(m_pDataModel->sSelected3DFile);
 
@@ -776,13 +776,13 @@ void DCP::DCP05CalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int l
 	}
 	if(lCtrlID == DIST_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		m_pDataModel->sSelectedDistFile = m_pDlg->GetDCP05Model()->sCalcDistFile;	
+		m_pDataModel->sSelectedDistFile = m_pDlg->GetDCP06Model()->sCalcDistFile;	
 		m_pDataModel->pCdfFileFunc->setFile(m_pDataModel->sSelectedDistFile);
 	}
 	// REF POINT
 	if(lCtrlID == SELECT_REF_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectOnePointModelC* pModel = (DCP::DCP05SelectOnePointModelC*) GetController( SELECT_REF_POINT_CONTROLLER )->GetModel();		
+		DCP::DCP06SelectOnePointModelC* pModel = (DCP::DCP06SelectOnePointModelC*) GetController( SELECT_REF_POINT_CONTROLLER )->GetModel();		
 		
 		m_pDataModel->pAdfFileFunc->form_pnt(pModel->iSelectedNo);
 
@@ -830,7 +830,7 @@ void DCP::DCP05CalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int l
 	// TARGETPOINT
 	if(lCtrlID == SELECT_TARGET_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectOnePointModelC* pModel = (DCP::DCP05SelectOnePointModelC*) GetController( SELECT_TARGET_POINT_CONTROLLER )->GetModel();		
+		DCP::DCP06SelectOnePointModelC* pModel = (DCP::DCP06SelectOnePointModelC*) GetController( SELECT_TARGET_POINT_CONTROLLER )->GetModel();		
 		
 		m_pDataModel->pAdfFileFunc->form_pnt(pModel->iSelectedNo);
 
@@ -876,8 +876,8 @@ void DCP::DCP05CalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int l
 	
 	if(lCtrlID == SELECT_MULTIPOINTS_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectMultiPointsModelC* pModel = (DCP::DCP05SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_LINE_CONTROLLER )->GetModel();		
-		DCP05CommonC common(m_pDCP05Model);
+		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_LINE_CONTROLLER )->GetModel();		
+		DCP06CommonC common(m_pDCP06Model);
 		
 		//delete old values
 		memset(&m_pDataModel->rline_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_LINE);
@@ -931,17 +931,17 @@ void DCP::DCP05CalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int l
 	
 		if(GetController(CALC_LINE_CONTROLLER) == NULL)
 		{
-			(void)AddController( CALC_LINE_CONTROLLER, new DCP::DCP05CalcLineControllerC(&m_pDataModel->rline_buff[0],ACTUAL, 1) );
+			(void)AddController( CALC_LINE_CONTROLLER, new DCP::DCP06CalcLineControllerC(&m_pDataModel->rline_buff[0],ACTUAL, 1) );
 		}
 
-		(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetDCP05Model());
+		(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
 		SetActiveController(CALC_LINE_CONTROLLER, true);
 	}
 
 	if(lCtrlID == SELECT_MULTIPOINTS_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP05SelectMultiPointsModelC* pModel = (DCP::DCP05SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_PLANE_CONTROLLER )->GetModel();		
-		DCP05CommonC common(m_pDCP05Model);
+		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_PLANE_CONTROLLER )->GetModel();		
+		DCP06CommonC common(m_pDCP06Model);
 		
 		//delete old values
 		memset(&m_pDataModel->rplane_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
@@ -995,10 +995,10 @@ void DCP::DCP05CalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int l
 	
 		if(GetController(CALC_PLANE_CONTROLLER) == NULL)
 		{
-			(void)AddController( CALC_PLANE_CONTROLLER, new DCP::DCP05CalcPlaneControllerC(&m_pDataModel->rplane_buff[0],ACTUAL, 1) );
+			(void)AddController( CALC_PLANE_CONTROLLER, new DCP::DCP06CalcPlaneControllerC(&m_pDataModel->rplane_buff[0],ACTUAL, 1) );
 		}
 
-		(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetDCP05Model());
+		(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
 		SetActiveController(CALC_PLANE_CONTROLLER, true);
 	}
 	if(lCtrlID == CALC_LINE_CONTROLLER/* && lExitCode == EC_KEY_CONT*/)
@@ -1016,62 +1016,62 @@ void DCP::DCP05CalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int l
 // ================================================================================================
 // Description: change_function_keys
 // ================================================================================================
-void DCP::DCP05CalcDistControllerC::change_function_keys()
+void DCP::DCP06CalcDistControllerC::change_function_keys()
 {
 	// 
 	ResetFunctionKeys();
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
 
 	 FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
 	if(m_pDataModel->dspMode == 0) // NORMAL
 	{
 		FKDef vDef;
-		//vDef.nAppId = AT_DCP05;
+		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP05,K_DCP_3DFILE_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_3DFILE_TOK);
 		SetFunctionKey( FK1, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_DIST_FILE_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_FILE_TOK);
 		SetFunctionKey( FK2, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_REF_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_REF_TOK);
 		SetFunctionKey( FK3, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_TARGET_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_TARGET_TOK);
 		SetFunctionKey( FK4, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_SAVE_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_SAVE_TOK);
 		SetFunctionKey( FK5, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 		SetFunctionKey( FK6, vDef );
 
 		// SHIFT
-		vDef.strLable = StringC(AT_DCP05,K_DCP_CLEAR_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_CLEAR_TOK);
 		SetFunctionKey( SHFK2, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_VIEW_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_VIEW_TOK);
 		SetFunctionKey( SHFK5, vDef );
 	}
 	else if(m_pDataModel->dspMode == 1) // REF
 	{
-		vDef.strLable = StringC(AT_DCP05,K_DCP_POINT_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_TOK);
 		SetFunctionKey( FK1, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_LINE_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_LINE_TOK);
 		SetFunctionKey( FK2, vDef );
 
-		vDef.strLable = StringC(AT_DCP05,K_DCP_PLANE_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_PLANE_TOK);
 		SetFunctionKey( FK3, vDef );
 
 	}
@@ -1083,24 +1083,24 @@ void DCP::DCP05CalcDistControllerC::change_function_keys()
 }
 
 // ================================================================================================
-// ====================================  DCP05CalcDistModelC=======================================
+// ====================================  DCP06CalcDistModelC=======================================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: constructor
 // ================================================================================================
-DCP::DCP05CalcDistModelC::DCP05CalcDistModelC(DCP::DCP05ModelC* pDCP05Model): pAdfFileFunc(0),pCommon(0),pMsgBox(0)
+DCP::DCP06CalcDistModelC::DCP06CalcDistModelC(DCP::DCP06ModelC* pDCP06Model): pAdfFileFunc(0),pCommon(0),pMsgBox(0)
 {
 	active_reftype = POINT;
 	dspMode = eNormal;
 	sSelected3DFile = L"";
 	sSelectedDistFile = L"";
-	pAdfFileFunc = new AdfFileFunc(pDCP05Model);
+	pAdfFileFunc = new AdfFileFunc(pDCP06Model);
 	pAdfFileFunc->always_single = 1;
-	pCommon = new DCP05CommonC(pDCP05Model);
-	pCdfFileFunc = new CdfFileFunc(pDCP05Model);
-	pMsgBox = new DCP05MsgBoxC;
+	pCommon = new DCP06CommonC(pDCP06Model);
+	pCdfFileFunc = new CdfFileFunc(pDCP06Model);
+	pMsgBox = new DCP06MsgBoxC;
 	memset(&point_list[0],0, sizeof(S_SELECT_POINTS)* MAX_POINTS_IN_FILE);
 
 	clear_buffers();
@@ -1108,16 +1108,16 @@ DCP::DCP05CalcDistModelC::DCP05CalcDistModelC(DCP::DCP05ModelC* pDCP05Model): pA
 	dCalculatedDist = 0.0;
 	iDistanceCalculated = 0;
 
-	sActualSelected.LoadTxt(AT_DCP05,P_DCP_ACTUAL_SELECTED_TOK);
-	sActualNonSelected.LoadTxt(AT_DCP05,P_DCP_ACTUAL_NONSELECTED_TOK);
-	sDesignSelected.LoadTxt(AT_DCP05,P_DCP_DESIGN_SELECTED_TOK);
-	sDesignNonSelected.LoadTxt(AT_DCP05,P_DCP_DESIGN_NONSELECTED_TOK);
+	sActualSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_SELECTED_TOK);
+	sActualNonSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_NONSELECTED_TOK);
+	sDesignSelected.LoadTxt(AT_DCP06,P_DCP_DESIGN_SELECTED_TOK);
+	sDesignNonSelected.LoadTxt(AT_DCP06,P_DCP_DESIGN_NONSELECTED_TOK);
 }
 // ================================================================================================
 // Description: destructor
 // ================================================================================================
 
-void DCP::DCP05CalcDistModelC::clear_buffers()
+void DCP::DCP06CalcDistModelC::clear_buffers()
 {
 	memset(&refpoint, 0, sizeof(S_POINT_BUFF));
 	memset(&trgtpoint,0, sizeof(S_POINT_BUFF));
@@ -1137,7 +1137,7 @@ void DCP::DCP05CalcDistModelC::clear_buffers()
 // ================================================================================================
 // Description: destructor
 // ================================================================================================
-DCP::DCP05CalcDistModelC::~DCP05CalcDistModelC()
+DCP::DCP06CalcDistModelC::~DCP06CalcDistModelC()
 {
 		if(pAdfFileFunc)
 		{
@@ -1164,7 +1164,7 @@ DCP::DCP05CalcDistModelC::~DCP05CalcDistModelC()
 // ================================================================================================
 // Description: destructor
 // ================================================================================================
-short DCP::DCP05CalcDistModelC::all_defined()
+short DCP::DCP06CalcDistModelC::all_defined()
 {
 	if(is_active_reference_defined() == 1 && is_active_target_defined() == 1)
 	{
@@ -1182,7 +1182,7 @@ short DCP::DCP05CalcDistModelC::all_defined()
 // ================================================================================================
 // Description: destructor
 // ================================================================================================
-short DCP::DCP05CalcDistModelC::is_active_reference_defined()
+short DCP::DCP06CalcDistModelC::is_active_reference_defined()
 {
 short ret=0;
 
@@ -1224,7 +1224,7 @@ short ret=0;
 // ************************************************************************
 //
 // ************************************************************************
-short DCP::DCP05CalcDistModelC::is_active_target_defined()
+short DCP::DCP06CalcDistModelC::is_active_target_defined()
 {
 short ret=1;
 
@@ -1239,7 +1239,7 @@ short ret=1;
 // ************************************************************************
 //
 // ************************************************************************
-short DCP::DCP05CalcDistModelC::calc_distance()
+short DCP::DCP06CalcDistModelC::calc_distance()
 {
 short ret = 0;
 //double dist;
@@ -1254,7 +1254,7 @@ struct plane  wplane;
 	   trgtpoint.dsta == 0	)
 	{
 		StringC sMsg;
-		sMsg.LoadTxt(AT_DCP05,M_DCP_DEFINE_TARGET_POINT_TOK);
+		sMsg.LoadTxt(AT_DCP06,M_DCP_DEFINE_TARGET_POINT_TOK);
 		pMsgBox->ShowMessageOk(sMsg);
 		return 1;
 	}
@@ -1365,7 +1365,7 @@ struct plane  wplane;
 // *******************************************************
 //
 // *******************************************************
-void DCP::DCP05CalcDistModelC::save()
+void DCP::DCP06CalcDistModelC::save()
 {
 //char strDist[20];
 char strRefType[20], strTrgtType[20];
@@ -1419,7 +1419,7 @@ char strRefType[20], strTrgtType[20];
 		sprintf(strTrgtType,"%-8s/%c",cTrgtType,(TRG_ACTDES==ACTUAL) ?sActualSelected[0] /*'A'*/:sDesignSelected[0] /*'D'*/);
 		//PrintLn("bDid=%-s",bDid);
 		if(pCdfFileFunc->save_calcdist_to_file(cDist, cRefId,strRefType,cTrgtId,strTrgtType, cDid,cNote,1))
-			 GUI::DesktopC::Instance()->MessageShow(StringC(AT_DCP05,I_DCP_DISTANCE_SAVED_TOK));
+			 GUI::DesktopC::Instance()->MessageShow(StringC(AT_DCP06,I_DCP_DISTANCE_SAVED_TOK));
 		/*
 		if(CalcDistFile_.open == RC_OK)
 		{

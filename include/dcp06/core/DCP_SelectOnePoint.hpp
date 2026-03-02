@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05SelectOnePointDlgC;
-	class DCP05SelectOnePointModelC;
+    class DCP06ModelC;
+	class DCP06SelectOnePointDlgC;
+	class DCP06SelectOnePointModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05SelectOnePointControllerC : public GUI::ControllerC
+    class DCP06SelectOnePointControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05SelectOnePointControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05SelectOnePointControllerC();
+            DCP06SelectOnePointControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06SelectOnePointControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -80,25 +80,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05SelectOnePointControllerC( const DCP05SelectOnePointControllerC& oDCP05SelectOnePointController )
+            DCP06SelectOnePointControllerC( const DCP06SelectOnePointControllerC& oDCP06SelectOnePointController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05SelectOnePointControllerC& operator=( const DCP05SelectOnePointControllerC& oDCP05SelectOnePointController )
+            DCP06SelectOnePointControllerC& operator=( const DCP06SelectOnePointControllerC& oDCP06SelectOnePointController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05SelectOnePointDlgC* m_pDCP05SelectOnePointDlg;
-			DCP05ModelC* m_pDCP05Model;
+            DCP06SelectOnePointDlgC* m_pDCP06SelectOnePointDlg;
+			DCP06ModelC* m_pDCP06Model;
     };
 
 
-    class DCP05SelectOnePointDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+    class DCP06SelectOnePointDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 	 public:
 			/*
@@ -117,10 +117,10 @@ namespace DCP
 				CI_ActualDesign
 			};
 
-		   DCP05SelectOnePointDlgC(DCP05ModelC *pDCP05Model);
+		   DCP06SelectOnePointDlgC(DCP06ModelC *pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05SelectOnePointDlgC();
+            virtual ~DCP06SelectOnePointDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -135,7 +135,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05SelectOnePointModelC* GetDCP05Model() const;
+            DCP06SelectOnePointModelC* GetDCP06Model() const;
 
 			OBS::ObserverC m_pMultiColCtrlObserver;
 			virtual void OnChanged(int unNotifyCode, int ulParam2);
@@ -143,9 +143,9 @@ namespace DCP
 		protected:
 			
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 
-			OBS_DECLARE_EXECUTE(DCP05SelectOnePointDlgC);
+			OBS_DECLARE_EXECUTE(DCP06SelectOnePointDlgC);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -154,8 +154,8 @@ namespace DCP
 				StringC sDesignSelected;
 				StringC sDesignNonSelected;
 
-				//void DCP::DCP05SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP05SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
+				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
  	};
 
 
@@ -168,10 +168,10 @@ namespace DCP
 				eDecimals
 			};
 
-		   DCP05UnitDlgC();
+		   DCP06UnitDlgC();
 
             // Description: Destructor
-            virtual ~DCP05UnitDlgC();
+            virtual ~DCP06UnitDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -184,14 +184,14 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP::DCP05ModelC* GetDCP05Model() const;
+            DCP::DCP06ModelC* GetDCP06Model() const;
 
 
 	protected:
 			
 			GUI::ComboLineCtrlC* m_pUnit;
 			GUI::ComboLineCtrlC* m_pDecimals;
-			OBS_DECLARE_EXECUTE(DCP05UnitDlgC);
+			OBS_DECLARE_EXECUTE(DCP06UnitDlgC);
 
 			// Description: add all controls
             virtual void RefreshControls();
@@ -202,17 +202,17 @@ namespace DCP
 			
 	};*/
 
-	class DCP05SelectOnePointModelC : public GUI::ModelC
+	class DCP06SelectOnePointModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05SelectOnePointModelC();
+            DCP06SelectOnePointModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05SelectOnePointModelC();
+            virtual ~DCP06SelectOnePointModelC();
 						
 			short m_iPointsCount;
 			short m_iCurrentPoint;

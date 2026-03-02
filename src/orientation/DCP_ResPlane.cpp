@@ -49,7 +49,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05SelectOnePointDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectOnePointDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -61,19 +61,19 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP::DCP05ResPlaneDlgC::DCP05ResPlaneDlgC(DCP::DCP05ModelC *pDCP05Model):poMultiColCtrl(NULL),m_pInfo1(NULL),
-	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP05SelectOnePointDlgC, OnChanged), this),
-	m_pDCP05Model(pDCP05Model)
+DCP::DCP06ResPlaneDlgC::DCP06ResPlaneDlgC(DCP::DCP06ModelC *pDCP06Model):poMultiColCtrl(NULL),m_pInfo1(NULL),
+	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06SelectOnePointDlgC, OnChanged), this),
+	m_pDCP06Model(pDCP06Model)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 	
 	// load title
-	sTitle.LoadTxt(AT_DCP05,T_DCP_DEV_OF_PLANE_TOK);
+	sTitle.LoadTxt(AT_DCP06,T_DCP_DEV_OF_PLANE_TOK);
 
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 }
 // Description: Destructor
-DCP::DCP05ResPlaneDlgC::~DCP05ResPlaneDlgC()
+DCP::DCP06ResPlaneDlgC::~DCP06ResPlaneDlgC()
 {
 	 if(m_pCommon)
 	 {
@@ -82,7 +82,7 @@ DCP::DCP05ResPlaneDlgC::~DCP05ResPlaneDlgC()
 	 }
 }
 
-void DCP::DCP05ResPlaneDlgC::OnInitDialog(void)
+void DCP::DCP06ResPlaneDlgC::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
@@ -103,9 +103,9 @@ void DCP::DCP05ResPlaneDlgC::OnInitDialog(void)
 
 
 	// text
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_POINT_NUMBER_TOK), CI_No));
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_POINT_ID_TOK),CI_Point));
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_DEVIATION_TOK),CI_Deviation));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_POINT_NUMBER_TOK), CI_No));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_POINT_ID_TOK),CI_Point));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_DEVIATION_TOK),CI_Deviation));
 	
 	poMultiColCtrl->AddColSelection(CI_No, CI_Point, CI_Deviation);
 
@@ -114,10 +114,10 @@ void DCP::DCP05ResPlaneDlgC::OnInitDialog(void)
 	AddTable(poMultiColCtrl);
 
 	FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_REJECT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_REJECT_TOK);
 	SetFunctionKey( FK1, vDef );
 	
 	//SetHelpTok(H_DCP_DEV_OF_PLANE_TOK,0);
@@ -126,7 +126,7 @@ void DCP::DCP05ResPlaneDlgC::OnInitDialog(void)
 
 
 
-void DCP::DCP05ResPlaneDlgC::OnF1Pressed(void)
+void DCP::DCP06ResPlaneDlgC::OnF1Pressed(void)
 {
 	
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
@@ -139,8 +139,8 @@ void DCP::DCP05ResPlaneDlgC::OnF1Pressed(void)
 		if(m_pCommon-> defined_points_count_in_plane(&GetDataModel()->plane_buff[0],NULL) <= 3)
 		{
 			StringC strText;
-			strText.LoadTxt(AT_DCP05,M_DCP_CANNOT_REJECT_PNT_TOK);
-			DCP05MsgBoxC msgbox;
+			strText.LoadTxt(AT_DCP06,M_DCP_CANNOT_REJECT_PNT_TOK);
+			DCP06MsgBoxC msgbox;
 			
 			msgbox.ShowMessageOk(strText);
 			return;
@@ -168,19 +168,19 @@ void DCP::DCP05ResPlaneDlgC::OnF1Pressed(void)
 		GetDataModel()->plane_buff[0].points[iSelectedId].sta = 2;
 	}
 	
-	DCP05CalcPlaneC calcplane;
+	DCP06CalcPlaneC calcplane;
 	calcplane.calc(&GetDataModel()->plane_buff[0],ACTUAL);
 	
 	RefreshControls();		
 }
 
-void DCP::DCP05ResPlaneDlgC::OnDialogActivated()
+void DCP::DCP06ResPlaneDlgC::OnDialogActivated()
 {
 	RefreshControls();
 } 
 
 // Description: refresh all controls
-void DCP::DCP05ResPlaneDlgC::RefreshControls()
+void DCP::DCP06ResPlaneDlgC::RefreshControls()
 {
 	int iMax=0;
 	int i;
@@ -223,7 +223,7 @@ void DCP::DCP05ResPlaneDlgC::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+9.*f", m_pDCP05Model->m_nDecimals, calc_pldist(&GetDataModel()->plane_buff[0],i));
+			sprintf(temp,"%+9.*f", m_pDCP06Model->m_nDecimals, calc_pldist(&GetDataModel()->plane_buff[0],i));
 			sDev = temp;
 		}
 		else if (sta == 0)
@@ -238,7 +238,7 @@ void DCP::DCP05ResPlaneDlgC::RefreshControls()
 		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) i, sDev));
 	}
 
-	// ja missä maxdev
+	// ja missï¿½ maxdev
 	short pno=1;
 	double rms=0.0;
 	double maxdist = get_max_dist_and_rms_plane(&GetDataModel()->plane_buff[0],&pno,&rms);
@@ -247,7 +247,7 @@ void DCP::DCP05ResPlaneDlgC::RefreshControls()
 	// set title with rms and point count
 	short iCount = m_pCommon->defined_points_count_in_plane(&GetDataModel()->plane_buff[0],0);
 	StringC sTemp = sTitle;
-	sTemp.Format(sTemp, m_pDCP05Model->m_nDecimals,rms,iCount);
+	sTemp.Format(sTemp, m_pDCP06Model->m_nDecimals,rms,iCount);
 	SetTitle(sTemp);
 
 	
@@ -256,7 +256,7 @@ void DCP::DCP05ResPlaneDlgC::RefreshControls()
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP05ResPlaneDlgC::get_max_dist_and_rms_plane(S_PLANE_BUFF *plane, short *pno, double *rms/*, short ACT*/)
+double DCP::DCP06ResPlaneDlgC::get_max_dist_and_rms_plane(S_PLANE_BUFF *plane, short *pno, double *rms/*, short ACT*/)
 {
 
 short i, count=0;
@@ -295,7 +295,7 @@ double max=0.0, dist, dist2=0.0,dist3;
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP05ResPlaneDlgC::calc_pldist(S_PLANE_BUFF *plane, short pno/*, short ACT*/)
+double DCP::DCP06ResPlaneDlgC::calc_pldist(S_PLANE_BUFF *plane, short pno/*, short ACT*/)
 {
 struct ams_vector m;
 struct plane wplane;
@@ -318,7 +318,7 @@ double dist;
 			return dist;
 
 }
-void DCP::DCP05ResPlaneDlgC::UpdateData()
+void DCP::DCP06ResPlaneDlgC::UpdateData()
 {
 	/*
 	StringC sSelected;
@@ -330,14 +330,14 @@ void DCP::DCP05ResPlaneDlgC::UpdateData()
 		
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP05ResPlaneDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ResPlaneDlgC::SetModel( GUI::ModelC* pModel )
 {
 	  // Verify type
-    DCP::DCP05DefinePlaneModelC* pDCP05Model = dynamic_cast< DCP::DCP05DefinePlaneModelC* >( pModel );
+    DCP::DCP06DefinePlaneModelC* pDCP06Model = dynamic_cast< DCP::DCP06DefinePlaneModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -348,47 +348,47 @@ bool DCP::DCP05ResPlaneDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP05DefinePlaneModelC* DCP::DCP05ResPlaneDlgC::GetDataModel() const
+DCP::DCP06DefinePlaneModelC* DCP::DCP06ResPlaneDlgC::GetDataModel() const
 {
-    return (DCP::DCP05DefinePlaneModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06DefinePlaneModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP05ResPlaneControllerC::DCP05ResPlaneControllerC(DCP::DCP05ModelC *pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model)
+DCP::DCP06ResPlaneControllerC::DCP06ResPlaneControllerC(DCP::DCP06ModelC *pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_DEV_OF_PLANE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_DEV_OF_PLANE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 	StringC sTitle;
 	sTitle = L"Dev of line RMS:";
 	sTitle += L"Points:";
 	SetTitle(sTitle);
 
     // Create a dialog
-     m_pDlg = new DCP::DCP05ResPlaneDlgC(pDCP05Model);  //lint !e1524 new in constructor for class 
+     m_pDlg = new DCP::DCP06ResPlaneDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( RES_PLANE_DLG, m_pDlg, true );
 
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
 	// moved into dialog
 	//vDef.nLable = K_DCP_REJECT_TOK;
 	//SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";
 	SetFunctionKey( SHFK6, vDef1 );
@@ -406,13 +406,13 @@ DCP::DCP05ResPlaneControllerC::DCP05ResPlaneControllerC(DCP::DCP05ModelC *pDCP05
 	*/
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05ResPlaneControllerC::~DCP05ResPlaneControllerC()
+DCP::DCP06ResPlaneControllerC::~DCP06ResPlaneControllerC()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP05ResPlaneControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ResPlaneControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -423,12 +423,12 @@ bool DCP::DCP05ResPlaneControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -442,7 +442,7 @@ bool DCP::DCP05ResPlaneControllerC::SetModel( GUI::ModelC* pModel )
 
 
 // CONT
-void DCP::DCP05ResPlaneControllerC::OnF6Pressed() 
+void DCP::DCP06ResPlaneControllerC::OnF6Pressed() 
 {
     if (m_pDlg == NULL)
     {
@@ -461,12 +461,12 @@ void DCP::DCP05ResPlaneControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP05ResPlaneControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06ResPlaneControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP05ResPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06ResPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -475,14 +475,14 @@ void DCP::DCP05ResPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int l
 
 
 // Instantiate template classes
-DCP::DCP05ResPlaneModelC::DCP05ResPlaneModelC()
+DCP::DCP06ResPlaneModelC::DCP06ResPlaneModelC()
 {
 	//memset(&sel_points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 	//memset(nro_table,0,sizeof(short) * MAX_POINTS_IN_FILE*2);
 }
 
 
-DCP::DCP05ResPlaneModelC::~DCP05ResPlaneModelC()
+DCP::DCP06ResPlaneModelC::~DCP06ResPlaneModelC()
 {
 }
 

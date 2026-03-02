@@ -44,18 +44,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05ShaftLineDlgC;
-	class DCP05ShaftLineModelC;
+    class DCP06ModelC;
+	class DCP06ShaftLineDlgC;
+	class DCP06ShaftLineModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05ShaftLineControllerC : public GUI::ControllerC
+    class DCP06ShaftLineControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05ShaftLineControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05ShaftLineControllerC();
+            DCP06ShaftLineControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06ShaftLineControllerC();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -76,26 +76,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05ShaftLineControllerC( const DCP05ShaftLineControllerC& oDCP05ShaftLineController )
+            DCP06ShaftLineControllerC( const DCP06ShaftLineControllerC& oDCP06ShaftLineController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05ShaftLineControllerC& operator=( const DCP05ShaftLineControllerC& oDCP05ShaftLineController )
+            DCP06ShaftLineControllerC& operator=( const DCP06ShaftLineControllerC& oDCP06ShaftLineController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05ShaftLineDlgC* m_pDlg;
-			DCP05ModelC* m_pDCP05Model;
+            DCP06ShaftLineDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
 			
     };
 
 
-    class DCP05ShaftLineDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class DCP06ShaftLineDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -107,10 +107,10 @@ namespace DCP
 				eLineInfo3
 			};
 
-		   DCP05ShaftLineDlgC(DCP05ModelC* pDCP05Model);
+		   DCP06ShaftLineDlgC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05ShaftLineDlgC();
+            virtual ~DCP06ShaftLineDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -124,7 +124,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05ShaftLineModelC* GetDataModel() const;
+            DCP06ShaftLineModelC* GetDataModel() const;
 			virtual void RefreshControls();
 
 			virtual void delete_line();
@@ -140,9 +140,9 @@ namespace DCP
 			GUI::TextCtrlC* m_pLineInfo2;
 			GUI::TextCtrlC* m_pLineInfo3;
 
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 
-			//OBS_DECLARE_EXECUTE(DCP05DomDlgC);
+			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
 
 			// Description: add all controls
             
@@ -156,17 +156,17 @@ namespace DCP
 			StringC m_strZLine;
 			StringC m_strMeasLine;
 	};
-    class DCP05ShaftLineModelC : public GUI::ModelC
+    class DCP06ShaftLineModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05ShaftLineModelC();
+            DCP06ShaftLineModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05ShaftLineModelC();
+            virtual ~DCP06ShaftLineModelC();
 			
 			short active_line; 
 			S_LINE_BUFF	line_buff[1];

@@ -40,22 +40,22 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP05ModelC;
-	//class DCP05ToolDlgC;
+	//class DCP06ModelC;
+	//class DCP06ToolDlgC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CalcPlaneC
+    class DCP06CalcPlaneC
     {
         public:
 
             // Description: Constructor
-            DCP05CalcPlaneC();
-			~DCP05CalcPlaneC();
+            DCP06CalcPlaneC();
+			~DCP06CalcPlaneC();
 
 			short calc(S_PLANE_BUFF *plane, short actdes);
 			short defined_points_count_in_plane(S_PLANE_BUFF *plane,short *lastpoint);
-			//short DCP::DCP05CalcLineC::points_count_in_line(S_LINE_BUFF *line);
+			//short DCP::DCP06CalcLineC::points_count_in_line(S_LINE_BUFF *line);
 
 	private:
     };

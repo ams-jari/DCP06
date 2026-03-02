@@ -28,7 +28,7 @@ DCP06 is the next-generation **onboard 3D measurement software for Leica total s
 
 ### 1.3 PMP9 Role
 
-PMP9 (FreeCAD workbench, Python) shares domain concepts (DOM, COM, CHST, ADF, alignments). Use as **reference** for:
+PMP9 (FreeCAD workbench, Python) shares domain concepts (321/DOM, Best Fit/POM, COM, CHST, ADF, alignments). Use as **reference** for:
 - Alignment solver logic
 - ADF format handling
 - Data structure design
@@ -77,8 +77,8 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (DOM, COM, CHST, ADF, al
 | Task | Description | DCP05 Reference |
 |------|-------------|------------------|
 | 2.1 | Init: User, unit, target, atm, face, file storage → DB persistence | DCP_DCP05Init |
-| 2.2 | DOM (orientation): Plane, Line, Point, Rotate → DB | DCP_DCP05Dom |
-| 2.3 | POM (best-fit): Points, calculation, residuals → DB | DCP_DCP05Pom |
+| 2.2 | 321 Alignment (orientation): Plane, Line, Point, Rotate → DB | DCP_DCP05Dom |
+| 2.3 | Best Fit Alignment: Points, calculation, residuals → DB | DCP_DCP05Pom |
 | 2.4 | CHST (change station): Transfer points, file/measure → DB | DCP_DCP05Chst |
 | 2.5 | Measurement: XYZ, Dist, Angle, Hidden, Circle, Scan → DB | DCP_Meas*, DCP_Scan* |
 | 2.6 | Calculation: Dist, Angle, Line/Plane/Circle fit → DB | DCP_Calc* |
@@ -98,7 +98,7 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (DOM, COM, CHST, ADF, al
 | 3.1 | Job management: create, load, save, delete, copy, swap | JobsBridge, JsonDatabase |
 | 3.2 | Multi-job support in UI (job selector) | JobsPage |
 | 3.3 | Settings persistence in DB (target, decimals, temp, etc.) | SettingsBridge |
-| 3.4 | Alignment data model alignment (321/DOM, BestFit/POM, Cylinder/COM, CHST) | DatabaseTypes |
+| 3.4 | Alignment data model (321 Alignment, Best Fit Alignment, Cylinder/COM, CHST) | DatabaseTypes |
 | 3.5 | CAD import (if Captivate allows): DXF, STEP, IGES → design points | cad/, libdxfrw, OpenCASCADE |
 | 3.6 | Export formats: TXT, XLS (if feasible on Captivate) | DCP9 export |
 | 3.7 | Point limit policy (DCP9: 1000) or scalable with indexing | DatabaseTypes |
@@ -112,7 +112,7 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (DOM, COM, CHST, ADF, al
 | Task | Description |
 |------|-------------|
 | 4.1 | Refactor controllers: introduce Bridge-like separation (UI ↔ DB ↔ Leica API) |
-| 4.2 | Split `DCP05ModelC` into domain sub-models (Init, DOM, POM, Meas, etc.) |
+| 4.2 | Split `DCP05ModelC` into domain sub-models (Init, 321 Alignment, Best Fit, Meas, etc.) |
 | 4.3 | Math library: evaluate keep vs. Eigen; add unit tests for fitting/transforms |
 | 4.4 | Add unit tests: DB CRUD, ADF import/export, coordinate transforms |
 | 4.5 | Regression testing: compare results with DCP05 on simulator |
@@ -184,8 +184,8 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (DOM, COM, CHST, ADF, al
 |--------------|---------|
 | **Job** | id, date, measurer, instrument_id, units, active_orientation_id, active_chst_id, settings |
 | **Point** | job_id, point_id, x_act, y_act, z_act, x_des, y_des, z_des, note, status, ... |
-| **DOM_321** | job_id, alignment_id, plane_points, line_points, ref_point, matrix |
-| **POM_BestFit** | job_id, alignment_id, points_scs, points_ocs, matrix, residuals |
+| **Alignment321** | job_id, alignment_id, plane_points, line_points, ref_point, matrix |
+| **BestFitAlignment** | job_id, alignment_id, points_scs, points_ocs, matrix, residuals |
 | **COM_Cylinder** | job_id, alignment_id, center_line, ref_angle, matrix |
 | **ChangeStation** | job_id, station_id, points_prev, points_new, matrix |
 | **Scan** | job_id, scan_id, metadata; points in separate store or .bin |

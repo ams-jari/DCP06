@@ -49,20 +49,20 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05ResShaftDlgC;
-	//class DCP05ResShaftModelC;
-	//class DCP05SelectOnePointModelC;
+    class DCP06ModelC;
+	class DCP06ResShaftDlgC;
+	//class DCP06ResShaftModelC;
+	//class DCP06SelectOnePointModelC;
 
     // Description: Tabbed controller for the Hello World application
 	
-    class DCP05ResShaftControllerC : public GUI::ControllerC
+    class DCP06ResShaftControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-			DCP05ResShaftControllerC(DCP05ModelC *pDCP05Model, DCP05ShaftModelC *pShaftModel);
-			~DCP05ResShaftControllerC();
+			DCP06ResShaftControllerC(DCP06ModelC *pDCP06Model, DCP06ShaftModelC *pShaftModel);
+			~DCP06ResShaftControllerC();
 
             // Description: Handle change of position values
             //virtual void OnF1Pressed();
@@ -85,26 +85,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05ResShaftControllerC( const DCP05ResShaftControllerC& oDCP05ResShaftController )
+            DCP06ResShaftControllerC( const DCP06ResShaftControllerC& oDCP06ResShaftController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-DCP05ResShaftControllerC& operator=( const DCP05ResShaftControllerC& oDCP05ResShaftController )
+DCP06ResShaftControllerC& operator=( const DCP06ResShaftControllerC& oDCP06ResShaftController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05ResShaftDlgC* m_pDlg;
-			DCP05ModelC* m_pDCP05Model;
-			DCP05ShaftModelC* m_pShaftModel;
+            DCP06ResShaftDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06ShaftModelC* m_pShaftModel;
     };
 	
 
-	class DCP05ResShaftDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
+	class DCP06ResShaftDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
 	{
 	 public:
 
@@ -141,10 +141,10 @@ DCP05ResShaftControllerC& operator=( const DCP05ResShaftControllerC& oDCP05ResSh
 					CI_Angle=2
 		
 			};
-		   DCP05ResShaftDlgC(DCP05ModelC *pDCP05Model, DCP05ShaftModelC *pShaftModel);
+		   DCP06ResShaftDlgC(DCP06ModelC *pDCP06Model, DCP06ShaftModelC *pShaftModel);
 
             // Description: Destructor
-            virtual ~DCP05ResShaftDlgC();
+            virtual ~DCP06ResShaftDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -161,7 +161,7 @@ DCP05ResShaftControllerC& operator=( const DCP05ResShaftControllerC& oDCP05ResSh
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05ModelC* GetDataModel() const;
+            DCP06ModelC* GetDataModel() const;
 
 			//OBS::ObserverC m_pMultiColCtrlObserver;
 			//virtual void OnChanged(int unNotifyCode, int ulParam2);
@@ -172,12 +172,12 @@ DCP05ResShaftControllerC& operator=( const DCP05ResShaftControllerC& oDCP05ResSh
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
 			//GUI::ListMultiColCtrlC* poMultiColCtrlDist;	
 			//GUI::ListMultiColCtrlC* poMultiColCtrlAngle;	
-			DCP05ModelC* m_pDCP05Model;
-			DCP05ShaftModelC* m_pShaftModel;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06ShaftModelC* m_pShaftModel;
 			// Description: add all controls
        
 
-			//OBS_DECLARE_EXECUTE(DCP05SelectOnePointDlgC);
+			//OBS_DECLARE_EXECUTE(DCP06SelectOnePointDlgC);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -187,27 +187,27 @@ DCP05ResShaftControllerC& operator=( const DCP05ResShaftControllerC& oDCP05ResSh
 				StringC sDesignNonSelected;
 				//virtual void OnTimer(void);
 
-				DCP05CommonC* m_pCommon;
+				DCP06CommonC* m_pCommon;
 				double calc_pdist(short pno);
 				StringC sTitle;
 				
 
-				//void DCP::DCP05SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP05SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
+				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
  	};
 
 	/*
-	class DCP05ResShaftModelC : public GUI::ModelC
+	class DCP06ResShaftModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05ResShaftModelC();
+            DCP06ResShaftModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05ResShaftModelC();
+            virtual ~DCP06ResShaftModelC();
 			S_POINT_BUFF shaft_res_points[MAX_POINTS_IN_CIRCLE];
     };
 	*/

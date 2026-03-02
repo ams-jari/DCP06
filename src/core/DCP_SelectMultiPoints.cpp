@@ -44,7 +44,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-OBS_IMPLEMENT_EXECUTE(DCP::DCP05SelectMultiPointsDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectMultiPointsDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -58,26 +58,26 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP05SelectMultiPointsDlgC);
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP05SelectMultiPointsDlgC::DCP05SelectMultiPointsDlgC(DCP::DCP05ModelC *pDCP05Model):poMultiColCtrl(NULL),
-	m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP05SelectMultiPointsDlgC, OnChanged), this),
-	m_pDCP05Model(pDCP05Model),m_iSelectedCount(0)
+DCP06SelectMultiPointsDlgC::DCP06SelectMultiPointsDlgC(DCP::DCP06ModelC *pDCP06Model):poMultiColCtrl(NULL),
+	m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06SelectMultiPointsDlgC, OnChanged), this),
+	m_pDCP06Model(pDCP06Model),m_iSelectedCount(0)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 
 
-	sActualSelected.LoadTxt(AT_DCP05,P_DCP_ACTUAL_SELECTED_TOK);
-	sActualNonSelected.LoadTxt(AT_DCP05,P_DCP_ACTUAL_NONSELECTED_TOK);
-	sDesignSelected.LoadTxt(AT_DCP05,P_DCP_DESIGN_SELECTED_TOK);
-	sDesignNonSelected.LoadTxt(AT_DCP05,P_DCP_DESIGN_NONSELECTED_TOK);
+	sActualSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_SELECTED_TOK);
+	sActualNonSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_NONSELECTED_TOK);
+	sDesignSelected.LoadTxt(AT_DCP06,P_DCP_DESIGN_SELECTED_TOK);
+	sDesignNonSelected.LoadTxt(AT_DCP06,P_DCP_DESIGN_NONSELECTED_TOK);
 
-	m_strMaxPointSelected.LoadTxt(AT_DCP05,L_DCP_MAX_POINTS_SELECTED_TOK); 
+	m_strMaxPointSelected.LoadTxt(AT_DCP06,L_DCP_MAX_POINTS_SELECTED_TOK); 
 
-	m_pCommon = new DCP05CommonC(pDCP05Model);
+	m_pCommon = new DCP06CommonC(pDCP06Model);
 }
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP05SelectMultiPointsDlgC::~DCP05SelectMultiPointsDlgC()
+DCP06SelectMultiPointsDlgC::~DCP06SelectMultiPointsDlgC()
 {
 	if(m_pCommon)
 	{
@@ -88,7 +88,7 @@ DCP05SelectMultiPointsDlgC::~DCP05SelectMultiPointsDlgC()
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP05SelectMultiPointsDlgC::OnInitDialog(void)
+void DCP06SelectMultiPointsDlgC::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
@@ -117,10 +117,10 @@ void DCP05SelectMultiPointsDlgC::OnInitDialog(void)
 	AddTable(poMultiColCtrl);
 
 	FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_SEL_MULTI_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_SEL_MULTI_TOK);
 	SetFunctionKey( FK1, vDef );
 
 	// help
@@ -132,7 +132,7 @@ void DCP05SelectMultiPointsDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnChanged
 // ================================================================================================
-void DCP05SelectMultiPointsDlgC::OnChanged( int unNotifyCode,  int ulParam2)
+void DCP06SelectMultiPointsDlgC::OnChanged( int unNotifyCode,  int ulParam2)
 {
 	//if(unNotifyCode == GUI::NC_ONCOMBOBOX_SELECTION_CHANGED)
 	if(unNotifyCode == GUI::NC_ONLISTMULTICOL_SELECTION_ACCEPTED)
@@ -146,7 +146,7 @@ void DCP05SelectMultiPointsDlgC::OnChanged( int unNotifyCode,  int ulParam2)
 // ================================================================================================
 // Description: RefreshControls
 // ================================================================================================
-void DCP05SelectMultiPointsDlgC::RefreshControls()
+void DCP06SelectMultiPointsDlgC::RefreshControls()
 {
 
 }
@@ -154,7 +154,7 @@ void DCP05SelectMultiPointsDlgC::RefreshControls()
 // ================================================================================================
 // Description: OnF1Pressed
 // ================================================================================================
-void DCP05SelectMultiPointsDlgC::OnF1Pressed(void)
+void DCP06SelectMultiPointsDlgC::OnF1Pressed(void)
 {
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
 	StringC sTemp;
@@ -217,7 +217,7 @@ void DCP05SelectMultiPointsDlgC::OnF1Pressed(void)
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP05SelectMultiPointsDlgC::OnDialogActivated()
+void DCP06SelectMultiPointsDlgC::OnDialogActivated()
 {
 	GUI::TableDialogC::OnDialogActivated();
 
@@ -284,22 +284,22 @@ void DCP05SelectMultiPointsDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP05SelectMultiPointsDlgC::UpdateData()
+void DCP::DCP06SelectMultiPointsDlgC::UpdateData()
 {
 	//nothing to update
 }
 
 // ================================================================================================
-// Description: only accept DCP05SelectMultiPointsModelC objects
+// Description: only accept DCP06SelectMultiPointsModelC objects
 // ================================================================================================
-bool DCP::DCP05SelectMultiPointsDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06SelectMultiPointsDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05SelectMultiPointsModelC* pDCP05Model = dynamic_cast< DCP::DCP05SelectMultiPointsModelC* >( pModel );
+    DCP::DCP06SelectMultiPointsModelC* pDCP06Model = dynamic_cast< DCP::DCP06SelectMultiPointsModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -311,9 +311,9 @@ bool DCP::DCP05SelectMultiPointsDlgC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: GetDataModel
 // ================================================================================================
-DCP::DCP05SelectMultiPointsModelC* DCP::DCP05SelectMultiPointsDlgC::GetDataModel() const
+DCP::DCP06SelectMultiPointsModelC* DCP::DCP06SelectMultiPointsDlgC::GetDataModel() const
 {
-    return (DCP::DCP05SelectMultiPointsModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06SelectMultiPointsModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
@@ -321,7 +321,7 @@ DCP::DCP05SelectMultiPointsModelC* DCP::DCP05SelectMultiPointsDlgC::GetDataModel
 // ================================================================================================
 // Description: remove selected point from table
 // ================================================================================================
-void DCP::DCP05SelectMultiPointsDlgC::remove_point_table(short sel)
+void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel)
 {
 short i,j;
 
@@ -346,7 +346,7 @@ short i,j;
 // ================================================================================================
 // Description: adds point number into table
 // ================================================================================================
-void DCP::DCP05SelectMultiPointsDlgC::add_point_table(short sel, bool bActual)
+void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual)
 {
 short i;
 	
@@ -366,47 +366,47 @@ short i;
 	m_iSelectedCount++;
 }
 // ================================================================================================
-// ====================================  DCP05SelectMultiPointsControllerC=========================
+// ====================================  DCP06SelectMultiPointsControllerC=========================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP05SelectMultiPointsControllerC::DCP05SelectMultiPointsControllerC(DCP::DCP05ModelC *pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model)
+DCP::DCP06SelectMultiPointsControllerC::DCP06SelectMultiPointsControllerC(DCP::DCP06ModelC *pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    //OnControllerActivatedSetTitleTok( AT_DCP05, T_DCP_3D_FILE_DLG_TOK /*C_DCP_APPLICATION_NAME_TOK */);
+    //OnControllerActivatedSetTitleTok( AT_DCP06, T_DCP_3D_FILE_DLG_TOK /*C_DCP_APPLICATION_NAME_TOK */);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP05SelectMultiPointsDlgC(pDCP05Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06SelectMultiPointsDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( SELECT_MULTIPOINTS_DLG, m_pDlg, true );
 
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_SEL_MULTI_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_SEL_MULTI_TOK);
 	SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";
 	SetFunctionKey( SHFK6, vDef1 );
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05SelectMultiPointsControllerC::~DCP05SelectMultiPointsControllerC()
+DCP::DCP06SelectMultiPointsControllerC::~DCP06SelectMultiPointsControllerC()
 {
 
 }
@@ -414,7 +414,7 @@ DCP::DCP05SelectMultiPointsControllerC::~DCP05SelectMultiPointsControllerC()
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP05SelectMultiPointsControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06SelectMultiPointsControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -422,7 +422,7 @@ bool DCP::DCP05SelectMultiPointsControllerC::SetModel( GUI::ModelC* pModel )
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
 	// set title here bacause it depending on caller...
-	DCP::DCP05SelectMultiPointsModelC* pMod = dynamic_cast< DCP::DCP05SelectMultiPointsModelC* >( pModel );
+	DCP::DCP06SelectMultiPointsModelC* pMod = dynamic_cast< DCP::DCP06SelectMultiPointsModelC* >( pModel );
 	SetTitle(pMod->sTitle);
 		
 	// Set it to hello world dialog
@@ -432,7 +432,7 @@ bool DCP::DCP05SelectMultiPointsControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: F6 /CONT
 // ================================================================================================
-void DCP::DCP05SelectMultiPointsControllerC::OnF6Pressed()
+void DCP::DCP06SelectMultiPointsControllerC::OnF6Pressed()
 {
     if (m_pDlg == NULL)
     {
@@ -452,27 +452,27 @@ void DCP::DCP05SelectMultiPointsControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: React on close of active dialog
 // ================================================================================================
-void DCP::DCP05SelectMultiPointsControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06SelectMultiPointsControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP05SelectMultiPointsControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06SelectMultiPointsControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
 }
 
 // ================================================================================================
-// ====================================  DCP05SelectMultiPointsModelC==============================
+// ====================================  DCP06SelectMultiPointsModelC==============================
 // ================================================================================================
 
 // ================================================================================================
 // Description: constructor
 // ================================================================================================
-DCP::DCP05SelectMultiPointsModelC::DCP05SelectMultiPointsModelC()
+DCP::DCP06SelectMultiPointsModelC::DCP06SelectMultiPointsModelC()
 {
 	memset(&sel_points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 	memset(nro_table,0,sizeof(short) * MAX_POINTS_IN_FILE*2);
@@ -491,6 +491,6 @@ DCP::DCP05SelectMultiPointsModelC::DCP05SelectMultiPointsModelC()
 // ================================================================================================
 // Description: destructor
 // ================================================================================================
-DCP::DCP05SelectMultiPointsModelC::~DCP05SelectMultiPointsModelC()
+DCP::DCP06SelectMultiPointsModelC::~DCP06SelectMultiPointsModelC()
 {
 }

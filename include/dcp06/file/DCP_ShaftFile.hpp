@@ -47,20 +47,20 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05ShaftFileDlgC;
-	class DCP05ShaftFileModelC;
+    class DCP06ModelC;
+	class DCP06ShaftFileDlgC;
+	class DCP06ShaftFileModelC;
 
 	class ShaftFileFunc;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05ShaftFileControllerC : public GUI::ControllerC
+    class DCP06ShaftFileControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05ShaftFileControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05ShaftFileControllerC();
+            DCP06ShaftFileControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06ShaftFileControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -81,26 +81,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05ShaftFileControllerC( const DCP05ShaftFileControllerC& oDCP05ShaftFileController )
+            DCP06ShaftFileControllerC( const DCP06ShaftFileControllerC& oDCP06ShaftFileController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05ShaftFileControllerC& operator=( const DCP05ShaftFileControllerC& oDCP05ShaftFileController )
+            DCP06ShaftFileControllerC& operator=( const DCP06ShaftFileControllerC& oDCP06ShaftFileController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05ShaftFileDlgC* m_pDlg;
-			DCP05ShaftFileModelC* m_pDataModel;
-			DCP05ModelC* m_pDCP05Model;
+            DCP06ShaftFileDlgC* m_pDlg;
+			DCP06ShaftFileModelC* m_pDataModel;
+			DCP06ModelC* m_pDCP06Model;
     };
 
 
-    class DCP05ShaftFileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+    class DCP06ShaftFileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 	 public:
 
@@ -113,10 +113,10 @@ namespace DCP
 				eFreeSpace
 			};
 
-		   DCP05ShaftFileDlgC(DCP05ShaftFileModelC* pModel);
+		   DCP06ShaftFileDlgC(DCP06ShaftFileModelC* pModel);
 
             // Description: Destructor
-            virtual ~DCP05ShaftFileDlgC();
+            virtual ~DCP06ShaftFileDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -131,7 +131,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05ModelC* GetDCP05Model() const;
+            DCP06ModelC* GetDCP06Model() const;
 
 			virtual void RefreshControls();
 
@@ -144,21 +144,21 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pTime;
 			GUI::ComboLineCtrlC* m_pFreeSpace;
 
-			DCP05ShaftFileModelC* m_pDataModel;
+			DCP06ShaftFileModelC* m_pDataModel;
 	};
 
-	class DCP05ShaftFileModelC : public GUI::ModelC
+	class DCP06ShaftFileModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05ShaftFileModelC(DCP05ModelC* pDCP05Model);
+            DCP06ShaftFileModelC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
             //
-            virtual ~DCP05ShaftFileModelC();
-			DCP05CommonC* pCommon;
+            virtual ~DCP06ShaftFileModelC();
+			DCP06CommonC* pCommon;
 			ShaftFileFunc* m_pFileFunc;
 			char x_diff[20];
 			char y_diff[20];
@@ -173,8 +173,8 @@ namespace DCP
             // Description: Constructor
             //ShaftFileFunc();
 			//AdfFileFunc(const char* filename, bool bCreate=false);
-			ShaftFileFunc(boost::filesystem::path* FileInfo, DCP05ModelC* pDCP05Model);//CPI::FileInfoC* FileInfo);
-			ShaftFileFunc(DCP05ModelC* pDCP05Model);
+			ShaftFileFunc(boost::filesystem::path* FileInfo, DCP06ModelC* pDCP06Model);//CPI::FileInfoC* FileInfo);
+			ShaftFileFunc(DCP06ModelC* pDCP06Model);
 
 			~ShaftFileFunc();
 
@@ -190,7 +190,7 @@ namespace DCP
 			//short get_next_id(char *did);
 			//short delete_point_from_cdf(short pno);
 			//short open_crl_file();
-			short save_shaft_to_file(StringC id, DCP05ShaftModelC* pModel);
+			short save_shaft_to_file(StringC id, DCP06ShaftModelC* pModel);
 			short create_new_shaftfile(char  *fname);
 			short create_new_file(char  *fname);
 			short delete_file(void);
@@ -199,7 +199,7 @@ namespace DCP
 
 
 	private:
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 			char m_cPath[CPI::LEN_PATH_MAX];
 			short opened;
 			bool m_bExists;
@@ -221,7 +221,7 @@ namespace DCP
 			short access1(char *fname);
 			short remove1(char *fname);
 			char trow[0xFF];
-			DCP05CommonC* m_pCommon;
+			DCP06CommonC* m_pCommon;
     };
 
 };

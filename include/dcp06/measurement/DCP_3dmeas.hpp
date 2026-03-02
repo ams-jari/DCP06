@@ -52,19 +52,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP053DMeasDlgC;
-	class DCP053DMeasModelC;
+	class DCP06ModelC;
+	class DCP063DMeasDlgC;
+	class DCP063DMeasModelC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP053DMeasControllerC : public GUI::ControllerC, public TBL::MeasurementC
+    class DCP063DMeasControllerC : public GUI::ControllerC, public TBL::MeasurementC
     {
         public:
 
             // Description: Constructor
-            DCP053DMeasControllerC(bool bShaf, DCP05ModelC* pDCP05Model);
-			~DCP053DMeasControllerC();
+            DCP063DMeasControllerC(bool bShaf, DCP06ModelC* pDCP06Model);
+			~DCP063DMeasControllerC();
 
 
             // Description: Handle change of position values
@@ -97,23 +97,23 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP053DMeasControllerC( const DCP053DMeasControllerC& oDCP053DMeasController )
+            DCP063DMeasControllerC( const DCP063DMeasControllerC& oDCP063DMeasController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP053DMeasControllerC& operator=( const DCP053DMeasControllerC& o3DMeasToolController )
+            DCP063DMeasControllerC& operator=( const DCP063DMeasControllerC& o3DMeasToolController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP053DMeasDlgC* m_pDlg;
-			DCP053DMeasModelC* m_pDataModel;
-			DCP05MsgBoxC* msgbox;
-			DCP05CommonC* m_pCommon;
+            DCP063DMeasDlgC* m_pDlg;
+			DCP063DMeasModelC* m_pDataModel;
+			DCP06MsgBoxC* msgbox;
+			DCP06CommonC* m_pCommon;
 			StringC msg;
 			GSV::GeospatialViewDialogC* poVideoDlg;
 
@@ -133,7 +133,7 @@ namespace DCP
 	};
 
 
-	class DCP053DMeasDlgC:public GUI::/*Standard*/DialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class DCP063DMeasDlgC:public GUI::/*Standard*/DialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -159,10 +159,10 @@ namespace DCP
 				eInfo
 			};
 
-			DCP053DMeasDlgC(DCP053DMeasModelC* pMeasModel);
+			DCP063DMeasDlgC(DCP063DMeasModelC* pMeasModel);
 
             // Description: Destructor
-            virtual ~DCP053DMeasDlgC();
+            virtual ~DCP063DMeasDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -175,7 +175,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05ModelC* GetDCP05Model() const;
+			DCP06ModelC* GetDCP06Model() const;
 			
 	protected:
   			
@@ -204,11 +204,11 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pYDev;
 			GUI::ComboLineCtrlC* m_pZDev;
 
-			OBS_DECLARE_EXECUTE(DCP053DMeasDlgC);
+			OBS_DECLARE_EXECUTE(DCP063DMeasDlgC);
 
 	private:
-		DCP05CommonC* m_pCommon;
-		DCP053DMeasModelC* m_pDataModel;
+		DCP06CommonC* m_pCommon;
+		DCP063DMeasModelC* m_pDataModel;
 
 		OBS::ObserverC m_pPointIdObserver;
 		OBS::ObserverC m_pXObserver;
@@ -223,19 +223,19 @@ namespace DCP
 		
 	};
 
-   class DCP053DMeasModelC : public GUI::ModelC
+   class DCP063DMeasModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP053DMeasModelC(DCP05ModelC* pDCP05Model);
+            DCP063DMeasModelC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
             //
-            virtual ~DCP053DMeasModelC();
+            virtual ~DCP063DMeasModelC();
 			
-			void set_dcp05_model(DCP05ModelC *pModel);
+			void set_dcp05_model(DCP06ModelC *pModel);
 
 			AdfFileFunc* m_pFileFunc;
 
@@ -275,8 +275,8 @@ namespace DCP
 			double Zdes;
 
 	private:
-			DCP05ModelC *m_pDCP05Model;
-			DCP05CommonC *m_pCommon;
+			DCP06ModelC *m_pDCP06Model;
+			DCP06CommonC *m_pCommon;
     };
 
 };

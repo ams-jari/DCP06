@@ -48,19 +48,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05CalcDistDlgC;
-	class DCP05CalcDistModelC;
+	class DCP06ModelC;
+	class DCP06CalcDistDlgC;
+	class DCP06CalcDistModelC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05CalcDistControllerC : public GUI::ControllerC
+    class DCP06CalcDistControllerC : public GUI::ControllerC
     {
         public:
 		
             // Description: Constructor
-            DCP05CalcDistControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05CalcDistControllerC();
+            DCP06CalcDistControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06CalcDistControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -89,30 +89,30 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05CalcDistControllerC( const DCP05CalcDistControllerC& oDCP05CalcDistController )
+            DCP06CalcDistControllerC( const DCP06CalcDistControllerC& oDCP06CalcDistController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05CalcDistControllerC& operator=( const DCP05CalcDistControllerC& oDCP05CalcDistController )
+            DCP06CalcDistControllerC& operator=( const DCP06CalcDistControllerC& oDCP06CalcDistController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05CalcDistDlgC* m_pDlg;
-			DCP05CalcDistModelC * m_pDataModel;
+            DCP06CalcDistDlgC* m_pDlg;
+			DCP06CalcDistModelC * m_pDataModel;
 			void change_function_keys();
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 
 	private:
 			
     };
 
 
-	class DCP05CalcDistDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class DCP06CalcDistDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -129,10 +129,10 @@ namespace DCP
 				eNote	
 			};
 
-		   DCP05CalcDistDlgC(DCP05CalcDistModelC * pCalcDistModel);
+		   DCP06CalcDistDlgC(DCP06CalcDistModelC * pCalcDistModel);
 
             // Description: Destructor
-            virtual ~DCP05CalcDistDlgC();
+            virtual ~DCP06CalcDistDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -144,7 +144,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05ModelC* GetDCP05Model() const;
+			DCP06ModelC* GetDCP06Model() const;
 
 	protected:
 			GUI::ComboLineCtrlC* m_p3DFile;
@@ -157,7 +157,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pRefType;
 			GUI::ComboLineCtrlC* m_pTargetType;
 
-			OBS_DECLARE_EXECUTE(DCP05CalcDistDlgC);
+			OBS_DECLARE_EXECUTE(DCP06CalcDistDlgC);
 
 			/*
 			GUI::ComboLineCtrlC* m_pPointNo;
@@ -167,7 +167,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pZ;
 			*/
 	private:
-		DCP05CalcDistModelC * m_pDataModel;
+		DCP06CalcDistModelC * m_pDataModel;
 		OBS::ObserverC m_pDistIdObserver;
 		OBS::ObserverC m_pNoteObserver;
 		OBS::ObserverC m_pRefIdObserver;
@@ -175,18 +175,18 @@ namespace DCP
 		virtual void OnValueChanged(int unNotifyCode, int ulParam2);
 	};
 
-	 class DCP05CalcDistModelC : public GUI::ModelC
+	 class DCP06CalcDistModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05CalcDistModelC(DCP05ModelC* pDCP05Model);
-			//DCP05DomModelC(DCP05DomModelC* pModel);
+            DCP06CalcDistModelC(DCP06ModelC* pDCP06Model);
+			//DCP06DomModelC(DCP06DomModelC* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP05CalcDistModelC();
+            virtual ~DCP06CalcDistModelC();
 
 			enum eDisplayMode
 			{
@@ -212,8 +212,8 @@ namespace DCP
 			StringC sActualNonSelected;
 			StringC sDesignNonSelected;
 
-			DCP05CommonC* pCommon;
-			DCP05MsgBoxC* pMsgBox;
+			DCP06CommonC* pCommon;
+			DCP06MsgBoxC* pMsgBox;
 			double dCalculatedDist;
 			short iDistanceCalculated;
 			short all_defined();

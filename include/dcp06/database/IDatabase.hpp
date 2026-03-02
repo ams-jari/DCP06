@@ -78,6 +78,11 @@ public:
     virtual bool deleteBestFitAlignment(const std::string& bestFitAlignmentId) = 0;
     virtual bool getBestFitAlignment(const std::string& bestFitAlignmentId, BestFitAlignmentData& data) = 0;
 
+    // Paths (for DB-primary workflow)
+    virtual std::string getDataDirectory() const { return ""; }
+    virtual std::string getJobWorkingPath(const std::string& jobId) const { return ""; }
+    virtual std::vector<std::string> listJobIds() const { return {}; }
+
     // Import/export
     virtual bool importFromADF(const std::string& filename) = 0;
     virtual bool exportToADF(const std::string& filename) = 0;

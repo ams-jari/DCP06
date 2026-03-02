@@ -47,19 +47,19 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05AngleFileDlgC;
-	class DCP05AngleFileModelC;
+    class DCP06ModelC;
+	class DCP06AngleFileDlgC;
+	class DCP06AngleFileModelC;
 	class AgfFileFunc;
 	
     // Description: Tabbed controller for the Hello World application
-    class DCP05AngleFileControllerC : public GUI::ControllerC
+    class DCP06AngleFileControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05AngleFileControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05AngleFileControllerC();
+            DCP06AngleFileControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06AngleFileControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -80,26 +80,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05AngleFileControllerC( const DCP05AngleFileControllerC& oDCP05AngleFileController )
+            DCP06AngleFileControllerC( const DCP06AngleFileControllerC& oDCP06AngleFileController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05AngleFileControllerC& operator=( const DCP05AngleFileControllerC& oDCP05AngleFileController )
+            DCP06AngleFileControllerC& operator=( const DCP06AngleFileControllerC& oDCP06AngleFileController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05AngleFileDlgC* m_pDlg;
-			DCP::DCP05AngleFileModelC* m_pDataModel;
-			DCP05ModelC* m_pDCP05Model;
+            DCP06AngleFileDlgC* m_pDlg;
+			DCP::DCP06AngleFileModelC* m_pDataModel;
+			DCP06ModelC* m_pDCP06Model;
     };
 
 
-    class DCP05AngleFileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+    class DCP06AngleFileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 	 public:
 
@@ -113,10 +113,10 @@ namespace DCP
 				eFreeSpace
 			};
 
-		   DCP05AngleFileDlgC(DCP05AngleFileModelC* pModel);
+		   DCP06AngleFileDlgC(DCP06AngleFileModelC* pModel);
 
             // Description: Destructor
-            virtual ~DCP05AngleFileDlgC();
+            virtual ~DCP06AngleFileDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -131,7 +131,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP::DCP05ModelC* GetDCP05Model() const;
+            DCP::DCP06ModelC* GetDCP06Model() const;
 
 			virtual void RefreshControls();
 			virtual void SelectFile(StringC sFile);
@@ -146,21 +146,21 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pTime;
 			GUI::ComboLineCtrlC* m_pFreeSpace;
 
-			DCP::DCP05AngleFileModelC* m_pDataModel;
+			DCP::DCP06AngleFileModelC* m_pDataModel;
 	};
 
-	class DCP05AngleFileModelC : public GUI::ModelC
+	class DCP06AngleFileModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05AngleFileModelC(DCP05ModelC* pDCP05Model);
+            DCP06AngleFileModelC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
             //
-            ~DCP05AngleFileModelC();
-			DCP05CommonC* pCommon;
+            ~DCP06AngleFileModelC();
+			DCP06CommonC* pCommon;
 			AgfFileFunc* m_pFileFunc;
 			char x_diff[20];
 			char y_diff[20];
@@ -175,8 +175,8 @@ namespace DCP
             // Description: Constructor
             AgfFileFunc();
 			//AdfFileFunc(const char* filename, bool bCreate=false);
-			AgfFileFunc(boost::filesystem::path* FileInfo,DCP05ModelC* pDCP05Model);//CPI::FileInfoC* FileInfo);
-			AgfFileFunc(DCP05ModelC* pDCP05Model);
+			AgfFileFunc(boost::filesystem::path* FileInfo,DCP06ModelC* pDCP06Model);//CPI::FileInfoC* FileInfo);
+			AgfFileFunc(DCP06ModelC* pDCP06Model);
 
 			~AgfFileFunc();
 
@@ -225,7 +225,7 @@ namespace DCP
 			char note[15];
 
 	private:
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 			char m_cPath[CPI::LEN_PATH_MAX];
 			short opened;
 			bool m_bExists;
@@ -252,7 +252,7 @@ namespace DCP
 			FILE* fopen2(FILE *pFile , char* fname, const char* mode);
 			short remove1(char *fname);
 			char trow[0xFF];
-			DCP05CommonC* m_pCommon;
+			DCP06CommonC* m_pCommon;
     };
 };
 

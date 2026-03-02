@@ -50,7 +50,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05SelectOnePointDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectOnePointDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -62,9 +62,9 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP::DCP05ResCircleDlgC::DCP05ResCircleDlgC(DCP::DCP05ModelC *pDCP05Model):poMultiColCtrl(NULL),m_pInfo1(NULL),
-	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP05SelectOnePointDlgC, OnChanged), this),
-	m_pDCP05Model(pDCP05Model)
+DCP::DCP06ResCircleDlgC::DCP06ResCircleDlgC(DCP::DCP06ModelC *pDCP06Model):poMultiColCtrl(NULL),m_pInfo1(NULL),
+	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06SelectOnePointDlgC, OnChanged), this),
+	m_pDCP06Model(pDCP06Model)
 {
 	//SetTxtApplicationId(AT_DCP05);
 	
@@ -74,7 +74,7 @@ DCP::DCP05ResCircleDlgC::DCP05ResCircleDlgC(DCP::DCP05ModelC *pDCP05Model):poMul
 	
 }
 // Description: Destructor
-DCP::DCP05ResCircleDlgC::~DCP05ResCircleDlgC()
+DCP::DCP06ResCircleDlgC::~DCP06ResCircleDlgC()
 {
 	 if(m_pCommon)
 	 {
@@ -83,7 +83,7 @@ DCP::DCP05ResCircleDlgC::~DCP05ResCircleDlgC()
 	 }
 }
 
-void DCP::DCP05ResCircleDlgC::OnInitDialog(void)
+void DCP::DCP06ResCircleDlgC::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
@@ -127,12 +127,12 @@ void DCP::DCP05ResCircleDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_CIRCLE_RESIDUALS_TOK,0);
 	//m_pMultiColCtrlObserver.Attach(poMultiColCtrl->GetSubject());
 
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 }
 
 
 
-void DCP::DCP05ResCircleDlgC::OnF1Pressed(void)
+void DCP::DCP06ResCircleDlgC::OnF1Pressed(void)
 {
 	
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
@@ -146,7 +146,7 @@ void DCP::DCP05ResCircleDlgC::OnF1Pressed(void)
 		{
 			StringC strText;
 			strText.LoadTxt(AT_DCP05,M_DCP_CANNOT_REJECT_PNT_TOK);
-			DCP05MsgBoxC msgbox;
+			DCP06MsgBoxC msgbox;
 			
 			msgbox.ShowMessageOk(strText);
 			return;
@@ -175,11 +175,11 @@ void DCP::DCP05ResCircleDlgC::OnF1Pressed(void)
 	}
 	
 	
-	DCP05CalcCircleC circle(GetDataModel()->PLANE_TYPE, 
+	DCP06CalcCircleC circle(GetDataModel()->PLANE_TYPE, 
 								&GetDataModel()->circle_points[0],
 								&GetDataModel()->planes[0],
 								&GetDataModel()->circle_points_in_plane[0],
-								GetDataModel()->bR, m_pDCP05Model);
+								GetDataModel()->bR, m_pDCP06Model);
 	
 	if(circle.calc_center_of_circle())
 		{
@@ -187,19 +187,19 @@ void DCP::DCP05ResCircleDlgC::OnF1Pressed(void)
 			circle.get_results(&GetDataModel()->cx, &GetDataModel()->cy,&GetDataModel()->cz, &GetDataModel()->vi, &GetDataModel()->vj,&GetDataModel()->vk, &GetDataModel()->diameter, &GetDataModel()->rms_diameter,&GetDataModel()->max_dev_in_point);
 			GetDataModel()->show_circle_points();
 	}
-	//DCP05CalcLineC calcline;
+	//DCP06CalcLineC calcline;
 	//calcline.calc(&GetDataModel()->line_buff[0],ACTUAL);
 	
 	RefreshControls();		
 }
 
-void DCP::DCP05ResCircleDlgC::OnDialogActivated()
+void DCP::DCP06ResCircleDlgC::OnDialogActivated()
 {
 	RefreshControls();
 } 
 
 // Description: refresh all controls
-void DCP::DCP05ResCircleDlgC::RefreshControls()
+void DCP::DCP06ResCircleDlgC::RefreshControls()
 {
 	int iMax=0;
 	int i;
@@ -243,7 +243,7 @@ void DCP::DCP05ResCircleDlgC::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+9.*f", m_pDCP05Model->m_nDecimals, GetDataModel()->circle_points[0].points[i].diameter - GetDataModel()->circle_points[0].diameter);
+			sprintf(temp,"%+9.*f", m_pDCP06Model->m_nDecimals, GetDataModel()->circle_points[0].points[i].diameter - GetDataModel()->circle_points[0].diameter);
 			sDev = temp;
 		}
 		else if (sta == 0)
@@ -258,7 +258,7 @@ void DCP::DCP05ResCircleDlgC::RefreshControls()
 		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) i, sDev));
 	}
 
-	// ja valitse piste missä max dev
+	// ja valitse piste missï¿½ max dev
 	short pno=1;
 	double rms=0.0;
 	/*
@@ -268,7 +268,7 @@ void DCP::DCP05ResCircleDlgC::RefreshControls()
 	// set title with rms and point count
 	short iCount = m_pCommon->defined_points_count_in_line(&GetDataModel()->line_buff[0],0);
 	StringC sTemp = sTitle;
-	sTemp.Format(sTemp, m_pDCP05Model->m_nDecimals,rms,iCount);
+	sTemp.Format(sTemp, m_pDCP06Model->m_nDecimals,rms,iCount);
 	SetTitleStr(sTemp);
 	*/
 	//EndDraw();
@@ -276,7 +276,7 @@ void DCP::DCP05ResCircleDlgC::RefreshControls()
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP05ResCircleDlgC::get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/)
+double DCP::DCP06ResCircleDlgC::get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/)
 {
 
 short i, count=0;
@@ -324,7 +324,7 @@ double max=0.0, dist, dist2=0.0, dist3;
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP05ResCircleDlgC::calc_pdist(S_LINE_BUFF *line, short pno/*, short ACT*/)
+double DCP::DCP06ResCircleDlgC::calc_pdist(S_LINE_BUFF *line, short pno/*, short ACT*/)
 {
 struct ams_vector m;
 struct line wline;
@@ -347,7 +347,7 @@ double dist;
 
 			return dist;
 }
-void DCP::DCP05ResCircleDlgC::UpdateData()
+void DCP::DCP06ResCircleDlgC::UpdateData()
 {
 	/*
 	StringC sSelected;
@@ -359,14 +359,14 @@ void DCP::DCP05ResCircleDlgC::UpdateData()
 		
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP05ResCircleDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ResCircleDlgC::SetModel( GUI::ModelC* pModel )
 {
 	  // Verify type
-    DCP::DCP05CircleModelC* pDCP05Model = dynamic_cast< DCP::DCP05CircleModelC* >( pModel );
+    DCP::DCP06CircleModelC* pDCP06Model = dynamic_cast< DCP::DCP06CircleModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -377,17 +377,17 @@ bool DCP::DCP05ResCircleDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP05CircleModelC* DCP::DCP05ResCircleDlgC::GetDataModel() const
+DCP::DCP06CircleModelC* DCP::DCP06ResCircleDlgC::GetDataModel() const
 {
-    return (DCP::DCP05CircleModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06CircleModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP05ResCircleControllerC::DCP05ResCircleControllerC(DCP::DCP05ModelC *pDCP05Model, short iDisplay)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model), m_iDisplay(iDisplay)
+DCP::DCP06ResCircleControllerC::DCP06ResCircleControllerC(DCP::DCP06ModelC *pDCP06Model, short iDisplay)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model), m_iDisplay(iDisplay)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -399,7 +399,7 @@ DCP::DCP05ResCircleControllerC::DCP05ResCircleControllerC(DCP::DCP05ModelC *pDCP
 	SetTitle(sTitle);
 
     // Create a dialog
-     m_pDlg = new DCP::DCP05ResCircleDlgC(pDCP05Model);  //lint !e1524 new in constructor for class 
+     m_pDlg = new DCP::DCP06ResCircleDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( RES_CIRCLE_DLG, m_pDlg, true );
 
     // Set the function key
@@ -443,13 +443,13 @@ DCP::DCP05ResCircleControllerC::DCP05ResCircleControllerC(DCP::DCP05ModelC *pDCP
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP05ResCircleControllerC::~DCP05ResCircleControllerC()
+DCP::DCP06ResCircleControllerC::~DCP06ResCircleControllerC()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP05ResCircleControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06ResCircleControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -457,18 +457,18 @@ bool DCP::DCP05ResCircleControllerC::SetModel( GUI::ModelC* pModel )
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
 	//Verify type
-    DCP::DCP05CircleModelC* pDataModel = dynamic_cast< DCP::DCP05CircleModelC* >( pModel );
+    DCP::DCP06CircleModelC* pDataModel = dynamic_cast< DCP::DCP06CircleModelC* >( pModel );
 
     // Set it to hello world dialog
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -479,7 +479,7 @@ bool DCP::DCP05ResCircleControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // SAVE
-void DCP::DCP05ResCircleControllerC::OnF3Pressed() 
+void DCP::DCP06ResCircleControllerC::OnF3Pressed() 
 {
     if (m_pDlg == NULL)
     {
@@ -489,18 +489,18 @@ void DCP::DCP05ResCircleControllerC::OnF3Pressed()
 	
 	if(GetController(CIRCLE_SAVE_CONTROLLER) == NULL)
 	{
-		(void)AddController( CIRCLE_SAVE_CONTROLLER, new DCP::DCP05SaveCircleControllerC(m_pDlg->GetDataModel(),m_pDCP05Model) );
+		(void)AddController( CIRCLE_SAVE_CONTROLLER, new DCP::DCP06SaveCircleControllerC(m_pDlg->GetDataModel(),m_pDCP06Model) );
 	}
 
 	(void)GetController(CIRCLE_SAVE_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_CIRCLE_SAVE_TOK));
-	(void)GetController( CIRCLE_SAVE_CONTROLLER )->SetModel(m_pDCP05Model);
+	(void)GetController( CIRCLE_SAVE_CONTROLLER )->SetModel(m_pDCP06Model);
 	SetActiveController(CIRCLE_SAVE_CONTROLLER, true);
 	
 }
 
 
 // CONT
-void DCP::DCP05ResCircleControllerC::OnF6Pressed() 
+void DCP::DCP06ResCircleControllerC::OnF6Pressed() 
 {
     if (m_pDlg == NULL)
     {
@@ -519,12 +519,12 @@ void DCP::DCP05ResCircleControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP05ResCircleControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06ResCircleControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP05ResCircleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06ResCircleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == CIRCLE_SAVE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
@@ -539,7 +539,7 @@ void DCP::DCP05ResCircleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 
 // Instantiate template classes
 /*
-DCP::DCP05ResCircleModelC::DCP05ResCircleModelC()
+DCP::DCP06ResCircleModelC::DCP06ResCircleModelC()
 {
 	//memset(&sel_points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 	//memset(nro_table,0,sizeof(short) * MAX_POINTS_IN_FILE*2);
@@ -550,7 +550,7 @@ DCP::DCP05ResCircleModelC::DCP05ResCircleModelC()
 }
 
 
-DCP::DCP05ResCircleModelC::~DCP05ResCircleModelC()
+DCP::DCP06ResCircleModelC::~DCP06ResCircleModelC()
 {
 }
 */

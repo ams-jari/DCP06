@@ -47,17 +47,11 @@ struct plane 		/* taso eli piste (px,py,pz) ja */
 double angle(struct ams_vector *a,struct ams_vector *b);
 short cartsph(double p0[4], double *disty, double *thetax,double *thetaz);
 short cartsph_left(double p0[4], double *disty, double *thetax,double *thetaz);
-short CoordTransf6 (	double *mea, double *nom,
-					short points,
-					double *par, double *M,
-					double *k, double *Zdd);
 double degtorad(double a);
 short dir_vector(double pa[4], double pb[4], double (*dv)[4]);
 double dot_product(struct ams_vector *a,struct ams_vector *b);
 void equation_of_line(struct ams_vector *a,struct ams_vector *b,struct line *c);
 short equation_of_plane(struct ams_vector *a, struct ams_vector *b, struct ams_vector *c, struct plane *d);
-short FitLine(double *p_mat, short points, double *a, double *b, double *c);
-short FitPlane (double *m_mat,short points, double *a, double *b, double *c);
 void rotate_about_x_axis(double a[4][4], double b, double (*w)[4][4]);
 void rotate_about_y_axis(double a[4][4], double b, double (*w)[4][4]);
 void rotate_about_z_axis(double a[4][4], double b, double (*w)[4][4]);
@@ -104,15 +98,6 @@ double vector_length(struct ams_vector *a);
 int vecmat(double v[4], double a[4][4],double (*w)[4]);
 void vec_product(double u[4], double v[4], double (*w)[4]);
 double vector_product(struct ams_vector *a,struct ams_vector *b,struct ams_vector *c);
-short CoordTransf6 (	double *mea, double *nom,
-					short points,
-					double *par, double *M,
-					double *k, double *Zdd);
-
-
-
-
-
 
 short center_of_circle(double x1,double y1,double x2,double y2,double x3,double y3,double *radius,double *cx,double *cy);
 

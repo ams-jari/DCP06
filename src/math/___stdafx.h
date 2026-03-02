@@ -54,7 +54,7 @@
 
 // Global GUI includes
 #include <UTL_Macro.hpp>
-#include <DCP05_TOK.hpp>
+#include <DCP06_TOK.HPP>
 
 #endif  // HEW_STDAFX_H
 

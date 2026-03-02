@@ -16,6 +16,9 @@
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>DCP06</ProjectName>
+    <VcpkgEnabled>true</VcpkgEnabled>
+    <VcpkgManifestInstall>true</VcpkgManifestInstall>
+    <VcpkgConfiguration>Release</VcpkgConfiguration>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -37,13 +40,16 @@
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC70.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <System1500_ROOT Condition="'$(System1500_ROOT)' == ''">$(Env.SYSTEM1500_ROOT)</System1500_ROOT>
+    <System1500_ROOT_x64 Condition="'$(System1500_ROOT_x64)' == ''">$(Env.SYSTEM1500_ROOT_x64)</System1500_ROOT_x64>
+    <SYSTEM1500_ROOT Condition="'$(SYSTEM1500_ROOT)' == ''">$(System1500_ROOT)</SYSTEM1500_ROOT>
+  </PropertyGroup>
   <PropertyGroup>
     <_ProjectFileVersion>16.0.33423.256</_ProjectFileVersion>
   </PropertyGroup>
@@ -62,7 +68,7 @@
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>..\..\include;..\..\include\dcp06\math;..\..\src\core;..\..\Text;$(System1500_ROOT)\Projects\;$(System1500_ROOT)\Projects\3rdParty\boost\boost-dist;$(System1500_ROOT)\Projects\ABL_Base\Source\API_Hdr;$(System1500_ROOT)\Projects\ABL_Manage\Source\API_Hdr;$(System1500_ROOT)\Projects\ABL_System\Source\API_Hdr;$(System1500_ROOT)\Projects\ABL_Scanning\Source\API_Hdr;$(System1500_ROOT)\Projects\ABL_Tps\Source\API_Hdr;$(System1500_ROOT)\Projects\Common\Source\API_Hdr;$(System1500_ROOT)\Projects\Database\Ext_Hdr\apisupport;$(System1500_ROOT)\Projects\GeoMath\Source\API_Hdr;$(System1500_ROOT)\Projects\GuiPlus\Source\API_Hdr;$(System1500_ROOT)\Projects\HALTools\Source\API_Hdr;$(System1500_ROOT)\Projects\ScanData\Source\API_Hdr;$(System1500_ROOT)\Projects\SensorData\Source\API_Hdr;$(System1500_ROOT)\Projects\TpsFacade\Source\API_Hdr;$(System1500_ROOT)\Projects\Utilities\Source\API_Hdr;$(System1500_ROOT)\Projects\CameraControl\Source\API_Hdr;$(System1500_ROOT)\Projects\GSV\Source\API_Hdr;$(System1500_ROOT)\Projects\Converter\Source\API_Hdr;$(System1500_ROOT)\Projects\GSV_Base\Source\API_Hdr;$(System1500_ROOT)\Projects\Geometry\Source\API_Hdr;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\include\dcp06\math;..\..\src\core;..\..\Text;..\..\vcpkg_installed\x86-windows\include;..\..\vcpkg_installed\x64-windows\include;$(System1500_ROOT)\Projects\;$(System1500_ROOT)\Projects\3rdParty\boost\boost-dist;$(System1500_ROOT)\Projects\ABL_Base\Source\API_Hdr;$(System1500_ROOT)\Projects\ABL_Manage\Source\API_Hdr;$(System1500_ROOT)\Projects\ABL_System\Source\API_Hdr;$(System1500_ROOT)\Projects\ABL_Scanning\Source\API_Hdr;$(System1500_ROOT)\Projects\ABL_Tps\Source\API_Hdr;$(System1500_ROOT)\Projects\Common\Source\API_Hdr;$(System1500_ROOT)\Projects\Database\Ext_Hdr\apisupport;$(System1500_ROOT)\Projects\GeoMath\Source\API_Hdr;$(System1500_ROOT)\Projects\GuiPlus\Source\API_Hdr;$(System1500_ROOT)\Projects\HALTools\Source\API_Hdr;$(System1500_ROOT)\Projects\ScanData\Source\API_Hdr;$(System1500_ROOT)\Projects\SensorData\Source\API_Hdr;$(System1500_ROOT)\Projects\TpsFacade\Source\API_Hdr;$(System1500_ROOT)\Projects\Utilities\Source\API_Hdr;$(System1500_ROOT)\Projects\CameraControl\Source\API_Hdr;$(System1500_ROOT)\Projects\GSV\Source\API_Hdr;$(System1500_ROOT)\Projects\Converter\Source\API_Hdr;$(System1500_ROOT)\Projects\GSV_Base\Source\API_Hdr;$(System1500_ROOT)\Projects\Geometry\Source\API_Hdr;..\..\include\sdk_fallback;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>HW_X86;PLAT_WINPC_X86;NDEBUG;_WINDOWS;_USRDLL;PILING_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -98,7 +104,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <!-- <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion> -->
       <!-- <OmitFramePointers>true</OmitFramePointers> -->
-      <AdditionalIncludeDirectories>..\..\include;..\..\include\dcp06\math;..\..\src\core;..\..\Text;$(System1500_ROOT_x64)\Projects\;$(System1500_ROOT_x64)\Projects\3rdParty\WinCEAdapte;$(System1500_ROOT_x64)\Projects\3rdParty\;$(System1500_ROOT_x64)\Projects\ABL_Base\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ABL_Manage\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ABL_System\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ABL_Scanning\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ABL_Tps\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Common\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\SLBasics\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Database\Ext_Hdr\apisupport;$(System1500_ROOT_x64)\Projects\GeoMath\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\GuiPlus\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\HALTools\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ScanData\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\SensorData\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\TpsFacade\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Utilities\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\CameraControl\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\GSV\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Converter\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\GSV_Base\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Geometry\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\SwxAssertHandler\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\include;..\..\include\dcp06\math;..\..\src\core;..\..\Text;..\..\vcpkg_installed\x64-windows\include;..\..\vcpkg_installed\x86-windows\include;$(System1500_ROOT_x64)\Projects\;$(System1500_ROOT_x64)\Projects\3rdParty\WinCEAdapte;$(System1500_ROOT_x64)\Projects\3rdParty\;$(System1500_ROOT_x64)\Projects\ABL_Base\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ABL_Manage\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ABL_System\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ABL_Scanning\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ABL_Tps\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Common\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\SLBasics\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Database\Ext_Hdr\apisupport;$(System1500_ROOT_x64)\Projects\GeoMath\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\GuiPlus\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\HALTools\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\ScanData\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\SensorData\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\TpsFacade\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Utilities\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\CameraControl\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\GSV\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Converter\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\GSV_Base\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\Geometry\Source\API_Hdr;$(System1500_ROOT_x64)\Projects\SwxAssertHandler\include\;..\..\include\sdk_fallback;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>CS35;WIN64;PLAT_WINPC_X64;NDEBUG;_WINDOWS;_USRDLL;DCP06_EXPORTS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <!-- <BasicRuntimeChecks>Default</BasicRuntimeChecks> -->
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -155,36 +161,36 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\file\DCP_AngleFile.cpp" />
     <ClCompile Include="..\..\src\application\DCP_Application.cpp" />
     <ClCompile Include="..\..\src\application\DCP_ApplicationMenu.cpp" />
-    <ClCompile Include="..\..\src\measurement\DCP_AutoMatch.cpp" />
+    <ClCompile Include="..\..\src\core\DCP_AutoMatch.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcAngle.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcChst.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_calccircle.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcCircleController.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcDist.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcDist2Points.cpp" />
-    <ClCompile Include="..\..\src\calculation\DCP_CalcDom.cpp" />
+    <ClCompile Include="..\..\src\calculation\DCP_Calc321.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_calcline.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcLineController.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcLineFit.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcMenu.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_calcplane.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalcPlaneController.cpp" />
-    <ClCompile Include="..\..\src\calculation\DCP_CalcPom.cpp" />
+    <ClCompile Include="..\..\src\calculation\DCP_CalcBestFit.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_CalculationCircle.cpp" />
     <ClCompile Include="..\..\src\core\DCP_ChangeFace.cpp" />
     <ClCompile Include="..\..\src\measurement\DCP_Circle.cpp" />
     <ClCompile Include="..\..\src\file\DCP_CircleFile.cpp" />
     <ClCompile Include="..\..\src\file\DCP_CircleSave.cpp" />
     <ClCompile Include="..\..\src\core\DCP_Common.cpp" />
-    <ClCompile Include="..\..\src\orientation\DCP_DCP05Chst.cpp" />
-    <ClCompile Include="..\..\src\orientation\DCP_DCP05Dom.cpp" />
-    <ClCompile Include="..\..\src\orientation\DCP_DCP05DomUserDef.cpp" />
-    <ClCompile Include="..\..\src\core\DCP_DCP05GUI.cpp" />
-    <ClCompile Include="..\..\src\init\DCP_DCP05Init.cpp" />
-    <ClCompile Include="..\..\src\core\DCP_DCP05Meas.cpp" />
-    <ClCompile Include="..\..\src\orientation\DCP_DCP05Pom.cpp" />
-    <ClCompile Include="..\..\src\init\DCP_DCP05Unit.cpp" />
-    <ClCompile Include="..\..\src\init\DCP_DCP05User.cpp" />
+    <ClCompile Include="..\..\src\orientation\DCP_DCP06Chst.cpp" />
+    <ClCompile Include="..\..\src\orientation\DCP_DCP06Alignment321.cpp" />
+    <ClCompile Include="..\..\src\orientation\DCP_DCP06Alignment321UserDef.cpp" />
+    <ClCompile Include="..\..\src\core\DCP_DCP06GUI.cpp" />
+    <ClCompile Include="..\..\src\init\DCP_DCP06Init.cpp" />
+    <ClCompile Include="..\..\src\core\DCP_DCP06Meas.cpp" />
+    <ClCompile Include="..\..\src\orientation\DCP_DCP06BestFit.cpp" />
+    <ClCompile Include="..\..\src\init\DCP_DCP06Unit.cpp" />
+    <ClCompile Include="..\..\src\init\DCP_DCP06User.cpp" />
     <ClCompile Include="..\..\src\orientation\DCP_DefineLine.cpp" />
     <ClCompile Include="..\..\src\orientation\DCP_DefineLineUserDef.cpp" />
     <ClCompile Include="..\..\src\orientation\DCP_DefinePlane.cpp" />
@@ -211,11 +217,11 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\orientation\DCP_Offsv.cpp" />
     <ClCompile Include="..\..\src\measurement\DCP_PlaneScanning.cpp" />
     <ClCompile Include="..\..\src\core\DCP_PointBuffModel.cpp" />
-    <ClCompile Include="..\..\src\orientation\DCP_PomSelectPoints.cpp" />
+    <ClCompile Include="..\..\src\orientation\DCP_BestFitSelectPoints.cpp" />
     <ClCompile Include="..\..\src\calculation\DCP_ResCircle.cpp" />
     <ClCompile Include="..\..\src\orientation\DCP_ResLine.cpp" />
     <ClCompile Include="..\..\src\orientation\DCP_ResPlane.cpp" />
-    <ClCompile Include="..\..\src\orientation\DCP_ResPom.cpp" />
+    <ClCompile Include="..\..\src\orientation\DCP_ResBestFit.cpp" />
     <ClCompile Include="..\..\src\core\DCP_ResShaft.cpp" />
     <ClCompile Include="..\..\src\orientation\DCP_RotateLine.cpp" />
     <ClCompile Include="..\..\src\orientation\DCP_RotatePlane.cpp" />
@@ -239,14 +245,11 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\math\CANGLE.cpp" />
     <ClCompile Include="..\..\src\math\CART.cpp" />
     <ClCompile Include="..\..\src\math\ccircle.cpp" />
-    <ClCompile Include="..\..\src\math\COORD6TR.cpp" />
     <ClCompile Include="..\..\src\math\DEGTORAD.cpp" />
     <ClCompile Include="..\..\src\math\DIRVEC.cpp" />
     <ClCompile Include="..\..\src\math\DOTPROD.cpp" />
     <ClCompile Include="..\..\src\math\EQOFLI.cpp" />
     <ClCompile Include="..\..\src\math\EQOFPL.cpp" />
-    <ClCompile Include="..\..\src\math\FITLINE.cpp" />
-    <ClCompile Include="..\..\src\math\FITPLANE.cpp" />
     <ClCompile Include="..\..\src\math\HROTAX.cpp" />
     <ClCompile Include="..\..\src\math\HROTAY.cpp" />
     <ClCompile Include="..\..\src\math\HROTAZ.cpp" />
@@ -271,6 +274,15 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\math\VECPRO.cpp" />
     <ClCompile Include="..\..\src\math\VECPROD.cpp" />
     <ClCompile Include="..\..\src\core\SelectOnePoint.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\Point.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\Plane.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\Line.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\Circle.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\PlaneFitting.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\LineFitting.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\CircleFitting.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\Transformations.cpp" />
+    <ClCompile Include="..\..\src\core\geometry\AlignmentCalculator.cpp" />
     <ClCompile Include="..\..\src\core\stdafx.cpp" />
     <ClCompile Include="..\..\src\core\UserDefStatus.cpp" />
     <ClCompile Include="..\..\src\database\JsonDatabase.cpp" />
@@ -287,29 +299,29 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcCircleController.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcDist.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcDist2Points.hpp" />
-    <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcDom.hpp" />
+    <ClInclude Include="..\..\include\dcp06\calculation\DCP_Calc321.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcLine.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcLineController.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcLineFit.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcMenu.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcPlane.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcPlaneController.hpp" />
-    <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcPom.hpp" />
+    <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalcBestFit.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_CalculationCircle.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\DCP_ChangeFace.hpp" />
     <ClInclude Include="..\..\include\dcp06\measurement\DCP_Circle.hpp" />
     <ClInclude Include="..\..\include\dcp06\file\DCP_CircleFile.hpp" />
     <ClInclude Include="..\..\include\dcp06\file\DCP_CircleSave.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\DCP_Common.hpp" />
-    <ClInclude Include="..\..\include\dcp06\orientation\DCP_DCP05Chst.hpp" />
-    <ClInclude Include="..\..\include\dcp06\orientation\DCP_DCP05Dom.hpp" />
-    <ClInclude Include="..\..\include\dcp06\orientation\DCP_DCP05DomUserDef.hpp" />
-    <ClInclude Include="..\..\include\dcp06\core\DCP_DCP05GUI.hpp" />
-    <ClInclude Include="..\..\include\dcp06\init\DCP_DCP05Init.hpp" />
-    <ClInclude Include="..\..\include\dcp06\core\DCP_DCP05Meas.hpp" />
-    <ClInclude Include="..\..\include\dcp06\orientation\DCP_DCP05Pom.hpp" />
-    <ClInclude Include="..\..\include\dcp06\init\DCP_DCP05Unit.hpp" />
-    <ClInclude Include="..\..\include\dcp06\init\DCP_DCP05User.hpp" />
+    <ClInclude Include="..\..\include\dcp06\orientation\DCP_DCP06Chst.hpp" />
+    <ClInclude Include="..\..\include\dcp06\orientation\DCP_DCP06Alignment321.hpp" />
+    <ClInclude Include="..\..\include\dcp06\orientation\DCP_DCP06Alignment321UserDef.hpp" />
+    <ClInclude Include="..\..\include\dcp06\core\DCP_DCP06GUI.hpp" />
+    <ClInclude Include="..\..\include\dcp06\init\DCP_DCP06Init.hpp" />
+    <ClInclude Include="..\..\include\dcp06\core\DCP_DCP06Meas.hpp" />
+    <ClInclude Include="..\..\include\dcp06\orientation\DCP_DCP06BestFit.hpp" />
+    <ClInclude Include="..\..\include\dcp06\init\DCP_DCP06Unit.hpp" />
+    <ClInclude Include="..\..\include\dcp06\init\DCP_DCP06User.hpp" />
     <ClInclude Include="..\..\include\dcp06\orientation\DCP_DefineLine.hpp" />
     <ClInclude Include="..\..\include\dcp06\orientation\DCP_DefineLineUserDef.hpp" />
     <ClInclude Include="..\..\include\dcp06\orientation\DCP_DefinePlane.hpp" />
@@ -337,11 +349,11 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClInclude Include="..\..\include\dcp06\orientation\DCP_Offsv.hpp" />
     <ClInclude Include="..\..\include\dcp06\measurement\DCP_PlaneScanning.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\DCP_PointBuffModel.hpp" />
-    <ClInclude Include="..\..\include\dcp06\orientation\DCP_PomSelectPoints.hpp" />
+    <ClInclude Include="..\..\include\dcp06\orientation\DCP_BestFitSelectPoints.hpp" />
     <ClInclude Include="..\..\include\dcp06\calculation\DCP_ResCircle.hpp" />
     <ClInclude Include="..\..\include\dcp06\orientation\DCP_ResLine.hpp" />
     <ClInclude Include="..\..\include\dcp06\orientation\DCP_ResPlane.hpp" />
-    <ClInclude Include="..\..\include\dcp06\orientation\DCP_ResPom.hpp" />
+    <ClInclude Include="..\..\include\dcp06\orientation\DCP_ResBestFit.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\DCP_ResShaft.hpp" />
     <ClInclude Include="..\..\include\dcp06\orientation\DCP_RotateLine.hpp" />
     <ClInclude Include="..\..\include\dcp06\orientation\DCP_RotatePlane.hpp" />

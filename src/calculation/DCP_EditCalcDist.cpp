@@ -26,7 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/init/DCP_DCP05Init.hpp>
+#include <dcp06/init/DCP_DCP06Init.hpp>
 #include <dcp06/calculation/DCP_EditCalcDist.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
@@ -44,7 +44,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -58,15 +58,15 @@
 
 // USER DIALOG
 
-DCP::DCP05EditCalcDistDlgC::DCP05EditCalcDistDlgC(DCP::DCP05ModelC *pDCP05Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pDistId(0),m_pRefId(0),m_pNote(0),m_pDCP05Model(pDCP05Model)
+DCP::DCP06EditCalcDistDlgC::DCP06EditCalcDistDlgC(DCP::DCP06ModelC *pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+	m_pDistId(0),m_pRefId(0),m_pNote(0),m_pDCP06Model(pDCP06Model)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 }
 
 
             // Description: Destructor
-DCP::DCP05EditCalcDistDlgC::~DCP05EditCalcDistDlgC()
+DCP::DCP06EditCalcDistDlgC::~DCP06EditCalcDistDlgC()
 {
 	if(m_pCommon)
 	{
@@ -75,7 +75,7 @@ DCP::DCP05EditCalcDistDlgC::~DCP05EditCalcDistDlgC()
 	}
 }
 
-void DCP::DCP05EditCalcDistDlgC::OnInitDialog(void)
+void DCP::DCP06EditCalcDistDlgC::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 
@@ -84,21 +84,21 @@ void DCP::DCP05EditCalcDistDlgC::OnInitDialog(void)
 
 	m_pDistId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDistId->SetId(eDistId);
-	m_pDistId->SetText(StringC(AT_DCP05,P_DCP_DISTANCE_ID_TOK));
+	m_pDistId->SetText(StringC(AT_DCP06,P_DCP_DISTANCE_ID_TOK));
 	m_pDistId->GetStringInputCtrl()->SetCharsCountMax(6);
 	m_pDistId->SetEmptyAllowed(true);
 	AddCtrl(m_pDistId);
 
 	m_pRefId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pRefId->SetId(eRefId);
-	m_pRefId->SetText(StringC(AT_DCP05,P_DCP_REF_ID_TOK));
+	m_pRefId->SetText(StringC(AT_DCP06,P_DCP_REF_ID_TOK));
 	m_pRefId->GetStringInputCtrl()->SetCharsCountMax(6);
 	m_pRefId->SetEmptyAllowed(true);
 	AddCtrl(m_pRefId);
 
 	m_pNote = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pNote->SetId(eNote);
-	m_pNote->SetText(StringC(AT_DCP05,P_DCP_NOTE_TOK));
+	m_pNote->SetText(StringC(AT_DCP06,P_DCP_NOTE_TOK));
 	m_pNote->GetStringInputCtrl()->SetCharsCountMax(8);
 	m_pNote->SetEmptyAllowed(true);
 	AddCtrl(m_pNote);
@@ -107,13 +107,13 @@ void DCP::DCP05EditCalcDistDlgC::OnInitDialog(void)
 }
 
 
-void DCP::DCP05EditCalcDistDlgC::OnDialogActivated()
+void DCP::DCP06EditCalcDistDlgC::OnDialogActivated()
 {
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 	RefreshControls();
 }
 
-void DCP::DCP05EditCalcDistDlgC::UpdateData()
+void DCP::DCP06EditCalcDistDlgC::UpdateData()
 {
 	GetDataModel()->sDistId = m_pDistId->GetStringInputCtrl()->GetString();
 	GetDataModel()->sRefId = m_pRefId->GetStringInputCtrl()->GetString();
@@ -122,7 +122,7 @@ void DCP::DCP05EditCalcDistDlgC::UpdateData()
 }
 
 // Description: refresh all controls
-void DCP::DCP05EditCalcDistDlgC::RefreshControls()
+void DCP::DCP06EditCalcDistDlgC::RefreshControls()
 {
 	if(m_pDistId  && m_pRefId && m_pNote)
 	{	
@@ -133,14 +133,14 @@ void DCP::DCP05EditCalcDistDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP05EditCalcDistDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06EditCalcDistDlgC::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP05EditCalcDistModelC* pDCP05Model = dynamic_cast< DCP::DCP05EditCalcDistModelC* >( pModel );
+    DCP::DCP06EditCalcDistModelC* pDCP06Model = dynamic_cast< DCP::DCP06EditCalcDistModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     {
         RefreshControls();
         return true;
@@ -150,54 +150,54 @@ bool DCP::DCP05EditCalcDistDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP05EditCalcDistModelC* DCP::DCP05EditCalcDistDlgC::GetDataModel() const
+DCP::DCP06EditCalcDistModelC* DCP::DCP06EditCalcDistDlgC::GetDataModel() const
 {
-    return (DCP::DCP05EditCalcDistModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DCP06EditCalcDistModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 
 // ================================================================================================
-// ====================================  DCP05UserControllerC  ===================================
+// ====================================  DCP06UserControllerC  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP05UserControllerC
+// DCP06UserControllerC
 // 
-DCP::DCP05EditCalcDistControllerC::DCP05EditCalcDistControllerC(DCP::DCP05ModelC *pDCP05Model)
-    : m_pDlg( NULL ),m_pDCP05Model(pDCP05Model),m_pCommon(0)
+DCP::DCP06EditCalcDistControllerC::DCP06EditCalcDistControllerC(DCP::DCP06ModelC *pDCP06Model)
+    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model),m_pCommon(0)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_CALC_DIST_EDIT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_CALC_DIST_EDIT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP05EditCalcDistDlgC(pDCP05Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DCP06EditCalcDistDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
     (void)AddDialog( XORYORZ_DLG, m_pDlg, true );
 
-	m_pCommon = new DCP05CommonC(m_pDCP05Model);
+	m_pCommon = new DCP06CommonC(m_pDCP06Model);
 
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK1, vDef );
 
 	// Hide SHF6(Quit Key)
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
 	
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP05EditCalcDistControllerC::~DCP05EditCalcDistControllerC()
+DCP::DCP06EditCalcDistControllerC::~DCP06EditCalcDistControllerC()
 {
 	if(m_pCommon)
 	{
@@ -207,7 +207,7 @@ DCP::DCP05EditCalcDistControllerC::~DCP05EditCalcDistControllerC()
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP05EditCalcDistControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DCP06EditCalcDistControllerC::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -218,12 +218,12 @@ bool DCP::DCP05EditCalcDistControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP05ModelC* pDCP05Model = dynamic_cast< DCP::DCP05ModelC* >( pModel );
+   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP05Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP05Model ))
+	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
     //(
     //    RefreshControls();
     //    return true;
@@ -234,7 +234,7 @@ bool DCP::DCP05EditCalcDistControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // CONT
-void DCP::DCP05EditCalcDistControllerC::OnF1Pressed()
+void DCP::DCP06EditCalcDistControllerC::OnF1Pressed()
 {
     // Update model
     // Set it to hello world dialog
@@ -249,12 +249,12 @@ void DCP::DCP05EditCalcDistControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP05EditCalcDistControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DCP06EditCalcDistControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP05EditCalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DCP06EditCalcDistControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );

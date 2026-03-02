@@ -56,20 +56,20 @@ namespace ABL
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	//class DCP05MeasDlgC;
-	class DCP05MeasDistModelC;
+	class DCP06ModelC;
+	//class DCP06MeasDlgC;
+	class DCP06MeasDistModelC;
 	class DCPSurveyModelC;
-	class DCP05DistErrorHandlerC;
+	class DCP06DistErrorHandlerC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05MeasDistControllerC : public GUI::ControllerC, public TBL::MeasurementC
+    class DCP06MeasDistControllerC : public GUI::ControllerC, public TBL::MeasurementC
     {
         public:
 
             // Description: Constructor
-            DCP05MeasDistControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05MeasDistControllerC();
+            DCP06MeasDistControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06MeasDistControllerC();
 
 
 			// Description: Route model to everybody else
@@ -86,27 +86,27 @@ namespace DCP
 			short get_xyz_values(double* x, double* y, double* z);
 
 			DCPSurveyModelC*   poSurveyModel;
-			DCP05ModelC*   poDCP05Model;
+			DCP06ModelC*   poDCP06Model;
 		protected:
 
 		private:
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05MeasDistControllerC( const DCP05MeasDistControllerC& oDCP05MeasDistController )
+            DCP06MeasDistControllerC( const DCP06MeasDistControllerC& oDCP06MeasDistController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05MeasDistControllerC& operator=( const DCP05MeasDistControllerC& oDCP05MeasDistController )
+            DCP06MeasDistControllerC& operator=( const DCP06MeasDistControllerC& oDCP06MeasDistController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP05MeasDistModelC *m_pMeasDistModel;
+			DCP06MeasDistModelC *m_pMeasDistModel;
 
 			double m_dDist;
 			double m_dHor;
@@ -114,13 +114,13 @@ namespace DCP
 	    };
 
 	  // Description: Tabbed controller for the Hello World application
-    class DCP05DoMeasDistControllerC : public GUI::ControllerC, public TBL::MeasurementC
+    class DCP06DoMeasDistControllerC : public GUI::ControllerC, public TBL::MeasurementC
     {
         public:
 
             // Description: Constructor
-            DCP05DoMeasDistControllerC();
-			~DCP05DoMeasDistControllerC();
+            DCP06DoMeasDistControllerC();
+			~DCP06DoMeasDistControllerC();
 
 
 			// Description: Route model to everybody else
@@ -137,7 +137,7 @@ namespace DCP
 			short get_xyz_values(double* x, double* y, double* z);
 
 			DCPSurveyModelC*   poSurveyModel;
-			DCP05ModelC*   poDCP05Model;
+			DCP06ModelC*   poDCP06Model;
 		protected:
 			virtual void OnOperationDistEvent(int unNotifyCode,  int ulOperationId);
 			virtual void OnPeriodicInclineValidation(int ulParam1, int ulParam2);
@@ -146,46 +146,46 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05DoMeasDistControllerC( const DCP05DoMeasDistControllerC& oDCP05DoMeasDistController )
+            DCP06DoMeasDistControllerC( const DCP06DoMeasDistControllerC& oDCP06DoMeasDistController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05DoMeasDistControllerC& operator=( const DCP05DoMeasDistControllerC& oDCP05DoMeasDistController )
+            DCP06DoMeasDistControllerC& operator=( const DCP06DoMeasDistControllerC& oDCP06DoMeasDistController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP05MeasDistModelC *m_pMeasDistModel;
+			DCP06MeasDistModelC *m_pMeasDistModel;
 
 			double m_dDist;
 			double m_dH;
 			double m_dV;
-			DCP05DistErrorHandlerC* poErrorHandler;
+			DCP06DistErrorHandlerC* poErrorHandler;
 
     };
 
-	class DCP05MeasDistModelC : public GUI::ModelC
+	class DCP06MeasDistModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05MeasDistModelC();
+            DCP06MeasDistModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05MeasDistModelC();
+            virtual ~DCP06MeasDistModelC();
 						
 			double m_dD;
 			double m_dH;
 			double m_dV;
     };
 
-	class DCP05DistErrorHandlerC:public TBL::MeasErrorHandlerC,public GUI::ControllerC, public TBL::MeasurementC //, public OBS::SubjectC
+	class DCP06DistErrorHandlerC:public TBL::MeasErrorHandlerC,public GUI::ControllerC, public TBL::MeasurementC //, public OBS::SubjectC
 	{
 	public:
 		 virtual HandlingKindT HandleMeasError(MeasErrorT eMeasError, MeasErrorSourceT eSource, unsigned int ulErrorCodeSensor);

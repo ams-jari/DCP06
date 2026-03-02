@@ -1,0 +1,28 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "vs2022",
+      "hidden": true,
+      "generator": "Visual Studio 17 2022",
+      "architecture": "x86",
+      "binaryDir": "${sourceDir}/build"
+    },
+    {
+      "name": "vs2022-nosdk",
+      "displayName": "VS2022 Win32 (no vcpkg)",
+      "inherits": "vs2022",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": ""
+      }
+    },
+    {
+      "name": "vs2022-vcpkg",
+      "displayName": "VS2022 Win32 (with vcpkg)",
+      "inherits": "vs2022",
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    }
+  ]
+}

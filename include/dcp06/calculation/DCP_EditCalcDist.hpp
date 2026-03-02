@@ -46,19 +46,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05EditCalcDistDlgC;
-	class DCP05EditCalcDistModelC;
+	class DCP06ModelC;
+	class DCP06EditCalcDistDlgC;
+	class DCP06EditCalcDistModelC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05EditCalcDistControllerC : public GUI::ControllerC
+    class DCP06EditCalcDistControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05EditCalcDistControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05EditCalcDistControllerC();
+            DCP06EditCalcDistControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06EditCalcDistControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -82,26 +82,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05EditCalcDistControllerC( const DCP05EditCalcDistControllerC& oDCP05EditCalcDistController )
+            DCP06EditCalcDistControllerC( const DCP06EditCalcDistControllerC& oDCP05EditCalcDistController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05EditCalcDistControllerC& operator=( const DCP05EditCalcDistControllerC& oDCP05EditCalcDistController )
+            DCP06EditCalcDistControllerC& operator=( const DCP06EditCalcDistControllerC& oDCP05EditCalcDistController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05EditCalcDistDlgC* m_pDlg;
-			DCP05ModelC * m_pDCP05Model;
-			DCP05CommonC* m_pCommon;
+            DCP06EditCalcDistDlgC* m_pDlg;
+			DCP06ModelC * m_pDCP06Model;
+			DCP06CommonC* m_pCommon;
     };
 
 
-	class DCP05EditCalcDistDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class DCP06EditCalcDistDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -112,10 +112,10 @@ namespace DCP
 				eNote
 			};
 
-		   DCP05EditCalcDistDlgC(DCP05ModelC *pDCP05Model);
+		   DCP06EditCalcDistDlgC(DCP06ModelC *pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05EditCalcDistDlgC();
+            virtual ~DCP06EditCalcDistDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -127,7 +127,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05EditCalcDistModelC* GetDataModel() const;
+			DCP06EditCalcDistModelC* GetDataModel() const;
 			
 
 	protected:
@@ -136,12 +136,12 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pRefId;
 			GUI::ComboLineCtrlC* m_pNote;
 
-			DCP05ModelC * m_pDCP05Model;
+			DCP06ModelC * m_pDCP06Model;
 	private:
-			DCP05CommonC* m_pCommon;
+			DCP06CommonC* m_pCommon;
 	};
 
-	 class DCP05EditCalcDistModelC : public GUI::ModelC
+	 class DCP06EditCalcDistModelC : public GUI::ModelC
     {
         public:
 			StringC sDistId;

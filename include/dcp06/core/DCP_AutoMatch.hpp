@@ -42,18 +42,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05AutoMatchDlgC;
-	class DCP05AutoMatchModelC;
+	class DCP06ModelC;
+	class DCP06AutoMatchDlgC;
+	class DCP06AutoMatchModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05AutoMatchControllerC : public GUI::ControllerC
+    class DCP06AutoMatchControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05AutoMatchControllerC(DCP05ModelC *pDCP05Model);
-			~DCP05AutoMatchControllerC();
+            DCP06AutoMatchControllerC(DCP06ModelC *pDCP06Model);
+			~DCP06AutoMatchControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -81,25 +81,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05AutoMatchControllerC( const DCP05AutoMatchControllerC& oDCP05AutoMatchController )
+            DCP06AutoMatchControllerC( const DCP06AutoMatchControllerC& oDCP06AutoMatchController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05AutoMatchControllerC& operator=( const DCP05AutoMatchControllerC& oDCP05AutoMatchController )
+            DCP06AutoMatchControllerC& operator=( const DCP06AutoMatchControllerC& oDCP06AutoMatchController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05AutoMatchDlgC* m_pDlg;
-			DCP05ModelC* m_pDCP05Model;
+            DCP06AutoMatchDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
     };
 
 
-	class DCP05AutoMatchDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class DCP06AutoMatchDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -112,10 +112,10 @@ namespace DCP
 				eZ
 			};
 
-			DCP05AutoMatchDlgC(DCP::DCP05ModelC* pModel);
+			DCP06AutoMatchDlgC(DCP::DCP06ModelC* pModel);
 
             // Description: Destructor
-            virtual ~DCP05AutoMatchDlgC();
+            virtual ~DCP06AutoMatchDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -127,7 +127,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP::DCP05AutoMatchModelC* GetDataModel() const;
+			DCP::DCP06AutoMatchModelC* GetDataModel() const;
 
 			
 	protected:
@@ -139,20 +139,20 @@ namespace DCP
 			GUI::TextCtrlC* m_pZ;
 	private:
 			
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 	};
 
-	class DCP05AutoMatchModelC : public GUI::ModelC
+	class DCP06AutoMatchModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05AutoMatchModelC();
+            DCP06AutoMatchModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05AutoMatchModelC();
+            virtual ~DCP06AutoMatchModelC();
 			double xmea, ymea, zmea;
 			double xdsg, ydsg, zdsg;
 			StringC pointid;

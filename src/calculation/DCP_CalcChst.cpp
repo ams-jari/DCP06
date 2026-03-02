@@ -32,7 +32,10 @@
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
 #include "calc.h"
+#include "core/geometry/Transformations.h"
+#include "geometry/Point.h"
 #include <math.h>
+#include <vector>
 #include <GUI_MessageDialog.hpp>
 #include <ABL_MsgDef.hpp>
 
@@ -51,7 +54,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -65,13 +68,13 @@
 
 // USER DIALOG
 
-DCP::DCP05CalcChStC::DCP05CalcChStC(DCP05PomModelC* pDCP05PomModel, DCP05ModelC* pDCP05Model, short active_plane_): 
-	m_pDCP05PomModel(pDCP05PomModel),m_pDCP05Model(pDCP05Model),active_plane(active_plane_)
+DCP::DCP06CalcChStC::DCP06CalcChStC(DCP06PomModelC* pDCP06PomModel, DCP06ModelC* pDCP06Model, short active_plane_): 
+	m_pDCP06PomModel(pDCP06PomModel),m_pDCP06Model(pDCP06Model),active_plane(active_plane_)
 {
 	
 }
 // ****************************************************************************************
-DCP::DCP05CalcChStC::~DCP05CalcChStC()
+DCP::DCP06CalcChStC::~DCP06CalcChStC()
 {
 	
 }
@@ -81,18 +84,18 @@ DCP::DCP05CalcChStC::~DCP05CalcChStC()
 /**************************************************************
 		  check how many points are defined
 ***************************************************************/
-short DCP::DCP05CalcChStC::defined_pom_points(/*point_buff_ *point_OCS,*/ short *lastpoint)
+short DCP::DCP06CalcChStC::defined_pom_points(/*point_buff_ *point_OCS,*/ short *lastpoint)
 {
 short points_defined=0,i;
 	
 	if(lastpoint != NULL)
 		*lastpoint = 0;
 
-	for(i=0; i < MAX_POM_POINTS; i++)
+	for(i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
-		if(m_pDCP05PomModel->point_OCS[i].sta == 1 || m_pDCP05PomModel->point_OCS[i].sta == 2 /* && point_DCS[i].sta != 0 */)
+		if(m_pDCP06PomModel->point_OCS[i].sta == 1 || m_pDCP06PomModel->point_OCS[i].sta == 2 /* && point_DCS[i].sta != 0 */)
 			points_defined++;
-		if(m_pDCP05PomModel->point_OCS[i].sta !=0)
+		if(m_pDCP06PomModel->point_OCS[i].sta !=0)
 		{
 			if(lastpoint != NULL)
 				*lastpoint = i+1;
@@ -106,15 +109,15 @@ short points_defined=0,i;
 ***************************************************************/
 
 
-short DCP::DCP05CalcChStC::get_last_defined_point(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/)
+short DCP::DCP06CalcChStC::get_last_defined_point(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/)
 {
 short i,ret=0;
-	DCP05CommonC common(m_pDCP05Model);
+	DCP06CommonC common(m_pDCP06Model);
 
-	for(i=MAX_POM_POINTS-1; i >= 0; i--)
+	for(i=MAX_BESTFIT_POINTS-1; i >= 0; i--)
 	{
-		if(m_pDCP05PomModel->point_OCS[i].sta != 0 || m_pDCP05PomModel->point_DCS[i].sta != 0 ||
-			!common.strblank(m_pDCP05PomModel->point_OCS[i].point_id)) //&& point_DCS[i].sta != 0)
+		if(m_pDCP06PomModel->point_OCS[i].sta != 0 || m_pDCP06PomModel->point_DCS[i].sta != 0 ||
+			!common.strblank(m_pDCP06PomModel->point_OCS[i].point_id)) //&& point_DCS[i].sta != 0)
 		{
 			ret = i+1;
 			break;
@@ -127,13 +130,13 @@ short i,ret=0;
 /**************************************************************
 		  check how many points are defined
 ***************************************************************/
-short DCP::DCP05CalcChStC::get_OCS_points_count(/*point_buff_ *point_OCS*/)
+short DCP::DCP06CalcChStC::get_OCS_points_count(/*point_buff_ *point_OCS*/)
 {
 short i,ret=0;
 
-	for(i=0; i < MAX_POM_POINTS; i++)
+	for(i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
-		if(m_pDCP05PomModel->point_OCS[i].sta != 0 ) //&& point_DCS[i].sta != 0)
+		if(m_pDCP06PomModel->point_OCS[i].sta != 0 ) //&& point_DCS[i].sta != 0)
 			ret++;
 	}
 	return ret;
@@ -143,15 +146,15 @@ short i,ret=0;
 /**************************************************************
 		  check how many points are defined
 ***************************************************************/
-short DCP::DCP05CalcChStC::get_OCS_SCS_points_count(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/)
+short DCP::DCP06CalcChStC::get_OCS_SCS_points_count(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/)
 {
 short i,ret=0;
 
-	for(i=0; i < MAX_POM_POINTS; i++)
+	for(i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
 		//if(point_OCS[i].sta != 0  && point_DCS[i].sta != 0)
-		if((m_pDCP05PomModel->point_OCS[i].sta == 1 ||m_pDCP05PomModel->point_OCS[i].sta == 2)  && 
-			(m_pDCP05PomModel->point_DCS[i].sta == 1 || m_pDCP05PomModel->point_DCS[i].sta == 2))
+		if((m_pDCP06PomModel->point_OCS[i].sta == 1 ||m_pDCP06PomModel->point_OCS[i].sta == 2)  && 
+			(m_pDCP06PomModel->point_DCS[i].sta == 1 || m_pDCP06PomModel->point_DCS[i].sta == 2))
 			ret++;
 	}
 	return ret;
@@ -160,35 +163,35 @@ short i,ret=0;
 /**************************************************************
 		  check how many points are defined
 ***************************************************************/
-short DCP::DCP05CalcChStC::get_min_points_count()
+short DCP::DCP06CalcChStC::get_min_points_count()
 {
 short ret, DOM_ROTATION;
 
 		DOM_ROTATION = get_rotation_status();
 		//ret = (get_LEVELING() == TRUE && DOM_ROTATION == FALSE  && get_HZ_PLANE_ONOFF() == TRUE ? 2: 3);
-		ret = (!DOM_ROTATION  && m_pDCP05Model->dom_hz_plane ? 2: 3);
+		ret = (!DOM_ROTATION  && m_pDCP06Model->dom_hz_plane ? 2: 3);
 		return ret;
 }
 
 
 /************************************************************************
 *************************************************************************/
-short DCP::DCP05CalcChStC::get_rotation_status()
+short DCP::DCP06CalcChStC::get_rotation_status()
 {
 double deg;
 short ACTIVE_PLANE, rotation=false;
 
-		ACTIVE_PLANE = m_pDCP05Model->dom_active_plane; //get_active_plane_dom();
+		ACTIVE_PLANE = m_pDCP06Model->dom_active_plane; //get_active_plane_dom();
 
 		if(ACTIVE_PLANE == XY_PLANE)
 		{
-			deg = m_pDCP05Model->dom_rot_plane_buff.x;//get_x_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.x;//get_x_plane_rot();
 			if(deg != 0.0)
 			{
 			  rotation = true;
 			}
 
-			deg = m_pDCP05Model->dom_rot_plane_buff.y;//get_y_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.y;//get_y_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -196,13 +199,13 @@ short ACTIVE_PLANE, rotation=false;
 		}
 		else if(ACTIVE_PLANE == ZX_PLANE)
 		{
-			deg = m_pDCP05Model->dom_rot_plane_buff.x;//get_x_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.x;//get_x_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
 			}
 
-			deg = m_pDCP05Model->dom_rot_plane_buff.z; //get_z_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.z; //get_z_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -210,13 +213,13 @@ short ACTIVE_PLANE, rotation=false;
 		}
 		else if(ACTIVE_PLANE == YZ_PLANE)
 		{
-			deg = m_pDCP05Model->dom_rot_plane_buff.y; //get_y_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.y; //get_y_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
 			}
 
-			deg = m_pDCP05Model->dom_rot_plane_buff.z;//get_z_plane_rot();
+			deg = m_pDCP06Model->dom_rot_plane_buff.z;//get_z_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -229,7 +232,7 @@ short ACTIVE_PLANE, rotation=false;
 
 /************************************************************************
 *************************************************************************/
-short DCP::DCP05CalcChStC::direction_of_point(short plane,double a[4], double b[4], double (*unit)[4])
+short DCP::DCP06CalcChStC::direction_of_point(short plane,double a[4], double b[4], double (*unit)[4])
 {
 double tmp;
 
@@ -313,7 +316,7 @@ double tmp;
 	Check if rotation has made in DOM
 *************************************************************************/
 
-short DCP::DCP05CalcChStC::calc_transform(
+short DCP::DCP06CalcChStC::calc_transform(
 					
 	
 					/*point_buff_ *point_OCS,		// Object points
@@ -328,23 +331,23 @@ short DCP::DCP05CalcChStC::calc_transform(
 {
 
 	short i, points_defined=0, count,ret;
-double mea[MAX_POM_POINTS*3],nom[MAX_POM_POINTS*3];
+double mea[MAX_BESTFIT_POINTS*3],nom[MAX_BESTFIT_POINTS*3];
 double x[4], xu[4];
 double k[3], par[6],Zdd[6][6], M[3][3];
 double tempx,tempy,tempz;
 short sta_OCS,sta_DCS;
 	
-		DCP05MsgBoxC msgbox;
+		DCP06MsgBoxC msgbox;
 		
 		//active_plane = active_plane_; // 0=Not used 1 = XY etc...
 
 		/**************************************************************
 		  check how many points are defined
 		***************************************************************/
-		for(i=0; i < MAX_POM_POINTS; i++)
+		for(i=0; i < MAX_BESTFIT_POINTS; i++)
 		{
-			sta_OCS = m_pDCP05PomModel->point_OCS[i].sta;
-			sta_DCS = m_pDCP05PomModel->point_DCS[i].sta;
+			sta_OCS = m_pDCP06PomModel->point_OCS[i].sta;
+			sta_DCS = m_pDCP06PomModel->point_DCS[i].sta;
 
 			if((sta_OCS ==1 || sta_OCS == 2) && (sta_DCS ==1 || sta_DCS == 2))
 			// if(point_OCS[i].sta != 0 && point_DCS[i].sta != 0)
@@ -367,7 +370,7 @@ short sta_OCS,sta_DCS;
 		  2 points levelled
 		***************************************************************/
 		/*if(points_defined == 2 && DOM_ROTATION == false
-			&& m_pDCP05Model->dom_hz_plane  && m_pDCP05PomModel->pom_chst != 0)*/
+			&& m_pDCP06Model->dom_hz_plane  && m_pDCP06PomModel->pom_chst != 0)*/
 
 		if(points_defined == 2 && min == 2)
 		{
@@ -380,13 +383,13 @@ short sta_OCS,sta_DCS;
 
 		/*else if(points_defined < 2 &&
 				DOM_ROTATION == false &&
-				m_pDCP05Model->dom_hz_plane && 
-				m_pDCP05PomModel->pom_chst == 1)*/
+				m_pDCP06Model->dom_hz_plane && 
+				m_pDCP06PomModel->pom_chst == 1)*/
 
 		else if(points_defined < 2 && min == 2)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_IN_MIN_2_POINTS_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_IN_MIN_2_POINTS_TOK);
 			msgbox.ShowMessageOk(msg);
 			//msgbox(TXT_NIL_TOKEN,M_IN_MIN_2_POINTS_TOK,MB_OK);
 			return false;
@@ -397,7 +400,7 @@ short sta_OCS,sta_DCS;
 		***************************************************************/
 
 		else if(points_defined == 3 && active_plane != 0) //&& bComp && ret1)
-			//&& m_pDCP05Model->dom_hz_plane && m_pDCP05PomModel->pom_chst != 0) 
+			//&& m_pDCP06Model->dom_hz_plane && m_pDCP06PomModel->pom_chst != 0) 
 		{
 			calculate_3points_levelled(/*point_OCS, point_DCS, ocs_matrix,pom_chst*/);
 		}
@@ -408,8 +411,8 @@ short sta_OCS,sta_DCS;
 		/*
 		else if (points_defined == 3 &&				(
 				 DOM_ROTATION ||
-				 m_pDCP05Model->dom_hz_plane == false  ||
-				 m_pDCP05PomModel->pom_chst == 0))
+				 m_pDCP06Model->dom_hz_plane == false  ||
+				 m_pDCP06PomModel->pom_chst == 0))
 		*/
 		else if (points_defined == 3)
 		
@@ -425,14 +428,14 @@ short sta_OCS,sta_DCS;
 		else if(points_defined < 3 && (
 				
 				DOM_ROTATION ||
-				m_pDCP05Model->dom_hz_plane == false ||
-				m_pDCP05PomModel->pom_chst == 0))
+				m_pDCP06Model->dom_hz_plane == false ||
+				m_pDCP06PomModel->pom_chst == 0))
 		*/
 		else if(points_defined < 3 && min == 3)
 		{
 
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_IN_MIN_3_POINTS_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_IN_MIN_3_POINTS_TOK);
 			msgbox.ShowMessageOk(msg);
 			//msgbox(TXT_NIL_TOKEN,M_IN_MIN_3_POINTS_TOK,MB_OK);
 			return false;
@@ -452,63 +455,62 @@ short sta_OCS,sta_DCS;
 			{
 				count = 0;
 
-				for(i=0; i < MAX_POM_POINTS; i++)
+				for(i=0; i < MAX_BESTFIT_POINTS; i++)
 				{
-					sta_OCS = m_pDCP05PomModel->point_OCS[i].sta;
-					sta_DCS = m_pDCP05PomModel->point_DCS[i].sta;
+					sta_OCS = m_pDCP06PomModel->point_OCS[i].sta;
+					sta_DCS = m_pDCP06PomModel->point_DCS[i].sta;
 
 					if((sta_OCS ==1 || sta_OCS == 2) && (sta_DCS ==1 || sta_DCS == 2))
 
 					// if(point_OCS[i].sta != 0 && point_DCS[i].sta != 0)
 					{
-						mea[count*3+0] = m_pDCP05PomModel->point_DCS[i].x;
-						mea[count*3+1] = m_pDCP05PomModel->point_DCS[i].y;
-						mea[count*3+2] = m_pDCP05PomModel->point_DCS[i].z;
+						mea[count*3+0] = m_pDCP06PomModel->point_DCS[i].x;
+						mea[count*3+1] = m_pDCP06PomModel->point_DCS[i].y;
+						mea[count*3+2] = m_pDCP06PomModel->point_DCS[i].z;
 
-						nom[count*3+0] = m_pDCP05PomModel->point_OCS[i].x;
-						nom[count*3+1] = m_pDCP05PomModel->point_OCS[i].y;
-						nom[count*3+2] = m_pDCP05PomModel->point_OCS[i].z;
+						nom[count*3+0] = m_pDCP06PomModel->point_OCS[i].x;
+						nom[count*3+1] = m_pDCP06PomModel->point_OCS[i].y;
+						nom[count*3+2] = m_pDCP06PomModel->point_OCS[i].z;
 
 						count++;
 					}
 				}
 
 				/****************
-					Calculate
+					Calculate - DCP9 solveRigidTransform (Kabsch)
 				****************/
-								
-				if((ret=CoordTransf6 (nom, mea, points_defined, &par[0], &M[0][0], &k[0], &Zdd[0][0])) == 1)
+				std::vector<DCP9::Geometry::Point> sourcePts, targetPts;
+				for(int idx=0; idx<points_defined; idx++) {
+					sourcePts.push_back(DCP9::Geometry::Point(mea[idx*3+0], mea[idx*3+1], mea[idx*3+2]));
+					targetPts.push_back(DCP9::Geometry::Point(nom[idx*3+0], nom[idx*3+1], nom[idx*3+2]));
+				}
+				auto transformResult = DCP9::Core::Geometry::solveRigidTransform(sourcePts, targetPts, true);
+				ret = transformResult.isValid ? 1 : -1;
+				if(ret == 1)
 				{
-					m_pDCP05PomModel->matrix/*(*ocs_matrix)*/[0][0] = M[0][0]; m_pDCP05PomModel->matrix[0][1] = M[0][1];
-					m_pDCP05PomModel->matrix[0][2] = M[0][2]; m_pDCP05PomModel->matrix[0][3] = k[0];
-
-					m_pDCP05PomModel->matrix[1][0] = M[1][0]; m_pDCP05PomModel->matrix[1][1] = M[1][1];
-					m_pDCP05PomModel->matrix[1][2] = M[1][2]; m_pDCP05PomModel->matrix[1][3] = k[1];
-
-					m_pDCP05PomModel->matrix[2][0] = M[2][0]; m_pDCP05PomModel->matrix[2][1] = M[2][1];
-					m_pDCP05PomModel->matrix[2][2] = M[2][2]; m_pDCP05PomModel->matrix[2][3] = k[2];
-
-					m_pDCP05PomModel->matrix[3][0] = 0; m_pDCP05PomModel->matrix[3][1] = 0;
-					m_pDCP05PomModel->matrix[3][2] = 0;m_pDCP05PomModel->matrix[3][3] = 1;
-
-					m_pDCP05PomModel->ocs_defined = true;
-					//set_ocs_defined(TRUE,pom_chst);
+					const auto& R = transformResult.rotation;
+					const auto& t = transformResult.translation;
+					m_pDCP06PomModel->matrix[0][0]=R(0,0); m_pDCP06PomModel->matrix[0][1]=R(0,1); m_pDCP06PomModel->matrix[0][2]=R(0,2); m_pDCP06PomModel->matrix[0][3]=t(0);
+					m_pDCP06PomModel->matrix[1][0]=R(1,0); m_pDCP06PomModel->matrix[1][1]=R(1,1); m_pDCP06PomModel->matrix[1][2]=R(1,2); m_pDCP06PomModel->matrix[1][3]=t(1);
+					m_pDCP06PomModel->matrix[2][0]=R(2,0); m_pDCP06PomModel->matrix[2][1]=R(2,1); m_pDCP06PomModel->matrix[2][2]=R(2,2); m_pDCP06PomModel->matrix[2][3]=t(2);
+					m_pDCP06PomModel->matrix[3][0]=0; m_pDCP06PomModel->matrix[3][1]=0; m_pDCP06PomModel->matrix[3][2]=0; m_pDCP06PomModel->matrix[3][3]=1;
+					m_pDCP06PomModel->ocs_defined = true;
 				}
 				else if(ret == -1)
 				{
-					m_pDCP05PomModel->ocs_defined = false;	
+					m_pDCP06PomModel->ocs_defined = false;	
 					//set_ocs_defined(FALSE, pom_chst);
 					StringC msg;
-					msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 					msgbox.ShowMessageOk(msg);
 					//msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
 				}
 				else
 				{
-					m_pDCP05PomModel->ocs_defined = false;	
+					m_pDCP06PomModel->ocs_defined = false;	
 					//set_ocs_defined(FALSE,pom_chst);
 					StringC msg;
-					msg.LoadTxt(AT_DCP05,M_DCP_ABORTED_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_ABORTED_TOK);
 					msgbox.ShowMessageOk(msg);
 
 					//msgbox(TXT_NIL_TOKEN, M_ABORTED_TOK,MB_OK);
@@ -516,12 +518,12 @@ short sta_OCS,sta_DCS;
 			}
 			else
 			{
-				m_pDCP05PomModel->ocs_defined = false;	
+				m_pDCP06PomModel->ocs_defined = false;	
 				//set_ocs_defined(FALSE,pom_chst);
 			}
 		}
 
-		if(m_pDCP05PomModel->ocs_defined/*get_ocs_defined(pom_chst) == TRUE*/)
+		if(m_pDCP06PomModel->ocs_defined/*get_ocs_defined(pom_chst) == TRUE*/)
 		{
 			//show_matrix4x4(ocsp_matrix);
 			/*******************************
@@ -537,10 +539,10 @@ short sta_OCS,sta_DCS;
 			*rms_y = 0.0;
 			*rms_z = 0.0;
 			*/
-			for(i=0; i < MAX_POM_POINTS; i++)
+			for(i=0; i < MAX_BESTFIT_POINTS; i++)
 			{
-				sta_OCS = m_pDCP05PomModel->point_OCS[i].sta;
-				sta_DCS = m_pDCP05PomModel->point_DCS[i].sta;
+				sta_OCS = m_pDCP06PomModel->point_OCS[i].sta;
+				sta_DCS = m_pDCP06PomModel->point_DCS[i].sta;
 
 				if((sta_OCS ==1 || sta_OCS == 2) && (sta_DCS ==1 || sta_DCS == 2))
 
@@ -548,21 +550,21 @@ short sta_OCS,sta_DCS;
 				{
 					count++;
 
-					x[0] = m_pDCP05PomModel->point_DCS[i].x;
-					x[1] = m_pDCP05PomModel->point_DCS[i].y;
-					x[2] = m_pDCP05PomModel->point_DCS[i].z;
+					x[0] = m_pDCP06PomModel->point_DCS[i].x;
+					x[1] = m_pDCP06PomModel->point_DCS[i].y;
+					x[2] = m_pDCP06PomModel->point_DCS[i].z;
 					x[3] = 1;
 
-					ptrans(x, &m_pDCP05PomModel->matrix[0], &xu);
+					ptrans(x, &m_pDCP06PomModel->matrix[0], &xu);
 
-					m_pDCP05PomModel->point_RES[i].x = xu[0] - m_pDCP05PomModel->point_OCS[i].x;
-					m_pDCP05PomModel->point_RES[i].y = xu[1] - m_pDCP05PomModel->point_OCS[i].y;
-					m_pDCP05PomModel->point_RES[i].z = xu[2] - m_pDCP05PomModel->point_OCS[i].z;
-					m_pDCP05PomModel->point_RES[i].sta = POINT_DESIGN;
+					m_pDCP06PomModel->point_RES[i].x = xu[0] - m_pDCP06PomModel->point_OCS[i].x;
+					m_pDCP06PomModel->point_RES[i].y = xu[1] - m_pDCP06PomModel->point_OCS[i].y;
+					m_pDCP06PomModel->point_RES[i].z = xu[2] - m_pDCP06PomModel->point_OCS[i].z;
+					m_pDCP06PomModel->point_RES[i].sta = POINT_DESIGN;
 
-					tempx = tempx +(m_pDCP05PomModel->point_RES[i].x * m_pDCP05PomModel->point_RES[i].x);
-					tempy = tempy +(m_pDCP05PomModel->point_RES[i].y * m_pDCP05PomModel->point_RES[i].y);
-					tempz = tempz +(m_pDCP05PomModel->point_RES[i].z * m_pDCP05PomModel->point_RES[i].z);
+					tempx = tempx +(m_pDCP06PomModel->point_RES[i].x * m_pDCP06PomModel->point_RES[i].x);
+					tempy = tempy +(m_pDCP06PomModel->point_RES[i].y * m_pDCP06PomModel->point_RES[i].y);
+					tempz = tempz +(m_pDCP06PomModel->point_RES[i].z * m_pDCP06PomModel->point_RES[i].z);
 				}
 				//else if((sta_OCS == 3 || sta_OCS == 4) && (sta_DCS ==3 || sta_DCS == 4))
 
@@ -572,25 +574,25 @@ short sta_OCS,sta_DCS;
 						 (( sta_OCS == 1 || sta_OCS == 2) && (sta_DCS == 3 || sta_DCS == 4)))	 			
 								
 				{
-					m_pDCP05PomModel->point_RES[i].sta = POINT_DESIGN_REJECTED;
+					m_pDCP06PomModel->point_RES[i].sta = POINT_DESIGN_REJECTED;
 				}
 				else
 				{
-					m_pDCP05PomModel->point_RES[i].sta = POINT_NOT_DEFINED;
+					m_pDCP06PomModel->point_RES[i].sta = POINT_NOT_DEFINED;
 				}
 			}
 
-			m_pDCP05PomModel->rms_x = sqrt(tempx / count);
-			m_pDCP05PomModel->rms_y = sqrt(tempy / count);
-			m_pDCP05PomModel->rms_z = sqrt(tempz / count);
+			m_pDCP06PomModel->rms_x = sqrt(tempx / count);
+			m_pDCP06PomModel->rms_y = sqrt(tempy / count);
+			m_pDCP06PomModel->rms_z = sqrt(tempz / count);
 			/*
 			PrintLn("Rmsx:%*.2f",*rms_x);
 			PrintLn("Rmsy:%*.2f",*rms_y);
 			PrintLn("Rmsz:%*.2f",*rms_z);
 			*/
-			matinv4x4(&m_pDCP05PomModel->matrix[0]/*[0]*/, &m_pDCP05PomModel->inv_matrix);
+			matinv4x4(&m_pDCP06PomModel->matrix[0]/*[0]*/, &m_pDCP06PomModel->inv_matrix);
 
-			if(m_pDCP05PomModel->pom_chst == 0) // POM
+			if(m_pDCP06PomModel->pom_chst == 0) // POM
 			{
 				/*
 				set_ocsp_matrix((*ocs_matrix)[0][0], (*ocs_matrix)[1][0],(*ocs_matrix)[2][0],(*ocs_matrix)[3][0],
@@ -629,7 +631,7 @@ short sta_OCS,sta_DCS;
 
 		// show_values(1,TRUE);
 
-		if(m_pDCP05PomModel->ocs_defined/*get_ocs_defined(pom_chst) == TRUE*/)
+		if(m_pDCP06PomModel->ocs_defined/*get_ocs_defined(pom_chst) == TRUE*/)
 		{
 //				sprintf(msgTxt,"%-s \n\033V %-s %6.1f \n\033V %-s %6.1f \n\033V %-s %6.1f",
 //						   "RMS of Calculation", RMS_X_TEXT, rms_x, RMS_Y_TEXT,rms_y, RMS_Z_TEXT,rms_z);
@@ -644,7 +646,7 @@ short sta_OCS,sta_DCS;
 		   show_matrix4x4(ocs_matrix);
 		}
 */
-		return (m_pDCP05PomModel->ocs_defined/*get_ocs_defined(pom_chst)*/);
+		return (m_pDCP06PomModel->ocs_defined/*get_ocs_defined(pom_chst)*/);
 
 }
 
@@ -652,7 +654,7 @@ short sta_OCS,sta_DCS;
 /************************************************************************
 	3 POINTS, LEVELLED
 *************************************************************************/
-short DCP::DCP05CalcChStC::calculate_3points_levelled(/*point_buff_ *point_OCS,	// Object points
+short DCP::DCP06CalcChStC::calculate_3points_levelled(/*point_buff_ *point_OCS,	// Object points
 								point_buff_ *point_DCS,		// Sensor
 								double (*ocs_matrix)[4][4],
 							    short pom_chst*/)				// 0=Pom 1 = Chst)
@@ -670,20 +672,20 @@ double length;
 short /*active_plane,*/sta_OCS,sta_DCS;
 //double dcs_matrix[4][4];
 				
-			DCP05MsgBoxC msgbox;
+			DCP06MsgBoxC msgbox;
 //			PrintLn("3 points, levelled");
 			
-			//active_plane = m_pDCP05Model->dom_active_plane;//get_active_plane_dom();
+			//active_plane = m_pDCP06Model->dom_active_plane;//get_active_plane_dom();
 
 			/***********************
 				Find defined points
 			************************/
 			count = 0;
 
-			for(i=0; i < MAX_POM_POINTS; i++)
+			for(i=0; i < MAX_BESTFIT_POINTS; i++)
 			{
-				sta_OCS = m_pDCP05PomModel->point_OCS[i].sta;
-				sta_DCS = m_pDCP05PomModel->point_DCS[i].sta;	
+				sta_OCS = m_pDCP06PomModel->point_OCS[i].sta;
+				sta_DCS = m_pDCP06PomModel->point_DCS[i].sta;	
 				
 				if( (sta_OCS== 1 || sta_OCS== 2) && (sta_DCS == 1 || sta_DCS== 2))
 				{
@@ -714,21 +716,21 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 			   1. Calculate
 				use 1 and 2 measured points
 			**************************************/
-			mea1[0] = m_pDCP05PomModel->point_DCS[first].x;
-			mea1[1] = m_pDCP05PomModel->point_DCS[first].y;
-			mea1[2] = m_pDCP05PomModel->point_DCS[first].z;
+			mea1[0] = m_pDCP06PomModel->point_DCS[first].x;
+			mea1[1] = m_pDCP06PomModel->point_DCS[first].y;
+			mea1[2] = m_pDCP06PomModel->point_DCS[first].z;
 
-			nom1[0]	= m_pDCP05PomModel->point_OCS[first].x;
-			nom1[1] = m_pDCP05PomModel->point_OCS[first].y;
-			nom1[2] = m_pDCP05PomModel->point_OCS[first].z;
+			nom1[0]	= m_pDCP06PomModel->point_OCS[first].x;
+			nom1[1] = m_pDCP06PomModel->point_OCS[first].y;
+			nom1[2] = m_pDCP06PomModel->point_OCS[first].z;
 
-			mea2[0] = m_pDCP05PomModel->point_DCS[second].x;
-			mea2[1] = m_pDCP05PomModel->point_DCS[second].y;
-			mea2[2] = m_pDCP05PomModel->point_DCS[second].z;
+			mea2[0] = m_pDCP06PomModel->point_DCS[second].x;
+			mea2[1] = m_pDCP06PomModel->point_DCS[second].y;
+			mea2[2] = m_pDCP06PomModel->point_DCS[second].z;
 
-			nom2[0]	= m_pDCP05PomModel->point_OCS[second].x;
-			nom2[1] = m_pDCP05PomModel->point_OCS[second].y;
-			nom2[2] = m_pDCP05PomModel->point_OCS[second].z;
+			nom2[0]	= m_pDCP06PomModel->point_OCS[second].x;
+			nom2[1] = m_pDCP06PomModel->point_OCS[second].y;
+			nom2[2] = m_pDCP06PomModel->point_OCS[second].z;
 
 			/*********************************************************
 				 SCS
@@ -740,9 +742,9 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 			if(length ==0.0)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
-				m_pDCP05PomModel->ocs_defined = false;
+				m_pDCP06PomModel->ocs_defined = false;
 				//msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
 				
 				//set_ocs_defined(FALSE,pom_chst);
@@ -794,9 +796,9 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 			if(length ==0.0)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
-				m_pDCP05PomModel->ocs_defined = false;
+				m_pDCP06PomModel->ocs_defined = false;
 				return false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
@@ -839,7 +841,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 
 			if(matinv4x4(temp21, &temp21_inv) != -1)
 			{
-				matmul4x4(m_pDCP05Model->dcs_matrix, temp11,&temp31); 		/* dcs_matrix is unitmatrix */
+				matmul4x4(m_pDCP06Model->dcs_matrix, temp11,&temp31); 		/* dcs_matrix is unitmatrix */
 				matmul4x4(temp31, temp21_inv, &ocsp11);
 			}
 
@@ -849,9 +851,9 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 			else
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
-				m_pDCP05PomModel->ocs_defined = false;
+				m_pDCP06PomModel->ocs_defined = false;
 				return false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
@@ -870,21 +872,21 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 				use 1 and 3 measured points
 			**************************************/
 
-			mea1[0] = m_pDCP05PomModel->point_DCS[first].x;
-			mea1[1] = m_pDCP05PomModel->point_DCS[first].y;
-			mea1[2] = m_pDCP05PomModel->point_DCS[first].z;
+			mea1[0] = m_pDCP06PomModel->point_DCS[first].x;
+			mea1[1] = m_pDCP06PomModel->point_DCS[first].y;
+			mea1[2] = m_pDCP06PomModel->point_DCS[first].z;
 
-			nom1[0]	= m_pDCP05PomModel->point_OCS[first].x;
-			nom1[1] = m_pDCP05PomModel->point_OCS[first].y;
-			nom1[2] = m_pDCP05PomModel->point_OCS[first].z;
+			nom1[0]	= m_pDCP06PomModel->point_OCS[first].x;
+			nom1[1] = m_pDCP06PomModel->point_OCS[first].y;
+			nom1[2] = m_pDCP06PomModel->point_OCS[first].z;
 
-			mea2[0] = m_pDCP05PomModel->point_DCS[third].x;
-			mea2[1] = m_pDCP05PomModel->point_DCS[third].y;
-			mea2[2] = m_pDCP05PomModel->point_DCS[third].z;
+			mea2[0] = m_pDCP06PomModel->point_DCS[third].x;
+			mea2[1] = m_pDCP06PomModel->point_DCS[third].y;
+			mea2[2] = m_pDCP06PomModel->point_DCS[third].z;
 
-			nom2[0]	= m_pDCP05PomModel->point_OCS[third].x;
-			nom2[1] = m_pDCP05PomModel->point_OCS[third].y;
-			nom2[2] = m_pDCP05PomModel->point_OCS[third].z;
+			nom2[0]	= m_pDCP06PomModel->point_OCS[third].x;
+			nom2[1] = m_pDCP06PomModel->point_OCS[third].y;
+			nom2[2] = m_pDCP06PomModel->point_OCS[third].z;
 
 			/*********************************************************
 				 SCS
@@ -897,9 +899,9 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 			if(length ==0.0)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
-				m_pDCP05PomModel->ocs_defined = false;
+				m_pDCP06PomModel->ocs_defined = false;
 				return false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
@@ -954,9 +956,9 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 			if(length ==0.0)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
-				m_pDCP05PomModel->ocs_defined = false;
+				m_pDCP06PomModel->ocs_defined = false;
 				return false;
 				/*	
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
@@ -999,7 +1001,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 
 			if(matinv4x4(temp22, &temp22_inv) != -1)
 			{
-				matmul4x4(m_pDCP05Model->dcs_matrix, temp12,&temp32); 		/* dcs_matrix is unitmatrix */
+				matmul4x4(m_pDCP06Model->dcs_matrix, temp12,&temp32); 		/* dcs_matrix is unitmatrix */
 				matmul4x4(temp32, temp22_inv, &ocsp12);
 /*
 				if(SHOW_INFO)
@@ -1009,26 +1011,26 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 */
 				matsum_n(&ocsp11[0][0],4,4, &ocsp12[0][0], &ocsp22[0][0]);
 
-				m_pDCP05PomModel->matrix[0][0] = ocsp22[0][0] / 2;
-				m_pDCP05PomModel->matrix[0][1] = ocsp22[0][1] / 2;
-				m_pDCP05PomModel->matrix[0][2] = ocsp22[0][2] / 2;
-				m_pDCP05PomModel->matrix[0][3] = ocsp22[0][3] / 2;
+				m_pDCP06PomModel->matrix[0][0] = ocsp22[0][0] / 2;
+				m_pDCP06PomModel->matrix[0][1] = ocsp22[0][1] / 2;
+				m_pDCP06PomModel->matrix[0][2] = ocsp22[0][2] / 2;
+				m_pDCP06PomModel->matrix[0][3] = ocsp22[0][3] / 2;
 
-				m_pDCP05PomModel->matrix[1][0] = ocsp22[1][0] / 2;
-				m_pDCP05PomModel->matrix[1][1] = ocsp22[1][1] / 2;
-				m_pDCP05PomModel->matrix[1][2] = ocsp22[1][2] / 2;
-				m_pDCP05PomModel->matrix[1][3] = ocsp22[1][3] / 2;
+				m_pDCP06PomModel->matrix[1][0] = ocsp22[1][0] / 2;
+				m_pDCP06PomModel->matrix[1][1] = ocsp22[1][1] / 2;
+				m_pDCP06PomModel->matrix[1][2] = ocsp22[1][2] / 2;
+				m_pDCP06PomModel->matrix[1][3] = ocsp22[1][3] / 2;
 
-				m_pDCP05PomModel->matrix[2][0] = ocsp22[2][0] / 2;
-				m_pDCP05PomModel->matrix[2][1] = ocsp22[2][1] / 2;
-				m_pDCP05PomModel->matrix[2][2] = ocsp22[2][2] / 2;
-				m_pDCP05PomModel->matrix[2][3] = ocsp22[2][3] / 2;
+				m_pDCP06PomModel->matrix[2][0] = ocsp22[2][0] / 2;
+				m_pDCP06PomModel->matrix[2][1] = ocsp22[2][1] / 2;
+				m_pDCP06PomModel->matrix[2][2] = ocsp22[2][2] / 2;
+				m_pDCP06PomModel->matrix[2][3] = ocsp22[2][3] / 2;
 
-				m_pDCP05PomModel->matrix[3][0] = ocsp22[3][0] / 2;
-				m_pDCP05PomModel->matrix[3][1] = ocsp22[3][1] / 2;
-				m_pDCP05PomModel->matrix[3][2] = ocsp22[3][2] / 2;
-				m_pDCP05PomModel->matrix[3][3] = ocsp22[3][3] / 2;
-				m_pDCP05PomModel->ocs_defined = true;
+				m_pDCP06PomModel->matrix[3][0] = ocsp22[3][0] / 2;
+				m_pDCP06PomModel->matrix[3][1] = ocsp22[3][1] / 2;
+				m_pDCP06PomModel->matrix[3][2] = ocsp22[3][2] / 2;
+				m_pDCP06PomModel->matrix[3][3] = ocsp22[3][3] / 2;
+				m_pDCP06PomModel->ocs_defined = true;
 				//set_ocs_defined(TRUE,pom_chst);
 			}
 
@@ -1038,21 +1040,21 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 			else
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
-				m_pDCP05PomModel->ocs_defined = false;
+				m_pDCP06PomModel->ocs_defined = false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
 				set_ocs_defined(FALSE,pom_chst);
 				*/
 			}
-			return m_pDCP05PomModel->ocs_defined; //get_ocs_defined(pom_chst);
+			return m_pDCP06PomModel->ocs_defined; //get_ocs_defined(pom_chst);
 }
 
 /************************************************************************
 	2 POINTS, LEVELLED
 *************************************************************************/
-short DCP::DCP05CalcChStC::calculate_2points_levelled(/*point_buff_ *point_OCS,		// Object points
+short DCP::DCP06CalcChStC::calculate_2points_levelled(/*point_buff_ *point_OCS,		// Object points
 								point_buff_ *point_DCS,			// Sensor
 							   double (*ocs_matrix)[4][4],		
 							   short pom_chst*/)					// 0=Pom 1 = Chst))
@@ -1067,19 +1069,19 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 double unit[4];
 //double dcs_matrix[4][4];
 
-			DCP05MsgBoxC msgbox;
-			//active_plane = m_pDCP05Model->dom_active_plane;//get_active_plane_dom();
+			DCP06MsgBoxC msgbox;
+			//active_plane = m_pDCP06Model->dom_active_plane;//get_active_plane_dom();
 
 			/************************
 			 find last defined point
 			*************************/
 			count = 0;
 
-			for(i=0; i < MAX_POM_POINTS; i++)
+			for(i=0; i < MAX_BESTFIT_POINTS; i++)
 			{
 					
-				sta_OCS = m_pDCP05PomModel->point_OCS[i].sta;
-				sta_DCS =m_pDCP05PomModel->point_DCS[i].sta;
+				sta_OCS = m_pDCP06PomModel->point_OCS[i].sta;
+				sta_DCS =m_pDCP06PomModel->point_DCS[i].sta;
 
 				if((sta_OCS ==1 || sta_OCS == 2) && (sta_DCS ==1 || sta_DCS == 2))
 				{
@@ -1100,14 +1102,14 @@ double unit[4];
 				/************************
 					set the 3.points values
 				*************************/
-				mea1[0] = m_pDCP05PomModel->point_DCS[first].x;
-				mea2[0] = m_pDCP05PomModel->point_DCS[second].x;
+				mea1[0] = m_pDCP06PomModel->point_DCS[first].x;
+				mea2[0] = m_pDCP06PomModel->point_DCS[second].x;
 
-				mea1[1] = m_pDCP05PomModel->point_DCS[first].y;
-				mea2[1] = m_pDCP05PomModel->point_DCS[second].y;
+				mea1[1] = m_pDCP06PomModel->point_DCS[first].y;
+				mea2[1] = m_pDCP06PomModel->point_DCS[second].y;
 
-				mea1[2] = m_pDCP05PomModel->point_DCS[first].z;
-				mea2[2] = m_pDCP05PomModel->point_DCS[second].z;
+				mea1[2] = m_pDCP06PomModel->point_DCS[first].z;
+				mea2[2] = m_pDCP06PomModel->point_DCS[second].z;
 
 				length = sqrt( ( (mea2[0]- mea1[0])*(mea2[0]- mea1[0]) ) +
 							   ( (mea2[1]- mea1[1])*(mea2[1]- mea1[1]) ) +
@@ -1116,9 +1118,9 @@ double unit[4];
 				if(length ==0.0)
 				{
 					StringC msg;
-					msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 					msgbox.ShowMessageOk(msg);
-					m_pDCP05PomModel->ocs_defined = false;
+					m_pDCP06PomModel->ocs_defined = false;
 					return false;
 					/*
 					msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
@@ -1166,14 +1168,14 @@ double unit[4];
 				/*****************************
 					 OCS
 				******************************/
-				nom1[0] = m_pDCP05PomModel->point_OCS[first].x;
-				nom2[0] = m_pDCP05PomModel->point_OCS[second].x;
+				nom1[0] = m_pDCP06PomModel->point_OCS[first].x;
+				nom2[0] = m_pDCP06PomModel->point_OCS[second].x;
 
-				nom1[1] = m_pDCP05PomModel->point_OCS[first].y;
-				nom2[1] = m_pDCP05PomModel->point_OCS[second].y;
+				nom1[1] = m_pDCP06PomModel->point_OCS[first].y;
+				nom2[1] = m_pDCP06PomModel->point_OCS[second].y;
 
-				nom1[2] = m_pDCP05PomModel->point_OCS[first].z;
-				nom2[2] = m_pDCP05PomModel->point_OCS[second].z;
+				nom1[2] = m_pDCP06PomModel->point_OCS[first].z;
+				nom2[2] = m_pDCP06PomModel->point_OCS[second].z;
 
 				length = sqrt( ( (nom2[0]- nom1[0])*(nom2[0]- nom1[0]) ) +
 							   ( (nom2[1]- nom1[1])*(nom2[1]- nom1[1]) ) +
@@ -1182,9 +1184,9 @@ double unit[4];
 				if(length ==0.0)
 				{
 					StringC msg;
-					msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 					msgbox.ShowMessageOk(msg);
-					m_pDCP05PomModel->ocs_defined = false;
+					m_pDCP06PomModel->ocs_defined = false;
 					return false;
 					//msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
 					//set_ocs_defined(FALSE,pom_chst);
@@ -1233,9 +1235,9 @@ double unit[4];
 
 				if(matinv4x4(temp2, &temp2_inv) != -1)
 				{
-					matmul4x4(m_pDCP05Model->dcs_matrix, temp1,&temp3); 		/* dcs_matrix is unitmatrix */
-					matmul4x4(temp3, temp2_inv, &m_pDCP05PomModel->matrix);
-					m_pDCP05PomModel->ocs_defined = true;
+					matmul4x4(m_pDCP06Model->dcs_matrix, temp1,&temp3); 		/* dcs_matrix is unitmatrix */
+					matmul4x4(temp3, temp2_inv, &m_pDCP06PomModel->matrix);
+					m_pDCP06PomModel->ocs_defined = true;
 					//set_ocs_defined(TRUE,pom_chst);
 				}
 
@@ -1245,22 +1247,22 @@ double unit[4];
 			else
 			{
 					StringC msg;
-					msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 					msgbox.ShowMessageOk(msg);
-					m_pDCP05PomModel->ocs_defined = false;
+					m_pDCP06PomModel->ocs_defined = false;
 				/*
 
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
 				set_ocs_defined(FALSE,pom_chst);
 				*/
 			}
-		return (m_pDCP05PomModel->ocs_defined);
+		return (m_pDCP06PomModel->ocs_defined);
 }
 
 /************************************************************************
 	3 POINTS, NOT LEVELLED
 *************************************************************************/
-short DCP::DCP05CalcChStC::calculate_3points_not_levelled(/*point_buff_ *point_OCS,	// Object points
+short DCP::DCP06CalcChStC::calculate_3points_not_levelled(/*point_buff_ *point_OCS,	// Object points
 									point_buff_ *point_DCS,	// Sensor
 								   double (*ocs_matrix)[4][4],		
 								   short pom_chst*/)	// 0=Pom 1 = Chst))
@@ -1278,10 +1280,10 @@ double temp3[4][4];
 		//	PrintLn("3 points not levelled ");
 			count = 0;
 
-			for(i=0; i < MAX_POM_POINTS; i++)
+			for(i=0; i < MAX_BESTFIT_POINTS; i++)
 			{
-				sta_OCS =m_pDCP05PomModel->point_OCS[i].sta;
-				sta_DCS =m_pDCP05PomModel->point_DCS[i].sta;
+				sta_OCS =m_pDCP06PomModel->point_OCS[i].sta;
+				sta_DCS =m_pDCP06PomModel->point_DCS[i].sta;
 
 				if((sta_OCS ==1 || sta_OCS == 2) && (sta_DCS ==1 || sta_DCS == 2))
 
@@ -1291,35 +1293,35 @@ double temp3[4][4];
 
 					if(count ==1)
 					{
-						mea1[0] = m_pDCP05PomModel->point_DCS[i].x;
-						mea1[1] = m_pDCP05PomModel->point_DCS[i].y;
-						mea1[2] = m_pDCP05PomModel->point_DCS[i].z;
+						mea1[0] = m_pDCP06PomModel->point_DCS[i].x;
+						mea1[1] = m_pDCP06PomModel->point_DCS[i].y;
+						mea1[2] = m_pDCP06PomModel->point_DCS[i].z;
 
-						nom1[0]	= m_pDCP05PomModel->point_OCS[i].x;
-						nom1[1] = m_pDCP05PomModel->point_OCS[i].y;
-						nom1[2] = m_pDCP05PomModel->point_OCS[i].z;
+						nom1[0]	= m_pDCP06PomModel->point_OCS[i].x;
+						nom1[1] = m_pDCP06PomModel->point_OCS[i].y;
+						nom1[2] = m_pDCP06PomModel->point_OCS[i].z;
 					}
 
 					else if(count ==2)
 					{
-						mea2[0] = m_pDCP05PomModel->point_DCS[i].x;
-						mea2[1] = m_pDCP05PomModel->point_DCS[i].y;
-						mea2[2] = m_pDCP05PomModel->point_DCS[i].z;
+						mea2[0] = m_pDCP06PomModel->point_DCS[i].x;
+						mea2[1] = m_pDCP06PomModel->point_DCS[i].y;
+						mea2[2] = m_pDCP06PomModel->point_DCS[i].z;
 
-						nom2[0]	= m_pDCP05PomModel->point_OCS[i].x;
-						nom2[1] = m_pDCP05PomModel->point_OCS[i].y;
-						nom2[2] = m_pDCP05PomModel->point_OCS[i].z;
+						nom2[0]	= m_pDCP06PomModel->point_OCS[i].x;
+						nom2[1] = m_pDCP06PomModel->point_OCS[i].y;
+						nom2[2] = m_pDCP06PomModel->point_OCS[i].z;
 					}
 
 					else if(count ==3)
 					{
-						mea3[0] = m_pDCP05PomModel->point_DCS[i].x;
-						mea3[1] = m_pDCP05PomModel->point_DCS[i].y;
-						mea3[2] = m_pDCP05PomModel->point_DCS[i].z;
+						mea3[0] = m_pDCP06PomModel->point_DCS[i].x;
+						mea3[1] = m_pDCP06PomModel->point_DCS[i].y;
+						mea3[2] = m_pDCP06PomModel->point_DCS[i].z;
 
-						nom3[0]	= m_pDCP05PomModel->point_OCS[i].x;
-						nom3[1] = m_pDCP05PomModel->point_OCS[i].y;
-						nom3[2] = m_pDCP05PomModel->point_OCS[i].z;
+						nom3[0]	= m_pDCP06PomModel->point_OCS[i].x;
+						nom3[1] = m_pDCP06PomModel->point_OCS[i].y;
+						nom3[2] = m_pDCP06PomModel->point_OCS[i].z;
 						break;
 					}
 				}
@@ -1335,9 +1337,9 @@ double temp3[4][4];
 			{
 				//get_dcs_table(&dcs_matrix);
 
-				matmul4x4(m_pDCP05Model->dcs_matrix, temp1,&temp3); 		/* dcs_matrix is unitmatrix */
-				matmul4x4(temp3, temp2_inv, &m_pDCP05PomModel->matrix);
-				m_pDCP05PomModel->ocs_defined = true;
+				matmul4x4(m_pDCP06Model->dcs_matrix, temp1,&temp3); 		/* dcs_matrix is unitmatrix */
+				matmul4x4(temp3, temp2_inv, &m_pDCP06PomModel->matrix);
+				m_pDCP06PomModel->ocs_defined = true;
 				//set_ocs_defined(TRUE,pom_chst);
 			}
 
@@ -1347,13 +1349,13 @@ double temp3[4][4];
 			else
 			{
 
-				m_pDCP05PomModel->ocs_defined = false;
+				m_pDCP06PomModel->ocs_defined = false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);	
 				set_ocs_defined(FALSE,pom_chst);
 				*/
 			}
-			return m_pDCP05PomModel->ocs_defined; //(get_ocs_defined(pom_chst));
+			return m_pDCP06PomModel->ocs_defined; //(get_ocs_defined(pom_chst));
 }
 
 

@@ -46,18 +46,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05DefineLineUserDefDlgC;
-	class DCP05DefineLineUserDefModelC;
+    class DCP06ModelC;
+	class DCP06DefineLineUserDefDlgC;
+	class DCP06DefineLineUserDefModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05DefineLineUserDefControllerC : public GUI::ControllerC
+    class DCP06DefineLineUserDefControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05DefineLineUserDefControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05DefineLineUserDefControllerC();
+            DCP06DefineLineUserDefControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06DefineLineUserDefControllerC();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -78,26 +78,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05DefineLineUserDefControllerC( const DCP05DefineLineUserDefControllerC& oDCP05DefineLineUserDefController )
+            DCP06DefineLineUserDefControllerC( const DCP06DefineLineUserDefControllerC& oDCP06DefineLineUserDefController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05DefineLineUserDefControllerC& operator=( const DCP05DefineLineUserDefControllerC& oDCP05DefineLineController )
+            DCP06DefineLineUserDefControllerC& operator=( const DCP06DefineLineUserDefControllerC& oDCP06DefineLineController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05DefineLineUserDefDlgC* m_pDlg;
-			DCP05ModelC* m_pDCP05Model;
+            DCP06DefineLineUserDefDlgC* m_pDlg;
+			DCP06ModelC* m_pDCP06Model;
 			
     };
 
 
-    class DCP05DefineLineUserDefDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class DCP06DefineLineUserDefDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -113,10 +113,10 @@ namespace DCP
 				*/
 			};
 
-		   DCP05DefineLineUserDefDlgC(DCP05ModelC* pDCP05Model);
+		   DCP06DefineLineUserDefDlgC(DCP06ModelC* pDCP06Model);
 
             // Description: Destructor
-            virtual ~DCP05DefineLineUserDefDlgC();
+            virtual ~DCP06DefineLineUserDefDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -130,7 +130,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05DefineLineUserDefModelC* GetDataModel() const;
+            DCP06DefineLineUserDefModelC* GetDataModel() const;
 			virtual void RefreshControls();
 
 			virtual void delete_line();
@@ -145,7 +145,7 @@ namespace DCP
 			GUI::TextCtrlC* m_pLinePoints; 
 			GUI::TextCtrlC* m_pPoints; 
 
-			DCP05ModelC* m_pDCP05Model;
+			DCP06ModelC* m_pDCP06Model;
 			// Description: add all controls
             
 
@@ -158,19 +158,19 @@ namespace DCP
 			StringC m_strZLine;
 	};
 	
-    class DCP05DefineLineUserDefModelC : public GUI::ModelC
+    class DCP06DefineLineUserDefModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05DefineLineUserDefModelC();
+            DCP06DefineLineUserDefModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05DefineLineUserDefModelC();
+            virtual ~DCP06DefineLineUserDefModelC();
 			
-			DCP05DefineLineModelC* lineModel;
+			DCP06DefineLineModelC* lineModel;
 
 			S_POINT_BUFF userdef_measured_points[MAX_USERDEF_POINTS];
 			short userdef_line_points_no[20];

@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP05ModelC;
-	class DCP05SelectToolDlgC;
-	class DCP05SelectToolModelC;
+    class DCP06ModelC;
+	class DCP06SelectToolDlgC;
+	class DCP06SelectToolModelC;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05SelectToolControllerC : public GUI::ControllerC
+    class DCP06SelectToolControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05SelectToolControllerC();
-			~DCP05SelectToolControllerC();
+            DCP06SelectToolControllerC();
+			~DCP06SelectToolControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -82,24 +82,24 @@ namespace DCP
 
 			// Description: Copy constructor
             // Remarks    : not implemented
-            DCP05SelectToolControllerC( const DCP05SelectToolControllerC& oDCP05SelectToolController )
+            DCP06SelectToolControllerC( const DCP06SelectToolControllerC& oDCP05SelectToolController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05SelectToolControllerC& operator=( const DCP05SelectToolControllerC& oDCP05SelectToolController )
+            DCP06SelectToolControllerC& operator=( const DCP06SelectToolControllerC& oDCP05SelectToolController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05SelectToolDlgC* m_pDlg;
+            DCP06SelectToolDlgC* m_pDlg;
     };
 
 
-    class DCP05SelectToolDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC
+    class DCP06SelectToolDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC
 	{
 	 public:
 
@@ -115,10 +115,10 @@ namespace DCP
 				CI_No = 1
 			};
 
-		   DCP05SelectToolDlgC();
+		   DCP06SelectToolDlgC();
 
             // Description: Destructor
-            virtual ~DCP05SelectToolDlgC();
+            virtual ~DCP06SelectToolDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -131,7 +131,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP05SelectToolModelC* GetDataModel() const;
+            DCP06SelectToolModelC* GetDataModel() const;
 
 		protected:
 			
@@ -144,17 +144,17 @@ namespace DCP
 	};
 
 	//              
-    class DCP05SelectToolModelC : public GUI::ModelC
+    class DCP06SelectToolModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05SelectToolModelC();
+            DCP06SelectToolModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05SelectToolModelC();
+            virtual ~DCP06SelectToolModelC();
 			
 			S_TOOL* tool_table;
 			short m_iCounts;

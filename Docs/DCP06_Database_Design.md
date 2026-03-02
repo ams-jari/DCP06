@@ -18,6 +18,8 @@
 
 | Principle | Rationale |
 |-----------|-----------|
+| **Database is primary** | The database (JSON jobs) stores full object/point information. It is the single source of truth. |
+| **ADF only for import/export** | ADF is used solely for: (1) Import from legacy DCP05 ADF files, (2) Export to ADF when user requests. No ADF as runtime storage. |
 | **Same interface** | DCP06 and DCP9 both implement the same `IDatabase`-style API so fixes and features propagate cleanly. |
 | **Same data types** | `DatabaseTypes` (PointData, JobData, alignments) should be structurally identical; only container types differ (Qt vs STL). |
 | **Backend-agnostic** | `IDatabase` abstracts storage; DCP9 uses JSON, DCP06 may use JSON or SQLite. Both behave the same. |
@@ -134,7 +136,22 @@ exportToTXT(path) -> bool
 | 1.3 | Create `src/database/JsonDatabase.cpp` — JSON backend using nlohmann/json, `std::fstream` | Done |
 | 1.4 | Storage: `setDataDirectory()` — use `%APPDATA%\A.M.S\DCP06\jobs\` on CS35, Captivate path on instrument | Done |
 
-### Phase 2: ADF Compatibility
+### Phase 2a: Model Integration + ADF Bridge ✅ (March 2025)
+
+| Step | Action | Status |
+|------|--------|--------|
+| 2a.1 | Add `m_pDatabase` (JsonDatabase) to `DCP05ModelC` | Done |
+| 2a.2 | `GetDatabase()`, `SetDatabaseDataDirectory()` | Done |
+| 2a.3 | Data directory from `CPI::SensorC::GetPath` + `/DCP06/jobs` | Done |
+| 2a.4 | **DB-primary:** Open lists jobs from DB, load job → export to work ADF → setFile | Done |
+| 2a.5 | **DB-primary:** New creates job in DB, `create_adf_file_at_path` in `.work/` | Done |
+| 2a.6 | **DB-primary:** Copy uses `copyJob` in DB, load new job | Done |
+| 2a.7 | **DB-primary:** Save (Shift-F3) — working ADF → importFromADF → saveJob | Done |
+| 2a.8 | **Import (Shift-F1):** ADF file → importFromADF → create job → save → open | Done |
+| 2a.9 | **Export (Shift-F4):** DB → exportToADF to `*_export.adf` | Done |
+| 2a.10 | Terminology doc — DCP9 terms (321, BestFit, Cylinder, Change Station) | See `DCP06_Terminology.md` |
+
+### Phase 2: ADF Compatibility (remaining)
 
 | Step | Action |
 |------|--------|
@@ -143,11 +160,11 @@ exportToTXT(path) -> bool
 | 2.3 | Align DCP9 ADF format with DCP05 expectations; document differences if any |
 | 2.4 | Add round-trip tests: DCP05 ADF → import → export → compare |
 
-### Phase 3: Model Integration
+### Phase 3: Model Integration (remaining)
 
 | Step | Action |
 |------|--------|
-| 3.1 | Add `IDatabase*` (or `std::unique_ptr<IDatabase>`) to `DCP05ModelC` (or new `DCP06ModelC`) |
+| 3.1 | Add `IDatabase*` (or `std::unique_ptr<IDatabase>`) to `DCP05ModelC` — ✅ Done in Phase 2a |
 | 3.2 | Replace direct `AdfFileFunc` usage for active session with `IDatabase` calls |
 | 3.3 | Keep `AdfFileFunc` for legacy open/save flows initially; migrate gradually |
 | 3.4 | Job management: create, load, save, delete, copy — wired to database |

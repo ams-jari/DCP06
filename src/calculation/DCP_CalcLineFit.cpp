@@ -29,7 +29,7 @@
 #include <dcp06/calculation/DCP_CalcLineFit.hpp>
 #include <dcp06/calculation/DCP_CalcPlane.hpp>
 #include <dcp06/calculation/DCP_CalcLine.hpp>
-#include <dcp06/calculation/DCP_CalcDom.hpp>
+#include <dcp06/calculation/DCP_Calc321.hpp>
 #include <dcp06/core/DCP_Common.hpp>
 #include <dcp06/core/DCP_Model.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
@@ -55,7 +55,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP05InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -69,12 +69,12 @@
 
 // USER DIALOG
 
-DCP::DCP05CalcLineFitC::DCP05CalcLineFitC(DCP05ModelC* pDCP05Model) : m_pDCP05Model(pDCP05Model) 
+DCP::DCP06CalcLineFitC::DCP06CalcLineFitC(DCP06ModelC* pDCP06Model) : m_pDCP06Model(pDCP06Model) 
 {
-		common = new DCP05CommonC(pDCP05Model);
+		common = new DCP06CommonC(pDCP06Model);
 }
 // ****************************************************************************************
-DCP::DCP05CalcLineFitC::~DCP05CalcLineFitC()
+DCP::DCP06CalcLineFitC::~DCP06CalcLineFitC()
 {
 	if(common != 0)
 	{
@@ -83,9 +83,9 @@ DCP::DCP05CalcLineFitC::~DCP05CalcLineFitC()
 	}
 }
 
-short DCP::DCP05CalcLineFitC::CalcLineFitDom(DCP05DomModelC* domModel, S_LINE_BUFF* line_buff, int refLine)
+short DCP::DCP06CalcLineFitC::CalcLineFitDom(DCP06DomModelC* domModel, S_LINE_BUFF* line_buff, int refLine)
 {
-DCP05MsgBoxC msgbox;
+DCP06MsgBoxC msgbox;
 
 	domModel->calculated = 0;
 
@@ -141,11 +141,11 @@ DCP05MsgBoxC msgbox;
 		domModel->dom_line_buff[0].points[1].sta = 1;
 		
 		// laske suora uudestaan
-		DCP05CalcLineC calcLine;
+		DCP06CalcLineC calcLine;
 		calcLine.calc(&domModel->dom_line_buff[0], ACTUAL);
 	}
 
-	DCP05CalcDomC calc_dom(domModel);
+	DCP06CalcDomC calc_dom(domModel);
 	if(!calc_dom.calc(false))
 	{
 		GUI::DesktopC::Instance()->MessageShow(L"Calculation LineFit/Dom error!");
@@ -160,7 +160,7 @@ DCP05MsgBoxC msgbox;
 	return 1;
 }
 
-void DCP::DCP05CalcLineFitC::delete_dom_values(DCP05DomModelC* domModel)
+void DCP::DCP06CalcLineFitC::delete_dom_values(DCP06DomModelC* domModel)
 {
 	// delete old values
 	domModel->ocsd_defined = false;
@@ -178,7 +178,7 @@ void DCP::DCP05CalcLineFitC::delete_dom_values(DCP05DomModelC* domModel)
 }
 
 // ****************************************************************************************
-short DCP::DCP05CalcLineFitC::CalcAllPoints(S_LINE_BUFF* line_buff,
+short DCP::DCP06CalcLineFitC::CalcAllPoints(S_LINE_BUFF* line_buff,
 								 S_POINT_BUFF* points,	
 								 S_LINE_FITTING_RESULTS* results,
  								 double manualHeight,
@@ -186,7 +186,7 @@ short DCP::DCP05CalcLineFitC::CalcAllPoints(S_LINE_BUFF* line_buff,
 								double rotateAngle,
 								int selectedHeight,
 								int selectedShift,
-								int selectedRotate,DCP05DomModelC* domModel,
+								int selectedRotate,DCP06DomModelC* domModel,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* points_in_line,
 								int selectedRefLine)
@@ -208,7 +208,7 @@ short DCP::DCP05CalcLineFitC::CalcAllPoints(S_LINE_BUFF* line_buff,
 }
 
 // ****************************************************************************************
-short DCP::DCP05CalcLineFitC::CalcPoint(short index, 
+short DCP::DCP06CalcLineFitC::CalcPoint(short index, 
 								  S_LINE_BUFF* line_buff,
 								 S_POINT_BUFF* points,	
 								 S_LINE_FITTING_RESULTS* results,
@@ -218,7 +218,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 								int selectedHeight,
 								int selectedShift,
 								int selectedRotate,
-								DCP05DomModelC* domModel,
+								DCP06DomModelC* domModel,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* points_in_line,
 								int selectedRefLine)
@@ -283,7 +283,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 		// move this later
 		if(selectedRefLine == REF_LINE_HORIZONTAL)
 		{
-			// siirretäänkö linjaa oikealle y+
+			// siirretï¿½ï¿½nkï¿½ linjaa oikealle y+
 			if(selectedShift == SHIFT_RIGHT)
 			{
 				for(int i=0; i < lastPoint; i++)
@@ -291,7 +291,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 					line_ocs[0].points[i].y -= shiftValue;
 				}
 			}
-			// siirretäänkö linjaa vasemmalle y-
+			// siirretï¿½ï¿½nkï¿½ linjaa vasemmalle y-
 			else if(selectedShift == SHIFT_LEFT)
 			{
 				for(int i=0; i < lastPoint; i++)
@@ -299,7 +299,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 					line_ocs[0].points[i].y += shiftValue;
 				}
 			}
-			// siirretäänkö linjaa ylös z+
+			// siirretï¿½ï¿½nkï¿½ linjaa ylï¿½s z+
 			else if(selectedShift == SHIFT_UP)
 			{
 				for(int i=0; i < lastPoint; i++)
@@ -307,7 +307,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 					line_ocs[0].points[i].z += shiftValue;
 				}
 			}
-			// siirretäänkö linjaa alas z-
+			// siirretï¿½ï¿½nkï¿½ linjaa alas z-
 			else if(selectedShift == SHIFT_DOWN)
 			{
 				for(int i=0; i < lastPoint; i++)
@@ -316,7 +316,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 		}
 		else
 		{
-			// siirretäänkö linjaa oikealle y+
+			// siirretï¿½ï¿½nkï¿½ linjaa oikealle y+
 			if(selectedShift == SHIFT_RIGHT)
 			{
 				for(int i=0; i < lastPoint; i++)
@@ -324,7 +324,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 					line_ocs[0].points[i].y -= shiftValue;
 				}
 			}
-			// siirretäänkö linjaa vasemmalle y-
+			// siirretï¿½ï¿½nkï¿½ linjaa vasemmalle y-
 			else if(selectedShift == SHIFT_LEFT)
 			{
 				for(int i=0; i < lastPoint; i++)
@@ -332,7 +332,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 					line_ocs[0].points[i].y += shiftValue;
 				}
 			}
-			// siirretäänkö linjaa ylös z+
+			// siirretï¿½ï¿½nkï¿½ linjaa ylï¿½s z+
 			else if(selectedShift == SHIFT_FORWARD)
 			{
 				for(int i=0; i < lastPoint; i++)
@@ -340,7 +340,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 					line_ocs[0].points[i].x += shiftValue;
 				}
 			}
-			// siirretäänkö linjaa alas z-
+			// siirretï¿½ï¿½nkï¿½ linjaa alas z-
 			else if(selectedShift == SHIFT_BACKWARD)
 			{
 				for(int i=0; i < lastPoint; i++)
@@ -375,7 +375,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 					line_ocs[0].points[i].z = z_new;
 				}
 			}
-			// muunna pisteet y akselin ympäri
+			// muunna pisteet y akselin ympï¿½ri
 			else if(selectedRotate == ROTATE_VERTICAL)
 			{
 					double x_orig = line_ocs[0].points[0].x;
@@ -427,7 +427,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 					line_ocs[0].points[i].z = z_new;
 				}
 			}
-			// muunna pisteet y akselin ympäri
+			// muunna pisteet y akselin ympï¿½ri
 			else if(selectedRotate == ROTATE_VERTICAL_DEPTH)
 			{
 					double x_orig = line_ocs[0].points[0].x;
@@ -474,7 +474,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 	
 
 		// ja laske line
-		DCP05CalcLineC calcLine;
+		DCP06CalcLineC calcLine;
 		if(!calcLine.calc(&line_ocs[0], ACTUAL))
 			return 0;
 		
@@ -485,7 +485,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 		double zDiff = 0.0;
 
 		
-		// distance from line to point ALKUPERÄINEN LINE
+		// distance from line to point ALKUPERï¿½INEN LINE
 		struct ams_vector m;
 		struct ams_vector dest_point;
 		struct ams_vector dest_point_hz;
@@ -505,13 +505,13 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 		wline.uy = line_ocs[0].uy;
 		wline.uz = line_ocs[0].uz;
 
-		// mitatun pisteen etäisyys suorasta, palauttaa lasketun pisteen suoralle ja etäisyyden
+		// mitatun pisteen etï¿½isyys suorasta, palauttaa lasketun pisteen suoralle ja etï¿½isyyden
 		dist = calc_point_dist_from_line2(&m, &wline, &dest_point);
 		points_in_line[index].x = dest_point.x;
 		points_in_line[index].y = dest_point.y;
 		points_in_line[index].z = dest_point.z;
 
-		// laske pisteen etäisyys suorasta hz-tasossa
+		// laske pisteen etï¿½isyys suorasta hz-tasossa
 		if(selectedRefLine == REF_LINE_HORIZONTAL)
 		{
 			m.x = p_ocs[0];//points[index].x;
@@ -547,7 +547,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 
 		//convert_point_to_ocs(p_in, domModel, &p_ocs_line);
 
-		// lasketaan shiftattu linepisteeen etäisyys mitatuun pisteeseen
+		// lasketaan shiftattu linepisteeen etï¿½isyys mitatuun pisteeseen
 		//ams_vector dest_point_ocs;
 		//ams_vector mea_point_ocs;
 		
@@ -586,7 +586,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 		//results[index].line_offset = dest_point.y - p_ocs[1];//p_ocs[1] - dest_point.y;//p_ocs_line[1];
 		results[index].line_offset = temp < 0.0 ? -offset : offset;
 
-		// ja etäisyys 1. pisteestä
+		// ja etï¿½isyys 1. pisteestï¿½
 		double dist1;
 		m.x = line_ocs[0].points[0].x;
 		m.y = line_ocs[0].points[0].y;
@@ -652,7 +652,7 @@ short DCP::DCP05CalcLineFitC::CalcPoint(short index,
 	return 1;
 }
 
-short DCP::DCP05CalcLineFitC::convert_point_to_ocs(double p_in[4], DCP05DomModelC* domModel, double (*p_out)[4])
+short DCP::DCP06CalcLineFitC::convert_point_to_ocs(double p_in[4], DCP06DomModelC* domModel, double (*p_out)[4])
 {
 	double x[4];
 	double xu[4];
@@ -671,7 +671,7 @@ short DCP::DCP05CalcLineFitC::convert_point_to_ocs(double p_in[4], DCP05DomModel
 		return 1;
 }
 
-short DCP::DCP05CalcLineFitC::convert_point_to_scs(double p_in[4], DCP05DomModelC* domModel, double (*p_out)[4])
+short DCP::DCP06CalcLineFitC::convert_point_to_scs(double p_in[4], DCP06DomModelC* domModel, double (*p_out)[4])
 {
 	double x[4];
 	double xu[4];
@@ -691,7 +691,7 @@ short DCP::DCP05CalcLineFitC::convert_point_to_scs(double p_in[4], DCP05DomModel
 }
 
 //double v[4],double a[4][4], double (*w)[4])
-short DCP::DCP05CalcLineFitC::convert_point_to_ocs(S_POINT_BUFF* points, short index, DCP05DomModelC* domModel, double (*p_out)[4])
+short DCP::DCP06CalcLineFitC::convert_point_to_ocs(S_POINT_BUFF* points, short index, DCP06DomModelC* domModel, double (*p_out)[4])
 {
 
 	double x[4];
@@ -716,14 +716,14 @@ short DCP::DCP05CalcLineFitC::convert_point_to_ocs(S_POINT_BUFF* points, short i
 		
 }
 // ================================================================================================
-short DCP::DCP05CalcLineFitC::set_hz_plane1(DCP05DomModelC* domModel,short actualdesign)
+short DCP::DCP06CalcLineFitC::set_hz_plane1(DCP06DomModelC* domModel,short actualdesign)
 {
 short dist_count,ret;
 
 ret = false;
 	
-	//DCP05CommonC common(m_pDCP05Model);
-	DCP05MsgBoxC msgbox;
+	//DCP06CommonC common(m_pDCP06Model);
+	DCP06MsgBoxC msgbox;
 
 	dist_count = common->points_count_in_plane(&domModel->dom_hz_plane_buff[0]);
 	
@@ -769,7 +769,7 @@ ret = false;
 				domModel->dom_hz_plane = false;
 			
 			//else if(display == DLG_DOMUSER)
-			//	GetDCP05Model()->hz_plane = false;
+			//	GetDCP06Model()->hz_plane = false;
 		}
 	 }
 	 else
@@ -780,16 +780,16 @@ ret = false;
 	return ret;
 }
 
-short DCP::DCP05CalcLineFitC::calc_plane(S_PLANE_BUFF *plane, short actdes)
+short DCP::DCP06CalcLineFitC::calc_plane(S_PLANE_BUFF *plane, short actdes)
 {
-	DCP05CalcPlaneC calcplane;
+	DCP06CalcPlaneC calcplane;
 
 	return calcplane.calc(plane,actdes);
 
 }
 
 // ================================================================================================
-short DCP::DCP05CalcLineFitC::set_horizontal_plane(DCP05DomModelC* domModel/*plane_buff_ *planes, short DISPLAY, short PLANE_TYPE*/)
+short DCP::DCP06CalcLineFitC::set_horizontal_plane(DCP06DomModelC* domModel/*plane_buff_ *planes, short DISPLAY, short PLANE_TYPE*/)
 {
 short points;
 short ret;
@@ -797,7 +797,7 @@ short ret;
 	ret = false;
 	points  = 0;	
 
-	//DCP05CommonC common(m_pDCP05Model);//(/*m_pDCP05Model*/);
+	//DCP06CommonC common(m_pDCP06Model);//(/*m_pDCP06Model*/);
 
 	points = common->points_count_in_plane(&domModel->dom_hz_plane_buff[0]);
 

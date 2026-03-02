@@ -43,20 +43,20 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP05ModelC;
-	class DCP05HomePointsDlgC;
-	class DCP05HomePointsModelC;
-	class DCP05SelectCoordinateSystemC;
+	class DCP06ModelC;
+	class DCP06HomePointsDlgC;
+	class DCP06HomePointsModelC;
+	class DCP06SelectCoordinateSystemC;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP05HomePointsControllerC : public GUI::ControllerC
+    class DCP06HomePointsControllerC : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP05HomePointsControllerC(DCP05ModelC* pDCP05Model);
-			~DCP05HomePointsControllerC();
+            DCP06HomePointsControllerC(DCP06ModelC* pDCP06Model);
+			~DCP06HomePointsControllerC();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -84,27 +84,27 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP05HomePointsControllerC( const DCP05HomePointsControllerC& oDCP05HomePointsController )
+            DCP06HomePointsControllerC( const DCP06HomePointsControllerC& oDCP05HomePointsController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP05HomePointsControllerC& operator=( const DCP05HomePointsControllerC& oDCP05HomePointsController )
+            DCP06HomePointsControllerC& operator=( const DCP06HomePointsControllerC& oDCP05HomePointsController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP05HomePointsDlgC* m_pDlg;
-			DCP05HomePointsModelC* m_pDataModel;
-			DCP05ModelC* m_pDCP05Model;
-			DCP05CommonC* m_pCommon;
+            DCP06HomePointsDlgC* m_pDlg;
+			DCP06HomePointsModelC* m_pDataModel;
+			DCP06ModelC* m_pDCP06Model;
+			DCP06CommonC* m_pCommon;
     };
 
 
-	class DCP05HomePointsDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC
+	class DCP06HomePointsDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -126,10 +126,10 @@ namespace DCP
 			};
 
 
-		   DCP05HomePointsDlgC(DCP05HomePointsModelC* pHomePointsModel);
+		   DCP06HomePointsDlgC(DCP06HomePointsModelC* pHomePointsModel);
 
             // Description: Destructor
-            virtual ~DCP05HomePointsDlgC();
+            virtual ~DCP06HomePointsDlgC();
 
 			virtual void OnInitDialog(void);
 
@@ -141,7 +141,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05ModelC* GetDCP05Model() const;
+			DCP06ModelC* GetDCP06Model() const;
 
 			short get_selected_id();
 
@@ -157,11 +157,11 @@ namespace DCP
 			StringC sOCS;
 	private:
 			
-			DCP05HomePointsModelC* m_pDataModel;
+			DCP06HomePointsModelC* m_pDataModel;
 	};
 
 	
-	class DCP05SelectCoordinateSystemC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class DCP06SelectCoordinateSystemC:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 			enum eCtrlId
@@ -171,10 +171,10 @@ namespace DCP
 				eLineInfo3
 			};
 		
-		   DCP05SelectCoordinateSystemC();
+		   DCP06SelectCoordinateSystemC();
 			
             // Description: Destructor
-            virtual ~DCP05SelectCoordinateSystemC();
+            virtual ~DCP06SelectCoordinateSystemC();
 
 			virtual void OnInitDialog(void);
 			virtual void OnDialogActivated();
@@ -187,7 +187,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP05ModelC* GetDCP05Model() const;
+			DCP06ModelC* GetDCP06Model() const;
 
 			short get_selected_id();
 
@@ -200,17 +200,17 @@ namespace DCP
 			short m_iSelected;
 	};
 
-    class DCP05HomePointsModelC : public GUI::ModelC
+    class DCP06HomePointsModelC : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP05HomePointsModelC();
+            DCP06HomePointsModelC();
 
             // Description: Destructor
             //
-            virtual ~DCP05HomePointsModelC();
+            virtual ~DCP06HomePointsModelC();
 			
 			S_POINT_BUFF home_points[MAX_HOME_POINTS];
 			short iOldActiveCds;
