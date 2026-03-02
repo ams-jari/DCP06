@@ -1,5 +1,5 @@
 # Update vcxproj paths for Option B structure
-$vcxproj = Join-Path (Split-Path -Parent $PSScriptRoot) "Project\MSVS\DCP06-CS.vcxproj"
+$vcxproj = Join-Path (Split-Path -Parent $PSScriptRoot) "Project\MSVS\DCP06-VS2022.vcxproj"
 $content = Get-Content $vcxproj -Raw
 
 $srcMap = @{
@@ -149,4 +149,4 @@ foreach ($hdr in $hdrToDomain.Keys) {
 }
 
 Set-Content $vcxproj -Value $content -NoNewline
-Write-Host "Updated DCP06-CS.vcxproj"
+Write-Host "Updated DCP06-VS2022.vcxproj"

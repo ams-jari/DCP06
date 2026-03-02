@@ -2,12 +2,12 @@ DCP06 Project - Solution and Platform Mapping
 =============================================
 
 MS60/TS16/CS20 (Visual Studio 2008)
-	DCP06.sln / DCP06.vcproj 
+	DCP06-VS2008.sln / DCP06-VS2008.vcproj 
 		DCP06_Release_Stellar_EC7_3P (ARMV4I).xml
 		DCP06_Release_Win32.xml
 
 CS35 Simulator (Visual Studio 2022)
-	DCP06-CS.sln / DCP06-CS.vcxproj
+	DCP06-VS2022.sln / DCP06-VS2022.vcxproj
 		DCP06_Release_x64.xml
 
 Environment Variables:

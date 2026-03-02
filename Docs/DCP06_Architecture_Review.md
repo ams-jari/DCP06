@@ -115,7 +115,7 @@ DCP06/
 ├── scripts/                    # SWXResBuilder, packaging
 ├── docs/
 ├── CMakeLists.txt              # Optional, alongside vcxproj
-├── DCP06.sln / DCP06-CS.sln
+├── DCP06-VS2008.sln / DCP06-VS2022.sln
 └── README.md
 ```
 
@@ -242,6 +242,6 @@ DCP06/
 - `tests/unit/` — placeholder for unit tests
 - `scripts/` — restructure_option_b.ps1, update_includes.ps1, update_vcxproj_paths.ps1, update_vcproj_paths.ps1
 
-All `#include` paths were updated to use `<dcp06/domain/Header.hpp>`. Both DCP06-CS.vcxproj (CS35) and DCP06.vcproj (instrument) have been updated.
+All `#include` paths were updated to use `<dcp06/domain/Header.hpp>`. Both DCP06-VS2022.vcxproj (CS35) and DCP06-VS2008.vcproj (instrument) have been updated.
 
 *Document approved for implementation. Option B implemented March 2025.*

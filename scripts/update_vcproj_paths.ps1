@@ -1,5 +1,5 @@
 # Update DCP06.vcproj paths for Option B structure
-$vcproj = Join-Path (Split-Path -Parent $PSScriptRoot) "Project\MSVS\DCP06.vcproj"
+$vcproj = Join-Path (Split-Path -Parent $PSScriptRoot) "Project\MSVS\DCP06-VS2008.vcproj"
 $content = Get-Content $vcproj -Raw
 
 # Source file path mapping (Src -> src/domain)
@@ -161,4 +161,4 @@ $content = $content -replace 'RelativePath="\.\.\\\.\.\\Src\\stdafx\.h"', 'Relat
 $content = $content -replace 'RelativePath="\.\.\\\.\.\\Src\\math\\stdafx\.h"', 'RelativePath="..\..\src\core\stdafx.h"'
 
 Set-Content $vcproj -Value $content -NoNewline
-Write-Host "Updated DCP06.vcproj"
+Write-Host "Updated DCP06-VS2008.vcproj"

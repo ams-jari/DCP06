@@ -45,9 +45,9 @@ DCP06/
 
 | Platform | Solution | Output |
 |----------|----------|--------|
-| MS60, TS16, CS20 (physical) | DCP06.sln (VS 2008) | DCP06.dll (ARM) |
-| Win32 desktop | DCP06.sln (VS 2008) | DCP06.dll (x86) |
-| CS35 Simulator | DCP06-CS.sln (VS 2022) | DCP06.dll (x86/x64) |
+| MS60, TS16, CS20 (physical) | DCP06-VS2008.sln (VS 2008) | DCP06.dll (ARM) |
+| Win32 desktop | DCP06-VS2008.sln (VS 2008) | DCP06.dll (x86) |
+| CS35 Simulator | DCP06-VS2022.sln (VS 2022) | DCP06.dll (x86/x64) |
 
 ## Prerequisites
 
@@ -61,7 +61,7 @@ DCP06/
 2. For MkEdit packaging: ensure DCP06 is available at  
    `%SYSTEM1500_ROOT%\Applications\Common\DCP06\`  
    (copy or symlink from your development folder).
-3. Open `Project/MSVS/DCP06-CS.sln` (CS35) or `Project/MSVS/DCP06.sln` (instrument).
+3. Open `Project/MSVS/DCP06-VS2022.sln` (CS35) or `Project/MSVS/DCP06-VS2008.sln` (instrument).
 4. Build Release|Win32 or Release|x64 (CS35) or Release|Stellar_EC7_3P (instrument).
 
 ## Documentation
