@@ -1,0 +1,21 @@
+DCP06 Project - Solution and Platform Mapping
+=============================================
+
+MS60/TS16/CS20 (Visual Studio 2008)
+	DCP06.sln / DCP06.vcproj 
+		DCP06_Release_Stellar_EC7_3P (ARMV4I).xml
+		DCP06_Release_Win32.xml
+
+CS35 Simulator (Visual Studio 2022)
+	DCP06-CS.sln / DCP06-CS.vcxproj
+		DCP06_Release_x64.xml
+
+Environment Variables:
+	SYSTEM1500_ROOT   - 32-bit System 1500 SDK (instrument, Win32)
+	SYSTEM1500_ROOT_x64 - 64-bit System 1500 SDK (CS35 simulator)
+	INCSCAPE          - Optional: path to Inkscape for SVG conversion
+
+Build Setup:
+	The project expects the DCP06 source to be available at:
+	%SYSTEM1500_ROOT%\Applications\Common\DCP06\
+	(or symlinked from the development folder)

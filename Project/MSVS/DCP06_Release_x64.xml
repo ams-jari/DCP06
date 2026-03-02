@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!-- MkEdit - Project File for DCP06 CS35 Simulator (x64)-->
+<ROOT>
+  <LOB Name="DCP06" ConfigDir="%SYSTEM1500_ROOT%\Applications\Common\DCP06\Project\DCP06.dat" OutputDir="%SYSTEM1500_ROOT_x64%\Binary\RCL\x64\release" OutputName="DCP06" Type="APPL_DESKTOP" Built="0" MultiLang="1" LangFolder="%SYSTEM1500_ROOT%\Applications\Common\DCP06\Text\Languages" LangName="DCP06" MultiLangSupport="1">
+    <POB PosId="1" Name="DCP06" ConfigDir="%SYSTEM1500_ROOT%\Applications\Common\DCP06\Project\DCP06.dat" DigSigFile="" OutputDir="%SYSTEM1500_ROOT_x64%\Binary\RCL\x64\release" BodyOfFileName="%SYSTEM1500_ROOT_x64%\Binary\RCL\x64\Release\DCP06.dll" PhysicalObjectName="DCP06_dll.pob" Type="APPL_DLL" OutputFile="%SYSTEM1500_ROOT_x64%\Binary\RCL\x64\release\DCP06_dll.pob" Built="0" CompatibilityVersion="" Locale="" PluginInstallPath="" DeleteBeforeExtract="0" ZipFlag="0" MaintenanceDisableFlag="0" AllowForceUpdate="0"/>
+    <POB PosId="2" Name="DCP06" ConfigDir="%SYSTEM1500_ROOT%\Applications\Common\DCP06\Project\DCP06.dat" DigSigFile="" OutputDir="%SYSTEM1500_ROOT_x64%\Binary\RCL\x64\release" BodyOfFileName="%SYSTEM1500_ROOT%\Applications\Common\DCP06\Project\DCP06.sys" PhysicalObjectName="DCP06_sys.pob" Type="APPL_SYS" OutputFile="%SYSTEM1500_ROOT_x64%\Binary\RCL\x64\release\DCP06_sys.pob" Built="0" CompatibilityVersion="" Locale="" PluginInstallPath="" DeleteBeforeExtract="0" ZipFlag="0" MaintenanceDisableFlag="0" AllowForceUpdate="0"/>
+    <POB PosId="3" Name="DCP06" ConfigDir="%SYSTEM1500_ROOT%\Applications\Common\DCP06\Project\DCP06.dat" DigSigFile="" OutputDir="%SYSTEM1500_ROOT_x64%\Binary\RCL\x64\release" BodyOfFileName="%SYSTEM1500_ROOT%\Applications\Common\DCP06\SWXRes\" PhysicalObjectName="DCP06_Res.pob" Type="APPRESOURCES" OutputFile="DCP06_Res.pob" Built="1" CompatibilityVersion="" Locale="" PluginInstallPath="" DeleteBeforeExtract="0" ZipFlag="0" MaintenanceDisableFlag="0" AllowForceUpdate="0"/>
+  </LOB>
+</ROOT>

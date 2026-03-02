@@ -1,0 +1,12 @@
+---
+description: Git workflow - wait for user to request commits
+alwaysApply: true
+---
+
+# Git Workflow
+
+**Do not commit or push to Git unless the user explicitly requests it.**
+
+- Wait for the user to ask for "commit", "push", "submit to Git", or similar.
+- Do not decide on your own when to commit or push, even after completing tasks.
+- When the user requests a commit: stage the relevant changes, create a clear commit message, commit, and push if requested.

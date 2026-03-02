@@ -1,0 +1,21 @@
+
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DCP06", "DCP06.vcproj", "{B5E79D68-4483-4885-9C5F-1CF4A8EC4E6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release|Stellar_EC7_3P (ARMv4I) = Release|Stellar_EC7_3P (ARMv4I)
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5E79D68-4483-4885-9C5F-1CF4A8EC4E6E}.Release|Stellar_EC7_3P (ARMv4I).ActiveCfg = Release|Stellar_EC7_3P (ARMv4I)
+		{B5E79D68-4483-4885-9C5F-1CF4A8EC4E6E}.Release|Stellar_EC7_3P (ARMv4I).Build.0 = Release|Stellar_EC7_3P (ARMv4I)
+		{B5E79D68-4483-4885-9C5F-1CF4A8EC4E6E}.Release|Stellar_EC7_3P (ARMv4I).Deploy.0 = Release|Stellar_EC7_3P (ARMv4I)
+		{B5E79D68-4483-4885-9C5F-1CF4A8EC4E6E}.Release|Win32.ActiveCfg = Release|Win32
+		{B5E79D68-4483-4885-9C5F-1CF4A8EC4E6E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

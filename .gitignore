@@ -1,0 +1,23 @@
+# Build outputs
+*.obj
+*.pdb
+*.lib
+*.exp
+*.ilk
+*.idb
+*.iobj
+*.ipdb
+Debug/
+Release/
+x64/
+Win32/
+.vs/
+*.user
+*.suo
+
+# Leica SDK / external (if local)
+# SYSTEM1500_ROOT paths are external
+
+# OS
+Thumbs.db
+.DS_Store

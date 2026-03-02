@@ -39,15 +39,16 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (DOM, COM, CHST, ADF, al
 
 ### Phase 0: Project Setup (Weeks 1–2)
 
-| Task | Description | Owner |
-|------|-------------|-------|
-| 0.1 | Initialize DCP06 repository from DCP05 baseline | Dev |
-| 0.2 | Set up GitHub: branch strategy, CI (if applicable) | Dev |
-| 0.3 | Create Docs folder; copy/adapt DCP05 Docs; add DCP05/DCP9 summaries | Dev |
-| 0.4 | Define coding standards, Cursor rules, AGENTS.md | Dev |
-| 0.5 | Confirm Leica SDK version (System 1500 vs. newer Captivate) | PM/Tech Lead |
+| Task | Description | Owner | Status |
+|------|-------------|-------|--------|
+| 0.1 | Initialize DCP06 repository from DCP05 baseline | Dev | ✅ Done |
+| 0.2 | Set up GitHub: branch strategy, CI (if applicable) | Dev | ✅ Repo at github.com/ams-jari/DCP06 |
+| 0.3 | Create Docs folder; copy/adapt DCP05 Docs; add DCP05/DCP9 summaries | Dev | ✅ Done |
+| 0.4 | Create projects, solutions, MkEdit XML for all DCP05 platforms | Dev | ✅ Done |
+| 0.5 | Define coding standards, Cursor rules, AGENTS.md | Dev | Pending |
+| 0.6 | Confirm Leica SDK version (System 1500 vs. newer Captivate) | PM/Tech Lead | Pending |
 
-**Deliverables:** Repo initialized, documentation in place, build working.
+**Deliverables:** Repo initialized, documentation in place, build projects for Win32, x64, ARM. ✅ Phase 0 complete.
 
 ---
 
@@ -57,7 +58,7 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (DOM, COM, CHST, ADF, al
 
 | Task | Description | Source |
 |------|-------------|--------|
-| 1.1 | Design database schema (jobs, points, alignments, settings) | DCP9 IDatabase/DatabaseTypes |
+| 1.1 | Design database schema (jobs, points, alignments, settings) | DCP9 IDatabase/DatabaseTypes; see [DCP06_Database_Design.md](DCP06_Database_Design.md) |
 | 1.2 | Choose storage backend: SQLite on instrument storage, or Captivate storage API | TBD |
 | 1.3 | Implement `IDatabase` (or equivalent) interface | DCP9 |
 | 1.4 | Implement first DB backend (e.g. SQLite) for points, jobs | New |

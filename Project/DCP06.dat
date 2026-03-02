@@ -1,0 +1,33 @@
+; Configuration file for physical/logical objects
+
+; Comments need a ';' at the beginning of the line.
+
+; BuildNr:     [0...4095]
+; IterationNr: [0...15]
+; SpecialInfo: [0...8]
+; VersionNr:   [0...63]
+; ReleaseNr:   [0...127]
+; ReleaseDate: [1...31].[1...12].[2000...2050]
+; ArticleNr:   [0...99999999]
+
+;Build number
+BuildNr: 1
+
+;Iteration number
+IterationNr: 0
+
+;Special information
+SpecialInfo: 0
+
+;Version number
+VersionNr: 1
+
+;Release number
+ReleaseNr: 00
+
+
+;Release date
+ReleaseDate: 01.03.2025
+
+;Articel Number
+ArticleNr: 1
