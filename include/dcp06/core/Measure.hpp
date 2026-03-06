@@ -55,19 +55,19 @@ namespace ABL
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06MeasDlgC;
-	class DCP06MeasModelC;
+	class Model;
+	class MeasureDialog;
+	class MeasureModel;
 	//class DCPSurveyModelC; 
 
     // Description: Tabbed controller for the Hello World application
-	class DCP06MeasControllerC : public GUI::ControllerC, public TBL::MeasurementC//, public GUI::StandardDialogC
+	class MeasureController : public GUI::ControllerC, public TBL::MeasurementC//, public GUI::StandardDialogC
     {
         public:
 
             // Description: Constructor
-            DCP06MeasControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06MeasControllerC();
+            MeasureController(Model *pModel);
+			~MeasureController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -103,29 +103,29 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06MeasControllerC( const DCP06MeasControllerC& oDCP05MeasController )
+            MeasureController( const MeasureController& oMeasureController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06MeasControllerC& operator=( const DCP06MeasControllerC& oDCP05MeasController )
+            MeasureController& operator=( const MeasureController& oMeasureController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06MeasDlgC* m_pDlg;
-			DCP06ModelC *m_pDCP06Model;
-			DCP06CommonC* m_pCommon;
+            MeasureDialog* m_pDlg;
+			Model *m_pModel;
+			Common* m_pCommon;
 			bool m_bCamera;
 			GSV::GeospatialViewDialogC* poVideoDlg;
 			bool isATR;
     };
 
 
-	class DCP06MeasDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class MeasureDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -139,10 +139,10 @@ namespace DCP
 				eInfo
 			};
 
-		   DCP06MeasDlgC(DCP06ModelC *pDCP06Model);
+		   MeasureDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06MeasDlgC();
+            virtual ~MeasureDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -154,7 +154,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06MeasModelC* GetDataModel() const;
+			MeasureModel* GetDataModel() const;
 
 			virtual void delete_point();
 			virtual void next_point();
@@ -173,7 +173,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pZ;
 			//GUI::TextCtrlC* m_pInfo;
 
-			OBS_DECLARE_EXECUTE(DCP06MeasDlgC);
+			OBS_DECLARE_EXECUTE(MeasureDialog);
 
 			
 
@@ -185,7 +185,7 @@ namespace DCP
 		/*virtual void OnTimer(void);
 		GUI::TimerC m_pTimer;*/
 
-		DCP06ModelC *m_pDCP06Model;
+		Model *m_pModel;
 
 		//S_POINT_BUFF temp_point_table[20];
 		//S_POINT_BUFF temp_point_table2[20];
@@ -194,22 +194,22 @@ namespace DCP
 		double to_mm(double dist);
 		short iInfoInd;
 		StringC strInfoText;
-		DCP06CommonC* m_pCommon;
+		Common* m_pCommon;
 		
 	};
 
 
-   class DCP06MeasModelC : public GUI::ModelC
+   class MeasureModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06MeasModelC();
+            MeasureModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06MeasModelC();
+            virtual ~MeasureModel();
 						
 			short m_iMinPoint;
 			short m_iMaxPoint;

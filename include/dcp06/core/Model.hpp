@@ -45,23 +45,23 @@
 //
 namespace DCP
 {
-	class DCP06ConfigControllerC;
+	class ConfigController;
 
 	namespace Database { class JsonDatabase; }
 
     // Description: Hello World application class
     //              
-    class DCP06ModelC : public  ABL::AppConfigModelC//public GUI::ModelC
+    class Model : public  ABL::AppConfigModelC//public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06ModelC();
+            Model();
 
             // Description: Destructor
             //
-            virtual ~DCP06ModelC();
+            virtual ~Model();
 			/*
 			typedef struct
 			{
@@ -310,7 +310,7 @@ namespace DCP
 			bool bDemoMode;
 			short iStartCount;
 
-			DCP06ConfigControllerC* poConfigController;
+			ConfigController* poConfigController;
 
 			/*unsigned int iVersion;
 			unsigned int iRelease;
@@ -348,26 +348,26 @@ namespace DCP
 
 	
 	 // Description: Survey config controller
-    class DCP06ConfigControllerC : public ABL::AppConfigControllerC
+    class ConfigController : public ABL::AppConfigControllerC
     {
         public:
 
             // Description: Constructor
             // Input      : pParent - Pointer to parent controller
             //              poModel - Configuration model
-            DCP06ConfigControllerC(GUI::ControllerC* pParent, DCP06ModelC* poModel = NULL);
+            ConfigController(GUI::ControllerC* pParent, Model* poModel = nullptr);
 
             // Description: Destructor
-            virtual ~DCP06ConfigControllerC(void);
+            virtual ~ConfigController(void);
 
             // Description: Get the configuration model
             // Return     : configuration model
-            DCP06ModelC*    GetModel(void) const;
+            Model*    GetModel(void) const;
 
         protected:
 
             // Description: Copies the configuration data from the archive to the model
-            // Remarks    : Must be overwritten by each application. If poArchive is NULL
+            // Remarks    : Must be overwritten by each application. If poArchive is nullptr
             //              factory default values are set
             // Input      : ulKey       - configuration key
             //              poArchive   - configuration database archive
@@ -387,38 +387,38 @@ namespace DCP
         private:
 			void save_matrix4x4(CPI::CFG::ArchiveC* poArchive, double matrix[4][4]);
 			void load_matrix4x4(CPI::CFG::ArchiveC* poArchive, double matrix[4][4]);
-			void save_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_home_points(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_circle_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_shaft_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_home_points(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_circle_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_shaft_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 
-			void load_adf_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_crl_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_shaft_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_init_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_dom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_pom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_chst_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_userdef_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_matrix_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_tool_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void load_lisence(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_adf_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_crl_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_shaft_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_init_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_dom_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_pom_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_chst_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_userdef_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_matrix_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_tool_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_lisence(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 
-			void save_adf_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_crl_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_shaft_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_init_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_dom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_pom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_chst_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_userdef_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_matrix_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_tool_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_home_points(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_circle_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_shaft_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_lisence(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void save_adf_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_crl_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_shaft_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_init_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_dom_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_pom_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_chst_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_userdef_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_matrix_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_tool_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_home_points(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_circle_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_shaft_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_lisence(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			
 			void save_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BUFF* pPoint);
 			void save_line(CPI::CFG::ArchiveC* poArchive, S_LINE_BUFF* pLine);
@@ -433,11 +433,11 @@ namespace DCP
 			void save_circle_buff(CPI::CFG::ArchiveC* poArchive, S_CIRCLE_BUFF* pBuff);	
 
 
-			void load_linefitting_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_linefitting_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_linefitting_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_linefitting_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 
-			void load_demo_licenses(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
-			void save_demo_licenses(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel);
+			void load_demo_licenses(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_demo_licenses(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 
 	};
 };

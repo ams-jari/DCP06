@@ -50,19 +50,19 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06ResPlaneDlgC;
-	//class DCP06SelectOnePointModelC;
+    class Model;
+	class ResPlaneDialog;
+	//class SelectOnePointModel;
 
     // Description: Tabbed controller for the Hello World application
 	
-    class DCP06ResPlaneControllerC : public GUI::ControllerC
+    class ResPlaneController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06ResPlaneControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06ResPlaneControllerC();
+            ResPlaneController(Model *pModel);
+			~ResPlaneController();
 
             // Description: Handle change of position values
             //virtual void OnF1Pressed();
@@ -84,25 +84,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06ResPlaneControllerC( const DCP06ResPlaneControllerC& oDCP06ResPlaneController )
+            ResPlaneController( const ResPlaneController& oResPlaneController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06ResPlaneControllerC& operator=( const DCP06ResPlaneControllerC& oDCP06ResPlaneController )
+            ResPlaneController& operator=( const ResPlaneController& oResPlaneController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06ResPlaneDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            ResPlaneDialog* m_pDlg;
+			Model* m_pModel;
     };
 	
 
-	class DCP06ResPlaneDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
+	class ResPlaneDialog: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
 	{
 	 public:
 
@@ -128,10 +128,10 @@ namespace DCP
 				CI_Deviation
 			};
 
-		   DCP06ResPlaneDlgC(DCP06ModelC *pDCP06Model);
+		   ResPlaneDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06ResPlaneDlgC();
+            virtual ~ResPlaneDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -148,7 +148,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06DefinePlaneModelC* GetDataModel() const;
+            DefinePlaneModel* GetDataModel() const;
 
 			//OBS::ObserverC m_pMultiColCtrlObserver;
 			//virtual void OnChanged(int unNotifyCode,  int ulParam2);
@@ -156,11 +156,11 @@ namespace DCP
 		protected:
 			GUI::TextCtrlC* m_pInfo1;
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			// Description: add all controls
        
 
-			//OBS_DECLARE_EXECUTE(DCP06SelectOnePointDlgC);
+			//OBS_DECLARE_EXECUTE(SelectOnePointDialog);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -170,29 +170,29 @@ namespace DCP
 				StringC sDesignNonSelected;
 				//virtual void OnTimer(void);
 
-				DCP06CommonC* m_pCommon;
+				Common* m_pCommon;
 				double calc_pldist(S_PLANE_BUFF *line, short pno);
 				double get_max_dist_and_rms_plane(S_PLANE_BUFF *line, short *pno, double *rms/*, short ACT*/);
 				
 				StringC sTitle;
 
-				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::SelectMultiPointsDialog::remove_point_table(short sel);
+				//void DCP::SelectMultiPointsDialog::add_point_table(short sel, bool bActual);
  	};
 
 
 		
-	class DCP06ResPlaneModelC : public GUI::ModelC
+	class ResPlaneModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06ResPlaneModelC();
+            ResPlaneModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06ResPlaneModelC();
+            virtual ~ResPlaneModel();
 			S_PLANE_BUFF line[1];
 			StringC sCaption;
 			/*			

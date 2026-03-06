@@ -49,19 +49,19 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06ResLineDlgC;
-	//class DCP06SelectOnePointModelC;
+    class Model;
+	class ResLineDialog;
+	//class SelectOnePointModel;
 
     // Description: Tabbed controller for the Hello World application
 	
-    class DCP06ResLineControllerC : public GUI::ControllerC
+    class ResLineController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06ResLineControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06ResLineControllerC();
+            ResLineController(Model *pModel);
+			~ResLineController();
 
             // Description: Handle change of position values
             //virtual void OnF1Pressed();
@@ -83,25 +83,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06ResLineControllerC( const DCP06ResLineControllerC& oDCP06ResLineController )
+            ResLineController( const ResLineController& oResLineController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06ResLineControllerC& operator=( const DCP06ResLineControllerC& oDCP06ResLineController )
+            ResLineController& operator=( const ResLineController& oResLineController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06ResLineDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            ResLineDialog* m_pDlg;
+			Model* m_pModel;
     };
 	
 
-	class DCP06ResLineDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
+	class ResLineDialog: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
 	{
 	 public:
 
@@ -127,10 +127,10 @@ namespace DCP
 				CI_Deviation
 			};
 
-		   DCP06ResLineDlgC(DCP06ModelC *pDCP06Model);
+		   ResLineDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06ResLineDlgC();
+            virtual ~ResLineDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -147,7 +147,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06DefineLineModelC* GetDataModel() const;
+            DefineLineModel* GetDataModel() const;
 
 			//OBS::ObserverC m_pMultiColCtrlObserver;
 			//virtual void OnChanged(int unNotifyCode, int ulParam2);
@@ -155,11 +155,11 @@ namespace DCP
 		protected:
 			GUI::TextCtrlC* m_pInfo1;
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			// Description: add all controls
        
 
-			//OBS_DECLARE_EXECUTE(DCP06SelectOnePointDlgC);
+			//OBS_DECLARE_EXECUTE(SelectOnePointDialog);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -169,31 +169,31 @@ namespace DCP
 				StringC sDesignNonSelected;
 				//virtual void OnTimer(void);
 
-				DCP06CommonC* m_pCommon;
+				Common* m_pCommon;
 				double calc_pdist(S_LINE_BUFF *line, short pno);
 				double get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/);
 
 				StringC sTitle;
 				
 
-				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::SelectMultiPointsDialog::remove_point_table(short sel);
+				//void DCP::SelectMultiPointsDialog::add_point_table(short sel, bool bActual);
  	};
 
 
 	
 	
-	class DCP06ResLineModelC : public GUI::ModelC
+	class ResLineModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06ResLineModelC();
+            ResLineModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06ResLineModelC();
+            virtual ~ResLineModel();
 			S_LINE_BUFF line[1];
 			StringC sCaption;
 			/*			

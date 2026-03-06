@@ -49,18 +49,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06CalcDist2PointsDlgC;
-	class DCP06CalcDist2PointsModelC;
+    class Model;
+	class CalculationDist2PointsDialog;
+	class CalculationDist2PointsModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CalcDist2PointsControllerC : public GUI::ControllerC
+    class CalculationDist2PointsController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06CalcDist2PointsControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06CalcDist2PointsControllerC();
+            CalculationDist2PointsController(Model* pModel);
+			~CalculationDist2PointsController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -77,25 +77,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06CalcDist2PointsControllerC( const DCP06CalcDist2PointsControllerC& oDCP06CalcDist2PointsController )
+            CalculationDist2PointsController( const CalculationDist2PointsController& oCalculationDist2PointsController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06CalcDist2PointsControllerC& operator=( const DCP06CalcDist2PointsControllerC& oDCP06CalcDist2PointsController )
+            CalculationDist2PointsController& operator=( const CalculationDist2PointsController& oCalculationDist2PointsController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06CalcDist2PointsDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            CalculationDist2PointsDialog* m_pDlg;
+			Model* m_pModel;
     };
 
 
-    class DCP06CalcDist2PointsDlgC:public GUI::DialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class CalculationDist2PointsDialog:public GUI::DialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -109,10 +109,10 @@ namespace DCP
 				eTotal
 			};
 
-		   DCP06CalcDist2PointsDlgC(DCP06ModelC* pDCP06Model);
+		   CalculationDist2PointsDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06CalcDist2PointsDlgC();
+            virtual ~CalculationDist2PointsDialog();
 
 			virtual void OnInitDialog(void);
 		
@@ -125,7 +125,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06CalcDist2PointsModelC* GetDataModel() const;
+            CalculationDist2PointsModel* GetDataModel() const;
 			virtual void RefreshControls();
 
 			void calc_distances(
@@ -167,8 +167,8 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pZ;
 			GUI::ComboLineCtrlC* m_pTotal;
 			*/
-			// pointer to DCP06ModelC
-			DCP06ModelC* m_pDCP06Model;
+			// pointer to Model
+			Model* m_pModel;
 
 	private:
 			// load text...
@@ -180,7 +180,7 @@ namespace DCP
 			StringC m_strZ;
 			StringC m_strTotal;
 
-			DCP06CommonC *m_pCommon;
+			Common *m_pCommon;
 
 			StringC sXline;
 			StringC sYline;
@@ -193,15 +193,15 @@ namespace DCP
 			char bXdif[15], bYdif[15], bZdif[15];
 			char bDmea[15], bDdes[15], bDdif[15];
 	};
-    class DCP06CalcDist2PointsModelC : public GUI::ModelC
+    class CalculationDist2PointsModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
-            DCP06CalcDist2PointsModelC();
+            CalculationDist2PointsModel();
 
             // Description: Destructor
-            virtual ~DCP06CalcDist2PointsModelC();
+            virtual ~CalculationDist2PointsModel();
 		
 			StringC sFile;
 			StringC sTitle;

@@ -49,7 +49,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectOnePointDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::SelectOnePointDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -61,19 +61,19 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP::DCP06ResPlaneDlgC::DCP06ResPlaneDlgC(DCP::DCP06ModelC *pDCP06Model):poMultiColCtrl(NULL),m_pInfo1(NULL),
-	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06SelectOnePointDlgC, OnChanged), this),
-	m_pDCP06Model(pDCP06Model)
+DCP::ResPlaneDialog::ResPlaneDialog(DCP::Model *pModel):poMultiColCtrl(nullptr),m_pInfo1(nullptr),
+	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(SelectOnePointDialog, OnChanged), this),
+	m_pModel(pModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
 	
 	// load title
 	sTitle.LoadTxt(AT_DCP06,T_DCP_DEV_OF_PLANE_TOK);
 
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 }
 // Description: Destructor
-DCP::DCP06ResPlaneDlgC::~DCP06ResPlaneDlgC()
+DCP::ResPlaneDialog::~ResPlaneDialog()
 {
 	 if(m_pCommon)
 	 {
@@ -82,7 +82,7 @@ DCP::DCP06ResPlaneDlgC::~DCP06ResPlaneDlgC()
 	 }
 }
 
-void DCP::DCP06ResPlaneDlgC::OnInitDialog(void)
+void DCP::ResPlaneDialog::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
@@ -126,7 +126,7 @@ void DCP::DCP06ResPlaneDlgC::OnInitDialog(void)
 
 
 
-void DCP::DCP06ResPlaneDlgC::OnF1Pressed(void)
+void DCP::ResPlaneDialog::OnF1Pressed(void)
 {
 	
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
@@ -136,11 +136,11 @@ void DCP::DCP06ResPlaneDlgC::OnF1Pressed(void)
 	
 	if(GetDataModel()->plane_buff[0].points[iSelectedId].sta == 1 || GetDataModel()->plane_buff[0].points[iSelectedId].sta == 2)
 	{
-		if(m_pCommon-> defined_points_count_in_plane(&GetDataModel()->plane_buff[0],NULL) <= 3)
+		if(m_pCommon-> defined_points_count_in_plane(&GetDataModel()->plane_buff[0],nullptr) <= 3)
 		{
 			StringC strText;
 			strText.LoadTxt(AT_DCP06,M_DCP_CANNOT_REJECT_PNT_TOK);
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			
 			msgbox.ShowMessageOk(strText);
 			return;
@@ -168,19 +168,19 @@ void DCP::DCP06ResPlaneDlgC::OnF1Pressed(void)
 		GetDataModel()->plane_buff[0].points[iSelectedId].sta = 2;
 	}
 	
-	DCP06CalcPlaneC calcplane;
+	CalcPlane calcplane;
 	calcplane.calc(&GetDataModel()->plane_buff[0],ACTUAL);
 	
 	RefreshControls();		
 }
 
-void DCP::DCP06ResPlaneDlgC::OnDialogActivated()
+void DCP::ResPlaneDialog::OnDialogActivated()
 {
 	RefreshControls();
 } 
 
 // Description: refresh all controls
-void DCP::DCP06ResPlaneDlgC::RefreshControls()
+void DCP::ResPlaneDialog::RefreshControls()
 {
 	int iMax=0;
 	int i;
@@ -223,7 +223,7 @@ void DCP::DCP06ResPlaneDlgC::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+9.*f", m_pDCP06Model->m_nDecimals, calc_pldist(&GetDataModel()->plane_buff[0],i));
+			sprintf(temp,"%+9.*f", m_pModel->m_nDecimals, calc_pldist(&GetDataModel()->plane_buff[0],i));
 			sDev = temp;
 		}
 		else if (sta == 0)
@@ -247,7 +247,7 @@ void DCP::DCP06ResPlaneDlgC::RefreshControls()
 	// set title with rms and point count
 	short iCount = m_pCommon->defined_points_count_in_plane(&GetDataModel()->plane_buff[0],0);
 	StringC sTemp = sTitle;
-	sTemp.Format(sTemp, m_pDCP06Model->m_nDecimals,rms,iCount);
+	sTemp.Format(sTemp, m_pModel->m_nDecimals,rms,iCount);
 	SetTitle(sTemp);
 
 	
@@ -256,7 +256,7 @@ void DCP::DCP06ResPlaneDlgC::RefreshControls()
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP06ResPlaneDlgC::get_max_dist_and_rms_plane(S_PLANE_BUFF *plane, short *pno, double *rms/*, short ACT*/)
+double DCP::ResPlaneDialog::get_max_dist_and_rms_plane(S_PLANE_BUFF *plane, short *pno, double *rms/*, short ACT*/)
 {
 
 short i, count=0;
@@ -295,7 +295,7 @@ double max=0.0, dist, dist2=0.0,dist3;
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP06ResPlaneDlgC::calc_pldist(S_PLANE_BUFF *plane, short pno/*, short ACT*/)
+double DCP::ResPlaneDialog::calc_pldist(S_PLANE_BUFF *plane, short pno/*, short ACT*/)
 {
 struct ams_vector m;
 struct plane wplane;
@@ -318,7 +318,7 @@ double dist;
 			return dist;
 
 }
-void DCP::DCP06ResPlaneDlgC::UpdateData()
+void DCP::ResPlaneDialog::UpdateData()
 {
 	/*
 	StringC sSelected;
@@ -330,14 +330,14 @@ void DCP::DCP06ResPlaneDlgC::UpdateData()
 		
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06ResPlaneDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::ResPlaneDialog::SetModel( GUI::ModelC* pModel )
 {
 	  // Verify type
-    DCP::DCP06DefinePlaneModelC* pDCP06Model = dynamic_cast< DCP::DCP06DefinePlaneModelC* >( pModel );
+    DCP::DefinePlaneModel* pModel = dynamic_cast< DCP::DefinePlaneModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -348,17 +348,17 @@ bool DCP::DCP06ResPlaneDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06DefinePlaneModelC* DCP::DCP06ResPlaneDlgC::GetDataModel() const
+DCP::DefinePlaneModel* DCP::ResPlaneDialog::GetDataModel() const
 {
-    return (DCP::DCP06DefinePlaneModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DefinePlaneModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP06ResPlaneControllerC::DCP06ResPlaneControllerC(DCP::DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::ResPlaneController::ResPlaneController(DCP::Model *pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -370,7 +370,7 @@ DCP::DCP06ResPlaneControllerC::DCP06ResPlaneControllerC(DCP::DCP06ModelC *pDCP06
 	SetTitle(sTitle);
 
     // Create a dialog
-     m_pDlg = new DCP::DCP06ResPlaneDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+     m_pDlg = new DCP::ResPlaneDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( RES_PLANE_DLG, m_pDlg, true );
 
     // Set the function key
@@ -406,13 +406,13 @@ DCP::DCP06ResPlaneControllerC::DCP06ResPlaneControllerC(DCP::DCP06ModelC *pDCP06
 	*/
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06ResPlaneControllerC::~DCP06ResPlaneControllerC()
+DCP::ResPlaneController::~ResPlaneController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06ResPlaneControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::ResPlaneController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -423,12 +423,12 @@ bool DCP::DCP06ResPlaneControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -442,9 +442,9 @@ bool DCP::DCP06ResPlaneControllerC::SetModel( GUI::ModelC* pModel )
 
 
 // CONT
-void DCP::DCP06ResPlaneControllerC::OnF6Pressed() 
+void DCP::ResPlaneController::OnF6Pressed() 
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -461,12 +461,12 @@ void DCP::DCP06ResPlaneControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06ResPlaneControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::ResPlaneController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06ResPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::ResPlaneController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -475,14 +475,14 @@ void DCP::DCP06ResPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int l
 
 
 // Instantiate template classes
-DCP::DCP06ResPlaneModelC::DCP06ResPlaneModelC()
+DCP::ResPlaneModel::ResPlaneModel()
 {
 	//memset(&sel_points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 	//memset(nro_table,0,sizeof(short) * MAX_POINTS_IN_FILE*2);
 }
 
 
-DCP::DCP06ResPlaneModelC::~DCP06ResPlaneModelC()
+DCP::ResPlaneModel::~ResPlaneModel()
 {
 }
 

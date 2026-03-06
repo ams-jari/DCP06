@@ -50,12 +50,12 @@
 // ================================================================================================
 
 // Instantiate template classes
-DCP::DCP06DomModelC::DCP06DomModelC():m_iPlane(XY_PLANE),m_iLine(X_LINE)
+DCP::Alignment321Model::Alignment321Model():m_iPlane(XY_PLANE),m_iLine(X_LINE)
 {
 	
 }
 
-DCP::DCP06DomModelC::~DCP06DomModelC()
+DCP::Alignment321Model::~Alignment321Model()
 {
 }
 

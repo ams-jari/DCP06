@@ -43,20 +43,20 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06HomePointsDlgC;
-	class DCP06HomePointsModelC;
-	class DCP06SelectCoordinateSystemC;
+	class Model;
+	class HomePointsDialog;
+	class HomePointsModel;
+	class SelectCoordinateSystem;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06HomePointsControllerC : public GUI::ControllerC
+    class HomePointsController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06HomePointsControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06HomePointsControllerC();
+            HomePointsController(Model* pModel);
+			~HomePointsController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -84,27 +84,27 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06HomePointsControllerC( const DCP06HomePointsControllerC& oDCP05HomePointsController )
+            HomePointsController( const HomePointsController& oHomePointsController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06HomePointsControllerC& operator=( const DCP06HomePointsControllerC& oDCP05HomePointsController )
+            HomePointsController& operator=( const HomePointsController& oHomePointsController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06HomePointsDlgC* m_pDlg;
-			DCP06HomePointsModelC* m_pDataModel;
-			DCP06ModelC* m_pDCP06Model;
-			DCP06CommonC* m_pCommon;
+            HomePointsDialog* m_pDlg;
+			HomePointsModel* m_pDataModel;
+			Model* m_pModel;
+			Common* m_pCommon;
     };
 
 
-	class DCP06HomePointsDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC
+	class HomePointsDialog:public GUI::TableDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -126,10 +126,10 @@ namespace DCP
 			};
 
 
-		   DCP06HomePointsDlgC(DCP06HomePointsModelC* pHomePointsModel);
+		   HomePointsDialog(HomePointsModel* pHomePointsModel);
 
             // Description: Destructor
-            virtual ~DCP06HomePointsDlgC();
+            virtual ~HomePointsDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -141,7 +141,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06ModelC* GetDCP06Model() const;
+			Model* GetModel() const;
 
 			short get_selected_id();
 
@@ -157,11 +157,11 @@ namespace DCP
 			StringC sOCS;
 	private:
 			
-			DCP06HomePointsModelC* m_pDataModel;
+			HomePointsModel* m_pDataModel;
 	};
 
 	
-	class DCP06SelectCoordinateSystemC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class SelectCoordinateSystem:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 			enum eCtrlId
@@ -171,10 +171,10 @@ namespace DCP
 				eLineInfo3
 			};
 		
-		   DCP06SelectCoordinateSystemC();
+		   SelectCoordinateSystem();
 			
             // Description: Destructor
-            virtual ~DCP06SelectCoordinateSystemC();
+            virtual ~SelectCoordinateSystem();
 
 			virtual void OnInitDialog(void);
 			virtual void OnDialogActivated();
@@ -187,7 +187,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06ModelC* GetDCP06Model() const;
+			Model* GetModel() const;
 
 			short get_selected_id();
 
@@ -200,17 +200,17 @@ namespace DCP
 			short m_iSelected;
 	};
 
-    class DCP06HomePointsModelC : public GUI::ModelC
+    class HomePointsModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06HomePointsModelC();
+            HomePointsModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06HomePointsModelC();
+            virtual ~HomePointsModel();
 			
 			S_POINT_BUFF home_points[MAX_HOME_POINTS];
 			short iOldActiveCds;

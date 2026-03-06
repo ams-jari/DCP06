@@ -45,7 +45,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -59,8 +59,8 @@
 
 // USER DIALOG
 
-DCP::DCP06LineSettingConfDlgC::DCP06LineSettingConfDlgC(DCP::DCP06ModelC* pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-		m_pDCP06Model(pDCP06Model), m_pInfo(0), m_pHor(0), m_pVer(0)	
+DCP::LineSettingConfDialog::LineSettingConfDialog(DCP::Model* pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+		m_pModel(pModel), m_pInfo(0), m_pHor(0), m_pVer(0)	
 			//,m_pPointNo(0),m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0)
 {
 	//SetTxtApplicationId(AT_DCP06);
@@ -68,12 +68,12 @@ DCP::DCP06LineSettingConfDlgC::DCP06LineSettingConfDlgC(DCP::DCP06ModelC* pDCP06
 
 
             // Description: Destructor
-DCP::DCP06LineSettingConfDlgC::~DCP06LineSettingConfDlgC()
+DCP::LineSettingConfDialog::~LineSettingConfDialog()
 {
 
 }
 
-void DCP::DCP06LineSettingConfDlgC::OnInitDialog(void)
+void DCP::LineSettingConfDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -110,19 +110,19 @@ void DCP::DCP06LineSettingConfDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_LINE_SETTING_CONF_TOK,0);
 }
 
-void DCP::DCP06LineSettingConfDlgC::OnDialogActivated()
+void DCP::LineSettingConfDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
 
-void DCP::DCP06LineSettingConfDlgC::UpdateData()
+void DCP::LineSettingConfDialog::UpdateData()
 {
 	GetDataModel()->dHor = m_pHor->GetFloatInputCtrl()->GetDouble();
 	GetDataModel()->dVer = m_pVer->GetFloatInputCtrl()->GetDouble();
 }
 
 // Description: refresh all controls
-void DCP::DCP06LineSettingConfDlgC::RefreshControls()
+void DCP::LineSettingConfDialog::RefreshControls()
 {
 	if(m_pHor && m_pVer)
 	{
@@ -131,14 +131,14 @@ void DCP::DCP06LineSettingConfDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06LineSettingConfDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::LineSettingConfDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06LSetConfModelC* pDCP06Model = dynamic_cast< DCP::DCP06LSetConfModelC* >( pModel );
+    DCP::LineSettingConfModel* pModel = dynamic_cast< DCP::LineSettingConfModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -148,20 +148,20 @@ bool DCP::DCP06LineSettingConfDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06LSetConfModelC* DCP::DCP06LineSettingConfDlgC::GetDataModel() const
+DCP::LineSettingConfModel* DCP::LineSettingConfDialog::GetDataModel() const
 {
-    return (DCP::DCP06LSetConfModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::LineSettingConfModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06LineSettingConfControllerC::DCP06LineSettingConfControllerC(DCP::DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL )
+DCP::LineSettingConfController::LineSettingConfController(DCP::Model *pModel)
+    : m_pDlg( nullptr )
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -169,7 +169,7 @@ DCP::DCP06LineSettingConfControllerC::DCP06LineSettingConfControllerC(DCP::DCP06
     SetTitle(StringC( AT_DCP06, T_DCP_LINE_SETTING_CONF_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-	 m_pDlg = new DCP::DCP06LineSettingConfDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+	 m_pDlg = new DCP::LineSettingConfDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( LINE_SETTING_DLG, m_pDlg, true );
 
     // Set the function key
@@ -205,13 +205,13 @@ DCP::DCP06LineSettingConfControllerC::DCP06LineSettingConfControllerC(DCP::DCP06
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06LineSettingConfControllerC::~DCP06LineSettingConfControllerC()
+DCP::LineSettingConfController::~LineSettingConfController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06LineSettingConfControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::LineSettingConfController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -222,12 +222,12 @@ bool DCP::DCP06LineSettingConfControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -238,7 +238,7 @@ bool DCP::DCP06LineSettingConfControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // 0
-void DCP::DCP06LineSettingConfControllerC::OnF1Pressed()
+void DCP::LineSettingConfController::OnF1Pressed()
 {
 	m_pDlg->GetDataModel()->dHor = 0.0;
 	m_pDlg->RefreshControls();
@@ -246,30 +246,30 @@ void DCP::DCP06LineSettingConfControllerC::OnF1Pressed()
 }
 
 // 90
-void DCP::DCP06LineSettingConfControllerC::OnF2Pressed()
+void DCP::LineSettingConfController::OnF2Pressed()
 {
 	m_pDlg->GetDataModel()->dHor = 90.0;
 	m_pDlg->RefreshControls();
 }
 
 // 180
-void DCP::DCP06LineSettingConfControllerC::OnF3Pressed()
+void DCP::LineSettingConfController::OnF3Pressed()
 {
 	m_pDlg->GetDataModel()->dHor = 180.0;
 	m_pDlg->RefreshControls();
 }
 
 // 270
-void DCP::DCP06LineSettingConfControllerC::OnF4Pressed()
+void DCP::LineSettingConfController::OnF4Pressed()
 {
 	m_pDlg->GetDataModel()->dHor = 270.0;
 	m_pDlg->RefreshControls();
 }
 
 // CONT
-void DCP::DCP06LineSettingConfControllerC::OnF6Pressed()
+void DCP::LineSettingConfController::OnF6Pressed()
 {
-   if (m_pDlg == NULL)
+   if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -288,26 +288,26 @@ void DCP::DCP06LineSettingConfControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06LineSettingConfControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::LineSettingConfController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06LineSettingConfControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::LineSettingConfController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
 }
 
 // ===========================================================================================
-// DCP05LineSettingModelC
+// LineSettingModel
 // ===========================================================================================
-DCP::DCP06LSetConfModelC::DCP06LSetConfModelC()
+DCP::LineSettingConfModel::LineSettingConfModel()
 {
 	dHor = 0.0;
 	dVer = 0.0;
 	
 }
-DCP::DCP06LSetConfModelC::~DCP06LSetConfModelC()
+DCP::LineSettingConfModel::~LineSettingConfModel()
 {
 }

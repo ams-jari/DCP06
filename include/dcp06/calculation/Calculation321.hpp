@@ -43,24 +43,24 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP06ModelC;
-	//class DCP06ToolDlgC;
+	//class Model;
+	//class ToolDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CalcDomC
+    class CalcAlignment321
     {
         public:
 
             // Description: Constructor
-			DCP06CalcDomC(DCP06DomModelC* pDCP06DomModel);//, DCP::DCP06ModelC* pDCP06Model);
-			~DCP06CalcDomC();
+			CalcAlignment321(Alignment321Model* pAlignment321Model);
+			~CalcAlignment321();
 			
 			bool calc(bool show_message = true);
 
 	private:
-		DCP06DomModelC *m_pDCP06DomModel;
-		DCP06ModelC *m_pDCP06Model;
+		Alignment321Model* m_pAlignment321Model;
+		Model *m_pModel;
     };
 };
 

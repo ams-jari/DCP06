@@ -52,23 +52,23 @@ namespace DCP
 {
     // Forward declaration
 	/*
-	class DCP06ModelC;
-	//class DCP06MeasDlgC;
-	class DCP06MeasXYZModelC;
+	class Model;
+	//class MeasureDialog;
+	class MeasXYZModel;
 	class DCPSurveyModelC;
 	*/
    
-	class DCP06PointBuffModelC : public GUI::ModelC
+	class PointBuffModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06PointBuffModelC();
+            PointBuffModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06PointBuffModelC();
+            virtual ~PointBuffModel();
 						
 			S_POINT_BUFF m_pPointBuff[1];
     };

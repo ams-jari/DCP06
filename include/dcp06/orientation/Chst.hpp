@@ -48,18 +48,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06ChangeStationDlgC;
-	//class DCP06ChStModelC;
+    class Model;
+	class ChangeStationDialog;
+	//class ChangeStationModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06ChangeStationControllerC : public GUI::ControllerC
+    class ChangeStationController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06ChangeStationControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06ChangeStationControllerC();
+            ChangeStationController(Model* pModel);
+			~ChangeStationController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -89,35 +89,35 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06ChangeStationControllerC( const DCP06ChangeStationControllerC& oDCP06ChangeStationController )
+            ChangeStationController( const ChangeStationController& oChangeStationController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06ChangeStationControllerC& operator=( const DCP06ChangeStationControllerC& oDCP06ChangeStationController )
+            ChangeStationController& operator=( const ChangeStationController& oChangeStationController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
-			DCP06PomModelC* m_pDataModel;
+			BestFitModel* m_pDataModel;
 
-            DCP06ChangeStationDlgC* m_pDlg;
+            ChangeStationDialog* m_pDlg;
 			bool check_values(int& min, int& max);
-			DCP06MsgBoxC* m_pMsgBox;
+			MsgBox* m_pMsgBox;
 
 			void update_dialog();
-			//void DCP::DCP06ChangeStationControllerC::check_function_keys();
+			//void DCP::ChangeStationController::check_function_keys();
 		
 			//AdfFileFunc* adf;
-			DCP06CommonC* m_pCommon;
-			DCP06FileModelC* m_pFileModel;
-			DCP06ModelC* m_pDCP06Model;
+			Common* m_pCommon;
+			FileModel* m_pFileModel;
+			Model* m_pModel;
     };
    
 
-    class DCP06ChangeStationDlgC:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
+    class ChangeStationDialog:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -134,10 +134,10 @@ namespace DCP
 
 			};
 
-			DCP06ChangeStationDlgC(DCP06PomModelC* pModel,DCP06ChangeStationControllerC* pController);
+			ChangeStationDialog(BestFitModel* pModel,ChangeStationController* pController);
 
             // Description: Destructor
-            virtual ~DCP06ChangeStationDlgC();
+            virtual ~ChangeStationDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -151,21 +151,21 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			virtual void RefreshControls();
 			virtual bool delete_chst();
 			void update_ms_adf();
 			short LAST_SEL;
-			DCP06CommonC* m_pCommon;
+			Common* m_pCommon;
 
 			bool get_horizontal_plane_in_use();
 			short get_active_plane();
 			short get_min_point_count();
 
 	protected:
-			//DCP06ChangeStationDlgC* m_pDCP05ChStDlg;
-			DCP06PomModelC* m_pDataModel;
+			//ChangeStationDialog* m_pChangeStationDlg;
+			BestFitModel* m_pDataModel;
 			GUI::ComboLineCtrlC* m_pCurrentStation;
 			GUI::TextCtrlC* m_pInfo1;
 			//GUI::ComboLineCtrlC* m_pFile;
@@ -175,15 +175,15 @@ namespace DCP
 			GUI::TextCtrlC* m_pCreateNewStation;
 			GUI::ComboLineCtrlC* m_pHorizPlane;
 
-			OBS_DECLARE_EXECUTE(DCP06ChangeStationDlgC);
+			OBS_DECLARE_EXECUTE(ChangeStationDialog);
 
-			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
+			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
 			// Description: add all controls
             
 
 	private:
-			//DCP06CommonC* m_pCommon;
+			//Common* m_pCommon;
 			OBS::ObserverC m_pHorizPlaneObserver;
 			virtual void OnComboBoxChanged(int unNotifyCode, int ulParam2);
 
@@ -192,7 +192,7 @@ namespace DCP
 			short active_plane;
 			short old_active_plane;
 
-			DCP06ChangeStationControllerC* m_pController;
+			ChangeStationController* m_pController;
 
 			void check_hz_plane_status();
 			void update_hz_plane_control();

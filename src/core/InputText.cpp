@@ -47,7 +47,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06InputTextDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::InputTextDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -61,8 +61,8 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06InputTextDlgC);
 
 // USER DIALOG
 
-DCP::DCP06InputTextDlgC::DCP06InputTextDlgC(DCP06ModelC* pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),m_pInfo(0),m_pDCP06Model(pDCP06Model),
-	m_pText(0),m_pObserver(OBS_METHOD_TO_PARAM0(DCP06InputTextDlgC, OnValueChanged), this)
+DCP::InputTextDialog::InputTextDialog(Model* pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),m_pInfo(0),m_pModel(pModel),
+	m_pText(0),m_pObserver(OBS_METHOD_TO_PARAM0(InputTextDialog, OnValueChanged), this)
 {
 	//SetTxtApplicationId(AT_DCP06);
 
@@ -70,12 +70,12 @@ DCP::DCP06InputTextDlgC::DCP06InputTextDlgC(DCP06ModelC* pDCP06Model):GUI::Model
 
 
             // Description: Destructor
-DCP::DCP06InputTextDlgC::~DCP06InputTextDlgC()
+DCP::InputTextDialog::~InputTextDialog()
 {
 
 }
 
-void DCP::DCP06InputTextDlgC::OnInitDialog(void)
+void DCP::InputTextDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 
@@ -101,7 +101,7 @@ void DCP::DCP06InputTextDlgC::OnInitDialog(void)
 	m_pObserver.Attach(m_pText->GetSubject());
 }
 
-bool DCP::DCP06InputTextDlgC::OnKeyPress  ( GUI::Key  eKey ) 
+bool DCP::InputTextDialog::OnKeyPress  ( GUI::Key  eKey ) 
 {
 	if(eKey == GUI::Key_Escape)
 	{
@@ -120,7 +120,7 @@ bool DCP::DCP06InputTextDlgC::OnKeyPress  ( GUI::Key  eKey )
 	}
 }
 
-//void DCP::DCP06InputTextDlgC::OnDialogClosed(int  iExitCode )
+//void DCP::InputTextDialog::OnDialogClosed(int  iExitCode )
 //{
 //	if(iExitCode == EC_KEY_ESC)
 //	{
@@ -128,13 +128,13 @@ bool DCP::DCP06InputTextDlgC::OnKeyPress  ( GUI::Key  eKey )
 //	}
 //}
 
-void DCP::DCP06InputTextDlgC::OnValueChanged( int unNotifyCode,  int ulParam2)
+void DCP::InputTextDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 {	
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
 		//short iCurrentPno = GetDataModel()->iCurrentPoint;
-		DCP06CommonC common(m_pDCP06Model);
+		Common common(m_pModel);
 		if(ulParam2 == eText)
 		{
 			StringC sText = m_pText->GetString();
@@ -158,18 +158,18 @@ void DCP::DCP06InputTextDlgC::OnValueChanged( int unNotifyCode,  int ulParam2)
 	}
 }
 
-void DCP::DCP06InputTextDlgC::OnDialogActivated()
+void DCP::InputTextDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
 
-void DCP::DCP06InputTextDlgC::UpdateData()
+void DCP::InputTextDialog::UpdateData()
 {
 	GetDataModel()->m_StrText = m_pText->GetString();
 }
 
 // Description: refresh all controls
-void DCP::DCP06InputTextDlgC::RefreshControls()
+void DCP::InputTextDialog::RefreshControls()
 {
 	if(m_pText)
 	{
@@ -178,14 +178,14 @@ void DCP::DCP06InputTextDlgC::RefreshControls()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06InputTextDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::InputTextDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06InputTextModelC* pDCP06Model = dynamic_cast< DCP::DCP06InputTextModelC* >( pModel );
+    DCP::InputTextModel* pModel = dynamic_cast< DCP::InputTextModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -195,20 +195,20 @@ bool DCP::DCP06InputTextDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06InputTextModelC* DCP::DCP06InputTextDlgC::GetDataModel() const
+DCP::InputTextModel* DCP::InputTextDialog::GetDataModel() const
 {
-    return (DCP::DCP06InputTextModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::InputTextModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06InputTextControllerC::DCP06InputTextControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL )
+DCP::InputTextController::InputTextController(Model* pModel)
+    : m_pDlg( nullptr )
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -216,7 +216,7 @@ DCP::DCP06InputTextControllerC::DCP06InputTextControllerC(DCP06ModelC* pDCP06Mod
   //  SetTitleTok( AT_DCP06, T_DCP_InputTextDLG_TOK /*C_DCP_APPLICATION_NAME_TOK */);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06InputTextDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::InputTextDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( INPUT_TEXT_DLG, m_pDlg, true );
 
     // Set the function key
@@ -237,13 +237,13 @@ DCP::DCP06InputTextControllerC::DCP06InputTextControllerC(DCP06ModelC* pDCP06Mod
 	
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06InputTextControllerC::~DCP06InputTextControllerC()
+DCP::InputTextController::~InputTextController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06InputTextControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::InputTextController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -254,12 +254,12 @@ bool DCP::DCP06InputTextControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -270,9 +270,9 @@ bool DCP::DCP06InputTextControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // CONT
-void DCP::DCP06InputTextControllerC::OnF1Pressed()
+void DCP::InputTextController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -282,7 +282,7 @@ void DCP::DCP06InputTextControllerC::OnF1Pressed()
     // Set it to hello world dialog
     m_pDlg->UpdateData();
 
-	DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetModel();		
+	DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetModel();		
 	if(pModel->m_StrText.IsEmpty())
 		return;
 
@@ -293,7 +293,7 @@ void DCP::DCP06InputTextControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06InputTextControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::InputTextController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	m_pDlg->UpdateData();
 	int x;
@@ -301,7 +301,7 @@ void DCP::DCP06InputTextControllerC::OnActiveDialogClosed( int lDlgID, int lExit
 }
 
 // Description: React on close of controller
-void DCP::DCP06InputTextControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::InputTextController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );

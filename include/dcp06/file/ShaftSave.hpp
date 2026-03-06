@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06SaveShaftDlgC;
-	class DCP06SaveShaftModelC;
+    class Model;
+	class SaveShaftDialog;
+	class SaveShaftModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06SaveShaftControllerC : public GUI::ControllerC
+    class SaveShaftController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06SaveShaftControllerC(DCP06ShaftModelC* pShaftModel, DCP06ModelC* pDCP06Model);
-			~DCP06SaveShaftControllerC();
+            SaveShaftController(ShaftModel* pShaftModel, Model* pModel);
+			~SaveShaftController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -76,29 +76,29 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06SaveShaftControllerC( const DCP06SaveShaftControllerC& oDCP05SaveShaftController )
+            SaveShaftController( const SaveShaftController& oSaveShaftController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06SaveShaftControllerC& operator=( const DCP06SaveShaftControllerC& oDCP05SaveShaftController )
+            SaveShaftController& operator=( const SaveShaftController& oSaveShaftController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06SaveShaftDlgC* m_pDlg;
-			DCP06ShaftModelC* m_pShaftModel;
-			DCP06SaveShaftModelC* m_pDataModel;
+            SaveShaftDialog* m_pDlg;
+			ShaftModel* m_pShaftModel;
+			SaveShaftModel* m_pDataModel;
 
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			
     };
 
 
-    class DCP06SaveShaftDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class SaveShaftDialog:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -108,10 +108,10 @@ namespace DCP
 				eFile,
 			};
 
-		   DCP06SaveShaftDlgC(DCP06ShaftModelC* pShaftModel, DCP06SaveShaftModelC* pSaveShaftModel);
+		   SaveShaftDialog(ShaftModel* pShaftModel, SaveShaftModel* pSaveShaftModel);
 
             // Description: Destructor
-            virtual ~DCP06SaveShaftDlgC();
+            virtual ~SaveShaftDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -125,7 +125,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 			virtual void RefreshControls();
 
 			StringC get_id();
@@ -136,10 +136,10 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pId;
 			GUI::ComboLineCtrlC* m_pFile;
 
-			DCP06ShaftModelC* m_pShaftModel;
-			DCP06SaveShaftModelC* m_pDataModel;
+			ShaftModel* m_pShaftModel;
+			SaveShaftModel* m_pDataModel;
 
-			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
+			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
 			// Description: add all controls
             
@@ -153,17 +153,17 @@ namespace DCP
 			StringC m_strZLine;
 	};
 	
-	class DCP06SaveShaftModelC : public GUI::ModelC
+	class SaveShaftModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06SaveShaftModelC(DCP06ModelC* pDCP06Model);
+            SaveShaftModel(Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06SaveShaftModelC();
+            virtual ~SaveShaftModel();
 
 			ShaftFileFunc* m_pFileFunc;
     };

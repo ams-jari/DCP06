@@ -57,7 +57,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06ChangeStationDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::ChangeStationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -70,10 +70,10 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06ChangeStationDlgC);
 
 // Unit
 
-DCP::DCP06ChangeStationDlgC::DCP06ChangeStationDlgC(DCP::DCP06PomModelC* pModel,DCP::DCP06ChangeStationControllerC* pController):
+DCP::ChangeStationDialog::ChangeStationDialog(DCP::BestFitModel* pModel,DCP::ChangeStationController* pController):
 	m_pInfo1(0)/*, m_pFile(0)*/, m_pPoints(0),m_pPointMeas(0),m_pDataModel(pModel),LAST_SEL(0),
 		m_pCurrentStation(0),m_pRemeasurePos2(0),m_pCreateNewStation(0),m_pHorizPlane(0),
-		m_pHorizPlaneObserver(OBS_METHOD_TO_PARAM0(DCP06ChangeStationDlgC, OnComboBoxChanged), this),
+		m_pHorizPlaneObserver(OBS_METHOD_TO_PARAM0(ChangeStationDialog, OnComboBoxChanged), this),
 		disable_hz_plane(false),use_hz_plane(false), active_plane(0),m_pController(pController)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
@@ -84,7 +84,7 @@ DCP::DCP06ChangeStationDlgC::DCP06ChangeStationDlgC(DCP::DCP06PomModelC* pModel,
  
  
             // Description: Destructor
-DCP::DCP06ChangeStationDlgC::~DCP06ChangeStationDlgC()
+DCP::ChangeStationDialog::~ChangeStationDialog()
 {
 	 if(m_pCommon)
 	 {
@@ -93,9 +93,9 @@ DCP::DCP06ChangeStationDlgC::~DCP06ChangeStationDlgC()
 	 }
 }
 
-void DCP::DCP06ChangeStationDlgC::OnInitDialog(void)
+void DCP::ChangeStationDialog::OnInitDialog(void)
 {
-		m_pCommon = new DCP06CommonC(GetDCP06Model());
+		m_pCommon = new Common(GetModel());
 
 		check_hz_plane_status();
 
@@ -107,7 +107,7 @@ void DCP::DCP06ChangeStationDlgC::OnInitDialog(void)
 
 /*
 		int DOM_ROTATION = m_pCommon->get_rotation_status();
-		short iMin = (!DOM_ROTATION  && GetDCP06Model()->dom_hz_plane ? 2: 3);
+		short iMin = (!DOM_ROTATION  && GetModel()->dom_hz_plane ? 2: 3);
 		*/
 		/*
 
@@ -128,7 +128,7 @@ void DCP::DCP06ChangeStationDlgC::OnInitDialog(void)
 			{
 				use_hz_plane =  m_pCommon->get_rotation_status() ? false : true;
 				disable_hz_plane = m_pCommon->get_rotation_status() ? true : false;
-				active_plane = GetDCP06Model()->dom_active_plane;
+				active_plane = GetModel()->dom_active_plane;
 			}
 			else if(m_pDataModel->old_active_coodinate_system == OCSC)
 			{
@@ -262,7 +262,7 @@ void DCP::DCP06ChangeStationDlgC::OnInitDialog(void)
 }
 
 //
-void DCP::DCP06ChangeStationDlgC::check_hz_plane_status()
+void DCP::ChangeStationDialog::check_hz_plane_status()
 {
 		TPI::MeasConfigC oMeasConfig;
 	
@@ -279,22 +279,22 @@ void DCP::DCP06ChangeStationDlgC::check_hz_plane_status()
 			disable_hz_plane = true;
 			
 			//if(m_pDataModel->old_active_coodinate_system == OCSD )
-			if(GetDCP06Model()->active_coodinate_system == OCSD)
+			if(GetModel()->active_coodinate_system == OCSD)
 			{
 
 				use_hz_plane =  m_pCommon->get_rotation_status() ? false : true;
 				disable_hz_plane = m_pCommon->get_rotation_status() ? true : false;
-				active_plane = GetDCP06Model()->dom_active_plane;
+				active_plane = GetModel()->dom_active_plane;
 			}
-			else if(GetDCP06Model()->active_coodinate_system == OCSC)
+			else if(GetModel()->active_coodinate_system == OCSC)
 			{
 				
 				disable_hz_plane = true;
-				active_plane = GetDCP06Model()->chst_used_hz_plane;
+				active_plane = GetModel()->chst_used_hz_plane;
 
 				use_hz_plane = active_plane == 0 ? false : true;
 			}
-			else if(GetDCP06Model()->active_coodinate_system == DCS)
+			else if(GetModel()->active_coodinate_system == DCS)
 			{
 				use_hz_plane = true;
 				disable_hz_plane = false;
@@ -318,23 +318,23 @@ void DCP::DCP06ChangeStationDlgC::check_hz_plane_status()
 
 }
 //
-void DCP::DCP06ChangeStationDlgC::OnDialogActivated()
+void DCP::ChangeStationDialog::OnDialogActivated()
 {
 	/* 011111 moved to controller */
 	/*
-	m_pDataModel->old_active_coodinate_system = GetDCP06Model()->active_coodinate_system;
-	memcpy(m_pDataModel->matrix,GetDCP06Model()->ocsc_matrix, sizeof(double) * 16);
-	memcpy(m_pDataModel->inv_matrix,GetDCP06Model()->ocsc_inv_matrix, sizeof(double) * 16);
+	m_pDataModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
+	memcpy(m_pDataModel->matrix,GetModel()->ocsc_matrix, sizeof(double) * 16);
+	memcpy(m_pDataModel->inv_matrix,GetModel()->ocsc_inv_matrix, sizeof(double) * 16);
 
-	memcpy(&m_pDataModel->point_DCS[0], &GetDCP06Model()->CHST_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_OCS[0], &GetDCP06Model()->CHST_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_RES[0], &GetDCP06Model()->CHST_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	LAST_SEL =  GetDCP06Model()->chst_last_sel;
+	memcpy(&m_pDataModel->point_DCS[0], &GetModel()->CHST_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_OCS[0], &GetModel()->CHST_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_RES[0], &GetModel()->CHST_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	LAST_SEL =  GetModel()->chst_last_sel;
 	*/
 	RefreshControls();
 }
 
-void DCP::DCP06ChangeStationDlgC::update_hz_plane_control()
+void DCP::ChangeStationDialog::update_hz_plane_control()
 {
 	m_pHorizPlane->GetComboBoxInputCtrl()->SetSelectedId(use_hz_plane ? YES : NO);
 	GUI::BaseCtrlC::CtrlStateT state =  m_pHorizPlane->GetComboBoxInputCtrl()->GetCtrlState();
@@ -346,17 +346,17 @@ void DCP::DCP06ChangeStationDlgC::update_hz_plane_control()
 
 }
 
-short DCP::DCP06ChangeStationDlgC::get_active_plane()
+short DCP::ChangeStationDialog::get_active_plane()
 {
 	return active_plane;
 }
 
-short DCP::DCP06ChangeStationDlgC::get_min_point_count()
+short DCP::ChangeStationDialog::get_min_point_count()
 {
 	return (active_plane == 0 || !get_horizontal_plane_in_use()) ? 3 : 2;
 }
 
-void DCP::DCP06ChangeStationDlgC::OnComboBoxChanged(int unNotifyCode, int ulParam2)
+void DCP::ChangeStationDialog::OnComboBoxChanged(int unNotifyCode, int ulParam2)
 {
 	if(unNotifyCode == GUI::NC_ONCOMBOBOX_SELECTION_CHANGED)
 	{
@@ -381,7 +381,7 @@ void DCP::DCP06ChangeStationDlgC::OnComboBoxChanged(int unNotifyCode, int ulPara
 }
 
 //
-bool DCP::DCP06ChangeStationDlgC::get_horizontal_plane_in_use()
+bool DCP::ChangeStationDialog::get_horizontal_plane_in_use()
 {
 	bool ret = false;
 
@@ -404,13 +404,13 @@ bool DCP::DCP06ChangeStationDlgC::get_horizontal_plane_in_use()
 
 
 // Description: refresh all controls
-void DCP::DCP06ChangeStationDlgC::RefreshControls()
+void DCP::ChangeStationDialog::RefreshControls()
 {	
 	if(m_pInfo1/* && m_pFile*/ &&  m_pPoints && m_pPointMeas && m_pCurrentStation)
 	{
 		/*
 		int DOM_ROTATION = m_pCommon->get_rotation_status();
-		short iMin = (!DOM_ROTATION  && GetDCP06Model()->dom_hz_plane ? 2: 3);
+		short iMin = (!DOM_ROTATION  && GetModel()->dom_hz_plane ? 2: 3);
 		*/
 		/*
 		TPI::MeasConfigC oMeasConfig;
@@ -437,7 +437,7 @@ void DCP::DCP06ChangeStationDlgC::RefreshControls()
 	
 		StringC sTemp;
 		char stNb[10];
-		sprintf(stNb,"%d",GetDCP06Model()->stationNumber);
+		sprintf(stNb,"%d",GetModel()->stationNumber);
 		m_pCurrentStation->GetStringInputCtrl()->SetString(StringC((const char*) stNb));
 
 		int iPointCount = m_pCommon->get_OCS_points_count(&m_pDataModel->point_OCS[0], MAX_BESTFIT_POINTS);
@@ -460,31 +460,31 @@ void DCP::DCP06ChangeStationDlgC::RefreshControls()
 	}
 }
  
-void DCP::DCP06ChangeStationDlgC::UpdateData()
+void DCP::ChangeStationDialog::UpdateData()
 {
 	
-	memcpy(GetDCP06Model()->ocsc_matrix,m_pDataModel->matrix, sizeof(double) * 16);
-	memcpy(GetDCP06Model()->ocsc_inv_matrix, m_pDataModel->inv_matrix, sizeof(double) * 16);
+	memcpy(GetModel()->ocsc_matrix,m_pDataModel->matrix, sizeof(double) * 16);
+	memcpy(GetModel()->ocsc_inv_matrix, m_pDataModel->inv_matrix, sizeof(double) * 16);
 
-	memcpy(&GetDCP06Model()->CHST_point_DCS[0],&m_pDataModel->point_DCS[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy( &GetDCP06Model()->CHST_point_OCS[0], &m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&GetDCP06Model()->CHST_point_RES[0],&m_pDataModel->point_RES[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&GetModel()->CHST_point_DCS[0],&m_pDataModel->point_DCS[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy( &GetModel()->CHST_point_OCS[0], &m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&GetModel()->CHST_point_RES[0],&m_pDataModel->point_RES[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 
-	GetDCP06Model()->chst_last_sel = LAST_SEL;
+	GetModel()->chst_last_sel = LAST_SEL;
 
-	GetDCP06Model()->chst_used_hz_plane = active_plane;
+	GetModel()->chst_used_hz_plane = active_plane;
 
-	GetDCP06Model()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_CHST);
-	GetDCP06Model()->poConfigController->StoreConfigData();
+	GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_CHST);
+	GetModel()->poConfigController->StoreConfigData();
 
-	GetDCP06Model()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
-	GetDCP06Model()->poConfigController->StoreConfigData();
+	GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
+	GetModel()->poConfigController->StoreConfigData();
 
 	// update _ms_.adf
 	update_ms_adf();
-	//GetDCP06Model()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
+	//GetModel()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
 }
-void DCP::DCP06ChangeStationDlgC::update_ms_adf()
+void DCP::ChangeStationDialog::update_ms_adf()
 {
 	//char bPid[ 100 ] ;
 	char bXmea[ 100 ] ;
@@ -514,14 +514,14 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 	char btf_filename[100];
 	btf_filename[0] = '\0';
 
-	AdfFileFunc* pAdf = new AdfFileFunc(STA, GetDCP06Model());
+	AdfFileFunc* pAdf = new AdfFileFunc(STA, GetModel());
 	pAdf->always_single = 1;
 
-	if(GetDCP06Model()->ADFFileName.GetLength() == 0)
+	if(GetModel()->ADFFileName.GetLength() == 0)
 		return;
 	else
 	{
-		StringC strFileName = GetDCP06Model()->ADFFileName.Mid(0,GetDCP06Model()->ADFFileName.GetLength()-4);
+		StringC strFileName = GetModel()->ADFFileName.Mid(0,GetModel()->ADFFileName.GetLength()-4);
 		//UTL::UnicodeToAscii(btf_filename, strFileName);
 		BSS::UTI::BSS_UTI_WCharToAscii(strFileName, btf_filename);
 	}
@@ -550,7 +550,7 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 				m_pCommon->copy_xyz_to_buffer(	&m_pDataModel->point_OCS[i].x, 
 												&m_pDataModel->point_OCS[i].y, 
 												&m_pDataModel->point_OCS[i].z,
-												&bXdes[0],&bYdes[0],&bZdes[0],9, GetDCP06Model()->m_nDecimals);
+												&bXdes[0],&bYdes[0],&bZdes[0],9, GetModel()->m_nDecimals);
 
 				if(m_pDataModel->point_RES[i].sta == 1 || m_pDataModel->point_RES[i].sta == 2)
 				{
@@ -562,14 +562,14 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 
 					m_pCommon->copy_xyz_to_buffer(	&x_conv,&y_conv,&z_conv, 
 													&bXmea[0],&bYmea[0],&bZmea[0],
-													9, GetDCP06Model()->m_nDecimals);
+													9, GetModel()->m_nDecimals);
 					outOfCalc = false;
 					
 				}
 				else
 				{
 					outOfCalc = true;
-					//sprintf(bNote,"%-d", GetDCP06Model()->stationNumber);
+					//sprintf(bNote,"%-d", GetModel()->stationNumber);
 					//bNote[6] = '\0';
 					//m_pCommon->empty_xyz_buffers(&bXmea[0],&bYmea[0],&bZmea[0],9);
 				}
@@ -585,7 +585,7 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 														&m_pDataModel->point_OCS[i].y, 
 														&m_pDataModel->point_OCS[i].z,
 														&pAdf->xdes_front[0],&pAdf->ydes_front[0],&pAdf->zdes_front[0],
-													   9, GetDCP06Model()->m_nDecimals);
+													   9, GetModel()->m_nDecimals);
 
 						if(outOfCalc == false)
 						{	
@@ -593,14 +593,14 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 
 							m_pCommon->copy_xyz_to_buffer(&x_conv,&y_conv,&z_conv,
 													  &pAdf->xmea_front[0],&pAdf->ymea_front[0],&pAdf->zmea_front[0],
-													   9, GetDCP06Model()->m_nDecimals);
+													   9, GetModel()->m_nDecimals);
 						
 							// add current station number to note field
 							// copy current note...
 							sprintf(noteBuffer,"%-6.6s", pAdf->note_front);
 							m_pCommon->strbtrim(noteBuffer);
 
-							sprintf(stationBuffer,"%-d", GetDCP06Model()->stationNumber);
+							sprintf(stationBuffer,"%-d", GetModel()->stationNumber);
 							stationBuffer[6] = '\0';
 							m_pCommon->strbtrim(stationBuffer);
 
@@ -634,9 +634,9 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 						{
 							//ei laskennassa: �l� p�ivit� mitattuja arvoja eik� Note:a
 							/*
-							if(GetDCP06Model()->stationNumber == 1)
+							if(GetModel()->stationNumber == 1)
 							{
-								sprintf(stationBuffer,"%-d", GetDCP06Model()->stationNumber);
+								sprintf(stationBuffer,"%-d", GetModel()->stationNumber);
 								sprintf(pAdf->note_front,"%-s",stationBuffer);		
 								pAdf->note_front[6] = '\0';
 							}
@@ -654,14 +654,14 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 					{
 						bNote[0] = '\0';
 						pAdf->add_new_pnt(pAdf->get_file_pointer(), m_pDataModel->point_OCS[i].point_id,
-													 NULL,&bXdes[0],
-													 NULL,&bYdes[0],
-													 NULL,&bZdes[0],&bNote[0]);
+													 nullptr,&bXdes[0],
+													 nullptr,&bYdes[0],
+													 nullptr,&bZdes[0],&bNote[0]);
 
 					}
 					else
 					{
-						sprintf(bNote,"%-d", GetDCP06Model()->stationNumber);
+						sprintf(bNote,"%-d", GetModel()->stationNumber);
 						bNote[6] = '\0';
 
 						pAdf->add_new_pnt(pAdf->get_file_pointer(), m_pDataModel->point_OCS[i].point_id,
@@ -689,7 +689,7 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 				m_pCommon->copy_xyz_to_buffer(	&m_pDataModel->point_OCS[i].x, 
 												&m_pDataModel->point_OCS[i].y, 
 												&m_pDataModel->point_OCS[i].z,
-												&bXdes[0],&bYdes[0],&bZdes[0],9, GetDCP06Model()->m_nDecimals);
+												&bXdes[0],&bYdes[0],&bZdes[0],9, GetModel()->m_nDecimals);
 				
 				if(m_pDataModel->point_RES[i].sta == 1 || m_pDataModel->point_RES[i].sta == 2)
 				{
@@ -701,7 +701,7 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 
 					m_pCommon->copy_xyz_to_buffer(	&x_conv,&y_conv,&z_conv, 
 													&bXmea[0],&bYmea[0],&bZmea[0],
-													9, GetDCP06Model()->m_nDecimals);
+													9, GetModel()->m_nDecimals);
 				
 					
 				}
@@ -749,7 +749,7 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 	pAdf = 0;
 }
  
-bool DCP::DCP06ChangeStationDlgC::delete_chst()
+bool DCP::ChangeStationDialog::delete_chst()
 {
 		bool ret = false;
 		short sRet = -1;
@@ -758,11 +758,11 @@ bool DCP::DCP06ChangeStationDlgC::delete_chst()
 		//strText.LoadTxt(AT_PMP7,L_DCP_CHST_TEXT_TOK);
 		StringC strMsg;
 		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_CHST_TOK);
-		strMsg.Format(strMsg,GetDCP06Model()->stationNumber);
+		strMsg.Format(strMsg,GetModel()->stationNumber);
 
 		//strMsg.LoadTxt(AT_PMP7,M_DCP_DELETE_ALL_TOK);
 		//strMsg.Format(strMsg,(const wchar_t*)strText);
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		sRet = msgbox.DeleteChstMessage(strMsg);
 
 		if(sRet == 1) // ALL
@@ -770,16 +770,16 @@ bool DCP::DCP06ChangeStationDlgC::delete_chst()
 			m_pDataModel->calculated 		= false;
 			//m_pDataModel->INTO_TEMPLATE 	= false;
 			//m_pDataModel->INTO_CAPTURE	= false;
-			GetDCP06Model()->ocsc_defined = false;
+			GetModel()->ocsc_defined = false;
 			
 			// 011111
-			GetDCP06Model()->active_coodinate_system = DCS;
+			GetModel()->active_coodinate_system = DCS;
 			
 
 			memset(&m_pDataModel->point_DCS[0], 0, sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 			memset(&m_pDataModel->point_OCS[0], 0, sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 			
-			GetDCP06Model()->stationNumber = 1;
+			GetModel()->stationNumber = 1;
 
 			ret = true;
 			//return true;
@@ -787,7 +787,7 @@ bool DCP::DCP06ChangeStationDlgC::delete_chst()
 		else if(sRet == 2) // POS2 VALUES
 		{
 			m_pDataModel->calculated 		= false;
-			GetDCP06Model()->ocsc_defined = false;
+			GetModel()->ocsc_defined = false;
 			memset(&m_pDataModel->point_DCS[0], 0, sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 			//memset(&m_pDataModel->point_OCS[0], 0, sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 			//LAST_SEL = 0;
@@ -807,23 +807,23 @@ bool DCP::DCP06ChangeStationDlgC::delete_chst()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06ChangeStationDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::ChangeStationDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
-		m_pDataModel->old_active_coodinate_system = pDCP06Model->active_coodinate_system;
-		memcpy(m_pDataModel->matrix, pDCP06Model->ocsc_matrix, sizeof(double) * 16);
-		memcpy(m_pDataModel->inv_matrix,pDCP06Model->ocsc_inv_matrix, sizeof(double) * 16);
+		m_pDataModel->old_active_coodinate_system = pModel->active_coodinate_system;
+		memcpy(m_pDataModel->matrix, pModel->ocsc_matrix, sizeof(double) * 16);
+		memcpy(m_pDataModel->inv_matrix,pModel->ocsc_inv_matrix, sizeof(double) * 16);
 
-		memcpy(&m_pDataModel->point_DCS[0], &pDCP06Model->CHST_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-		memcpy(&m_pDataModel->point_OCS[0], &pDCP06Model->CHST_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-		memcpy(&m_pDataModel->point_RES[0], &pDCP06Model->CHST_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-		LAST_SEL =  pDCP06Model->chst_last_sel;
+		memcpy(&m_pDataModel->point_DCS[0], &pModel->CHST_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+		memcpy(&m_pDataModel->point_OCS[0], &pModel->CHST_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+		memcpy(&m_pDataModel->point_RES[0], &pModel->CHST_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+		LAST_SEL =  pModel->chst_last_sel;
 
         RefreshControls();
         return true;
@@ -833,22 +833,22 @@ bool DCP::DCP06ChangeStationDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06ChangeStationDlgC::GetDCP06Model() const
+DCP::Model* DCP::ChangeStationDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06ChangeStationControllerC::DCP06ChangeStationControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pCommon(0), m_pFileModel(0),m_pMsgBox(0), m_pDCP06Model(pDCP06Model)
+DCP::ChangeStationController::ChangeStationController(Model* pModel)
+    : m_pDlg( nullptr ),m_pCommon(0), m_pFileModel(0),m_pMsgBox(0), m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -856,20 +856,20 @@ DCP::DCP06ChangeStationControllerC::DCP06ChangeStationControllerC(DCP06ModelC* p
     SetTitle(StringC( AT_DCP05, T_DCP_CHANGE_STATION_POS1_TOK));
 	
 	// create model
-	m_pDataModel = new DCP06PomModelC;
+	m_pDataModel = new BestFitModel;
 	m_pDataModel->pom_chst = 1;
 
-	m_pFileModel = new DCP06FileModelC (pDCP06Model);
+	m_pFileModel = new FileModel (pModel);
 
 
 	
 
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06ChangeStationDlgC(m_pDataModel, this);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::ChangeStationDialog(m_pDataModel, this);  //lint !e1524 new in constructor for class 
     (void)AddDialog( CHST_DLG, m_pDlg, true );
 	
-	m_pMsgBox = new DCP06MsgBoxC;
+	m_pMsgBox = new MsgBox;
 
     // Set the function key
 	 
@@ -924,7 +924,7 @@ DCP::DCP06ChangeStationControllerC::DCP06ChangeStationControllerC(DCP06ModelC* p
 // **************************************************************************
 // Description: destructor
 // **************************************************************************
-DCP::DCP06ChangeStationControllerC::~DCP06ChangeStationControllerC()
+DCP::ChangeStationController::~ChangeStationController()
 {
 	if(m_pCommon)
 	{
@@ -954,7 +954,7 @@ DCP::DCP06ChangeStationControllerC::~DCP06ChangeStationControllerC()
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP06ChangeStationControllerC::OnControllerActivated(void)
+void DCP::ChangeStationController::OnControllerActivated(void)
 {
 	check_function_keys();
 }
@@ -962,7 +962,7 @@ void DCP::DCP06ChangeStationControllerC::OnControllerActivated(void)
 // **************************************************************************
 // Description: Route model to everybody else
 // **************************************************************************
-bool DCP::DCP06ChangeStationControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::ChangeStationController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
@@ -971,7 +971,7 @@ bool DCP::DCP06ChangeStationControllerC::SetModel( GUI::ModelC* pModel )
     // Set it to hello world dialog
 	bool ret  = m_pDlg->SetModel( pModel );
 	
-	m_pCommon = new DCP06CommonC(m_pDlg->GetDCP06Model());
+	m_pCommon = new Common(m_pDlg->GetModel());
 	
     return ret;
 }
@@ -979,7 +979,7 @@ bool DCP::DCP06ChangeStationControllerC::SetModel( GUI::ModelC* pModel )
 // **************************************************************************
 // **************************************************************************
 /*
-void DCP::DCP06ChangeStationControllerC::OnF1Pressed()
+void DCP::ChangeStationController::OnF1Pressed()
 {
 	// check....
 	int min=3, max=MAX_BESTFIT_POINTS;
@@ -992,11 +992,11 @@ void DCP::DCP06ChangeStationControllerC::OnF1Pressed()
 	m_pMsgBox->ShowMessageOk(sText);
 
 	// select file
-	DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
-	if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+	DCP::SelectFileModel* pModel = new SelectFileModel;
+	if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 	{
 		StringC sTitle = GetTitleStr();	
-		(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ONLY_ADF, sTitle,false) );
+		(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle,false) );
 	}
 	(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 	SetActiveController(SELECT_FILE_CONTROLLER, true);
@@ -1005,9 +1005,9 @@ void DCP::DCP06ChangeStationControllerC::OnF1Pressed()
 */
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::OnF1Pressed()
+void DCP::ChangeStationController::OnF1Pressed()
 {
-   if (m_pDlg == NULL)
+   if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -1016,7 +1016,7 @@ void DCP::DCP06ChangeStationControllerC::OnF1Pressed()
 
 	/*
 	int DOM_ROTATION = m_pCommon->get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetDCP06Model()->dom_hz_plane ? 2: 3);
+	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1038,8 +1038,8 @@ void DCP::DCP06ChangeStationControllerC::OnF1Pressed()
 	//sText.LoadTxt(AT_DCP05,M_CHG_INST_POS_TOK);
 	//m_pMsgBox->ShowMessageOk(sText);
 
-	DCP::DCP06PomSelectPointsModelC* pModel = new DCP06PomSelectPointsModelC;
-	//DCP06CommonC common;
+	DCP::BestFitSelectPointsModel* pModel = new BestFitSelectPointsModel;
+	//Common common;
 
 	memcpy(&pModel->points[0], &m_pDataModel->point_OCS[0],sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	memcpy(&pModel->points1[0], &m_pDataModel->point_DCS[0],sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
@@ -1060,9 +1060,9 @@ void DCP::DCP06ChangeStationControllerC::OnF1Pressed()
 	}
 
 	//m_pDataModel->INTO_CAPTURE = true;
-	if(GetController(CHST_POINT_CONTROLLER) == NULL)
+	if(GetController(CHST_POINT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( CHST_POINT_CONTROLLER, new DCP::DCP06PomSelectPointsControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( CHST_POINT_CONTROLLER, new DCP::BestFitSelectPointsController(m_pDlg->GetModel()));
 	}
 	(void)GetController( CHST_POINT_CONTROLLER )->SetModel(pModel);
 	SetActiveController(CHST_POINT_CONTROLLER, true);
@@ -1070,20 +1070,20 @@ void DCP::DCP06ChangeStationControllerC::OnF1Pressed()
 }
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::OnF2Pressed()
+void DCP::ChangeStationController::OnF2Pressed()
 { 
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 	int min=3, max=MAX_BESTFIT_POINTS;
 
-	//DCP06CommonC common;
+	//Common common;
 	// added 041111
 	/*
 	int DOM_ROTATION = m_pCommon->get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetDCP06Model()->dom_hz_plane ? 2: 3);
+	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1108,10 +1108,10 @@ void DCP::DCP06ChangeStationControllerC::OnF2Pressed()
 	
 	int sum = m_pCommon->get_last_defined_point(&m_pDataModel->point_OCS[0],&m_pDataModel->point_DCS[0],MAX_BESTFIT_POINTS);
 		
-	//old_coordinate = m_pDCP06PomDlg->GetDCP06Model()->active_coodinate_system;
-	//m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+	//old_coordinate = m_pDCP06PomDlg->GetModel()->active_coodinate_system;
+	//m_pDlg->GetModel()->active_coodinate_system = DCS;
 				
-		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+		DCP::MeasureModel* pModel = new MeasureModel;
 		pModel->m_iMaxPoint = MAX_BESTFIT_POINTS;
 		pModel->m_iMinPoint = min;
 		pModel->m_iPointsCount = sum;
@@ -1130,9 +1130,9 @@ void DCP::DCP06ChangeStationControllerC::OnF2Pressed()
 			sprintf(pModel->point_table[i].point_id,"REF%d",i+1);
 		}
 
-		if(GetController(MEAS_CONTROLLER) == NULL)
+		if(GetController(MEAS_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 		}
 		(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_CHANGE_STATION_POS1_MEAS_TOK));
 		(void)GetController( MEAS_CONTROLLER )->SetModel(pModel);
@@ -1142,9 +1142,9 @@ void DCP::DCP06ChangeStationControllerC::OnF2Pressed()
 
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::OnF4Pressed()
+void DCP::ChangeStationController::OnF4Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -1152,14 +1152,14 @@ void DCP::DCP06ChangeStationControllerC::OnF4Pressed()
 		int min=3, max=MAX_BESTFIT_POINTS;
 	int i;
 
-	//DCP06CommonC common;
+	//Common common;
 
 	// removed 041111
 	//check_values(min,max);
 	// added 041111
 	/*
 	int DOM_ROTATION = m_pCommon->get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetDCP06Model()->dom_hz_plane ? 2: 3);
+	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1182,7 +1182,7 @@ void DCP::DCP06ChangeStationControllerC::OnF4Pressed()
 	}
 	if(count < min)
 	{	
-		DCP06MsgBoxC MsgBox;
+		MsgBox MsgBox;
 		StringC sMsg;
 		
 		if(min ==2)
@@ -1197,12 +1197,12 @@ void DCP::DCP06ChangeStationControllerC::OnF4Pressed()
 		return;
 	}
 	
-	m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+	m_pDlg->GetModel()->active_coodinate_system = DCS;
 
 	
 
 	// set values...
-	DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+	DCP::MeasureModel* pModel = new MeasureModel;
 	pModel->disable_point_editing = true;
 	pModel->m_iMaxPoint = 20;
 	pModel->m_iMinPoint = min;
@@ -1221,14 +1221,14 @@ void DCP::DCP06ChangeStationControllerC::OnF4Pressed()
 	}
 	// load measurement display
  
-	if(GetController(MEAS_POS2_CONTROLLER) == NULL)
+	if(GetController(MEAS_POS2_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_POS2_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()) );
+		(void)AddController( MEAS_POS2_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 	}
 
 	StringC msg;
 	msg.LoadTxt(AT_DCP05,T_DCP_CHST_POS2_MEAS_TOK);
-	msg.Format(msg,m_pDlg->GetDCP06Model()->stationNumber);
+	msg.Format(msg,m_pDlg->GetModel()->stationNumber);
 
 	//(void)GetController(MEAS_POS2_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_CHST_POS2_MEAS_TOK);
 	(void)GetController(MEAS_POS2_CONTROLLER)->SetTitle(msg);
@@ -1238,9 +1238,9 @@ void DCP::DCP06ChangeStationControllerC::OnF4Pressed()
 }
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
+void DCP::ChangeStationController::OnF5Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -1248,14 +1248,14 @@ void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
 	int min=3, max=MAX_BESTFIT_POINTS;
 	int i;
 
-	//DCP06CommonC common;
+	//Common common;
 
 	// removed 041111
 	//check_values(min,max);
 	// added 041111
 	/*
 	int DOM_ROTATION = m_pCommon->get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetDCP06Model()->dom_hz_plane ? 2: 3);
+	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1278,12 +1278,12 @@ void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
 		}
 	}
 
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	StringC sMsg;
 	
 	if(count < min)
 	{	
-		//DCP06MsgBoxC MsgBox;
+		//MsgBox MsgBox;
 		//StringC sMsg;
 		
 		if(min ==2)
@@ -1313,7 +1313,7 @@ void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
 	if(count2 > 0)
 	{
 		sMsg.LoadTxt(AT_DCP05,M_DCP_CHST_DELETE_STA_POINTS_TOK);
-		sMsg.Format(sMsg, m_pDlg->GetDCP06Model()->stationNumber);
+		sMsg.Format(sMsg, m_pDlg->GetModel()->stationNumber);
 
 		if(MsgBox.ShowMessageYesNo(sMsg))
 		{
@@ -1327,7 +1327,7 @@ void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
 	*/
 		// show always the message
 		sMsg.LoadTxt(AT_DCP05,M_DCP_CHST_DELETE_STA_POINTS_TOK);
-		sMsg.Format(sMsg, m_pDlg->GetDCP06Model()->stationNumber);
+		sMsg.Format(sMsg, m_pDlg->GetModel()->stationNumber);
 
 		if(MsgBox.ShowMessageYesNo(sMsg))
 		{
@@ -1339,12 +1339,12 @@ void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
 	
 	// end added 071111
 
-	m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+	m_pDlg->GetModel()->active_coodinate_system = DCS;
 
 	
 
 	// set values...
-	DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+	DCP::MeasureModel* pModel = new MeasureModel;
 	pModel->m_iMaxPoint = 20;
 	pModel->m_iMinPoint = min;
 	pModel->disable_point_editing = true;
@@ -1357,7 +1357,7 @@ void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
 
 	memcpy(&pModel->point_table2[0],&m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 
-	m_pDlg->GetDCP06Model()->stationNumber++;
+	m_pDlg->GetModel()->stationNumber++;
 
 	for(i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
@@ -1368,13 +1368,13 @@ void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
 	}
 	// load measurement display
  
-	if(GetController(MEAS_POS2_CONTROLLER) == NULL)
+	if(GetController(MEAS_POS2_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_POS2_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()) );
+		(void)AddController( MEAS_POS2_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 	}
 	StringC msg;
 	msg.LoadTxt(AT_DCP05,T_DCP_CHST_POS2_MEAS_TOK);
-	msg.Format(msg,m_pDlg->GetDCP06Model()->stationNumber);
+	msg.Format(msg,m_pDlg->GetModel()->stationNumber);
 
 	//(void)GetController(MEAS_POS2_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_CHST_POS2_MEAS_TOK);
 	(void)GetController(MEAS_POS2_CONTROLLER)->SetTitle(msg);
@@ -1387,9 +1387,9 @@ void DCP::DCP06ChangeStationControllerC::OnF5Pressed()
 // **************************************************************************
 // **************************************************************************
 // Description: Handle change of position values
-void DCP::DCP06ChangeStationControllerC::OnF6Pressed()
+void DCP::ChangeStationController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -1406,9 +1406,9 @@ void DCP::DCP06ChangeStationControllerC::OnF6Pressed()
 
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::OnSHF2Pressed()
+void DCP::ChangeStationController::OnSHF2Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -1418,55 +1418,55 @@ void DCP::DCP06ChangeStationControllerC::OnSHF2Pressed()
 	update_dialog();
 	//m_pDlg->RefreshControls();
 	/*
-	if(GetController(3) == NULL)
+	if(GetController(3) == nullptr)
 	{
-		(void)AddController( 3, new DCP::DCP06UserControllerC );
+		(void)AddController( 3, new DCP::UserController );
 	}
-	(void)GetController( 3 )->SetModel(m_pDCP05InitDlg->GetDCP06Model());
+	(void)GetController( 3 )->SetModel(m_pInitDlg->GetModel());
 	SetActiveController(3, true);
 	*/
 }
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::OnSHF3Pressed()
+void DCP::ChangeStationController::OnSHF3Pressed()
 {	/*
-    if (m_pDCP05InitDlg == NULL)
+    if (m_pInitDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	if(GetController(3) == NULL)
+	if(GetController(3) == nullptr)
 	{
-		(void)AddController( 3, new DCP::DCP06UserControllerC );
+		(void)AddController( 3, new DCP::UserController );
 	}
-	(void)GetController( 3 )->SetModel(m_pDCP05InitDlg->GetDCP06Model());
+	(void)GetController( 3 )->SetModel(m_pInitDlg->GetModel());
 	SetActiveController(3, true);
 	*/
 }
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::OnSHF4Pressed()
+void DCP::ChangeStationController::OnSHF4Pressed()
 {	/*
-    if (m_pDCP05InitDlg == NULL)
+    if (m_pInitDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     } 
 
-	if(GetController(3) == NULL)
+	if(GetController(3) == nullptr)
 	{
-		(void)AddController( 3, new DCP::DCP06UserControllerC );
+		(void)AddController( 3, new DCP::UserController );
 	}
-	(void)GetController( 3 )->SetModel(m_pDCP05InitDlg->GetDCP06Model());
+	(void)GetController( 3 )->SetModel(m_pInitDlg->GetModel());
 	SetActiveController(3, true);
 	*/
 }
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::OnSHF5Pressed()
+void DCP::ChangeStationController::OnSHF5Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -1480,31 +1480,31 @@ void DCP::DCP06ChangeStationControllerC::OnSHF5Pressed()
 	else
 		return;
 	
-	if(GetController(_3DFILEVIEW_CONTROLLER) == NULL)		
+	if(GetController(_3DFILEVIEW_CONTROLLER) == nullptr)		
 	{
-		(void)AddController( _3DFILEVIEW_CONTROLLER, new DCP::DCP063DFileViewControllerC (m_pFileModel));//, false));CAPTIVATE TBD
+		(void)AddController( _3DFILEVIEW_CONTROLLER, new DCP::FileView3DController (m_pFileModel));//, false));CAPTIVATE TBD
 	}
-	(void)GetController( _3DFILEVIEW_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+	(void)GetController( _3DFILEVIEW_CONTROLLER )->SetModel(m_pDlg->GetModel());
 	SetActiveController(_3DFILEVIEW_CONTROLLER, true);
 	
 }
 // **************************************************************************
 // **************************************************************************
 // Description: React on close of tabbed dialog
-void DCP::DCP06ChangeStationControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::ChangeStationController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // **************************************************************************
 // **************************************************************************
 // Description: React on close of controller
-void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::ChangeStationController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	// selected file, pos1 
 	/*
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		StringC strSelectedFile = pModel->m_strSelectedFile;
 		//m_pDCP06PomDlg->SelectFile(strSelectedFile);
 
@@ -1515,7 +1515,7 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 		// create
 		AdfFileFunc adf;
 		adf.always_single = 1;
-		DCP06CommonC common;  
+		Common common;  
 
 		if(adf.setFile(strSelectedFile))
 		{
@@ -1527,7 +1527,7 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 
 			for(int i = 1; i <= adf.getPointsCount(); i++)
 			{
-				adf.select_pnt1((long) i, pid, NULL, bXmea, bXdes, NULL, bYmea, bYdes, NULL, bZmea, bZdes, NULL);
+				adf.select_pnt1((long) i, pid, nullptr, bXmea, bXdes, nullptr, bYmea, bYdes, nullptr, bZmea, bZdes, nullptr);
 				 
 				sprintf(m_pDataModel->point_OCS[i-1].point_id,"%-6.6s",pid);
 				strcpy(m_pDataModel->point_DCS[i-1].point_id, m_pDataModel->point_OCS[i-1].point_id);
@@ -1551,9 +1551,9 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 	*/
 	if(lCtrlID == CHST_POINT_CONTROLLER) 
 	{
-		DCP::DCP06PomSelectPointsModelC* pModel = (DCP::DCP06PomSelectPointsModelC*) GetController( CHST_POINT_CONTROLLER )->GetModel();
+		DCP::BestFitSelectPointsModel* pModel = (DCP::BestFitSelectPointsModel*) GetController( CHST_POINT_CONTROLLER )->GetModel();
 
-		DCP06CommonC common(m_pDlg->GetDCP06Model());
+		Common common(m_pDlg->GetModel());
 		
 		memcpy(&m_pDataModel->point_OCS[0], &pModel->points[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 		memcpy(&m_pDataModel->point_DCS[0], &pModel->points1[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
@@ -1567,11 +1567,11 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 	// measured points, pos1
 	if(lCtrlID == MEAS_CONTROLLER) 
 	{
-		//m_pDlg->GetDCP06Model()->active_coodinate_system = old_coordinate;
+		//m_pDlg->GetModel()->active_coodinate_system = old_coordinate;
 		
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();	
+			DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();	
 
 			memcpy(&m_pDataModel->point_OCS[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 			// otettu matkaan 041111
@@ -1594,18 +1594,18 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 	// measured points, pos1
 	if(lCtrlID == MEAS_POS2_CONTROLLER) 
 	{
-		m_pDlg->GetDCP06Model()->active_coodinate_system = m_pDataModel->old_active_coodinate_system;
+		m_pDlg->GetModel()->active_coodinate_system = m_pDataModel->old_active_coodinate_system;
 		
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_POS2_CONTROLLER )->GetModel();	
+			DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_POS2_CONTROLLER )->GetModel();	
 
 			memcpy(&m_pDataModel->point_OCS[0], &pModel->point_table2[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 			memcpy(&m_pDataModel->point_DCS[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 
 			m_pDataModel->calculated = false;
 			
-			DCP06CalcChStC calcpom(m_pDataModel,m_pDlg->GetDCP06Model(),m_pDlg->get_active_plane());
+			CalcChangeStation calcpom(m_pDataModel,m_pDlg->GetModel(),m_pDlg->get_active_plane());
 			if(calcpom.calc_transform())
 			{
 				m_pDataModel->calculated = true;
@@ -1623,13 +1623,13 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 				StringC sZline;
 				char formatBuffer[STRING_BUFFER_MEDIUM];
 		
-				sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
+				sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_x);
 				sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(formatBuffer));
 
-				sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
+				sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_y);
 				sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(formatBuffer));
 
-				sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
+				sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_z);
 				sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(formatBuffer));
 				
 
@@ -1639,16 +1639,16 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 				sMsg += L"\n";
 				sMsg += sZline;
 				
-				DCP06MsgBoxC msgbox;
+				MsgBox msgbox;
 				short ret = msgbox.ShowMessageOkAbortRetry(sMsg);
 				if(ret == 1)
 				{
-					if(GetController(RES_BESTFIT_CONTROLLER) == NULL)
+					if(GetController(RES_BESTFIT_CONTROLLER) == nullptr)
 					{
 						StringC sTitle = GetTitle();	
-						(void)AddController( RES_BESTFIT_CONTROLLER, new DCP::DCP06ResPomControllerC(m_pDataModel) );
+						(void)AddController( RES_BESTFIT_CONTROLLER, new DCP::ResBestFitController(m_pDataModel) );
 					}
-					(void)GetController( RES_BESTFIT_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+					(void)GetController( RES_BESTFIT_CONTROLLER )->SetModel(m_pDlg->GetModel());
 					SetActiveController(RES_BESTFIT_CONTROLLER, true);
 				}
 				else if(ret == -1) // Abort
@@ -1668,7 +1668,7 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 			}
 			else
 			{
-				m_pDlg->GetDCP06Model()->active_coodinate_system = m_pDataModel->old_active_coodinate_system;						
+				m_pDlg->GetModel()->active_coodinate_system = m_pDataModel->old_active_coodinate_system;						
 			}
 		}	
 	}
@@ -1676,8 +1676,8 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 	if(lCtrlID == RES_BESTFIT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		m_pDataModel->calculated = true;
-		m_pDlg->GetDCP06Model()->active_coodinate_system = OCSC;
-		m_pDlg->GetDCP06Model()->ocsc_defined = true;
+		m_pDlg->GetModel()->active_coodinate_system = OCSC;
+		m_pDlg->GetModel()->ocsc_defined = true;
 		m_pDlg->update_ms_adf();
 	}
 
@@ -1695,9 +1695,9 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 
 // **************************************************************************
 // **************************************************************************
-bool DCP::DCP06ChangeStationControllerC::check_values(int& min, int& count)
+bool DCP::ChangeStationController::check_values(int& min, int& count)
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
 	{
 		USER_APP_VERIFY( false );
 		return false;
@@ -1706,7 +1706,7 @@ bool DCP::DCP06ChangeStationControllerC::check_values(int& min, int& count)
 	int trans_points = 0;
 
 	// check if points existing
-	DCP06CommonC common(m_pDlg->GetDCP06Model());
+	Common common(m_pDlg->GetModel());
 
 	for(int i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
@@ -1729,7 +1729,7 @@ bool DCP::DCP06ChangeStationControllerC::check_values(int& min, int& count)
 	}
 	/* removed 28122012
 	int DOM_ROTATION = common.get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetDCP06Model()->dom_hz_plane ? 2: 3);
+	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1756,7 +1756,7 @@ bool DCP::DCP06ChangeStationControllerC::check_values(int& min, int& count)
 
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::update_dialog()
+void DCP::ChangeStationController::update_dialog()
 {
 	check_function_keys();
 	m_pDlg->RefreshControls();
@@ -1764,7 +1764,7 @@ void DCP::DCP06ChangeStationControllerC::update_dialog()
 
 // **************************************************************************
 // **************************************************************************
-void DCP::DCP06ChangeStationControllerC::check_function_keys()
+void DCP::ChangeStationController::check_function_keys()
 {
 	bool disable_newst = false;
 	bool disable_remeas = false;
@@ -1775,7 +1775,7 @@ void DCP::DCP06ChangeStationControllerC::check_function_keys()
 	//int DOM_ROTATION = m_pDlg->m_pCommon->get_rotation_status();
 	/* removed 28122012
 	int DOM_ROTATION =m_pCommon->get_rotation_status();
-	int min = (!DOM_ROTATION  && m_pDlg->GetDCP06Model()->dom_hz_plane ? 2: 3);
+	int min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1805,7 +1805,7 @@ void DCP::DCP06ChangeStationControllerC::check_function_keys()
 	}
 	if(ref_count >= min)
 	{
-		if(m_pDlg->GetDCP06Model()->stationNumber == 1)
+		if(m_pDlg->GetModel()->stationNumber == 1)
 		{
 			DisableFunctionKey(FK4);
 			EnableFunctionKey(FK5);
@@ -1826,7 +1826,7 @@ void DCP::DCP06ChangeStationControllerC::check_function_keys()
 	//	DisableFunctionKey(FK2);
 
 	// check view
-	AdfFileFunc adf(m_pDCP06Model);
+	AdfFileFunc adf(m_pModel);
 	if(adf.setFile("_ms_"))
 		EnableFunctionKey(SHFK5);
 	else
@@ -1842,7 +1842,7 @@ void DCP::DCP06ChangeStationControllerC::check_function_keys()
 // ===========================================================================================
 /*
 // Instantiate template classes
-DCP::DCP06ChStModelC::DCP06ChStModelC()
+DCP::ChangeStationModel::ChangeStationModel()
 {
 	calculated=false;
 	memset(&point_DCS[0],0,sizeof(S_POINT_BUFF)* MAX_BESTFIT_POINTS);
@@ -1852,7 +1852,7 @@ DCP::DCP06ChStModelC::DCP06ChStModelC()
 }
 
 
-DCP::DCP06ChStModelC::~DCP06ChStModelC()
+DCP::ChangeStationModel::~ChangeStationModel()
 {
 
 }

@@ -36,7 +36,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06DlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::BaseDialog);
 
 
 // ================================================================================================
@@ -50,8 +50,8 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06DlgC);
 
 
 // Description: Constructor
-DCP::DCP06DlgC::DCP06DlgC() : m_pCombo( NULL ), m_pCombo2(NULL), m_pComboBox(NULL),
-	m_pComboBoxObserver(OBS_METHOD_TO_PARAM0(DCP06DlgC, OnComboBoxChanged), this)
+DCP::BaseDialog::BaseDialog() : m_pCombo( nullptr ), m_pCombo2(nullptr), m_pComboBox(nullptr),
+	m_pComboBoxObserver(OBS_METHOD_TO_PARAM0(BaseDialog, OnComboBoxChanged), this)
 {
 }
 
@@ -59,7 +59,7 @@ DCP::DCP06DlgC::DCP06DlgC() : m_pCombo( NULL ), m_pCombo2(NULL), m_pComboBox(NUL
 //
 // On Initialize Dialog
 //
-void DCP::DCP06DlgC::OnInitDialog()
+void DCP::BaseDialog::OnInitDialog()
 {
 
 //	SetTxtApplicationId(10111);
@@ -112,14 +112,14 @@ void DCP::DCP06DlgC::OnInitDialog()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06DlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::BaseDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -129,30 +129,30 @@ bool DCP::DCP06DlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: refresh all controls
-void DCP::DCP06DlgC::RefreshControls()
+void DCP::BaseDialog::RefreshControls()
 {
 	if(m_pComboBox)
 	{
-		m_pComboBox->GetComboBoxInputCtrl()->SetSelectedId (GetDCP06Model()->m_nOption);	
+		m_pComboBox->GetComboBoxInputCtrl()->SetSelectedId (GetModel()->m_nOption);	
 	}
 }
 
 // Description: update the road model with the new values
-void DCP::DCP06DlgC::UpdateData()
+void DCP::BaseDialog::UpdateData()
 {
-	GetDCP06Model()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06DlgC::GetDCP06Model() const
+DCP::Model* DCP::BaseDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 
-void DCP::DCP06DlgC::OnComboBoxChanged(int unNotifyCode, int ulParam2)
+void DCP::BaseDialog::OnComboBoxChanged(int unNotifyCode, int ulParam2)
 {
 	if(unNotifyCode == GUI::NC_ONCOMBOBOX_SELECTION_CHANGED)
 	{

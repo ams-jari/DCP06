@@ -49,7 +49,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectOnePointDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::SelectOnePointDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -61,19 +61,19 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP::DCP06ResLineDlgC::DCP06ResLineDlgC(DCP::DCP06ModelC *pDCP06Model):poMultiColCtrl(NULL),m_pInfo1(NULL),
-	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06SelectOnePointDlgC, OnChanged), this),
-	m_pDCP06Model(pDCP06Model)
+DCP::ResLineDialog::ResLineDialog(DCP::Model *pModel):poMultiColCtrl(nullptr),m_pInfo1(nullptr),
+	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(SelectOnePointDialog, OnChanged), this),
+	m_pModel(pModel)
 {
 	//SetTxtApplicationId(AT_DCP05);
 	
 	// load title
 	sTitle.LoadTxt(AT_DCP05,T_DCP_DEV_OF_LINE_TOK);
 	
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 }
 // Description: Destructor
-DCP::DCP06ResLineDlgC::~DCP06ResLineDlgC()
+DCP::ResLineDialog::~ResLineDialog()
 {
 	 if(m_pCommon)
 	 {
@@ -82,7 +82,7 @@ DCP::DCP06ResLineDlgC::~DCP06ResLineDlgC()
 	 }
 }
 
-void DCP::DCP06ResLineDlgC::OnInitDialog(void)
+void DCP::ResLineDialog::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
@@ -127,7 +127,7 @@ void DCP::DCP06ResLineDlgC::OnInitDialog(void)
 
 
 
-void DCP::DCP06ResLineDlgC::OnF1Pressed(void)
+void DCP::ResLineDialog::OnF1Pressed(void)
 {
 	
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
@@ -137,11 +137,11 @@ void DCP::DCP06ResLineDlgC::OnF1Pressed(void)
 	
 	if(GetDataModel()->line_buff[0].points[iSelectedId].sta == 1 || GetDataModel()->line_buff[0].points[iSelectedId].sta == 2)
 	{
-		if(m_pCommon-> defined_points_count_in_line(&GetDataModel()->line_buff[0],NULL) <= 2)
+		if(m_pCommon-> defined_points_count_in_line(&GetDataModel()->line_buff[0],nullptr) <= 2)
 		{
 			StringC strText;
 			strText.LoadTxt(AT_DCP05,M_DCP_CANNOT_REJECT_PNT_TOK);
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			
 			msgbox.ShowMessageOk(strText);
 			return;
@@ -169,19 +169,19 @@ void DCP::DCP06ResLineDlgC::OnF1Pressed(void)
 		GetDataModel()->line_buff[0].points[iSelectedId].sta = 2;
 	}
 	
-	DCP06CalcLineC calcline;
+	CalcLine calcline;
 	calcline.calc(&GetDataModel()->line_buff[0],ACTUAL);
 	
 	RefreshControls();		
 }
 
-void DCP::DCP06ResLineDlgC::OnDialogActivated()
+void DCP::ResLineDialog::OnDialogActivated()
 {
 	RefreshControls();
 } 
 
 // Description: refresh all controls
-void DCP::DCP06ResLineDlgC::RefreshControls()
+void DCP::ResLineDialog::RefreshControls()
 {
 	int iMax=0;
 	int i;
@@ -225,7 +225,7 @@ void DCP::DCP06ResLineDlgC::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+9.*f", m_pDCP06Model->m_nDecimals, calc_pdist(&GetDataModel()->line_buff[0],i));
+			sprintf(temp,"%+9.*f", m_pModel->m_nDecimals, calc_pdist(&GetDataModel()->line_buff[0],i));
 			sDev = temp;
 		}
 		else if (sta == 0)
@@ -249,7 +249,7 @@ void DCP::DCP06ResLineDlgC::RefreshControls()
 	// set title with rms and point count
 	short iCount = m_pCommon->defined_points_count_in_line(&GetDataModel()->line_buff[0],0);
 	StringC sTemp = sTitle;
-	sTemp.Format(sTemp, m_pDCP06Model->m_nDecimals,rms,iCount);
+	sTemp.Format(sTemp, m_pModel->m_nDecimals,rms,iCount);
 	SetTitle(sTemp);
 
 	//EndDraw();
@@ -257,7 +257,7 @@ void DCP::DCP06ResLineDlgC::RefreshControls()
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP06ResLineDlgC::get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/)
+double DCP::ResLineDialog::get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/)
 {
 
 short i, count=0;
@@ -305,7 +305,7 @@ double max=0.0, dist, dist2=0.0, dist3;
 
 /************************************************************************
 *************************************************************************/
-double DCP::DCP06ResLineDlgC::calc_pdist(S_LINE_BUFF *line, short pno/*, short ACT*/)
+double DCP::ResLineDialog::calc_pdist(S_LINE_BUFF *line, short pno/*, short ACT*/)
 {
 struct ams_vector m;
 struct line wline;
@@ -328,7 +328,7 @@ double dist;
 
 			return dist;
 }
-void DCP::DCP06ResLineDlgC::UpdateData()
+void DCP::ResLineDialog::UpdateData()
 {
 	/*
 	StringC sSelected;
@@ -340,14 +340,14 @@ void DCP::DCP06ResLineDlgC::UpdateData()
 		
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06ResLineDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::ResLineDialog::SetModel( GUI::ModelC* pModel )
 {
 	  // Verify type
-    DCP::DCP06DefineLineModelC* pDCP06Model = dynamic_cast< DCP::DCP06DefineLineModelC* >( pModel );
+    DCP::DefineLineModel* pModel = dynamic_cast< DCP::DefineLineModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -358,17 +358,17 @@ bool DCP::DCP06ResLineDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06DefineLineModelC* DCP::DCP06ResLineDlgC::GetDataModel() const
+DCP::DefineLineModel* DCP::ResLineDialog::GetDataModel() const
 {
-    return (DCP::DCP06DefineLineModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DefineLineModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP06ResLineControllerC::DCP06ResLineControllerC(DCP::DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::ResLineController::ResLineController(DCP::Model *pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -380,7 +380,7 @@ DCP::DCP06ResLineControllerC::DCP06ResLineControllerC(DCP::DCP06ModelC *pDCP06Mo
 	SetTitle(sTitle);
 
     // Create a dialog
-     m_pDlg = new DCP::DCP06ResLineDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+     m_pDlg = new DCP::ResLineDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( RES_LINE_DLG, m_pDlg, true );
 
     // Set the function key
@@ -417,12 +417,12 @@ DCP::DCP06ResLineControllerC::DCP06ResLineControllerC(DCP::DCP06ModelC *pDCP06Mo
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06ResLineControllerC::~DCP06ResLineControllerC()
+DCP::ResLineController::~ResLineController()
 {
 
 }
 // Description: Route model to everybody else
-bool DCP::DCP06ResLineControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::ResLineController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -433,12 +433,12 @@ bool DCP::DCP06ResLineControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -452,9 +452,9 @@ bool DCP::DCP06ResLineControllerC::SetModel( GUI::ModelC* pModel )
 
 
 // CONT
-void DCP::DCP06ResLineControllerC::OnF6Pressed() 
+void DCP::ResLineController::OnF6Pressed() 
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -471,12 +471,12 @@ void DCP::DCP06ResLineControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06ResLineControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::ResLineController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06ResLineControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::ResLineController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -485,14 +485,14 @@ void DCP::DCP06ResLineControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 
 
 // Instantiate template classes
-DCP::DCP06ResLineModelC::DCP06ResLineModelC()
+DCP::ResLineModel::ResLineModel()
 {
 	//memset(&sel_points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 	//memset(nro_table,0,sizeof(short) * MAX_POINTS_IN_FILE*2);
 }
 
 
-DCP::DCP06ResLineModelC::~DCP06ResLineModelC()
+DCP::ResLineModel::~ResLineModel()
 {
 }
 

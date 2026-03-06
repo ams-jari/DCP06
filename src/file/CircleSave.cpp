@@ -48,7 +48,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
+// OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -61,7 +61,7 @@
 
 // Unit
 
-DCP::DCP06SaveCircleDlgC::DCP06SaveCircleDlgC(DCP::DCP06CircleModelC* pCircleModel, DCP06SaveCircleModelC* pDataModel):m_pId(0),
+DCP::SaveCircleDialog::SaveCircleDialog(DCP::CircleModel* pCircleModel, SaveCircleModel* pDataModel):m_pId(0),
 		m_pCircleModel(pCircleModel), m_pFile(0), m_pDataModel(pDataModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
@@ -69,12 +69,12 @@ DCP::DCP06SaveCircleDlgC::DCP06SaveCircleDlgC(DCP::DCP06CircleModelC* pCircleMod
 
 
             // Description: Destructor
-DCP::DCP06SaveCircleDlgC::~DCP06SaveCircleDlgC()
+DCP::SaveCircleDialog::~SaveCircleDialog()
 {
 
 }
 
-void DCP::DCP06SaveCircleDlgC::OnInitDialog(void)
+void DCP::SaveCircleDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -110,15 +110,15 @@ void DCP::DCP06SaveCircleDlgC::OnInitDialog(void)
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 }
 
-void DCP::DCP06SaveCircleDlgC::OnDialogActivated()
+void DCP::SaveCircleDialog::OnDialogActivated()
 {
-	m_pDataModel->m_pFileFunc->setFile(GetDCP06Model()->sCircleFile);
+	m_pDataModel->m_pFileFunc->setFile(GetModel()->sCircleFile);
 	
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP06SaveCircleDlgC::RefreshControls()
+void DCP::SaveCircleDialog::RefreshControls()
 {	
 	if(m_pId && m_pFile)	
 	{
@@ -131,7 +131,7 @@ void DCP::DCP06SaveCircleDlgC::RefreshControls()
 	}
 }
 
-StringC DCP::DCP06SaveCircleDlgC::get_id()
+StringC DCP::SaveCircleDialog::get_id()
 {
 	StringC sTemp;
 
@@ -139,20 +139,20 @@ StringC DCP::DCP06SaveCircleDlgC::get_id()
 	return sTemp;
 }
 
-void DCP::DCP06SaveCircleDlgC::UpdateData()
+void DCP::SaveCircleDialog::UpdateData()
 {
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06SaveCircleDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::SaveCircleDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -162,22 +162,22 @@ bool DCP::DCP06SaveCircleDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06SaveCircleDlgC::GetDCP06Model() const
+DCP::Model* DCP::SaveCircleDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06SaveCircleControllerC::DCP06SaveCircleControllerC(DCP::DCP06CircleModelC* pCircleModel, DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pCircleModel(pCircleModel),m_pDCP06Model(pDCP06Model)
+DCP::SaveCircleController::SaveCircleController(DCP::CircleModel* pCircleModel, Model* pModel)
+    : m_pDlg( nullptr ),m_pCircleModel(pCircleModel),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -185,11 +185,11 @@ DCP::DCP06SaveCircleControllerC::DCP06SaveCircleControllerC(DCP::DCP06CircleMode
     SetTitle(StringC(AT_DCP06, T_DCP_3DSHAFT_ALIGMENT_TOK));
 
 	// create model
-	m_pDataModel = new DCP06SaveCircleModelC(pDCP06Model);
+	m_pDataModel = new SaveCircleModel(pModel);
     
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06SaveCircleDlgC(pCircleModel, m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::SaveCircleDialog(pCircleModel, m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( CIRCLE_SAVE_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -218,7 +218,7 @@ DCP::DCP06SaveCircleControllerC::DCP06SaveCircleControllerC(DCP::DCP06CircleMode
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06SaveCircleControllerC::~DCP06SaveCircleControllerC()
+DCP::SaveCircleController::~SaveCircleController()
 {
 	if(m_pDataModel)
 	{
@@ -227,31 +227,31 @@ DCP::DCP06SaveCircleControllerC::~DCP06SaveCircleControllerC()
 	}
 }
 // Description: Route model to everybody else
-bool DCP::DCP06SaveCircleControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::SaveCircleController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	m_pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Set it to hello world dialog
     return m_pDlg->SetModel( pModel );
 }
 
-void DCP::DCP06SaveCircleControllerC::OnF1Pressed()
+void DCP::SaveCircleController::OnF1Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	if(GetController(CIRCLE_FILE_CONTROLLER) == NULL)				
+	if(GetController(CIRCLE_FILE_CONTROLLER) == nullptr)				
 	{
-		(void)AddController( CIRCLE_FILE_CONTROLLER, new DCP::DCP06CircleFileControllerC(m_pDCP06Model));
+		(void)AddController( CIRCLE_FILE_CONTROLLER, new DCP::CircleFileController(m_pModel));
 	}
-	(void)GetController( CIRCLE_FILE_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( CIRCLE_FILE_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(CIRCLE_FILE_CONTROLLER, true);
 
 	/*
@@ -261,9 +261,9 @@ void DCP::DCP06SaveCircleControllerC::OnF1Pressed()
 	
 }
 
-void DCP::DCP06SaveCircleControllerC::OnF3Pressed()
+void DCP::SaveCircleController::OnF3Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -280,7 +280,7 @@ void DCP::DCP06SaveCircleControllerC::OnF3Pressed()
 		}
 		else
 		{
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			StringC sMsg;
 			sMsg.LoadTxt(AT_DCP06, M_DCP_SELECT_CIRCLE_FILE_TOK);
 			msgbox.ShowMessageOk(sMsg);
@@ -289,7 +289,7 @@ void DCP::DCP06SaveCircleControllerC::OnF3Pressed()
 	}
 	else
 	{
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			StringC sMsg;
 			sMsg.LoadTxt(AT_DCP06, M_DCP_ENTER_CIRCLE_ID_TOK);
 			msgbox.ShowMessageOk(sMsg);
@@ -298,9 +298,9 @@ void DCP::DCP06SaveCircleControllerC::OnF3Pressed()
 
 }
 // Description: Handle change of position values
-void DCP::DCP06SaveCircleControllerC::OnF6Pressed()
+void DCP::SaveCircleController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -317,18 +317,18 @@ void DCP::DCP06SaveCircleControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06SaveCircleControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::SaveCircleController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 
 }
 
 // Description: React on close of controller
-void DCP::DCP06SaveCircleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::SaveCircleController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 
 	if(lCtrlID == CIRCLE_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		m_pDataModel->m_pFileFunc->setFile(m_pDlg->GetDCP06Model()->sCircleFile);
+		m_pDataModel->m_pFileFunc->setFile(m_pDlg->GetModel()->sCircleFile);
 		
 	}
 	m_pDlg->RefreshControls();
@@ -337,14 +337,14 @@ void DCP::DCP06SaveCircleControllerC::OnActiveControllerClosed( int lCtrlID, int
 
 
 
-DCP::DCP06SaveCircleModelC::DCP06SaveCircleModelC(DCP06ModelC* pDCP06Model)
+DCP::SaveCircleModel::SaveCircleModel(Model* pModel)
 {
-	m_pFileFunc = new CircleFileFunc(pDCP06Model);
+	m_pFileFunc = new CircleFileFunc(pModel);
 }
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06SaveCircleModelC::~DCP06SaveCircleModelC()
+DCP::SaveCircleModel::~SaveCircleModel()
 {
 	if(m_pFileFunc)
 	{

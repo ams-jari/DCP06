@@ -45,7 +45,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
+// OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -58,8 +58,8 @@
 
 // Unit
 
-DCP::DCP06DefineLineUserDefDlgC::DCP06DefineLineUserDefDlgC(DCP::DCP06ModelC* pDCP06Model):m_pLine(0),
-		m_pDCP06Model(pDCP06Model),m_pPoints(0),m_pLinePoints(0)
+DCP::DefineLineUserDefDialog::DefineLineUserDefDialog(DCP::Model* pModel):m_pLine(0),
+		m_pModel(pModel),m_pPoints(0),m_pLinePoints(0)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
 	//SetTxtApplicationId(AT_DCP06);
@@ -73,12 +73,12 @@ DCP::DCP06DefineLineUserDefDlgC::DCP06DefineLineUserDefDlgC(DCP::DCP06ModelC* pD
 
 
             // Description: Destructor
-DCP::DCP06DefineLineUserDefDlgC::~DCP06DefineLineUserDefDlgC()
+DCP::DefineLineUserDefDialog::~DefineLineUserDefDialog()
 {
 
 }
 
-void DCP::DCP06DefineLineUserDefDlgC::OnInitDialog(void)
+void DCP::DefineLineUserDefDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -126,14 +126,14 @@ void DCP::DCP06DefineLineUserDefDlgC::OnInitDialog(void)
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 }
 
-void DCP::DCP06DefineLineUserDefDlgC::OnDialogActivated()
+void DCP::DefineLineUserDefDialog::OnDialogActivated()
 {
 
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP06DefineLineUserDefDlgC::RefreshControls()
+void DCP::DefineLineUserDefDialog::RefreshControls()
 {	
 	if(m_pLine && m_pPoints && m_pLinePoints)	
 	{
@@ -194,20 +194,20 @@ void DCP::DCP06DefineLineUserDefDlgC::RefreshControls()
 	}
 }
 
-void DCP::DCP06DefineLineUserDefDlgC::UpdateData()
+void DCP::DefineLineUserDefDialog::UpdateData()
 {
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06DefineLineUserDefDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DefineLineUserDefDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06DefineLineUserDefModelC* pDCP06Model = dynamic_cast< DCP::DCP06DefineLineUserDefModelC* >( pModel );
+    DCP::DefineLineUserDefModel* pModel = dynamic_cast< DCP::DefineLineUserDefModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -217,18 +217,18 @@ bool DCP::DCP06DefineLineUserDefDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06DefineLineUserDefModelC* DCP::DCP06DefineLineUserDefDlgC::GetDataModel() const
+DCP::DefineLineUserDefModel* DCP::DefineLineUserDefDialog::GetDataModel() const
 {
-    return (DCP::DCP06DefineLineUserDefModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DefineLineUserDefModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-void DCP::DCP06DefineLineUserDefDlgC::delete_line()
+void DCP::DefineLineUserDefDialog::delete_line()
 {
 	StringC strMsg;
 	strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_POINTS_OF_LINE_TOK);
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
 		GetDataModel()->lineModel->active_line	= X_LINE;
@@ -238,20 +238,20 @@ void DCP::DCP06DefineLineUserDefDlgC::delete_line()
 	}
 }
 // ================================================================================================
-void DCP::DCP06DefineLineUserDefDlgC:: x_line()
+void DCP::DefineLineUserDefDialog:: x_line()
 {
 	GetDataModel()->lineModel->active_line = X_LINE;
 	RefreshControls();
 }
 
 // ================================================================================================
-void DCP::DCP06DefineLineUserDefDlgC:: y_line()
+void DCP::DefineLineUserDefDialog:: y_line()
 {
 	GetDataModel()->lineModel->active_line = Y_LINE;
 	RefreshControls();
 }
 // ================================================================================================
-void DCP::DCP06DefineLineUserDefDlgC::z_line()
+void DCP::DefineLineUserDefDialog::z_line()
 {
 	GetDataModel()->lineModel->active_line = Z_LINE;
 	RefreshControls(); 
@@ -259,14 +259,14 @@ void DCP::DCP06DefineLineUserDefDlgC::z_line()
 
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06DefineLineUserDefControllerC::DCP06DefineLineUserDefControllerC(DCP::DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::DefineLineUserDefController::DefineLineUserDefController(DCP::Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -274,7 +274,7 @@ DCP::DCP06DefineLineUserDefControllerC::DCP06DefineLineUserDefControllerC(DCP::D
     SetTitle(StringC( AT_DCP06, T_DCP_USERDEF_LINE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06DefineLineUserDefDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DefineLineUserDefDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( LINE_USERDEF_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -311,18 +311,18 @@ DCP::DCP06DefineLineUserDefControllerC::DCP06DefineLineUserDefControllerC(DCP::D
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06DefineLineUserDefControllerC::~DCP06DefineLineUserDefControllerC()
+DCP::DefineLineUserDefController::~DefineLineUserDefController()
 {
 
 }
 // Description: Route model to everybody else
-bool DCP::DCP06DefineLineUserDefControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DefineLineUserDefController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	DCP::DCP06DefineLineUserDefModelC* pLineModel = dynamic_cast< DCP::DCP06DefineLineUserDefModelC* >( pModel );
+	DCP::DefineLineUserDefModel* pLineModel = dynamic_cast< DCP::DefineLineUserDefModel* >( pModel );
 	if(pLineModel->lineModel->active_plane == XY_PLANE)
 		HideFunctionKey(FK3);
 	else if(pLineModel->lineModel->active_plane == YZ_PLANE)
@@ -336,18 +336,18 @@ bool DCP::DCP06DefineLineUserDefControllerC::SetModel( GUI::ModelC* pModel )
     return m_pDlg->SetModel( pModel );
 }
 
-void DCP::DCP06DefineLineUserDefControllerC::OnF1Pressed()
+void DCP::DefineLineUserDefController::OnF1Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 	m_pDlg->x_line();
 }
-void DCP::DCP06DefineLineUserDefControllerC::OnF2Pressed()
+void DCP::DefineLineUserDefController::OnF2Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -355,9 +355,9 @@ void DCP::DCP06DefineLineUserDefControllerC::OnF2Pressed()
 	m_pDlg->y_line();
 
 }
-void DCP::DCP06DefineLineUserDefControllerC::OnF3Pressed()
+void DCP::DefineLineUserDefController::OnF3Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -367,17 +367,17 @@ void DCP::DCP06DefineLineUserDefControllerC::OnF3Pressed()
 }
 
 
-void DCP::DCP06DefineLineUserDefControllerC::OnF5Pressed()
+void DCP::DefineLineUserDefController::OnF5Pressed()
 {	
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
-	DCP::DCP06CommonC common(m_pDCP06Model);
+	DCP::Common common(m_pModel);
 
 	// SELECT MULTIPOINTS
-	DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
+	DCP::SelectMultiPointsModel* pModel = new SelectMultiPointsModel;
 	
 	// list of selectable points
 	memcpy(&pModel->sel_points[0],&m_pDlg->GetDataModel()->select_point_list[0], sizeof(S_SELECT_POINTS) * MAX_USERDEF_POINTS);
@@ -403,9 +403,9 @@ void DCP::DCP06DefineLineUserDefControllerC::OnF5Pressed()
 	// set help token
 	pModel->helpToken = H_DCP_SEL_MULTI_A_AND_D_TOK;
 
-	if(GetController(SELECT_MULTIPOINTS_CONTROLLER) == NULL)
+	if(GetController(SELECT_MULTIPOINTS_CONTROLLER) == nullptr)
 	{
-			(void)AddController( SELECT_MULTIPOINTS_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDCP06Model) );
+			(void)AddController( SELECT_MULTIPOINTS_CONTROLLER, new DCP::SelectMultiPointsController(m_pModel) );
 	}
 
 	(void)GetController( SELECT_MULTIPOINTS_CONTROLLER )->SetModel(pModel);
@@ -413,9 +413,9 @@ void DCP::DCP06DefineLineUserDefControllerC::OnF5Pressed()
 	
 }
 // Description: Handle change of position values
-void DCP::DCP06DefineLineUserDefControllerC::OnF6Pressed()
+void DCP::DefineLineUserDefController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -430,28 +430,28 @@ void DCP::DCP06DefineLineUserDefControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 
-void DCP::DCP06DefineLineUserDefControllerC::OnSHF2Pressed()
+void DCP::DefineLineUserDefController::OnSHF2Pressed()
 {	
 	m_pDlg->delete_line();
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06DefineLineUserDefControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::DefineLineUserDefController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == RES_LINE_DLG)
 	{
-		DCP06MsgBoxC msgBox;
+		MsgBox msgBox;
 		msgBox.ShowMessageOk("OK");
 	}
 }
 
 // Description: React on close of controller
-void DCP::DCP06DefineLineUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DefineLineUserDefController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {	
 	if(lCtrlID == SELECT_MULTIPOINTS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();		
-		DCP06CommonC common(m_pDCP06Model);
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();		
+		Common common(m_pModel);
 		
 		// delete line
 		memset(&m_pDlg->GetDataModel()->lineModel->line_buff[0], 0, sizeof(S_LINE_BUFF));
@@ -472,7 +472,7 @@ void DCP::DCP06DefineLineUserDefControllerC::OnActiveControllerClosed( int lCtrl
 
 		if(iSelected < 2)
 		{
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			StringC sMsg;
 			sMsg.LoadTxt(AT_DCP06, M_DCP_IN_MIN_2_POINTS_TOK);
 			msgbox.ShowMessageOk(sMsg);
@@ -488,12 +488,12 @@ void DCP::DCP06DefineLineUserDefControllerC::OnActiveControllerClosed( int lCtrl
 // DefinePlaneModel
 // ===========================================================================================
 
-DCP::DCP06DefineLineUserDefModelC::DCP06DefineLineUserDefModelC()
+DCP::DefineLineUserDefModel::DefineLineUserDefModel()
 {
-	lineModel = new DCP::DCP06DefineLineModelC;
+	lineModel = new DCP::DefineLineModel;
 }
 
-DCP::DCP06DefineLineUserDefModelC::~DCP06DefineLineUserDefModelC()
+DCP::DefineLineUserDefModel::~DefineLineUserDefModel()
 {
 	if(lineModel != 0)
 	{

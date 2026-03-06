@@ -52,7 +52,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06ToolDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::ToolDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -66,13 +66,13 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06ToolDlgC);
 
 // USER DIALOG
 
-DCP::DCP06ToolDlgC::DCP06ToolDlgC(DCP06ToolModelC* pToolModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+DCP::ToolDialog::ToolDialog(ToolModel* pToolModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
 					m_pToolId(0), m_pConstant(0),m_pTranslX(0), m_pTranslY(0),
 					m_pTranslZ(0), m_pToolX_Total(0),m_pToolY_Total(0), m_pToolZ_Total(0),
 					m_pDataModel(pToolModel),m_pCommon(0),
-					m_pXObserver(OBS_METHOD_TO_PARAM0(DCP06ToolDlgC, OnValueChanged), this),
-					m_pYObserver(OBS_METHOD_TO_PARAM0(DCP06ToolDlgC, OnValueChanged), this),
-					m_pZObserver(OBS_METHOD_TO_PARAM0(DCP06ToolDlgC, OnValueChanged), this)
+					m_pXObserver(OBS_METHOD_TO_PARAM0(ToolDialog, OnValueChanged), this),
+					m_pYObserver(OBS_METHOD_TO_PARAM0(ToolDialog, OnValueChanged), this),
+					m_pZObserver(OBS_METHOD_TO_PARAM0(ToolDialog, OnValueChanged), this)
 
 
 {
@@ -81,7 +81,7 @@ DCP::DCP06ToolDlgC::DCP06ToolDlgC(DCP06ToolModelC* pToolModel):GUI::ModelHandler
 
 
             // Description: Destructor
-DCP::DCP06ToolDlgC::~DCP06ToolDlgC()
+DCP::ToolDialog::~ToolDialog()
 {
 	if(m_pCommon)
 	{
@@ -90,7 +90,7 @@ DCP::DCP06ToolDlgC::~DCP06ToolDlgC()
 	}
 }
 
-void DCP::DCP06ToolDlgC::OnInitDialog(void)
+void DCP::ToolDialog::OnInitDialog(void)
 {
 		GUI::BaseDialogC::OnInitDialog();
 	
@@ -116,7 +116,7 @@ void DCP::DCP06ToolDlgC::OnInitDialog(void)
 	m_pTranslX = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pTranslX->SetId(eTranslX);
 	m_pTranslX->SetText(StringC(AT_DCP06,P_DCP_TRANSLATION_X_TOK));
-	m_pTranslX->GetFloatInputCtrl()->SetDecimalPlaces(GetDCP06Model()->m_nDecimals);
+	m_pTranslX->GetFloatInputCtrl()->SetDecimalPlaces(GetModel()->m_nDecimals);
 	//m_pXDsg->GetFlexFloatInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pTranslX->SetEmptyAllowed(true);
 	AddCtrl(m_pTranslX);
@@ -124,14 +124,14 @@ void DCP::DCP06ToolDlgC::OnInitDialog(void)
 	m_pTranslY = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pTranslY->SetId(eTranslY);
 	m_pTranslY->SetText(StringC(AT_DCP06,P_DCP_TRANSLATION_Y_TOK));
-	m_pTranslY->GetFloatInputCtrl()->SetDecimalPlaces(GetDCP06Model()->m_nDecimals);
+	m_pTranslY->GetFloatInputCtrl()->SetDecimalPlaces(GetModel()->m_nDecimals);
 	m_pTranslY->SetEmptyAllowed(true);
 	AddCtrl(m_pTranslY);
 
 	m_pTranslZ = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pTranslZ->SetId(eTranslZ);
 	m_pTranslZ->SetText(StringC(AT_DCP06,P_DCP_TRANSLATION_Z_TOK));
-	m_pTranslZ->GetFloatInputCtrl()->SetDecimalPlaces(GetDCP06Model()->m_nDecimals);
+	m_pTranslZ->GetFloatInputCtrl()->SetDecimalPlaces(GetModel()->m_nDecimals);
 	m_pTranslZ->SetEmptyAllowed(true);
 	AddCtrl(m_pTranslZ);
 
@@ -161,7 +161,7 @@ void DCP::DCP06ToolDlgC::OnInitDialog(void)
 	m_pToolZ_Total->SetEmptyAllowed(true);
 	AddCtrl(m_pToolZ_Total);
 
-	m_pCommon = new DCP06CommonC(GetDCP06Model());
+	m_pCommon = new Common(GetModel());
 
 	m_pXObserver.Attach(m_pTranslX->GetSubject());
 	m_pYObserver.Attach(m_pTranslY->GetSubject());
@@ -170,30 +170,30 @@ void DCP::DCP06ToolDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_TOOL_TOK,0);
 }
 
-void DCP::DCP06ToolDlgC::OnDialogActivated()
+void DCP::ToolDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
 
-void DCP::DCP06ToolDlgC::UpdateData()
+void DCP::ToolDialog::UpdateData()
 {
 	// cont pressed update data into DCP05Model....
 
-	memcpy(&GetDCP06Model()->tool_table[0],&m_pDataModel->tool_table[0],sizeof(S_TOOL) * MAX_TOOLS);
-	GetDCP06Model()->active_tool = m_pDataModel->iActiveTool;
-	GetDCP06Model()->tool_trans_x = m_pDataModel->dTransX;
-	GetDCP06Model()->tool_trans_y = m_pDataModel->dTransY;
-	GetDCP06Model()->tool_trans_z = m_pDataModel->dTransZ;
+	memcpy(&GetModel()->tool_table[0],&m_pDataModel->tool_table[0],sizeof(S_TOOL) * MAX_TOOLS);
+	GetModel()->active_tool = m_pDataModel->iActiveTool;
+	GetModel()->tool_trans_x = m_pDataModel->dTransX;
+	GetModel()->tool_trans_y = m_pDataModel->dTransY;
+	GetModel()->tool_trans_z = m_pDataModel->dTransZ;
 
-	GetDCP06Model()->active_tool_x = GetDCP06Model()->tool_trans_x + m_pDataModel->tool_table[m_pDataModel->iActiveTool-1].x;
-	GetDCP06Model()->active_tool_y = GetDCP06Model()->tool_trans_y + m_pDataModel->tool_table[m_pDataModel->iActiveTool-1].y;
-	GetDCP06Model()->active_tool_z = GetDCP06Model()->tool_trans_z + m_pDataModel->tool_table[m_pDataModel->iActiveTool-1].z;
+	GetModel()->active_tool_x = GetModel()->tool_trans_x + m_pDataModel->tool_table[m_pDataModel->iActiveTool-1].x;
+	GetModel()->active_tool_y = GetModel()->tool_trans_y + m_pDataModel->tool_table[m_pDataModel->iActiveTool-1].y;
+	GetModel()->active_tool_z = GetModel()->tool_trans_z + m_pDataModel->tool_table[m_pDataModel->iActiveTool-1].z;
 
 
 }
 
 // Description: refresh all controls
-void DCP::DCP06ToolDlgC::RefreshControls()
+void DCP::ToolDialog::RefreshControls()
 {
 	if( m_pToolId && m_pConstant  && m_pTranslX && m_pTranslY &&  m_pTranslZ &&  m_pToolX_Total)
 	{
@@ -217,17 +217,17 @@ void DCP::DCP06ToolDlgC::RefreshControls()
 			m_pTranslZ->GetFloatInputCtrl()->SetDouble(m_pDataModel->dTransZ);
 			
 			
-			sTemp.Format(L"%7.*f %8.*f",GetDCP06Model()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].x,
-									   GetDCP06Model()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].x+m_pDataModel->dTransX);  	
+			sTemp.Format(L"%7.*f %8.*f",GetModel()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].x,
+									   GetModel()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].x+m_pDataModel->dTransX);  	
 			m_pToolX_Total->GetStringInputCtrl()->SetString(sTemp);
 
-			sTemp.Format(L"%7.*f %8.*f",GetDCP06Model()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].y,
-									   GetDCP06Model()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].y + m_pDataModel->dTransY);  	
+			sTemp.Format(L"%7.*f %8.*f",GetModel()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].y,
+									   GetModel()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].y + m_pDataModel->dTransY);  	
 			m_pToolY_Total->GetStringInputCtrl()->SetString(sTemp);
 
 			
-			sTemp.Format(L"%7.*f %8.*f",GetDCP06Model()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].z,
-									   GetDCP06Model()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].z + m_pDataModel->dTransZ);  	
+			sTemp.Format(L"%7.*f %8.*f",GetModel()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].z,
+									   GetModel()->m_nDecimals,m_pDataModel->tool_table[iActiveTool-1].z + m_pDataModel->dTransZ);  	
 			
 			m_pToolZ_Total->GetStringInputCtrl()->SetString(sTemp);
 		}
@@ -248,12 +248,12 @@ void DCP::DCP06ToolDlgC::RefreshControls()
 // ================================================================================================
 // Description: OnValueChanged
 // ================================================================================================
-void DCP::DCP06ToolDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
+void DCP::ToolDialog::OnValueChanged(int unNotifyCode,  int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
-		//short iCurrentPno = GetDCP06Model()->iCurrentPoint;
+		//short iCurrentPno = GetModel()->iCurrentPoint;
 			if (ulParam2 == eTranslX)
 			{
 				if(!m_pTranslX->GetFloatInputCtrl()->IsEmpty())
@@ -283,14 +283,14 @@ void DCP::DCP06ToolDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06ToolDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::ToolDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -300,30 +300,30 @@ bool DCP::DCP06ToolDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06ToolDlgC::GetDCP06Model() const
+DCP::Model* DCP::ToolDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06ToolControllerC::DCP06ToolControllerC()
-    : m_pDlg( NULL )
+DCP::ToolController::ToolController()
+    : m_pDlg( nullptr )
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
     SetTitle(StringC( AT_DCP06, T_DCP_TOOL_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
-	m_pDataModel = new DCP06ToolModelC();
+	m_pDataModel = new ToolModel();
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06ToolDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::ToolDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( TOOL_DLG, m_pDlg, true );
 
     // Set the function key
@@ -360,7 +360,7 @@ DCP::DCP06ToolControllerC::DCP06ToolControllerC()
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06ToolControllerC::~DCP06ToolControllerC()
+DCP::ToolController::~ToolController()
 {
 	if(m_pDataModel)
 	{
@@ -375,17 +375,17 @@ DCP::DCP06ToolControllerC::~DCP06ToolControllerC()
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06ToolControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::ToolController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	m_pModel = dynamic_cast< DCP::Model* >( pModel );
 	
 	// save current tool
-	m_pDataModel->iOld_active_tool = m_pDCP06Model->active_tool;
+	m_pDataModel->iOld_active_tool = m_pModel->active_tool;
 	if(m_pDataModel->iOld_active_tool == 0)
 	{
 		TPI::MeasConfigC oMeasConfig;
@@ -395,30 +395,30 @@ bool DCP::DCP06ToolControllerC::SetModel( GUI::ModelC* pModel )
 	}
 	else
 	{
-		m_pDataModel->dOld_x_trans = m_pDCP06Model->tool_trans_x;
-		m_pDataModel->dOld_y_trans = m_pDCP06Model->tool_trans_y;
-		m_pDataModel->dOld_z_trans = m_pDCP06Model->tool_trans_z;
+		m_pDataModel->dOld_x_trans = m_pModel->tool_trans_x;
+		m_pDataModel->dOld_y_trans = m_pModel->tool_trans_y;
+		m_pDataModel->dOld_z_trans = m_pModel->tool_trans_z;
 
 	}
-	memcpy(&m_pDataModel->tool_table[0], &m_pDCP06Model->tool_table[0], sizeof(S_TOOL) * MAX_TOOLS);
-	m_pDataModel->dTransX = m_pDCP06Model->tool_trans_x;
-	m_pDataModel->dTransY = m_pDCP06Model->tool_trans_y;
-	m_pDataModel->dTransZ = m_pDCP06Model->tool_trans_z;
-	m_pDataModel->iActiveTool = m_pDCP06Model->active_tool;
+	memcpy(&m_pDataModel->tool_table[0], &m_pModel->tool_table[0], sizeof(S_TOOL) * MAX_TOOLS);
+	m_pDataModel->dTransX = m_pModel->tool_trans_x;
+	m_pDataModel->dTransY = m_pModel->tool_trans_y;
+	m_pDataModel->dTransZ = m_pModel->tool_trans_z;
+	m_pDataModel->iActiveTool = m_pModel->active_tool;
 
 	
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 
     // Set it to hello world dialog
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -429,9 +429,9 @@ bool DCP::DCP06ToolControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // CONT
-void DCP::DCP06ToolControllerC::OnF1Pressed()
+void DCP::ToolController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -447,9 +447,9 @@ void DCP::DCP06ToolControllerC::OnF1Pressed()
 }
 
 // TOOL ID
-void DCP::DCP06ToolControllerC::OnF2Pressed()
+void DCP::ToolController::OnF2Pressed()
 {
-   if (m_pDlg == NULL)
+   if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -464,14 +464,14 @@ void DCP::DCP06ToolControllerC::OnF2Pressed()
 		}
 	}
 
-	DCP::DCP06SelectToolModelC* pModel = new DCP06SelectToolModelC;
+	DCP::SelectToolModel* pModel = new SelectToolModel;
 	pModel->m_iCounts = iCount;
 	pModel->tool_table = &m_pDataModel->tool_table[0];
 	pModel->m_iSelectedId = m_pDataModel->iActiveTool+1;
 		
-	if(GetController(SELECT_TOOL_CONTROLLER) == NULL)
+	if(GetController(SELECT_TOOL_CONTROLLER) == nullptr)
 	{
-		(void)AddController( SELECT_TOOL_CONTROLLER, new DCP::DCP06SelectToolControllerC );
+		(void)AddController( SELECT_TOOL_CONTROLLER, new DCP::SelectToolController );
 	}
 
 		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
@@ -481,13 +481,13 @@ void DCP::DCP06ToolControllerC::OnF2Pressed()
 }
 
 // ADD
-void DCP::DCP06ToolControllerC::OnF3Pressed()
+void DCP::ToolController::OnF3Pressed()
 {
 		// Add tool
-		DCP::DCP06AddToolModelC* pModel = new DCP::DCP06AddToolModelC;		
-		if(GetController(ADD_TOOL_CONTROLLER) == NULL)
+		DCP::AddToolModel* pModel = new DCP::AddToolModel;		
+		if(GetController(ADD_TOOL_CONTROLLER) == nullptr)
 		{
-			(void)AddController( ADD_TOOL_CONTROLLER, new DCP::DCP06AddToolControllerC(m_pDlg->GetDCP06Model()));
+			(void)AddController( ADD_TOOL_CONTROLLER, new DCP::AddToolController(m_pDlg->GetModel()));
 		}
 		(void)GetController( ADD_TOOL_CONTROLLER )->SetModel( pModel);
 		SetActiveController(ADD_TOOL_CONTROLLER, true);
@@ -495,7 +495,7 @@ void DCP::DCP06ToolControllerC::OnF3Pressed()
 }
 
 // NEXT
-void DCP::DCP06ToolControllerC::OnF4Pressed()
+void DCP::ToolController::OnF4Pressed()
 {
 	if(m_pDataModel->iActiveTool < MAX_TOOLS)
 		m_pDataModel->iActiveTool++;
@@ -505,7 +505,7 @@ void DCP::DCP06ToolControllerC::OnF4Pressed()
 }
 
 // PREV
-void DCP::DCP06ToolControllerC::OnF5Pressed()
+void DCP::ToolController::OnF5Pressed()
 {
 	if(m_pDataModel->iActiveTool > 0)
 		m_pDataModel->iActiveTool--;
@@ -516,11 +516,11 @@ void DCP::DCP06ToolControllerC::OnF5Pressed()
 
 
 // DEL
-void DCP::DCP06ToolControllerC::OnSHF2Pressed()
+void DCP::ToolController::OnSHF2Pressed()
 {
 	if(m_pDataModel->iActiveTool > 0)
 	{
-		DCP06MsgBoxC msgBox;
+		MsgBox msgBox;
 		StringC sMsg;
 		sMsg.LoadTxt(AT_DCP06, M_DCP_DELETE_TOOL_TOK);
 		if(msgBox.ShowMessageYesNo(sMsg))
@@ -553,16 +553,16 @@ void DCP::DCP06ToolControllerC::OnSHF2Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06ToolControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::ToolController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06ToolControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::ToolController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == ADD_TOOL_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06AddToolModelC* pModel = (DCP::DCP06AddToolModelC*) GetController( ADD_TOOL_CONTROLLER )->GetModel();		
+		DCP::AddToolModel* pModel = (DCP::AddToolModel*) GetController( ADD_TOOL_CONTROLLER )->GetModel();		
 		m_pDataModel->iActiveTool = 0;
 		
 		for(short i =1; i <= MAX_TOOLS; i++)
@@ -586,7 +586,7 @@ void DCP::DCP06ToolControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 
 	if(lCtrlID == SELECT_TOOL_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectToolModelC* pModel = (DCP::DCP06SelectToolModelC*) GetController( SELECT_TOOL_CONTROLLER )->GetModel();		
+		DCP::SelectToolModel* pModel = (DCP::SelectToolModel*) GetController( SELECT_TOOL_CONTROLLER )->GetModel();		
 		m_pDataModel->iActiveTool = pModel->m_iSelectedId-1;
 	}
 	
@@ -596,14 +596,14 @@ void DCP::DCP06ToolControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 
 
 // ================================================================================================
-// ====================================  DCP06ToolModelC =======================================
+// ====================================  ToolModel =======================================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06ToolModelC::DCP06ToolModelC()
+DCP::ToolModel::ToolModel()
 {
 	memset(&tool_table[0], 0, sizeof(S_TOOL) * MAX_TOOLS);
 	iActiveTool = 0;
@@ -615,6 +615,6 @@ DCP::DCP06ToolModelC::DCP06ToolModelC()
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06ToolModelC::~DCP06ToolModelC()
+DCP::ToolModel::~ToolModel()
 {
 }

@@ -44,17 +44,17 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06InputTextDlgC;
+	class Model;
+	class InputTextDialog;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06InputTextControllerC : public GUI::ControllerC
+    class InputTextController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-			DCP06InputTextControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06InputTextControllerC();
+			InputTextController(Model* pModel);
+			~InputTextController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -82,24 +82,24 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06InputTextControllerC( const DCP06InputTextControllerC& oDCP06InputTextController )
+            InputTextController( const InputTextController& oInputTextController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06InputTextControllerC& operator=( const DCP06InputTextControllerC& oDCP06InputTextController )
+            InputTextController& operator=( const InputTextController& oInputTextController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06InputTextDlgC* m_pDlg;
+            InputTextDialog* m_pDlg;
     };
 
 
-	class DCP06InputTextDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class InputTextDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -110,10 +110,10 @@ namespace DCP
 				eText
 			};
 
-		   DCP06InputTextDlgC(DCP06ModelC* pDCP06Model);
+		   InputTextDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06InputTextDlgC();
+            virtual ~InputTextDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -128,18 +128,18 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06InputTextModelC* GetDataModel() const;
+			InputTextModel* GetDataModel() const;
 			
 	protected:
   			
 			GUI::TextCtrlC* m_pInfo;
 			GUI::EditStringCtrlC* m_pText;
-			OBS_DECLARE_EXECUTE(DCP06InputTextDlgC);
+			OBS_DECLARE_EXECUTE(InputTextDialog);
 
 	private:
 		OBS::ObserverC m_pObserver;
 		virtual void OnValueChanged( int unNotifyCode, int ulParam2);
-		DCP06ModelC* m_pDCP06Model;
+		Model* m_pModel;
 	};
 
 	/*

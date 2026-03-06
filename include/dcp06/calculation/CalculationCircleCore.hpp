@@ -18,19 +18,19 @@
 
 namespace DCP
 {
-    class DCP06CalcCircleC
+    class CalcCircle
     {
     public:
-        DCP06CalcCircleC(short plane_type, S_CIRCLE_BUFF* circle_points, S_PLANE_BUFF* planes,
-            S_CIRCLE_BUFF* circle_points_in_plane, double dToolRadius, DCP06ModelC* pDCP06Model);
-        ~DCP06CalcCircleC();
+        CalcCircle(short plane_type, S_CIRCLE_BUFF* circle_points, S_PLANE_BUFF* planes,
+            S_CIRCLE_BUFF* circle_points_in_plane, double dToolRadius, Model* pModel);
+        ~CalcCircle();
         short calc_center_of_circle();
         double diameter, cx, cy, cz, vi, vj, vk;
         void get_results(double* dCx, double* dCy, double* dCz, double* dVi, double* dVj, double* dVk, double* dDiameter, double* rms, short* iPno);
         double get_max_dist_and_rms_circle(S_CIRCLE_BUFF* circle_, short* pno, double* rms_diameter);
     private:
-        DCP06CommonC* m_pCommon;
-        DCP06MsgBoxC* m_pMsgBox;
+        Common* m_pCommon;
+        MsgBox* m_pMsgBox;
         short m_iPlaneType;
         S_CIRCLE_BUFF* m_pCircle_points;
         S_CIRCLE_BUFF* m_pCircle_points_in_plane;
@@ -45,22 +45,22 @@ namespace DCP
         short pns_ymp(S_CIRCLE_BUFF* points, int count, double* cxtod, double* cytod, double* diameter);
     };
 
-    class DCP06CalcCircleControllerC : public GUI::ControllerC
+    class CalcCircleontrollerC : public GUI::ControllerC
     {
     public:
-        DCP06CalcCircleControllerC(DCP06CircleModelC* pCircleModel, short iDisplay = 0);
-        ~DCP06CalcCircleControllerC();
+        CalcCircleontrollerC(CircleModel* pCircleModel, short iDisplay = 0);
+        ~CalcCircleontrollerC();
         virtual bool SetModel(GUI::ModelC* pModel);
         virtual void OnActiveDialogClosed(int lDlgID, int lExitCode);
         virtual void OnActiveControllerClosed(int lCtrlID, int lExitCode);
         virtual void OnControllerActivated(void);
         virtual void Run(void);
     private:
-        DCP06CalcCircleControllerC(const DCP06CalcCircleControllerC&) { USER_APP_VERIFY(false); }
-        DCP06CalcCircleControllerC& operator=(const DCP06CalcCircleControllerC&) { USER_APP_VERIFY(false); return *this; }
-        DCP06CommonC* m_pCommon;
-        DCP06ModelC* m_pDCP06Model;
-        DCP06CircleModelC* m_pDataModel;
+        CalcCircleontrollerC(const CalcCircleontrollerC&) { USER_APP_VERIFY(false); }
+        CalcCircleontrollerC& operator=(const CalcCircleontrollerC&) { USER_APP_VERIFY(false); return *this; }
+        Common* m_pCommon;
+        Model* m_pModel;
+        CircleModel* m_pDataModel;
         short m_iDisplay;
     };
 }

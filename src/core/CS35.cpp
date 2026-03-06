@@ -13,7 +13,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -27,40 +27,40 @@
 
 // USER DIALOG
 
-DCP::DCP06CS35C::DCP06CS35C()
+DCP::CS35::CS35()
 {
 	
 }
 
 // ****************************************************************************************
-DCP::DCP06CS35C::~DCP06CS35C()
+DCP::CS35::~CS35()
 {
 	
 } 
 
  
 // ****************************************************************************************
-void DCP::DCP06CS35C::get_serialnumber(char* serialNumber)
+void DCP::CS35::get_serialnumber(char* serialNumber)
 {
 	serialNumber[0] = '\0';
 
 	//#if defined(HW_X86) && defined(CS35) 
     #if defined(CS35) 
 		HRESULT lResult = CoInitializeSecurity(
-            NULL,
+            nullptr,
             -1,
-            NULL,
-            NULL,
+            nullptr,
+            nullptr,
             RPC_C_AUTHN_LEVEL_DEFAULT,
             RPC_C_IMP_LEVEL_IMPERSONATE,
-            NULL,
+            nullptr,
             EOAC_NONE,
-            NULL
+            nullptr
       );
 
       CComPtr<IWbemLocator> pLocator;
 
-      lResult = pLocator.CoCreateInstance( CLSID_WbemLocator, NULL, CLSCTX_INPROC_SERVER );
+      lResult = pLocator.CoCreateInstance( CLSID_WbemLocator, nullptr, CLSCTX_INPROC_SERVER );
 
       if ( FAILED( lResult ) ) {
             return; //("Failed to create IWbemLocator object.", lResult);
@@ -68,7 +68,7 @@ void DCP::DCP06CS35C::get_serialnumber(char* serialNumber)
 
       CComPtr<IWbemServices> pService;
 
-      lResult = pLocator->ConnectServer( _bstr_t( L"ROOT\\CIMV2" ), NULL, NULL, 0, NULL, 0, 0, &pService );
+      lResult = pLocator->ConnectServer( _bstr_t( L"ROOT\\CIMV2" ), nullptr, nullptr, 0, nullptr, 0, 0, &pService );
 
       if ( FAILED( lResult ) ) {
             return ; // ("Could not connect.", lResult);
@@ -78,10 +78,10 @@ void DCP::DCP06CS35C::get_serialnumber(char* serialNumber)
             pService,
             RPC_C_AUTHN_WINNT,
             RPC_C_AUTHZ_NONE,
-            NULL,
+            nullptr,
             RPC_C_AUTHN_LEVEL_CALL,
             RPC_C_IMP_LEVEL_IMPERSONATE,
-            NULL, EOAC_NONE
+            nullptr, EOAC_NONE
       );
 
       if ( FAILED( lResult ) ) {
@@ -94,7 +94,7 @@ void DCP::DCP06CS35C::get_serialnumber(char* serialNumber)
             L"WQL",
             L"SELECT * FROM Win32_ComputerSystemProduct",
             WBEM_FLAG_FORWARD_ONLY | WBEM_FLAG_RETURN_IMMEDIATELY,
-            NULL,
+            nullptr,
             &pEnumerator
       );
 
@@ -136,7 +136,7 @@ void DCP::DCP06CS35C::get_serialnumber(char* serialNumber)
 
 	   BSS::UTI::BSS_UTI_WCharToAscii(vSerialNumber.bstrVal, serialNumber);
 
-	   /*DCP06MsgBoxC msgBox;	
+	   /*MsgBox msgBox;	
  	   msgBox.ShowMessageOk(StringC(serialNumber));*/
 		
 	   

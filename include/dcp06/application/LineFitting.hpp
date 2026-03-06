@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06LineFitDlgC;
-	class DCP06LineFitModelC;
+    class Model;
+	class LineFitDialog;
+	class LineFitModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06LineFitControllerC : public GUI::ControllerC
+    class LineFitController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06LineFitControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06LineFitControllerC();
+            LineFitController(Model* pModel);
+			~LineFitController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -79,29 +79,29 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-			DCP06LineFitControllerC( const DCP06LineFitControllerC& oDCP05LineFitController )
+			LineFitController( const LineFitController& oLineFitController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06LineFitControllerC& operator=( const DCP06LineFitControllerC& oDCP05LineFitController )
+            LineFitController& operator=( const LineFitController& oLineFitController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06LineFitDlgC* m_pDlg;
-			DCP06LineFitModelC* m_pLineFitModel;
-			DCP06ModelC* m_pDCP06Model;
-			DCP06CalcLineFitC* calcLineFit;
+            LineFitDialog* m_pDlg;
+			LineFitModel* m_pLineFitModel;
+			Model* m_pModel;
+			CalcLineFit* calcLineFit;
 			short SaveLineFitting(char *fname);
-			DCP06CommonC* common;
+			Common* common;
     };
 
 
-    class DCP06LineFitDlgC:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
+    class LineFitDialog:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -117,10 +117,10 @@ namespace DCP
 				eRotateValue
 			};
 
-		   DCP06LineFitDlgC(DCP06LineFitModelC* pModel,DCP06CalcLineFitC* calcLineFit);
+		   LineFitDialog(LineFitModel* pModel,CalcLineFit* calcLineFit);
 
             // Description: Destructor
-            virtual ~DCP06LineFitDlgC();
+            virtual ~LineFitDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -134,7 +134,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 			virtual void RefreshControls();
 
 			virtual void delete_line();
@@ -153,13 +153,13 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pRotateLine;
 			GUI::ComboLineCtrlC* m_pRotateValue;
 
-			OBS_DECLARE_EXECUTE(DCP06LineFitDlgC);
+			OBS_DECLARE_EXECUTE(LineFitDialog);
 
 			//GUI::TextCtrlC* m_pLineInfo3;
 
-			//DCP::DCP06ModelC* m_pDCP06Model;
+			//DCP::Model* m_pModel;
 
-			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
+			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
 			// Description: add all controls
             
@@ -184,21 +184,21 @@ namespace DCP
 			StringC m_strYLine;
 			StringC m_strZLine;
 			StringC m_strMeasLine;
-			DCP06LineFitModelC* m_pLineFitModel;
-			DCP06CalcLineFitC* m_pCalcLineFit;
+			LineFitModel* m_pLineFitModel;
+			CalcLineFit* m_pCalcLineFit;
 
 	};
-    class DCP06LineFitModelC : public GUI::ModelC
+    class LineFitModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06LineFitModelC();
+            LineFitModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06LineFitModelC();
+            virtual ~LineFitModel();
 			
 			//short active_line; 
 			S_LINE_BUFF	line_buff[1];
@@ -213,7 +213,7 @@ namespace DCP
 			int selectedShift;
 			int selectedRotate;
 			StringC fileName;
-			DCP06DomModelC* domModel;
+			Alignment321Model* domModel;
 
 			S_LINE_BUFF line_ocs[1];
 			S_POINT_BUFF points_in_line[MAX_LINEFIT_POINTS];

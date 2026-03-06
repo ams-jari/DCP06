@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06PlaneScanDlgC;
-	class DCP06PlaneScanModelC;
+    class Model;
+	class PlaneScanDialog;
+	class PlaneScanModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06PlaneScanControllerC : public GUI::ControllerC
+    class PlaneScanController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06PlaneScanControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06PlaneScanControllerC();
+            PlaneScanController(Model* pModel);
+			~PlaneScanController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -84,29 +84,29 @@ namespace DCP
 			
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06PlaneScanControllerC( const DCP06PlaneScanControllerC& oDCP05PlaneScanController )
+            PlaneScanController( const PlaneScanController& oPlaneScanController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06PlaneScanControllerC& operator=( const DCP06PlaneScanControllerC& oDCP05PlaneScanController )
+            PlaneScanController& operator=( const PlaneScanController& oPlaneScanController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06PlaneScanDlgC* m_pDlg;
-			DCP06PlaneScanModelC* m_pDataModel;
+            PlaneScanDialog* m_pDlg;
+			PlaneScanModel* m_pDataModel;
 			bool CancelMeas;
-			DCP06CommonC* m_pCommon;
-			DCP06ModelC* m_pDCP06Model;
-			//DCP::DCP06MeasXYZModelC* pMeasXYZModel;
+			Common* m_pCommon;
+			Model* m_pModel;
+			//DCP::MeasXYZModel* pMeasXYZModel;
     };
 
 
-    class DCP06PlaneScanDlgC:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
+    class PlaneScanDialog:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -119,10 +119,10 @@ namespace DCP
 				eResolutionWidth
 			};
 
-			DCP06PlaneScanDlgC(DCP06PlaneScanModelC* pPlaneScanModel,DCP06PlaneScanControllerC* controller);
+			PlaneScanDialog(PlaneScanModel* pPlaneScanModel,PlaneScanController* controller);
 
             // Description: Destructor
-            virtual ~DCP06PlaneScanDlgC();
+            virtual ~PlaneScanDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -136,7 +136,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			virtual void RefreshControls();
 			
@@ -150,9 +150,9 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pResolutionWidth;
 
 			
-			OBS_DECLARE_EXECUTE(DCP06PlaneScanDlgC);
+			OBS_DECLARE_EXECUTE(PlaneScanDialog);
 
-			DCP06PlaneScanModelC* m_pDataModel;
+			PlaneScanModel* m_pDataModel;
             
 
 	private:
@@ -163,21 +163,21 @@ namespace DCP
 
 			virtual void OnValueChanged(int unNotifyCode, int ulParam2);
 
-			DCP06PlaneScanControllerC* pController;
+			PlaneScanController* pController;
 	};
 
-   class DCP06PlaneScanModelC : public GUI::ModelC
+   class PlaneScanModel : public GUI::ModelC
     {
         public: 
 
             // Description: Constructor
             //
-            DCP06PlaneScanModelC(DCP06ModelC* pDCP06Model);
-			//DCP06DomModelC(DCP06DomModelC* pModel);
+            PlaneScanModel(Model* pModel);
+			//Alignment321Model(Alignment321Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06PlaneScanModelC();
+            virtual ~PlaneScanModel();
 
 			short iResolutionHeigth;
 			short iResolutionWidth;
@@ -186,9 +186,9 @@ namespace DCP
 			ScanFileFunc* m_pScanFile;
 			S_PLANE_BUFF boundary_plane[1];
 			//S_POINT_BUFF boundary_points[3];
-			bool generate_points(DCP06ModelC *pDCP06Model);
+			bool generate_points(Model *pModel);
 			bool isRunning;
-			///DCP06FileModelC fileModel;
+			///FileModel fileModel;
 
 			
 			S_SCAN_POINT_BUFF des_points[MAX_SCAN_POINTS];
@@ -198,7 +198,7 @@ namespace DCP
 	private:	
 			bool add_line_points(ScanFileFunc* m_pScanFile, struct line* line1, 
 							short i, short pointCountWidth, double distWidth, double resolutionWidth, char* first_pointid,
-							DCP06ModelC *pDCP06Model);
+							Model *pModel);
 
 			
     };

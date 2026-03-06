@@ -56,19 +56,19 @@ namespace ABL
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06LineFitMeasDlgC;
-	class DCP06LineFitMeasModelC;
+	class Model;
+	class LineFitMeasDialog;
+	class LineFitMeasModel;
 	//class DCPSurveyModelC; 
 
     // Description: Tabbed controller for the Hello World application
-	class DCP06LineFitMeasControllerC : public GUI::ControllerC, public TBL::MeasurementC//, public GUI::StandardDialogC
+	class LineFitMeasController : public GUI::ControllerC, public TBL::MeasurementC//, public GUI::StandardDialogC
     {
         public:
 
             // Description: Constructor
-            DCP06LineFitMeasControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06LineFitMeasControllerC();
+            LineFitMeasController(Model *pModel);
+			~LineFitMeasController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -104,31 +104,31 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06LineFitMeasControllerC( const DCP06LineFitMeasControllerC& oDCP06LineFitMeasController )
+            LineFitMeasController( const LineFitMeasController& oLineFitMeasController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06LineFitMeasControllerC& operator=( const DCP06LineFitMeasControllerC& oDCP06LineFitMeasController )
+            LineFitMeasController& operator=( const LineFitMeasController& oLineFitMeasController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06LineFitMeasDlgC* m_pDlg;
-			DCP06ModelC *m_pDCP06Model;
-			DCP06CommonC* m_pCommon;
+            LineFitMeasDialog* m_pDlg;
+			Model *m_pModel;
+			Common* m_pCommon;
 			bool m_bCamera;
 			GSV::GeospatialViewDialogC* poVideoDlg;
 			bool isATR;
 			void calculate_linefit(short iCurrPoint);
-			DCP06CalcLineFitC* calcLineFit;
+			CalcLineFit* calcLineFit;
     };
 
 
-	class DCP06LineFitMeasDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class LineFitMeasDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -147,10 +147,10 @@ namespace DCP
 				eInfo
 			};
 
-		   DCP06LineFitMeasDlgC(DCP06ModelC *pDCP06Model);
+		   LineFitMeasDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06LineFitMeasDlgC();
+            virtual ~LineFitMeasDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -162,7 +162,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06LineFitMeasModelC* GetDataModel() const;
+			LineFitMeasModel* GetDataModel() const;
 
 			virtual void delete_point();
 			virtual void next_point();
@@ -185,7 +185,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pLineOffset;
 			//GUI::TextCtrlC* m_pInfo;
 
-			OBS_DECLARE_EXECUTE(DCP06LineFitMeasDlgC);
+			OBS_DECLARE_EXECUTE(LineFitMeasDialog);
 
 			
 
@@ -197,7 +197,7 @@ namespace DCP
 		//virtual void OnTimer(void);
 		//GUI::TimerC m_pTimer;
 
-		DCP06ModelC *m_pDCP06Model;
+		Model *m_pModel;
 
 		//S_POINT_BUFF temp_point_table[20];
 		//S_POINT_BUFF temp_point_table2[20];
@@ -206,22 +206,22 @@ namespace DCP
 		double to_mm(double dist);
 		short iInfoInd;
 		StringC strInfoText;
-		DCP06CommonC* m_pCommon;
+		Common* m_pCommon;
 		
 	};
 
 
-   class DCP06LineFitMeasModelC : public GUI::ModelC
+   class LineFitMeasModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06LineFitMeasModelC();
+            LineFitMeasModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06LineFitMeasModelC();
+            virtual ~LineFitMeasModel();
 						
 			short m_iMinPoint;
 			short m_iMaxPoint;
@@ -238,7 +238,7 @@ namespace DCP
 
 			S_LINE_BUFF* pLline_buff;
 			S_LINE_BUFF* pLline_buff_ocs;
-			DCP06DomModelC* domModel;
+			Alignment321Model* domModel;
 			//S_POINT_BUFF points_buff[MAX_LINEFIT_POINTS];	
 			S_LINE_FITTING_RESULTS linefit_results[MAX_LINEFIT_POINTS];
 			double manualHeight;

@@ -63,7 +63,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP063DFbsDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::Fbs3DDialog);
 // ================================================================================================
 // =====================================  Static Functions  =======================================
 // ================================================================================================
@@ -75,20 +75,20 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP063DFbsDlgC);
 
 
 // ================================================================================================
-// ====================================  DCP063DFbsDlgC              ==============================
+// ====================================  Fbs3DDialog              ==============================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP063DFbsDlgC::DCP063DFbsDlgC(DCP063DFBSMeasModelC* pDataModel):GUI::ModelHandlerC(),GUI::DialogC(),
+DCP::Fbs3DDialog::Fbs3DDialog(Fbs3DMeasModel* pDataModel):GUI::ModelHandlerC(),GUI::DialogC(),
 			m_pDataModel(pDataModel),
 			m_pFile(0),m_pPointId(0), m_pXDsg(0), m_pYDsg(0), m_pZDsg(0),
 			m_pXAct(0),m_pYAct(0),m_pZAct(0),m_pXDev(0),m_pYDev(0),m_pZDev(0),
-			m_pPointIdObserver(OBS_METHOD_TO_PARAM0(DCP063DFbsDlgC, OnValueChanged), this),
-			m_pXObserver(OBS_METHOD_TO_PARAM0(DCP063DFbsDlgC, OnValueChanged), this),
-			m_pYObserver(OBS_METHOD_TO_PARAM0(DCP063DFbsDlgC, OnValueChanged), this),
-			m_pZObserver(OBS_METHOD_TO_PARAM0(DCP063DFbsDlgC, OnValueChanged), this),iInfoInd(0)
+			m_pPointIdObserver(OBS_METHOD_TO_PARAM0(Fbs3DDialog, OnValueChanged), this),
+			m_pXObserver(OBS_METHOD_TO_PARAM0(Fbs3DDialog, OnValueChanged), this),
+			m_pYObserver(OBS_METHOD_TO_PARAM0(Fbs3DDialog, OnValueChanged), this),
+			m_pZObserver(OBS_METHOD_TO_PARAM0(Fbs3DDialog, OnValueChanged), this),iInfoInd(0)
 			//,m_pInfo(0)
 {
      // VIVA REMOVED
@@ -105,7 +105,7 @@ DCP::DCP063DFbsDlgC::DCP063DFbsDlgC(DCP063DFBSMeasModelC* pDataModel):GUI::Model
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP063DFbsDlgC::~DCP063DFbsDlgC()
+DCP::Fbs3DDialog::~Fbs3DDialog()
 {
 	//m_pTimer.KillTimer();
 }
@@ -113,7 +113,7 @@ DCP::DCP063DFbsDlgC::~DCP063DFbsDlgC()
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP063DFbsDlgC::OnInitDialog(void)
+void DCP::Fbs3DDialog::OnInitDialog(void)
 {
 GUI::BaseDialogC::OnInitDialog();
 
@@ -185,7 +185,7 @@ GUI::BaseDialogC::OnInitDialog();
 	//m_pXDsg->GetTextCtrl()->SetTextTok(P_DCP_X_DSG_TOK);
 	m_pXDsg->SetText(StringC(AT_DCP05,P_DCP_X_DSG_TOK));
 
-	m_pXDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short) GetDCP06Model()->m_nDecimals);
+	m_pXDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short) GetModel()->m_nDecimals);
 	//m_pXDsg->GetFloatInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); // CAPTIVATE
 	//m_pXDsg->GetFlexFloatInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 
@@ -204,7 +204,7 @@ GUI::BaseDialogC::OnInitDialog();
 	// m_pYDsg->GetTextCtrl()->SetTextTok(P_DCP_Y_DSG_TOK);
 	m_pYDsg->SetText(StringC(AT_DCP05,P_DCP_Y_DSG_TOK));
 	
-	m_pYDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
+	m_pYDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	//m_pYDsg->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pYDsg->SetEmptyAllowed(true);
 
@@ -221,7 +221,7 @@ GUI::BaseDialogC::OnInitDialog();
 	// m_pZDsg->GetTextCtrl()->SetTextTok(P_DCP_Z_DSG_TOK);
 	m_pZDsg->SetText(StringC(AT_DCP05,P_DCP_Z_DSG_TOK));
 
-	m_pZDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
+	m_pZDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	m_pZDsg->SetEmptyAllowed(true);
 
 	// VIVA REMOVED
@@ -407,7 +407,7 @@ GUI::BaseDialogC::OnInitDialog();
 // ================================================================================================
 // Description: OnTimer
 // ================================================================================================
-//void DCP::DCP063DFbsDlgC::OnTimer(void)
+//void DCP::Fbs3DDialog::OnTimer(void)
 //{
 //	StringC sMsg = m_pCommon->get_info_text(iInfoInd);
 //	
@@ -417,30 +417,30 @@ GUI::BaseDialogC::OnInitDialog();
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP::DCP063DFbsDlgC::OnDialogActivated()
+void DCP::Fbs3DDialog::OnDialogActivated()
 {
-	m_pDataModel->pFileFunc->setFile(GetDCP06Model()->ADFFileName);
-	m_pCommon = new DCP06CommonC(GetDCP06Model());
+	m_pDataModel->pFileFunc->setFile(GetModel()->ADFFileName);
+	m_pCommon = new Common(GetModel());
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 	RefreshControls();
 }
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP063DFbsDlgC::UpdateData()
+void DCP::Fbs3DDialog::UpdateData()
 {
 
 }
 // ================================================================================================
 // Description: OnValueChanged
 // ================================================================================================
-void DCP::DCP063DFbsDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
+void DCP::Fbs3DDialog::OnValueChanged(int unNotifyCode,  int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
-		//short iCurrentPno = GetDCP06Model()->iCurrentPoint;
-		DCP06CommonC common(GetDCP06Model());
+		//short iCurrentPno = GetModel()->iCurrentPoint;
+		Common common(GetModel());
 		if(ulParam2 == ePointId)
 		{
 			StringC sPid;
@@ -467,7 +467,7 @@ void DCP::DCP063DFbsDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 			if (ulParam2 == eXDsg)
 			{
 				if(!m_pXDsg->GetFloatInputCtrl()->IsEmpty())
-					sprintf(m_pDataModel->xdes_ptr,"%9.*f",GetDCP06Model()->m_nDecimals,m_pXDsg->GetFloatInputCtrl()->GetDouble());
+					sprintf(m_pDataModel->xdes_ptr,"%9.*f",GetModel()->m_nDecimals,m_pXDsg->GetFloatInputCtrl()->GetDouble());
 				else
 					sprintf(m_pDataModel->xdes_ptr,"%9.9s"," ");
 				m_pDataModel->save_point();
@@ -476,7 +476,7 @@ void DCP::DCP063DFbsDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 			else if (ulParam2 == eYDsg)
 			{
 				if(!m_pYDsg->GetFloatInputCtrl()->IsEmpty())
-					sprintf(m_pDataModel->ydes_ptr,"%9.*f",GetDCP06Model()->m_nDecimals,m_pYDsg->GetFloatInputCtrl()->GetDouble());
+					sprintf(m_pDataModel->ydes_ptr,"%9.*f",GetModel()->m_nDecimals,m_pYDsg->GetFloatInputCtrl()->GetDouble());
 				else
 					sprintf(m_pDataModel->ydes_ptr,"%9.9s"," ");
 				m_pDataModel->save_point();
@@ -486,7 +486,7 @@ void DCP::DCP063DFbsDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 			else if(ulParam2 == eZDsg)
 			{
 				if(!m_pZDsg->GetFloatInputCtrl()->IsEmpty())
-					sprintf(m_pDataModel->zdes_ptr,"%9.*f",GetDCP06Model()->m_nDecimals,m_pZDsg->GetFloatInputCtrl()->GetDouble());
+					sprintf(m_pDataModel->zdes_ptr,"%9.*f",GetModel()->m_nDecimals,m_pZDsg->GetFloatInputCtrl()->GetDouble());
 				else
 					sprintf(m_pDataModel->zdes_ptr,"%9.9s"," ");
 
@@ -499,7 +499,7 @@ void DCP::DCP063DFbsDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 // ================================================================================================
 // Description: refresh all controls
 // ================================================================================================
-void DCP::DCP063DFbsDlgC::RefreshControls()
+void DCP::Fbs3DDialog::RefreshControls()
 {
 	if(m_pFile && m_pPointId && m_pXDsg && m_pYDsg&& m_pXAct &&
 		m_pYAct && m_pZAct && m_pXDev &&
@@ -934,14 +934,14 @@ void DCP::DCP063DFbsDlgC::RefreshControls()
 // ================================================================================================
 // Description: only accept hello world Model objects
 // ================================================================================================
-bool DCP::DCP063DFbsDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::Fbs3DDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -953,22 +953,22 @@ bool DCP::DCP063DFbsDlgC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: only accept xxx Model objects
 // ================================================================================================
-DCP::DCP06ModelC* DCP::DCP063DFbsDlgC::GetDCP06Model() const
+DCP::Model* DCP::Fbs3DDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP063DFbsControllerC::DCP063DFbsControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),poVideoDlg(0),m_bCamera(false)
+DCP::Fbs3DController::Fbs3DController(Model* pModel)
+    : m_pDlg( nullptr ),poVideoDlg(0),m_bCamera(false)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -978,10 +978,10 @@ DCP::DCP063DFbsControllerC::DCP063DFbsControllerC(DCP06ModelC* pDCP06Model)
 	//SetTitleTok( AT_DCP05, T_DCP_3DROLLER_TOK /*C_DCP_APPLICATION_NAME_TOK */);
 	SetTitle( StringC(AT_DCP05, T_DCP_3DROLLER_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
-	m_pDataModel = new DCP063DFBSMeasModelC(pDCP06Model);
+	m_pDataModel = new Fbs3DMeasModel(pModel);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP063DFbsDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::Fbs3DDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( _3DROLLER_DLG, m_pDlg, true );
 
     // Set the function key
@@ -1032,13 +1032,13 @@ DCP::DCP063DFbsControllerC::DCP063DFbsControllerC(DCP06ModelC* pDCP06Model)
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP063DFbsControllerC::~DCP063DFbsControllerC()
+DCP::Fbs3DController::~Fbs3DController()
 {
 }
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP063DFbsControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::Fbs3DController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -1049,12 +1049,12 @@ bool DCP::DCP063DFbsControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -1066,7 +1066,7 @@ bool DCP::DCP063DFbsControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnControllerActivated(void)
+void DCP::Fbs3DController::OnControllerActivated(void)
 {
 	show_function_keys();
 
@@ -1074,7 +1074,7 @@ void DCP::DCP063DFbsControllerC::OnControllerActivated(void)
 // ================================================================================================
 // Description: show_function_keys
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::show_function_keys()
+void DCP::Fbs3DController::show_function_keys()
 {
 	ResetFunctionKeys();
 
@@ -1216,7 +1216,7 @@ void DCP::DCP063DFbsControllerC::show_function_keys()
 // *********************************************************************
 //
 // *********************************************************************
-void DCP::DCP063DFbsControllerC::change_dsp()
+void DCP::Fbs3DController::change_dsp()
 {
 //int f,b;
 	
@@ -1266,7 +1266,7 @@ void DCP::DCP063DFbsControllerC::change_dsp()
 // ================================================================================================
 // Description: ConfirmClose
 // ================================================================================================
-bool DCP::DCP063DFbsControllerC::ConfirmClose(bool bEsc)
+bool DCP::Fbs3DController::ConfirmClose(bool bEsc)
 {
 	if(bEsc && m_pDataModel->iPointKeys == 1)
 	{
@@ -1290,7 +1290,7 @@ bool DCP::DCP063DFbsControllerC::ConfirmClose(bool bEsc)
 // ================================================================================================
 // Description: F1 / ALL
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnF1Pressed()
+void DCP::Fbs3DController::OnF1Pressed()
 {
 	if(m_pDataModel->iPointKeys == 0 && m_pDataModel->DSP_MODE != FRONTBACK)
 	{
@@ -1313,8 +1313,8 @@ void DCP::DCP063DFbsControllerC::OnF1Pressed()
 
 		m_pDataModel->set_xyz_mea_ptr();
 
-		if(m_pDlg->GetDCP06Model()->m_nOverWriteInfo && 
-			!m_pDlg->GetDCP06Model()->m_nAutoMatch)
+		if(m_pDlg->GetModel()->m_nOverWriteInfo && 
+			!m_pDlg->GetModel()->m_nAutoMatch)
 		{
 			if(!m_pDataModel->pCommon->strblank(m_pDataModel->xmea_ptr) || 
 				!m_pDataModel->pCommon->strblank(m_pDataModel->ymea_ptr) || 
@@ -1340,14 +1340,14 @@ void DCP::DCP063DFbsControllerC::OnF1Pressed()
 			DisableFunctionKey(FK5);
 			DisableFunctionKey(FK6);
 
-			DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
+			DCP::MeasXYZModel* pModel = new MeasXYZModel;
 			pModel->tooli = 1;
 			
 			sprintf(pModel->sPointId,"%6.6s",m_pDataModel->pid_ptr);
 			
-			if(GetController(MEAS_XYZ_CONTROLLER) == NULL)
+			if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
 			{
-				(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDlg->GetDCP06Model()));
+				(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::MeasXYZController(m_pDlg->GetModel()));
 			}
 			(void)GetController( MEAS_XYZ_CONTROLLER )->SetModel( pModel);
 			SetActiveController(MEAS_XYZ_CONTROLLER, true);
@@ -1388,9 +1388,9 @@ void DCP::DCP063DFbsControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F2 / DIST
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnF2Pressed()
+void DCP::Fbs3DController::OnF2Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
 	    USER_APP_VERIFY( false );
 		return;
@@ -1400,7 +1400,7 @@ void DCP::DCP063DFbsControllerC::OnF2Pressed()
 	{
 		m_pDataModel->set_xyz_des_ptr();
 	
-		if(!m_pDlg->GetDCP06Model()->m_nDesignValues)	
+		if(!m_pDlg->GetModel()->m_nDesignValues)	
 			return;
 
 		if(m_pDataModel->pCommon->strblank(m_pDataModel->xdes_ptr) ||
@@ -1408,16 +1408,16 @@ void DCP::DCP063DFbsControllerC::OnF2Pressed()
 			m_pDataModel->pCommon->strblank(m_pDataModel->zdes_ptr))
 			return;
 
-		//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetDCP06Model()->active_coodinate_system);		
-		if(GetController(AIM_CONTROLLER) == NULL)
+		//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetModel()->active_coodinate_system);		
+		if(GetController(AIM_CONTROLLER) == nullptr)
 		{
-			(void)AddController( AIM_CONTROLLER, new DCP::DCP06AimControllerC(	atof(m_pDataModel->xdes_ptr),
+			(void)AddController( AIM_CONTROLLER, new DCP::AimController(	atof(m_pDataModel->xdes_ptr),
 																				atof(m_pDataModel->ydes_ptr),
 																				atof(m_pDataModel->zdes_ptr),
-																				m_pDlg->GetDCP06Model()->active_coodinate_system) );
+																				m_pDlg->GetModel()->active_coodinate_system) );
 		}
 
-		(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(AIM_CONTROLLER, true);
 	}
 
@@ -1431,9 +1431,9 @@ void DCP::DCP063DFbsControllerC::OnF2Pressed()
 			m_pDataModel->pFileFunc->get_next_point_id(buffer);
 
 			//if(get_AUTO_MATCH() == FALSE)
-			if(!m_pDlg->GetDCP06Model()->m_nAutoMatch)
+			if(!m_pDlg->GetModel()->m_nAutoMatch)
 			{
-				DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+				DCP::InputTextModel* pModel = new InputTextModel;
 				pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_POINT_ID_TOK);
 				
 				// VIVA REMOVED
@@ -1443,15 +1443,15 @@ void DCP::DCP063DFbsControllerC::OnF2Pressed()
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = StringC(buffer);
 
-				if ( NULL == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
+				if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
 				{
 					USER_APP_VERIFY( false );
 					return;
 				}
 
-				if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
+				if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
 				{
-					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC(m_pDlg->GetDCP06Model() ));
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController(m_pDlg->GetModel() ));
 				}
 
 				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -1497,7 +1497,7 @@ void DCP::DCP063DFbsControllerC::OnF2Pressed()
 // ================================================================================================
 // Description: F3 / POINT
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnF3Pressed()
+void DCP::Fbs3DController::OnF3Pressed()
 {
 	if(m_pDataModel->iPointKeys == 0 && m_pDataModel->DSP_MODE != FRONTBACK)
 	{
@@ -1547,7 +1547,7 @@ void DCP::DCP063DFbsControllerC::OnF3Pressed()
 // ================================================================================================
 // Description: F4 / AIM
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnF4Pressed()
+void DCP::Fbs3DController::OnF4Pressed()
 {
 	if(m_pDataModel->iPointKeys == 0)
 	{
@@ -1607,21 +1607,21 @@ void DCP::DCP063DFbsControllerC::OnF4Pressed()
 // ================================================================================================
 // Description: F5 / PID
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnF5Pressed()
+void DCP::Fbs3DController::OnF5Pressed()
 {
 	// point id
 	if(m_pDataModel->iPointKeys == 0)
 	{	
 		if(m_pDataModel->pFileFunc->IsOpen())
 		{
-			DCP::DCP06SelectPointModelC* pModel = new DCP06SelectPointModelC;
+			DCP::SelectPointModel* pModel = new SelectPointModel;
 			int iCount = m_pDataModel->pFileFunc->GetPointList(&pModel->points[0],MAX_SELECT_POINTS);
 			pModel->m_iCounts = iCount;
 			pModel->m_iSelectedId = m_pDataModel->pFileFunc->active_point_front;
 			
-			if(GetController(SELECT_POINT_CONTROLLER) == NULL)
+			if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
 			{
-				(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP06SelectPointControllerC );
+				(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
 			}
 
 			//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_PLANE_MEAS_TOK);
@@ -1650,12 +1650,12 @@ void DCP::DCP063DFbsControllerC::OnF5Pressed()
 		}
 
 		// call file dialog
-		if(GetController(FILE_CONTROLLER) == NULL)
+		if(GetController(FILE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( FILE_CONTROLLER, new DCP::DCP06FileControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( FILE_CONTROLLER, new DCP::FileController(m_pDlg->GetModel()) );
 		}
 
-		(void)GetController( FILE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		(void)GetController( FILE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(FILE_CONTROLLER, true);
 
 		m_pDataModel->iPointKeys = 0;	
@@ -1667,9 +1667,9 @@ void DCP::DCP063DFbsControllerC::OnF5Pressed()
 // ================================================================================================
 // Description: F6
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnF6Pressed()
+void DCP::Fbs3DController::OnF6Pressed()
 {
-  if (m_pDlg == NULL)
+  if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -1693,7 +1693,7 @@ void DCP::DCP063DFbsControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: SHF1
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnSHF1Pressed()
+void DCP::Fbs3DController::OnSHF1Pressed()
 {
 	/*
 	if( ABL::VideoDialogC::IsCameraAvailable(CFA::CT_OVC) )
@@ -1731,7 +1731,7 @@ void DCP::DCP063DFbsControllerC::OnSHF1Pressed()
 // ================================================================================================
 // Description: SHF2
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnSHF2Pressed()
+void DCP::Fbs3DController::OnSHF2Pressed()
 {
 	if(m_pDataModel->iPointKeys != 0)
 	{
@@ -1802,11 +1802,11 @@ void DCP::DCP063DFbsControllerC::OnSHF2Pressed()
 	}
 	else
 	{
-		if(GetController(INIT_CONTROLLER) == NULL)
+		if(GetController(INIT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC );
+			(void)AddController( INIT_CONTROLLER, new DCP::InitializationController );
 		}
-		(void)GetController( INIT_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+		(void)GetController( INIT_CONTROLLER )->SetModel( m_pDlg->GetModel());
 		SetActiveController(INIT_CONTROLLER, true);
 	}
 
@@ -1819,13 +1819,13 @@ void DCP::DCP063DFbsControllerC::OnSHF2Pressed()
 // ================================================================================================
 // Description: SHF3 / SPECIAL MENU
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnSHF3Pressed()
+void DCP::Fbs3DController::OnSHF3Pressed()
 {
-	if(GetController(SPECIAL_MENU_CONTROLLER) == NULL)
+	if(GetController(SPECIAL_MENU_CONTROLLER) == nullptr)
 	{
-		(void)AddController( SPECIAL_MENU_CONTROLLER, new DCP::DCP06SpecialMenuControllerC( m_pDlg->GetDCP06Model()));
+		(void)AddController( SPECIAL_MENU_CONTROLLER, new DCP::SpecialMenuController( m_pDlg->GetModel()));
 	}
-	(void)GetController( SPECIAL_MENU_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( SPECIAL_MENU_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(SPECIAL_MENU_CONTROLLER, true);
 
 }
@@ -1833,13 +1833,13 @@ void DCP::DCP063DFbsControllerC::OnSHF3Pressed()
 // ================================================================================================
 // Description: SHF4
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnSHF4Pressed()
+void DCP::Fbs3DController::OnSHF4Pressed()
 {
-	if(GetController(TOOL_CONTROLLER) == NULL)
+	if(GetController(TOOL_CONTROLLER) == nullptr)
 	{
-		(void)AddController( TOOL_CONTROLLER, new DCP::DCP06ToolControllerC());
+		(void)AddController( TOOL_CONTROLLER, new DCP::ToolController());
 	}
-	(void)GetController( TOOL_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( TOOL_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(TOOL_CONTROLLER, true);
 
 }
@@ -1847,9 +1847,9 @@ void DCP::DCP063DFbsControllerC::OnSHF4Pressed()
 // ================================================================================================
 // Description: SHF5 / CALC
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnSHF5Pressed()
+void DCP::Fbs3DController::OnSHF5Pressed()
 {
-	DCP06CalcDist2PointsModelC* pModel = new DCP06CalcDist2PointsModelC;
+	CalculationDist2PointsModel* pModel = new CalculationDist2PointsModel;
 	int iCount = m_pDataModel->pFileFunc->GetPointList(&pModel->points[0],MAX_SELECT_POINTS, BOTH);
 	pModel->sFile = StringC(m_pDataModel->pFileFunc->getFileName());
 	pModel->m_iCounts = iCount;
@@ -1865,9 +1865,9 @@ void DCP::DCP063DFbsControllerC::OnSHF5Pressed()
 	
 	pModel->sTitle += sTemp;
 
-	if(GetController(CALC_2_POINTS_CONTROLLER) == NULL)
+	if(GetController(CALC_2_POINTS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( CALC_2_POINTS_CONTROLLER, new DCP::DCP06CalcDist2PointsControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( CALC_2_POINTS_CONTROLLER, new DCP::CalculationDist2PointsController(m_pDlg->GetModel()));
 	}
 	(void)GetController( CALC_2_POINTS_CONTROLLER )->SetModel(pModel);
 	SetActiveController(CALC_2_POINTS_CONTROLLER, true);
@@ -1877,7 +1877,7 @@ void DCP::DCP063DFbsControllerC::OnSHF5Pressed()
 // ================================================================================================
 // Description: SHF6 / CHANGE FACE
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnSHF6Pressed()
+void DCP::Fbs3DController::OnSHF6Pressed()
 {
 		// I<>II
 		TBL::ChangeFaceControllerC* poChangeFace = new TBL::ChangeFaceControllerC();
@@ -1889,7 +1889,7 @@ void DCP::DCP063DFbsControllerC::OnSHF6Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::Fbs3DController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == CAMERA_DLG)
 	{
@@ -1902,7 +1902,7 @@ void DCP::DCP063DFbsControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::Fbs3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {	
 	// ************************
 	// File
@@ -1910,7 +1910,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	if(lCtrlID == FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		m_pDataModel->pFileFunc->always_single = 0;
-		m_pDataModel->pFileFunc->setFile(m_pDlg->GetDCP06Model()->ADFFileName);
+		m_pDataModel->pFileFunc->setFile(m_pDlg->GetModel()->ADFFileName);
 		m_pDataModel->pFileFunc->form_pnt((int) m_pDataModel->pFileFunc->active_point_front);
 	}
 	// ************************
@@ -1918,7 +1918,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	// ************************
 	if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 			char buffer[10]; buffer[0] = '\0';
 			m_pDataModel->pCommon->convert_to_ascii(strNewFile, buffer, DCP_POINT_ID_LENGTH + 1);
@@ -1942,7 +1942,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	// ************************
 	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectPointModelC* pModel = (DCP::DCP06SelectPointModelC*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
+		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
 		StringC strSelectedPoint = pModel->m_strSelectedPoint;
 		short iSelectedPointId = pModel->m_iSelectedId;
 		m_pDataModel->pFileFunc->form_pnt(pModel->m_iSelectedId);
@@ -1974,12 +1974,12 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 
 		if(lExitCode == EC_KEY_CONT)
 		{
-		DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
+		DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
 		m_pDataModel->x_temp = pModel->m_dX;
 		m_pDataModel->y_temp = pModel->m_dY;
 		m_pDataModel->z_temp= pModel->m_dZ;
 
-		if(m_pDlg->GetDCP06Model()->m_nAutoMatch)
+		if(m_pDlg->GetModel()->m_nAutoMatch)
 		{
 			int pno = m_pDataModel->pFileFunc->find_point(m_pDataModel->x_temp, m_pDataModel->y_temp, m_pDataModel->z_temp);
 
@@ -2005,7 +2005,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 					m_pDataModel->set_xyz_mea_ptr();
 
 					// show dialog
-					DCP06AutoMatchModelC* pModel = new DCP06AutoMatchModelC;
+					AutoMatchModel* pModel = new AutoMatchModel;
 					pModel->pno = pno;
 					pModel->xdsg = atof(m_pDataModel->xdes_ptr);
 					
@@ -2026,9 +2026,9 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 					pModel->pointid = StringC(m_pDataModel->pid_ptr);
 
 					// added 280110
-					if(GetController(AUTOMATCH_CONTROLLER) == NULL)
+					if(GetController(AUTOMATCH_CONTROLLER) == nullptr)
 					{
-						(void)AddController( AUTOMATCH_CONTROLLER, new DCP::DCP06AutoMatchControllerC(m_pDlg->GetDCP06Model()));
+						(void)AddController( AUTOMATCH_CONTROLLER, new DCP::AutoMatchController(m_pDlg->GetModel()));
 					}
 					(void)GetController( AUTOMATCH_CONTROLLER )->SetModel(pModel);
 					SetActiveController(AUTOMATCH_CONTROLLER, true);
@@ -2036,7 +2036,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 				m_pDataModel->pFileFunc->form_pnt(pno);
 				m_pDataModel->set_xyz_mea_ptr();
 					
-				if(m_pDlg->GetDCP06Model()->m_nOverWriteInfo)
+				if(m_pDlg->GetModel()->m_nOverWriteInfo)
 				{
 					if( !m_pDataModel->pCommon->strblank(m_pDataModel->xmea_ptr) || 
 						!m_pDataModel->pCommon->strblank(m_pDataModel->ymea_ptr) || 
@@ -2053,7 +2053,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 					}
 				}
 							
-				m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+				m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 				m_pDataModel->save_point();
 				*/
 			}	
@@ -2061,7 +2061,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 		}
 		else
 		{
-			m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+			m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 			m_pDataModel->save_point();
 		}
 
@@ -2091,7 +2091,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 		/*
 		if(m_pDataModel->pFileFunc->IsOpen())
 		{
-			if(m_pDlg->GetDCP06Model()->m_nAutoIncrement)
+			if(m_pDlg->GetModel()->m_nAutoIncrement)
 			{
 				short ret = m_pDataModel->pFileFunc->form_next_pnt();
 				if(m_pDataModel->pFileFunc->point_type == 1)     //FRONTBACK
@@ -2131,14 +2131,14 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	}
 	if(lCtrlID == AUTOMATCH_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-			DCP::DCP06AutoMatchModelC* pModel = (DCP::DCP06AutoMatchModelC*) GetController( AUTOMATCH_CONTROLLER )->GetModel();		
+			DCP::AutoMatchModel* pModel = (DCP::AutoMatchModel*) GetController( AUTOMATCH_CONTROLLER )->GetModel();		
 			short pno = pModel->pno;
 			
 			m_pDataModel->pFileFunc->form_pnt(pno);
 			//m_pDataModel->DSP_MODE = SINGLE;
 			m_pDataModel->set_xyz_mea_ptr();
 					
-			if(m_pDlg->GetDCP06Model()->m_nOverWriteInfo)
+			if(m_pDlg->GetModel()->m_nOverWriteInfo)
 					//if(get_show_overwrite_info() == TRUE)
 			{
 				if( !m_pDataModel->pCommon->strblank(m_pDataModel->xmea_ptr) || 
@@ -2154,20 +2154,20 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 						}
 						else
 						{
-							m_pDataModel->pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+							m_pDataModel->pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 							m_pDataModel->save_point();
 						}
 					}
 					else
 					{
-							m_pDataModel->pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+							m_pDataModel->pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 							m_pDataModel->save_point();
 					}
 
 			}
 			else
 			{
-				m_pDataModel->pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+				m_pDataModel->pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 				m_pDataModel->save_point();
 			}
 			if(m_pDataModel->DSP_MODE == FRONT)
@@ -2194,7 +2194,7 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 			// Auto Increment codes
 			if(m_pDataModel->pFileFunc->IsOpen())
 			{
-				if(m_pDlg->GetDCP06Model()->m_nAutoIncrement)
+				if(m_pDlg->GetModel()->m_nAutoIncrement)
 				{
 					short ret = m_pDataModel->pFileFunc->form_next_pnt();
 					if(m_pDataModel->pFileFunc->point_type == 1)     //FRONTBACK
@@ -2262,26 +2262,26 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 
 	if(lCtrlID == CIRCLE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( CIRCLE_CONTROLLER )->GetModel();		
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( CIRCLE_CONTROLLER )->GetModel();		
 		m_pDataModel->x_temp = pModel->m_pPointBuff[0].x;
 		m_pDataModel->y_temp = pModel->m_pPointBuff[0].y;
 		m_pDataModel->z_temp= pModel->m_pPointBuff[0].z;
 			
-		m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+		m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 		
 		// also diamter
-		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
+		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
 		m_pDataModel->save_point();
 	}
 	
 	if(lCtrlID == MID_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( MID_POINT_CONTROLLER )->GetModel();	
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( MID_POINT_CONTROLLER )->GetModel();	
 		m_pDataModel->x_temp = pModel->m_pPointBuff[0].x;
 		m_pDataModel->y_temp =  pModel->m_pPointBuff[0].y;
 		m_pDataModel->z_temp=   pModel->m_pPointBuff[0].z;
 		
-		m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+		m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 	
 		m_pDataModel->save_point();
 	}
@@ -2290,19 +2290,19 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	// ************************
 	if(lCtrlID == SEPARATE_RECORDING_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( SEPARATE_RECORDING_CONTROLLER )->GetModel();		
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( SEPARATE_RECORDING_CONTROLLER )->GetModel();		
 		
 		if(pModel->m_pPointBuff[0].xsta)
-			sprintf(m_pDataModel->xmea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].x);
+			sprintf(m_pDataModel->xmea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].x);
 
 		if(pModel->m_pPointBuff[0].ysta)
-			sprintf(m_pDataModel->ymea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].y);
+			sprintf(m_pDataModel->ymea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].y);
 		
 		if(pModel->m_pPointBuff[0].zsta)
-			sprintf(m_pDataModel->zmea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].z);
+			sprintf(m_pDataModel->zmea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].z);
 
 		// also diamter
-		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
+		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
 		m_pDataModel->save_point();
 	}
 
@@ -2311,12 +2311,12 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	// ************************
 	if(lCtrlID == HIDDENPOINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( HIDDENPOINT_CONTROLLER )->GetModel();		
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( HIDDENPOINT_CONTROLLER )->GetModel();		
 		m_pDataModel->x_temp = pModel->m_pPointBuff[0].x;
 		m_pDataModel->y_temp = pModel->m_pPointBuff[0].y;
 		m_pDataModel->z_temp= pModel->m_pPointBuff[0].z;
 			
-		m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+		m_pDataModel->pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 		
 		m_pDataModel->save_point();
 	}
@@ -2326,19 +2326,19 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	// ************************
 	if(lCtrlID == XYZ_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( XYZ_CONTROLLER )->GetModel();		
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( XYZ_CONTROLLER )->GetModel();		
 		
 		if(pModel->m_pPointBuff[0].xsta)
-			sprintf(m_pDataModel->xmea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].x);
+			sprintf(m_pDataModel->xmea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].x);
 
 		if(pModel->m_pPointBuff[0].ysta)
-			sprintf(m_pDataModel->ymea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].y);
+			sprintf(m_pDataModel->ymea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].y);
 		
 		if(pModel->m_pPointBuff[0].zsta)
-			sprintf(m_pDataModel->zmea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].z);
+			sprintf(m_pDataModel->zmea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].z);
 
 		// also diamter
-		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
+		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
 		m_pDataModel->save_point();
 	}
 	
@@ -2349,14 +2349,14 @@ void DCP::DCP063DFbsControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 // ================================================================================================
 // Description: ShowHiddenPointDlg
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::ShowHiddenPointDlg()
+void DCP::Fbs3DController::ShowHiddenPointDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+	DCP::PointBuffModel* pModel = new PointBuffModel;
 	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
 
-	if(GetController(HIDDENPOINT_CONTROLLER) == NULL)
+	if(GetController(HIDDENPOINT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::DCP06HiddenPointControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::HiddenPointController(m_pDlg->GetModel()));
 	}
 	(void)GetController( HIDDENPOINT_CONTROLLER )->SetModel( pModel);
 	SetActiveController(HIDDENPOINT_CONTROLLER, true);
@@ -2365,13 +2365,13 @@ void DCP::DCP063DFbsControllerC::ShowHiddenPointDlg()
 // ================================================================================================
 // Description: ShowXorYorZDlg
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::ShowXorYorZDlg()
+void DCP::Fbs3DController::ShowXorYorZDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+	DCP::PointBuffModel* pModel = new PointBuffModel;
 	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
-	if(GetController(XYZ_CONTROLLER) == NULL)
+	if(GetController(XYZ_CONTROLLER) == nullptr)
 	{
-		(void)AddController( XYZ_CONTROLLER, new DCP::DCP06XYZControllerC(m_pDlg->GetDCP06Model()) );
+		(void)AddController( XYZ_CONTROLLER, new DCP::XYZController(m_pDlg->GetModel()) );
 	}
 	(void)GetController( XYZ_CONTROLLER )->SetModel( pModel);
 	SetActiveController(XYZ_CONTROLLER, true);
@@ -2380,12 +2380,12 @@ void DCP::DCP063DFbsControllerC::ShowXorYorZDlg()
 // ================================================================================================
 // Description: ShowCircleDlg
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::ShowCircleDlg()
+void DCP::Fbs3DController::ShowCircleDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
-	if(GetController(CIRCLE_CONTROLLER) == NULL)
+	DCP::PointBuffModel* pModel = new PointBuffModel;
+	if(GetController(CIRCLE_CONTROLLER) == nullptr)
 	{
-		(void)AddController( CIRCLE_CONTROLLER, new DCP::DCP06CircleControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( CIRCLE_CONTROLLER, new DCP::CircleController(m_pDlg->GetModel()));
 	}
 	(void)GetController( CIRCLE_CONTROLLER )->SetModel(pModel);
 	SetActiveController(CIRCLE_CONTROLLER, true);
@@ -2394,16 +2394,16 @@ void DCP::DCP063DFbsControllerC::ShowCircleDlg()
 // ================================================================================================
 // Description: ShowSeparateRecDlg
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::ShowSeparateRecDlg()
+void DCP::Fbs3DController::ShowSeparateRecDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+	DCP::PointBuffModel* pModel = new PointBuffModel;
 
 	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
-	if(GetController(SEPARATE_RECORDING_CONTROLLER) == NULL)
+	if(GetController(SEPARATE_RECORDING_CONTROLLER) == nullptr)
 	{
-		(void)AddController( SEPARATE_RECORDING_CONTROLLER, new DCP::DCP06SeparateRecControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( SEPARATE_RECORDING_CONTROLLER, new DCP::SeparateRecController(m_pDlg->GetModel()));
 	}
 	(void)GetController( SEPARATE_RECORDING_CONTROLLER )->SetModel( pModel);
 	SetActiveController(SEPARATE_RECORDING_CONTROLLER, true);
@@ -2412,45 +2412,45 @@ void DCP::DCP063DFbsControllerC::ShowSeparateRecDlg()
 // ================================================================================================
 // Description: ShowHomePointsDlg
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::ShowHomePointsDlg()
+void DCP::Fbs3DController::ShowHomePointsDlg()
 {
-	if(GetController(HOME_POINTS_CONTROLLER) == NULL)
+	if(GetController(HOME_POINTS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( HOME_POINTS_CONTROLLER, new DCP::DCP06HomePointsControllerC(m_pDlg->GetDCP06Model()) );
+		(void)AddController( HOME_POINTS_CONTROLLER, new DCP::HomePointsController(m_pDlg->GetModel()) );
 	}
-	(void)GetController( HOME_POINTS_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( HOME_POINTS_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(HOME_POINTS_CONTROLLER, true);
 }
 
 // ================================================================================================
 // Description: ShowHomePointsDlg
 // ================================================================================================
-void DCP::DCP063DFbsControllerC::ShowMidPointDlg()
+void DCP::Fbs3DController::ShowMidPointDlg()
 {
-		DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+		DCP::PointBuffModel* pModel = new PointBuffModel;
 
 		sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
 
 		//pModel->m_pPointBuff[0].xsta = pMeasModel->
-		if(GetController(MID_POINT_CONTROLLER) == NULL)
+		if(GetController(MID_POINT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MID_POINT_CONTROLLER, new DCP::DCP06MidPointControllerC(m_pDlg->GetDCP06Model()));
+			(void)AddController( MID_POINT_CONTROLLER, new DCP::MidPointController(m_pDlg->GetModel()));
 		}
 		(void)GetController( MID_POINT_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MID_POINT_CONTROLLER, true);
 }
 // ================================================================================================
-// ====================================  DCP063DMeasModelC           ==============================
+// ====================================  Meas3DModel           ==============================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP063DFBSMeasModelC::DCP063DFBSMeasModelC(DCP::DCP06ModelC* pDCP06Model)//:m_pDCP06Model(pDCP06Model))
+DCP::Fbs3DMeasModel::Fbs3DMeasModel(DCP::Model* pModel)//:m_pModel(pModel))
 {
-	pFileFunc = new AdfFileFunc(pDCP06Model);
-	pCommon = new DCP06CommonC(pDCP06Model);
-	pMsgBox = new DCP06MsgBoxC;
+	pFileFunc = new AdfFileFunc(pModel);
+	pCommon = new Common(pModel);
+	pMsgBox = new MsgBox;
 	pFileFunc->always_single = 0;
 	DSP_MODE = SINGLE;
 	FRONTBACK_ACTUAL = ACTUAL;
@@ -2498,7 +2498,7 @@ DCP::DCP063DFBSMeasModelC::DCP063DFBSMeasModelC(DCP::DCP06ModelC* pDCP06Model)//
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP063DFBSMeasModelC::~DCP063DFBSMeasModelC()
+DCP::Fbs3DMeasModel::~Fbs3DMeasModel()
 {
 	if(pFileFunc)
 	{
@@ -2523,7 +2523,7 @@ DCP::DCP063DFBSMeasModelC::~DCP063DFBSMeasModelC()
 // *********************************************************************
 //
 // *********************************************************************
-void DCP::DCP063DFBSMeasModelC::set_xyz_mea_ptr()
+void DCP::Fbs3DMeasModel::set_xyz_mea_ptr()
 {
 	if(pFileFunc->IsOpen())
 	{
@@ -2639,7 +2639,7 @@ void DCP::DCP063DFBSMeasModelC::set_xyz_mea_ptr()
 // *********************************************************************
 //
 // *********************************************************************
-void DCP::DCP063DFBSMeasModelC::set_xyz_des_ptr()
+void DCP::Fbs3DMeasModel::set_xyz_des_ptr()
 {
 	if(pFileFunc->IsOpen())
 	{
@@ -2717,7 +2717,7 @@ void DCP::DCP063DFBSMeasModelC::set_xyz_des_ptr()
 // ================================================================================================
 // Description: save_point
 // ================================================================================================
-void DCP::DCP063DFBSMeasModelC::save_point()
+void DCP::Fbs3DMeasModel::save_point()
 {
 	if(pFileFunc->IsOpen())
 	{

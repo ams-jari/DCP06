@@ -44,18 +44,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
+    class Model;
 
-	class DCP06UnitDlgC;
+	class UnitDialog;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06UnitControllerC : public GUI::ControllerC
+    class UnitController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06UnitControllerC();
-			~DCP06UnitControllerC();
+            UnitController();
+			~UnitController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -70,25 +70,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06UnitControllerC( const DCP06UnitControllerC& oDCP06UnitController )
+            UnitController( const UnitController& oUnitController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06UnitControllerC& operator=( const DCP06UnitControllerC& oDCP06UnitController )
+            UnitController& operator=( const UnitController& oUnitController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
 
-            DCP06UnitDlgC* m_pDlg;
+            UnitDialog* m_pDlg;
     };
 
 
-    class DCP06UnitDlgC:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
+    class UnitDialog:public GUI::StandardDialogC, public OBS::CommandC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -98,10 +98,10 @@ namespace DCP
 				eDecimals
 			};
 
-		   DCP06UnitDlgC();
+		   UnitDialog();
 
             // Description: Destructor
-            virtual ~DCP06UnitDlgC();
+            virtual ~UnitDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -114,14 +114,14 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 
 	protected:
 			
 			GUI::ComboLineCtrlC* m_pUnit;
 			GUI::ComboLineCtrlC* m_pDecimals;
-			OBS_DECLARE_EXECUTE(DCP06UnitDlgC);
+			OBS_DECLARE_EXECUTE(UnitDialog);
 
 			// Description: add all controls
             virtual void RefreshControls();

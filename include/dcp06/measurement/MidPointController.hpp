@@ -46,13 +46,13 @@ namespace DCP
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06MidPointControllerC : public GUI::ControllerC
+    class MidPointController : public GUI::ControllerC
 	{
 	public:
 
             // Description: Constructor
-            DCP06MidPointControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06MidPointControllerC();
+            MidPointController(Model *pModel);
+			~MidPointController();
 
 
             // Description: Handle change of position values
@@ -68,8 +68,8 @@ namespace DCP
 			// Description: Route model to everybody else
 
 			virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06PointBuffModelC* m_pPointBuffModel;
-			DCP06PointBuffModelC* GetDataModel() const;
+			PointBuffModel* m_pPointBuffModel;
+			PointBuffModel* GetDataModel() const;
 		
             // Description: React on close of tabbed dialog
             virtual void OnActiveDialogClosed( int lDlgID, int lExitCode );
@@ -81,23 +81,23 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06MidPointControllerC( const DCP06MidPointControllerC& oDCP06MidPointController )
+            MidPointController( const MidPointController& oMidPointController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06MidPointControllerC& operator=( const DCP06MidPointControllerC& oDCP06MidPointControllerC )
+            MidPointController& operator=( const MidPointController& oMidPointController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP06CommonC* m_pCommon;
-			DCP06ModelC* m_pDCP06Model;
+			Common* m_pCommon;
+			Model* m_pModel;
 			
-			DCP06PointBuffModelC* m_pPoint;
+			PointBuffModel* m_pPoint;
 			/*short m_iActDes;
 			short m_iAskId;*/
     };

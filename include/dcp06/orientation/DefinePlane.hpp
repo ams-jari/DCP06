@@ -45,18 +45,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06DefinePlaneDlgC;
-	class DCP06DefinePlaneModelC;
+    class Model;
+	class DefinePlaneDialog;
+	class DefinePlaneModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06DefinePlaneControllerC : public GUI::ControllerC
+    class DefinePlaneController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06DefinePlaneControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06DefinePlaneControllerC();
+            DefinePlaneController(Model* pModel);
+			~DefinePlaneController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -78,25 +78,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06DefinePlaneControllerC( const DCP06DefinePlaneControllerC& oDCP05DefinePlaneController )
+            DefinePlaneController( const DefinePlaneController& oDefinePlaneController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06DefinePlaneControllerC& operator=( const DCP06DefinePlaneControllerC& oDCP05DefinePlaneController )
+            DefinePlaneController& operator=( const DefinePlaneController& oDefinePlaneController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06DefinePlaneDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            DefinePlaneDialog* m_pDlg;
+			Model* m_pModel;
     };
 
 
-    class DCP06DefinePlaneDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class DefinePlaneDialog:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -109,10 +109,10 @@ namespace DCP
 				ePlaneInfo4,
 			};
 
-		   DCP06DefinePlaneDlgC(DCP06ModelC* pDCP06Model);
+		   DefinePlaneDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06DefinePlaneDlgC();
+            virtual ~DefinePlaneDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -126,7 +126,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06DefinePlaneModelC* GetDataModel() const;
+            DefinePlaneModel* GetDataModel() const;
 		
 			virtual void RefreshControls();
 
@@ -145,12 +145,12 @@ namespace DCP
 			GUI::TextCtrlC* m_pPlaneInfo2;
 			GUI::TextCtrlC* m_pPlaneInfo3;
 			GUI::TextCtrlC* m_pPlaneInfo4;
-			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
+			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
 			// Description: add all controls
 
-			DCP06ModelC* m_pDCP06Model;
-			//DCP::DCP06DefinePlaneModelC* m_pTempDefinePlaneModel;
+			Model* m_pModel;
+			//DCP::DefinePlaneModel* m_pTempDefinePlaneModel;
             
 	private:
 			//OBS::ObserverC m_pComboBoxObserver;
@@ -167,17 +167,17 @@ namespace DCP
 			short calc_plane(S_PLANE_BUFF *plane, short actdes);
 
 	};
-    class DCP06DefinePlaneModelC : public GUI::ModelC
+    class DefinePlaneModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06DefinePlaneModelC();
+            DefinePlaneModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06DefinePlaneModelC();
+            virtual ~DefinePlaneModel();
 
 			short /*DCP_PLANE_TYPE*/ active_plane;
 			short /*DCP_LINE_TYPE*/  active_line; 

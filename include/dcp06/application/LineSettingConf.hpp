@@ -42,19 +42,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06LineSettingConfDlgC;
-	class DCP06LSetConfModelC;
+	class Model;
+	class LineSettingConfDialog;
+	class LineSettingConfModel;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06LineSettingConfControllerC : public GUI::ControllerC
+    class LineSettingConfController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06LineSettingConfControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06LineSettingConfControllerC();
+            LineSettingConfController(Model *pModel);
+			~LineSettingConfController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -82,25 +82,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06LineSettingConfControllerC( const DCP06LineSettingConfControllerC& oDCP05LineSettingConfController )
+            LineSettingConfController( const LineSettingConfController& oLineSettingConfController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06LineSettingConfControllerC& operator=( const DCP06LineSettingConfControllerC& oDCP05LineSettingConfController )
+            LineSettingConfController& operator=( const LineSettingConfController& oLineSettingConfController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06LineSettingConfDlgC* m_pDlg;
-			DCP06ModelC *m_pDCP06Model;
+            LineSettingConfDialog* m_pDlg;
+			Model *m_pModel;
     };
 
 
-	class DCP06LineSettingConfDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class LineSettingConfDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -112,10 +112,10 @@ namespace DCP
 			};
 
 
-		   DCP06LineSettingConfDlgC(DCP06ModelC *pDCP06Model);
+		   LineSettingConfDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06LineSettingConfDlgC();
+            virtual ~LineSettingConfDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -127,7 +127,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06LSetConfModelC* GetDataModel() const;
+			LineSettingConfModel* GetDataModel() const;
 
 	protected:
   			GUI::TextCtrlC* m_pInfo; 
@@ -135,20 +135,20 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pVer;
 
 		private:	
-			DCP06ModelC *m_pDCP06Model;
+			Model *m_pModel;
 	};
 
-	 class DCP06LSetConfModelC : public GUI::ModelC
+	 class LineSettingConfModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06LSetConfModelC();
+            LineSettingConfModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06LSetConfModelC();
+            virtual ~LineSettingConfModel();
 
 
 			double dHor;

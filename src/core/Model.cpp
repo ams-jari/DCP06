@@ -65,7 +65,7 @@
 // ================================================================================================
 
 // Instantiate template classes
-DCP::DCP06ModelC::DCP06ModelC():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n2FaceMeas(NO/*ALL_MANUAL*/),
+DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n2FaceMeas(NO/*ALL_MANUAL*/),
 					m_nDesignValues(YES),m_nToolInfo(YES), m_nAverageCount(1), m_nLeftRightHand(RIGHTHAND),
 					m_nAutoMatch(NO),m_nUnit(MM), m_nDecimals(1),ADFFileName(L""),active_coodinate_system(DCS),
 					isMotorized(false),active_tool(0),isATR(false),tool_trans_x(0.0),tool_trans_y(0.0),tool_trans_z(0.0),
@@ -240,22 +240,22 @@ DCP::DCP06ModelC::DCP06ModelC():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteIn
 			//getSpecialInfo();
 			//oVers.
 }
-DCP::DCP06ModelC::~DCP06ModelC()
+DCP::Model::~Model()
 {
 }
 
-DCP::Database::IDatabase* DCP::DCP06ModelC::GetDatabase() const
+DCP::Database::IDatabase* DCP::Model::GetDatabase() const
 {
 	return m_pDatabase.get();
 }
 
-void DCP::DCP06ModelC::SetDatabaseDataDirectory(const char* path)
+void DCP::Model::SetDatabaseDataDirectory(const char* path)
 {
 	if (m_pDatabase.get())
 		m_pDatabase->setDataDirectory(path ? path : "");
 }
 
-void DCP::DCP06ModelC::initialize_matrix4x4(double pMatrix[4][4])
+void DCP::Model::initialize_matrix4x4(double pMatrix[4][4])
 {
 	for(int i=0; i < 4; i++)
 	{
@@ -274,14 +274,14 @@ void DCP::DCP06ModelC::initialize_matrix4x4(double pMatrix[4][4])
 }
 
 
-DCP::DCP06ConfigControllerC::DCP06ConfigControllerC(GUI::ControllerC* pParent, DCP06ModelC* poModel)
+DCP::ConfigController::ConfigController(GUI::ControllerC* pParent, Model* poModel)
     : ABL::AppConfigControllerC(pParent)
 {
     // Create data model if necessary
-    if (NULL == poModel)
+    if (nullptr == poModel)
     {
         //lint -save -e1732 -e1733 new in constructor which has no assignment operator / copy constructor
-        poModel = new DCP06ModelC();
+        poModel = new Model();
         //lint -restore
     }
 
@@ -367,7 +367,7 @@ DCP::DCP06ConfigControllerC::DCP06ConfigControllerC(GUI::ControllerC* pParent, D
 //
 // Destructor
 //
-DCP::DCP06ConfigControllerC::~DCP06ConfigControllerC(void)
+DCP::ConfigController::~ConfigController(void)
 {
 }
 
@@ -375,15 +375,15 @@ DCP::DCP06ConfigControllerC::~DCP06ConfigControllerC(void)
 //
 // GetModel
 // 
-DCP::DCP06ModelC* DCP::DCP06ConfigControllerC::GetModel(void) const
+DCP::Model* DCP::ConfigController::GetModel(void) const
 {
     // Return the configuration model
-    USER_APP_ASSERT(ModelHandlerC::GetModel() != NULL)
-    return dynamic_cast<DCP06ModelC*>(ModelHandlerC::GetModel());
+    USER_APP_ASSERT(ModelHandlerC::GetModel() != nullptr)
+    return dynamic_cast<Model*>(ModelHandlerC::GetModel());
 }
 
 /*
-bool DCP::DCP06ConfigControllerC::UpdateModelMigrated(
+bool DCP::ConfigController::UpdateModelMigrated(
                 unsigned int ulKey, CPI::CFG::ArchiveC* poArchive, unsigned int ulCnfVersion,
 				unsigned int ulAppVersion)
 {
@@ -394,18 +394,18 @@ bool DCP::DCP06ConfigControllerC::UpdateModelMigrated(
 //
 // UpdateModel
 //
-void DCP::DCP06ConfigControllerC::UpdateModel(unsigned int ulKey, CPI::CFG::ArchiveC* poArchive)
+void DCP::ConfigController::UpdateModel(unsigned int ulKey, CPI::CFG::ArchiveC* poArchive)
 {
 	
-    DCP06ModelC* poModel = GetModel();
-    if (NULL == poModel)
+    Model* poModel = GetModel();
+    if (nullptr == poModel)
     {
         return;
     }
 
-   if(NULL == poArchive)
+   if(nullptr == poArchive)
    {	
-		//DCP06MsgBoxC msgbox;
+		//MsgBox msgbox;
 		//StringC sMsg;
 		//sMsg.Format(L"Cannot read data from archive (Key=%d )!",ulKey);
 		//msgbox.ShowMessageOk(sMsg);
@@ -415,11 +415,11 @@ void DCP::DCP06ConfigControllerC::UpdateModel(unsigned int ulKey, CPI::CFG::Arch
        switch(ulKey)
     {
 		case CNF_KEY_INIT:
-			if(NULL != poArchive)
+			if(nullptr != poArchive)
 			{	
 				load_adf_file_name(poArchive, poModel);
 				
-				//DCP06MsgBoxC msgbox;
+				//MsgBox msgbox;
 				//StringC sMsg;
 				//msgbox.ShowMessageOk(poModel->ADFFileName);
 				load_init_data(poArchive, poModel);
@@ -431,21 +431,21 @@ void DCP::DCP06ConfigControllerC::UpdateModel(unsigned int ulKey, CPI::CFG::Arch
 			break;
 
 	    case CNF_KEY_A321:
-			if(NULL != poArchive)
+			if(nullptr != poArchive)
 			{	
 				load_dom_data(poArchive, poModel);
 			}
 			break;
 	
 		case CNF_KEY_USERDEF:
-			if(NULL != poArchive)
+			if(nullptr != poArchive)
 			{	
 				load_userdef_data(poArchive, poModel);
 			}
 			break;
 
 		case CNF_KEY_BESTFIT:
-			if(NULL != poArchive)
+			if(nullptr != poArchive)
 			{	
 				load_pom_data(poArchive, poModel);
 				*poArchive >> poModel->pom_into_capture;
@@ -454,7 +454,7 @@ void DCP::DCP06ConfigControllerC::UpdateModel(unsigned int ulKey, CPI::CFG::Arch
 			break;
 
 	case CNF_KEY_CHST:
-     if(NULL != poArchive)
+     if(nullptr != poArchive)
 		{	
 			load_chst_data(poArchive, poModel);
 			//save_home_points(poArchive, poModel);
@@ -462,7 +462,7 @@ void DCP::DCP06ConfigControllerC::UpdateModel(unsigned int ulKey, CPI::CFG::Arch
 		break;
 
 	case CNF_KEY_CIRCLE:
-     if(NULL != poArchive)
+     if(nullptr != poArchive)
 		{	
 			load_circle_data(poArchive, poModel);
 			load_crl_file_name(poArchive, poModel);
@@ -472,14 +472,14 @@ void DCP::DCP06ConfigControllerC::UpdateModel(unsigned int ulKey, CPI::CFG::Arch
 
 
 	 case CNF_KEY_LICENSE:
-     if(NULL != poArchive)
+     if(nullptr != poArchive)
 	 {	
 			load_lisence(poArchive, poModel);
 	 }	
 		break;
  
 	case CNF_KEY_SHAFT:
-		if(NULL != poArchive)
+		if(nullptr != poArchive)
 		{	
 			load_shaft_file_name(poArchive, poModel);
 			load_shaft_data(poArchive, poModel);
@@ -488,14 +488,14 @@ void DCP::DCP06ConfigControllerC::UpdateModel(unsigned int ulKey, CPI::CFG::Arch
 		break;
 
 	case CNF_KEY_LINE_FITTING:
-		if(NULL != poArchive)
+		if(nullptr != poArchive)
 		{
 			load_linefitting_data(poArchive, poModel);
 		}
 		break;
 
 	case CNF_KEY_DEMO_LICENSES:
-		if(NULL != poArchive)
+		if(nullptr != poArchive)
 		{
 			load_demo_licenses(poArchive, poModel);
 		}
@@ -509,17 +509,17 @@ void DCP::DCP06ConfigControllerC::UpdateModel(unsigned int ulKey, CPI::CFG::Arch
 //
 // ReadModel
 //
-void DCP::DCP06ConfigControllerC::ReadModel(unsigned int ulKey, CPI::CFG::ArchiveC* poArchive)
+void DCP::ConfigController::ReadModel(unsigned int ulKey, CPI::CFG::ArchiveC* poArchive)
 {
-    DCP06ModelC* poModel = GetModel();
-    if (NULL == poModel)
+    Model* poModel = GetModel();
+    if (nullptr == poModel)
     {
         return;
     }
 
-	 if(NULL == poArchive)
+	 if(nullptr == poArchive)
 	 {
-    		DCP06MsgBoxC msgbox;
+    		MsgBox msgbox;
 			msgbox.ShowMessageOk(L"Cannot save data into archive! ");
 			return;
 	 }
@@ -527,7 +527,7 @@ void DCP::DCP06ConfigControllerC::ReadModel(unsigned int ulKey, CPI::CFG::Archiv
     switch(ulKey)
     {
 		case CNF_KEY_INIT:
-			if(NULL != poArchive)
+			if(nullptr != poArchive)
 			{	
 				save_adf_file_name(poArchive, poModel);
 				save_init_data(poArchive, poModel);
@@ -539,14 +539,14 @@ void DCP::DCP06ConfigControllerC::ReadModel(unsigned int ulKey, CPI::CFG::Archiv
 			break;
 
 	    case CNF_KEY_A321:
-			if(NULL != poArchive)
+			if(nullptr != poArchive)
 			{	
 				save_dom_data(poArchive, poModel);
 			}
 			break;
 	
 		case CNF_KEY_BESTFIT:
-			if(NULL != poArchive)
+			if(nullptr != poArchive)
 			{	
 				save_pom_data(poArchive, poModel);
 				*poArchive << poModel->pom_into_capture;
@@ -556,7 +556,7 @@ void DCP::DCP06ConfigControllerC::ReadModel(unsigned int ulKey, CPI::CFG::Archiv
 			break;
 
 	case CNF_KEY_CHST:
-     if(NULL != poArchive)
+     if(nullptr != poArchive)
 		{	
 			save_chst_data(poArchive, poModel);
 			//save_home_points(poArchive, poModel);
@@ -564,7 +564,7 @@ void DCP::DCP06ConfigControllerC::ReadModel(unsigned int ulKey, CPI::CFG::Archiv
 		break;
 
 	case CNF_KEY_CIRCLE:
-     if(NULL != poArchive)
+     if(nullptr != poArchive)
 		{	
 			save_circle_data(poArchive, poModel);
 			save_crl_file_name(poArchive, poModel);
@@ -573,21 +573,21 @@ void DCP::DCP06ConfigControllerC::ReadModel(unsigned int ulKey, CPI::CFG::Archiv
 		break;
 
 	case CNF_KEY_USERDEF:
-     if(NULL != poArchive)
+     if(nullptr != poArchive)
 	 {	
 			save_userdef_data(poArchive, poModel);
 	 }	
 		break;
 
 	case CNF_KEY_LICENSE:
-     if(NULL != poArchive)
+     if(nullptr != poArchive)
 	 {	
 			save_lisence(poArchive, poModel);
 			//load_lisence(poArchive, poModel);
 	 }	
 		break;
 	case CNF_KEY_SHAFT:
-     if(NULL != poArchive)
+     if(nullptr != poArchive)
 	 {	
 			save_shaft_file_name(poArchive, poModel);
 			save_shaft_data(poArchive, poModel);
@@ -595,14 +595,14 @@ void DCP::DCP06ConfigControllerC::ReadModel(unsigned int ulKey, CPI::CFG::Archiv
 		break;
 	
 	case CNF_KEY_LINE_FITTING:
-		if(NULL != poArchive)
+		if(nullptr != poArchive)
 		{
 			save_linefitting_data(poArchive, poModel);
 		}
 		break;
 
 	case CNF_KEY_DEMO_LICENSES:
-		if(NULL != poArchive)
+		if(nullptr != poArchive)
 		{
 			save_demo_licenses(poArchive, poModel);
 		}
@@ -612,7 +612,7 @@ void DCP::DCP06ConfigControllerC::ReadModel(unsigned int ulKey, CPI::CFG::Archiv
     }
 }
 
-void DCP::DCP06ConfigControllerC::save_matrix4x4(CPI::CFG::ArchiveC* poArchive, double matrix[4][4])
+void DCP::ConfigController::save_matrix4x4(CPI::CFG::ArchiveC* poArchive, double matrix[4][4])
 {
 	for(int i=0; i < 4; i++)
 		for(int j=0; j < 4; j++)
@@ -621,26 +621,26 @@ void DCP::DCP06ConfigControllerC::save_matrix4x4(CPI::CFG::ArchiveC* poArchive, 
 
 }
 
-void DCP::DCP06ConfigControllerC::load_matrix4x4(CPI::CFG::ArchiveC* poArchive, double matrix[4][4])
+void DCP::ConfigController::load_matrix4x4(CPI::CFG::ArchiveC* poArchive, double matrix[4][4])
 {
 	for(int i=0; i < 4; i++)
 		for(int j=0; j < 4; j++)
 			*poArchive >> matrix[i][j];
 }
 
-void DCP::DCP06ConfigControllerC::save_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel)
+void DCP::ConfigController::save_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, Model* pModel)
 {
 	for(int i=0; i < MAX_POINTS_IN_HIDDENPOINT_BAR ; i++)
 		*poArchive << pModel->hidden_point_bar[i];
 }
 
-void DCP::DCP06ConfigControllerC::load_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel)
+void DCP::ConfigController::load_hiddenpointbar_conf(CPI::CFG::ArchiveC* poArchive, Model* pModel)
 {
 	for(int i=0; i < MAX_POINTS_IN_HIDDENPOINT_BAR ; i++)
 		*poArchive >> pModel->hidden_point_bar[i];
 }
 
-void DCP::DCP06ConfigControllerC::load_adf_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_adf_file_name(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	char szUser[20+1];
 
@@ -649,7 +649,7 @@ void DCP::DCP06ConfigControllerC::load_adf_file_name(CPI::CFG::ArchiveC* poArchi
 	poModel->ADFFileName = StringC(szUser);
 }
 
-void DCP::DCP06ConfigControllerC::load_crl_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_crl_file_name(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	char szUser[20+1];
 
@@ -658,7 +658,7 @@ void DCP::DCP06ConfigControllerC::load_crl_file_name(CPI::CFG::ArchiveC* poArchi
 	poModel->sCircleFile = StringC(szUser);
 }
 
-void DCP::DCP06ConfigControllerC::load_shaft_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_shaft_file_name(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	char szUser[20+1];
 
@@ -666,14 +666,14 @@ void DCP::DCP06ConfigControllerC::load_shaft_file_name(CPI::CFG::ArchiveC* poArc
 	*poArchive >> szUser;	
 	poModel->sShaftFile = StringC(szUser);
 }
-void DCP::DCP06ConfigControllerC::load_lisence(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_lisence(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	//char temp[21];
 	*poArchive >> poModel->sKeyCode;	
 	*poArchive >> poModel->iStartCount;
 }
 
-void DCP::DCP06ConfigControllerC::load_init_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_init_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	char szUser[DCP_USER_LENGTH+1];
 
@@ -721,7 +721,7 @@ void DCP::DCP06ConfigControllerC::load_init_data(CPI::CFG::ArchiveC* poArchive, 
 	
 }
 
-void DCP::DCP06ConfigControllerC::load_dom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_dom_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 			*poArchive >> poModel->dom_active_plane; 
 			*poArchive >>  poModel->dom_active_line;
@@ -739,7 +739,7 @@ void DCP::DCP06ConfigControllerC::load_dom_data(CPI::CFG::ArchiveC* poArchive, D
 
 }
 
-void DCP::DCP06ConfigControllerC::load_userdef_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_userdef_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	int i = 0;
 
@@ -775,7 +775,7 @@ void DCP::DCP06ConfigControllerC::load_userdef_data(CPI::CFG::ArchiveC* poArchiv
 
 }
 
-void DCP::DCP06ConfigControllerC::load_tool_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_tool_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {			
 		*poArchive >> poModel->active_tool;
 		*poArchive >> poModel->active_tool_x;
@@ -797,7 +797,7 @@ void DCP::DCP06ConfigControllerC::load_tool_data(CPI::CFG::ArchiveC* poArchive, 
 
 
 }
-void DCP::DCP06ConfigControllerC::load_circle_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_circle_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {		
 		*poArchive >> poModel->circle_plane_type;
 
@@ -815,7 +815,7 @@ void DCP::DCP06ConfigControllerC::load_circle_data(CPI::CFG::ArchiveC* poArchive
 		*poArchive >> poModel->circle_vj;
 		*poArchive >> poModel->circle_vk;
 }
-void DCP::DCP06ConfigControllerC::load_shaft_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_shaft_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {			
 		short i = 0;
 
@@ -838,7 +838,7 @@ void DCP::DCP06ConfigControllerC::load_shaft_data(CPI::CFG::ArchiveC* poArchive,
 
 }
 
-void DCP::DCP06ConfigControllerC::save_circle_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_circle_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 		*poArchive << poModel->circle_plane_type;
 
@@ -856,7 +856,7 @@ void DCP::DCP06ConfigControllerC::save_circle_data(CPI::CFG::ArchiveC* poArchive
 		*poArchive << poModel->circle_vj;
 		*poArchive << poModel->circle_vk;
 }
-void DCP::DCP06ConfigControllerC::save_shaft_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_shaft_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 		*poArchive << poModel->shaft_circle_plane_type;
 
@@ -875,12 +875,12 @@ void DCP::DCP06ConfigControllerC::save_shaft_data(CPI::CFG::ArchiveC* poArchive,
 		*poArchive << poModel->shaft_circle_vj;
 		*poArchive << poModel->shaft_circle_vk;
 }
-void DCP::DCP06ConfigControllerC::save_lisence(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_lisence(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 		*poArchive << poModel->sKeyCode;
 		*poArchive << poModel->iStartCount;
 }
-void DCP::DCP06ConfigControllerC::load_pom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_pom_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	for(int i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
@@ -892,7 +892,7 @@ void DCP::DCP06ConfigControllerC::load_pom_data(CPI::CFG::ArchiveC* poArchive, D
 	*poArchive >> poModel->ocsp_defined;
 
 }
-void DCP::DCP06ConfigControllerC::load_chst_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_chst_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	for(int i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
@@ -907,7 +907,7 @@ void DCP::DCP06ConfigControllerC::load_chst_data(CPI::CFG::ArchiveC* poArchive, 
 	*poArchive >> poModel->chst_used_hz_plane;
 }
 
-void DCP::DCP06ConfigControllerC::load_matrix_data(CPI::CFG::ArchiveC*poArchive, DCP06ModelC* pModel)
+void DCP::ConfigController::load_matrix_data(CPI::CFG::ArchiveC*poArchive, Model* pModel)
 {
 	load_matrix4x4(poArchive, pModel->dcs_matrix);
 	load_matrix4x4(poArchive, pModel->ocsd_matrix);
@@ -922,7 +922,7 @@ void DCP::DCP06ConfigControllerC::load_matrix_data(CPI::CFG::ArchiveC*poArchive,
 	matinv4x4(pModel->ocsu_matrix, &pModel->ocsu_inv_matrix);
 }
 
-void DCP::DCP06ConfigControllerC::load_home_points(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_home_points(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	for(int i=0; i < MAX_HOME_POINTS; i++)
 	{
@@ -930,7 +930,7 @@ void DCP::DCP06ConfigControllerC::load_home_points(CPI::CFG::ArchiveC* poArchive
 	}
 }
 
-void DCP::DCP06ConfigControllerC::load_linefitting_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel)
+void DCP::ConfigController::load_linefitting_data(CPI::CFG::ArchiveC* poArchive, Model* pModel)
 {
 	load_line(poArchive,&pModel->linefitting_line[0]);
 
@@ -956,11 +956,11 @@ void DCP::DCP06ConfigControllerC::load_linefitting_data(CPI::CFG::ArchiveC* poAr
 	*poArchive >> pModel->linefitting_selectedRefLine;
 }
 
-void DCP::DCP06ConfigControllerC::save_linefitting_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_linefitting_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	int i = 0;
 
-	/*DCP06MsgBoxC msgbox;
+	/*MsgBox msgbox;
 	msgbox.ShowMessageOk(L"Save_linefitting! ");*/
 
 
@@ -987,7 +987,7 @@ void DCP::DCP06ConfigControllerC::save_linefitting_data(CPI::CFG::ArchiveC* poAr
 	*poArchive << poModel->linefitting_selectedRefLine;
 }
 
-void DCP::DCP06ConfigControllerC::save_adf_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_adf_file_name(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 			char szTemp[20+1];
 			//UTL::UnicodeToAscii(szTemp, poModel->ADFFileName);
@@ -997,7 +997,7 @@ void DCP::DCP06ConfigControllerC::save_adf_file_name(CPI::CFG::ArchiveC* poArchi
 			*poArchive << szTemp;
 }
 
-void DCP::DCP06ConfigControllerC::save_crl_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_crl_file_name(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 			char szTemp[20+1];
 			//UTL::UnicodeToAscii(szTemp, poModel->sCircleFile);
@@ -1006,7 +1006,7 @@ void DCP::DCP06ConfigControllerC::save_crl_file_name(CPI::CFG::ArchiveC* poArchi
 			//sprintf(&szTemp[0],"%-*.*s", 10,10, DCP_USER_LENGTH,DCP_USER_LENGTH, szTemp);	
 			*poArchive << szTemp;
 }
-void DCP::DCP06ConfigControllerC::save_shaft_file_name(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_shaft_file_name(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 			char szTemp[20+1];
 			//UTL::UnicodeToAscii(szTemp, poModel->sShaftFile);
@@ -1014,7 +1014,7 @@ void DCP::DCP06ConfigControllerC::save_shaft_file_name(CPI::CFG::ArchiveC* poArc
 			//sprintf(&szTemp[0],"%-*.*s", 10,10, DCP_USER_LENGTH,DCP_USER_LENGTH, szTemp);	
 			*poArchive << szTemp;
 }
-void DCP::DCP06ConfigControllerC::save_init_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_init_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 
 			char szTemp[DCP_USER_LENGTH+1];
@@ -1092,7 +1092,7 @@ void DCP::DCP06ConfigControllerC::save_init_data(CPI::CFG::ArchiveC* poArchive, 
 
 }
 
-void DCP::DCP06ConfigControllerC::save_dom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_dom_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {		
 			*poArchive << poModel->dom_active_plane; 
 			*poArchive <<  poModel->dom_active_line;
@@ -1123,7 +1123,7 @@ void DCP::DCP06ConfigControllerC::save_dom_data(CPI::CFG::ArchiveC* poArchive, D
 			*/
 }
 
-void DCP::DCP06ConfigControllerC::save_userdef_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_userdef_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {		
 	int i = 0;
 
@@ -1157,7 +1157,7 @@ void DCP::DCP06ConfigControllerC::save_userdef_data(CPI::CFG::ArchiveC* poArchiv
 			*poArchive << poModel->userdef_point_no;
 }
 
-void DCP::DCP06ConfigControllerC::save_tool_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_tool_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 		*poArchive << poModel->active_tool;
 		*poArchive << poModel->active_tool_x;
@@ -1178,7 +1178,7 @@ void DCP::DCP06ConfigControllerC::save_tool_data(CPI::CFG::ArchiveC* poArchive, 
 		}
 }
 
-void DCP::DCP06ConfigControllerC::save_pom_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_pom_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	for(int i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
@@ -1190,14 +1190,14 @@ void DCP::DCP06ConfigControllerC::save_pom_data(CPI::CFG::ArchiveC* poArchive, D
 	*poArchive << poModel->ocsp_defined;
 }
 
-void DCP::DCP06ConfigControllerC::save_home_points(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_home_points(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	for(int i=0; i < MAX_HOME_POINTS; i++)
 	{
 		save_point(poArchive,&poModel->home_points[i]);	
 	}
 }
-void DCP::DCP06ConfigControllerC::save_chst_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_chst_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	for(int i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
@@ -1211,7 +1211,7 @@ void DCP::DCP06ConfigControllerC::save_chst_data(CPI::CFG::ArchiveC* poArchive, 
 	*poArchive << poModel->chst_used_hz_plane;
 }
 
-void DCP::DCP06ConfigControllerC::save_matrix_data(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* pModel)
+void DCP::ConfigController::save_matrix_data(CPI::CFG::ArchiveC* poArchive, Model* pModel)
 {
 	save_matrix4x4(poArchive, pModel->dcs_matrix);
 	save_matrix4x4(poArchive, pModel->ocsd_matrix);
@@ -1221,7 +1221,7 @@ void DCP::DCP06ConfigControllerC::save_matrix_data(CPI::CFG::ArchiveC* poArchive
 }
 
 
-void DCP::DCP06ConfigControllerC::save_plane(CPI::CFG::ArchiveC* poArchive, S_PLANE_BUFF* pPlane)
+void DCP::ConfigController::save_plane(CPI::CFG::ArchiveC* poArchive, S_PLANE_BUFF* pPlane)
 {	
 		*poArchive <<	pPlane->id;
 		for(int i=0; i < MAX_POINTS_IN_PLANE; i++)
@@ -1245,9 +1245,9 @@ void DCP::DCP06ConfigControllerC::save_plane(CPI::CFG::ArchiveC* poArchive, S_PL
 		*poArchive <<	pPlane->des_sta;
 }
 
-void DCP::DCP06ConfigControllerC::save_line(CPI::CFG::ArchiveC* poArchive, S_LINE_BUFF* pLine)
+void DCP::ConfigController::save_line(CPI::CFG::ArchiveC* poArchive, S_LINE_BUFF* pLine)
 {
-	//DCP06MsgBoxC msgbox;
+	//MsgBox msgbox;
 	//msgbox.ShowMessageOk(L"Save_line! ");
 
 	*poArchive <<	pLine->id;
@@ -1273,7 +1273,7 @@ void DCP::DCP06ConfigControllerC::save_line(CPI::CFG::ArchiveC* poArchive, S_LIN
 	*poArchive <<	pLine->des_sta;
 }
 
-void DCP::DCP06ConfigControllerC::save_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BUFF* pPoint)
+void DCP::ConfigController::save_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BUFF* pPoint)
 {	
 	//short temp_short;
 	char temp[POINT_ID_BUFF_LEN + 1];
@@ -1321,7 +1321,7 @@ void DCP::DCP06ConfigControllerC::save_point(CPI::CFG::ArchiveC* poArchive, S_PO
 }
 
 
-void DCP::DCP06ConfigControllerC::load_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BUFF* pPoint)
+void DCP::ConfigController::load_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BUFF* pPoint)
 {	
 //short temp_short;
 	char temp[POINT_ID_BUFF_LEN + 1];
@@ -1344,7 +1344,7 @@ void DCP::DCP06ConfigControllerC::load_point(CPI::CFG::ArchiveC* poArchive, S_PO
 	*poArchive >>	pPoint->zsta;
 }
 
-void DCP::DCP06ConfigControllerC::load_plane(CPI::CFG::ArchiveC* poArchive, S_PLANE_BUFF* pPlane)
+void DCP::ConfigController::load_plane(CPI::CFG::ArchiveC* poArchive, S_PLANE_BUFF* pPlane)
 {
 		*poArchive >>	pPlane->id;
 		for(int i=0; i < MAX_POINTS_IN_PLANE; i++)
@@ -1368,7 +1368,7 @@ void DCP::DCP06ConfigControllerC::load_plane(CPI::CFG::ArchiveC* poArchive, S_PL
 		*poArchive >>	pPlane->des_sta;
 
 }
-void DCP::DCP06ConfigControllerC::load_line(CPI::CFG::ArchiveC* poArchive, S_LINE_BUFF* pLine)
+void DCP::ConfigController::load_line(CPI::CFG::ArchiveC* poArchive, S_LINE_BUFF* pLine)
 {
 	*poArchive >>	pLine->id;
 	for(int i=0; i < MAX_POINTS_IN_LINE; i++)
@@ -1396,7 +1396,7 @@ void DCP::DCP06ConfigControllerC::load_line(CPI::CFG::ArchiveC* poArchive, S_LIN
 
 
 
-void DCP::DCP06ConfigControllerC::save_circle_buff(CPI::CFG::ArchiveC* poArchive, S_CIRCLE_BUFF* pBuff)
+void DCP::ConfigController::save_circle_buff(CPI::CFG::ArchiveC* poArchive, S_CIRCLE_BUFF* pBuff)
 {
 	*poArchive <<	pBuff->id;
 	for(int i=0; i < MAX_POINTS_IN_CIRCLE; i++)
@@ -1415,7 +1415,7 @@ void DCP::DCP06ConfigControllerC::save_circle_buff(CPI::CFG::ArchiveC* poArchive
 	*poArchive <<	pBuff->vk_;
 }
 
-void DCP::DCP06ConfigControllerC::load_circle_buff(CPI::CFG::ArchiveC* poArchive, S_CIRCLE_BUFF* pBuff)
+void DCP::ConfigController::load_circle_buff(CPI::CFG::ArchiveC* poArchive, S_CIRCLE_BUFF* pBuff)
 {
 	*poArchive >>	pBuff->id;
 	for(int i=0; i < MAX_POINTS_IN_CIRCLE; i++)
@@ -1434,7 +1434,7 @@ void DCP::DCP06ConfigControllerC::load_circle_buff(CPI::CFG::ArchiveC* poArchive
 	*poArchive >>	pBuff->vk_;
 } 
 
-void DCP::DCP06ConfigControllerC::load_demo_licenses(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::load_demo_licenses(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	DateTime sta, last;
 
@@ -1457,7 +1457,7 @@ void DCP::DCP06ConfigControllerC::load_demo_licenses(CPI::CFG::ArchiveC* poArchi
 
 }
 
-void DCP::DCP06ConfigControllerC::save_demo_licenses(CPI::CFG::ArchiveC* poArchive, DCP06ModelC* poModel)
+void DCP::ConfigController::save_demo_licenses(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 
 	DateTime temp1 = poModel->startDate / 3.1 + 10.3;

@@ -4,18 +4,18 @@
 #include <dcp06/core/Model.hpp>
 #include <dcp06/core/UserDefStatus.hpp>
 
-	DCP::DCP06UserDefStatusDlgC::DCP06UserDefStatusDlgC(DCP06ModelC* pDCP06Model, bool defined_):
-		m_pText1(0),m_pDCP06Model(pDCP06Model),Defined(defined_)
+	DCP::UserDefStatusDialog::UserDefStatusDialog(Model* pModel, bool defined_):
+		m_pText1(0),m_pModel(pModel),Defined(defined_)
 	{
 		//SetTxtApplicationId(AT_DCP06);
 	}
 
-	DCP::DCP06UserDefStatusDlgC::~DCP06UserDefStatusDlgC()
+	DCP::UserDefStatusDialog::~UserDefStatusDialog()
 	{
 
 	}
 
-	void DCP::DCP06UserDefStatusDlgC::OnInitDialog(void)
+	void DCP::UserDefStatusDialog::OnInitDialog(void)
 	{
 		ResetFunctionKeys();
 
@@ -55,21 +55,21 @@
 		*/
 	}
 
-	void DCP::DCP06UserDefStatusDlgC::OnDialogActivated()
+	void DCP::UserDefStatusDialog::OnDialogActivated()
 	{
 		RefreshControls();
 	} 
 
-	void DCP::DCP06UserDefStatusDlgC::OnF1Pressed()
+	void DCP::UserDefStatusDialog::OnF1Pressed()
 	{
 		Close(100);
 	}
 
-	void DCP::DCP06UserDefStatusDlgC::OnF3Pressed()
+	void DCP::UserDefStatusDialog::OnF3Pressed()
 	{
 		Close(200);
 	}
-	void DCP::DCP06UserDefStatusDlgC::RefreshControls()
+	void DCP::UserDefStatusDialog::RefreshControls()
 	{
 		if(m_pText1)
 		{	

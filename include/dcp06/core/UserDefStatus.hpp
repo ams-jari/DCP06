@@ -18,7 +18,7 @@
 //
 namespace DCP
 {
-	class DCP06UserDefStatusDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class UserDefStatusDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -28,8 +28,8 @@ namespace DCP
 				
 			};
 
-			DCP06UserDefStatusDlgC(DCP06ModelC* pDCP06Model, bool defined_);
-			~DCP06UserDefStatusDlgC();
+			UserDefStatusDialog(Model* pModel, bool defined_);
+			~UserDefStatusDialog();
 
 
             virtual void OnInitDialog(void);
@@ -43,7 +43,7 @@ namespace DCP
 	private:
 			GUI::TextCtrlC* m_pText1;
 
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			bool Defined;
 		
 	};

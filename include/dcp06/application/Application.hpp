@@ -48,21 +48,21 @@
 //
 namespace DCP
 {
-    class DCP06ModelC;
+    class Model;
 
     // Description: Hello World application class
     //              
-    class DCP06ApplicationC : public GUI::ApplicationC, public GUI::ModelHandlerC
+    class Application : public GUI::ApplicationC, public GUI::ModelHandlerC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06ApplicationC();
+            Application();
 
             // Description: Destructor
             //
-            virtual ~DCP06ApplicationC();
+            virtual ~Application();
 
             // Description: Start application
             virtual void Run(/* bool bShowStartDialog */);
@@ -79,8 +79,8 @@ namespace DCP
             //
             virtual void OnActiveDialogClosed(int lDlgID, int lExitCode);
 		private:
-			 DCP06ModelC     *m_pDCP06Model;
-			 DCP06ConfigControllerC* poConfigController;
+			 Model     *m_pModel;
+			 ConfigController* poConfigController;
 			
 			StringC get_code(char *code);
 
@@ -90,15 +90,15 @@ namespace DCP
 
     };
 
-	//class DCP06MenuDlgC:public GUI::MenuDialogC ,public GUI::ModelHandlerC
-	class DCP06MenuDlgC:public GUI::GraphMenuDialogC ,public GUI::ModelHandlerC
+	//class MenuDialog:public GUI::MenuDialogC ,public GUI::ModelHandlerC
+	class MenuDialog:public GUI::GraphMenuDialogC ,public GUI::ModelHandlerC
 	{
 		 public:
 
-		   DCP06MenuDlgC();
+		   MenuDialog();
 
             // Description: Destructor
-            virtual ~DCP06MenuDlgC();
+            virtual ~MenuDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -112,21 +112,21 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			 // Description: Hello World model
-            DCP::DCP06ModelC* GetDCP06Model() const;
+            DCP::Model* GetModel() const;
 
 	};
 	
 
-    class DCP06DlgC;
+    class BaseDialog;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06ControllerC : public GUI::ControllerC
+    class Controller : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06ControllerC(char* code);
-			virtual ~DCP06ControllerC();
+            Controller(char* code);
+			virtual ~Controller();
             // Description: Handle change of position values
             virtual void OnF1Pressed();
 			virtual void OnSHF2Pressed(void);
@@ -144,32 +144,32 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06ControllerC( const DCP06ControllerC& oDCP06Controller )
+            Controller( const Controller& oController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06ControllerC& operator=( const DCP06ControllerC& oDCP06Controller )
+            Controller& operator=( const Controller& oController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06MenuDlgC* m_pDCP06Dlg;
+            MenuDialog* m_pMenuDlg;
 			char* m_pCode;
     };
 
 
-	class DCP06OrientationMenuDlgC:public GUI::GraphMenuDialogC
+	class OrientationMenuDialog:public GUI::GraphMenuDialogC
 	{
 		 public:
 
-		   DCP06OrientationMenuDlgC(DCP06ModelC* pDCP06Model);
+		   OrientationMenuDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06OrientationMenuDlgC();
+            virtual ~OrientationMenuDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -179,17 +179,17 @@ namespace DCP
 
 			virtual void OnF1Pressed(void);
 		private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 	};
 
-	class DCP06FileMenuDlgC:public GUI::GraphMenuDialogC
+	class FileMenuDialog:public GUI::GraphMenuDialogC
 	{
 		 public:
 
-		   DCP06FileMenuDlgC();
+		   FileMenuDialog();
 
             // Description: Destructor
-            virtual ~DCP06FileMenuDlgC();
+            virtual ~FileMenuDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -201,7 +201,7 @@ namespace DCP
 	};
 
 
-	class DCP06InfoDlgC:public GUI::StandardDialogC
+	class InfoDialog:public GUI::StandardDialogC
 	{
 		 public:
 
@@ -211,8 +211,8 @@ namespace DCP
 				
 			};
 
-			DCP06InfoDlgC(DCP06ModelC* pDCP06Model);
-			~DCP06InfoDlgC();
+			InfoDialog(Model* pModel);
+			~InfoDialog();
 
 
             virtual void OnInitDialog(void);
@@ -223,11 +223,11 @@ namespace DCP
 			GUI::TextCtrlC* m_pText;
 		
 	private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 		
 	};
 
-	class DCP06LisenceDlgC:public GUI::StandardDialogC
+	class LicenseDialog:public GUI::StandardDialogC
 	{
 		 public:
 
@@ -237,8 +237,8 @@ namespace DCP
 				
 			};
 
-			DCP06LisenceDlgC(DCP06ModelC* pDCP06Model);
-			~DCP06LisenceDlgC();
+			LicenseDialog(Model* pModel);
+			~LicenseDialog();
 
 
             virtual void OnInitDialog(void);
@@ -250,7 +250,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pText;
 		
 	private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 		
 	};
 };

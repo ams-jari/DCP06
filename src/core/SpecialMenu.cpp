@@ -69,47 +69,47 @@ using namespace DCP;
 
 // SPECIAL MENU
 
-DCP06SpecialMenuDlgC::DCP06SpecialMenuDlgC(DCP06ModelC* pDCP06Model,int showItems):m_pDCP06Model(pDCP06Model),m_pShowItems(showItems)
+SpecialMenuDialog::SpecialMenuDialog(Model* pModel,int showItems):m_pModel(pModel),m_pShowItems(showItems)
 {
 	//SetTxtApplicationId( AT_DCP06 );
 }
 
 // Description: Destructor
-DCP06SpecialMenuDlgC::~DCP06SpecialMenuDlgC()
+SpecialMenuDialog::~SpecialMenuDialog()
 {
 }
 
-void DCP06SpecialMenuDlgC::OnInitDialog(void)
+void SpecialMenuDialog::OnInitDialog(void)
 {
 		
 	SetTitle(StringC(AT_DCP06,T_DCP_SPECIAL_MENU_TOK ));
 	//SetHelpTok(H_DCP_SPECIAL_MENU_TOK,0);
 	/*
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_HIDDEN_POINT_TOK),L"", NULL,HIDDEN_POINT);
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_X_OR_Y_OR_Z_TOK),L"", NULL	,X_OR_Y_OR_Z);
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_CIRCLE_TOK),L"", NULL, CIRCLE);
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_SEPARATE_REC_TOK),L"", NULL,SEPARATE_REC);
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_HOME_POINTS_TOK),L"", NULL,HOME_POINTS);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_HIDDEN_POINT_TOK),L"", nullptr,HIDDEN_POINT);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_X_OR_Y_OR_Z_TOK),L"", nullptr	,X_OR_Y_OR_Z);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_CIRCLE_TOK),L"", nullptr, CIRCLE);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_SEPARATE_REC_TOK),L"", nullptr,SEPARATE_REC);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_HOME_POINTS_TOK),L"", nullptr,HOME_POINTS);
 	*/
 	if(!(m_pShowItems & DISABLE_HIDDEN_POINT))
-		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Hidden_point_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Hidden_point_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_HIDDEN_POINT_TOK),L"", NULL,HIDDEN_POINT);
+		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Hidden_point_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Hidden_point_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_HIDDEN_POINT_TOK),L"", nullptr,HIDDEN_POINT);
 
 	if(!(m_pShowItems & DISABLE_X_OR_Y_OR_Z))
-		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"X_or_Y_or_Z_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"X_or_Y_or_Z_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_X_OR_Y_OR_Z_TOK),L"", NULL	,X_OR_Y_OR_Z);
+		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"X_or_Y_or_Z_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"X_or_Y_or_Z_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_X_OR_Y_OR_Z_TOK),L"", nullptr	,X_OR_Y_OR_Z);
 
 	if(!(m_pShowItems & DISABLE_CIRCLE))
-		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Circle_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Circle_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_CIRCLE_TOK),L"", NULL, CIRCLE);
+		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Circle_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Circle_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_CIRCLE_TOK),L"", nullptr, CIRCLE);
 
 	if(!(m_pShowItems & DISABLE_SEPARATE_REC))
-		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Separate_recording_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Separate_recording_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_SEPARATE_REC_TOK),L"", NULL,SEPARATE_REC);
+		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Separate_recording_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Separate_recording_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_SEPARATE_REC_TOK),L"", nullptr,SEPARATE_REC);
 
 	if(!(m_pShowItems & DISABLE_HOME_POINTS))
-		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Home_Points_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Home_Points_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_HOME_POINTS_TOK),L"", NULL,HOME_POINTS);
+		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Home_Points_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Home_Points_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_HOME_POINTS_TOK),L"", nullptr,HOME_POINTS);
 	
 	if(!(m_pShowItems & DISABLE_MID_POINT))
-		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"mid_point_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"mid_point_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_MID_POINT_TOK),L"", NULL,MID_POINT);
+		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"mid_point_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"mid_point_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_MID_POINT_TOK),L"", nullptr,MID_POINT);
 	
-	if(m_pDCP06Model->bDemoMode)
+	if(m_pModel->bDemoMode)
 	{	
 		/* CAPTIVATE TBD
 		DisableMenuItem(HIDDEN_POINT);
@@ -125,18 +125,18 @@ void DCP06SpecialMenuDlgC::OnInitDialog(void)
 // Description: Called if selection is completed (by ENTER, mouse click or numeric keys)
 //
 
-void DCP06SpecialMenuDlgC::OnSelectionDone(void)
+void SpecialMenuDialog::OnSelectionDone(void)
 {
 	short unId = GetSelected();
 	
 	OnF1Pressed();
 }
 
-void DCP06SpecialMenuDlgC::OnF1Pressed(void)
+void SpecialMenuDialog::OnF1Pressed(void)
 {
-	/*if(m_pDCP06Model->bDemoMode)
+	/*if(m_pModel->bDemoMode)
 	{
-		DCP06MsgBoxC msgBox;
+		MsgBox msgBox;
 		msgBox.ShowMessageOk(StringC(AT_DCP06,M_DCP_NOT_AVAILABLE_IN_DEMO_TOK ));
 		Close(EC_KEY_ESC);
 	}
@@ -147,8 +147,8 @@ void DCP06SpecialMenuDlgC::OnF1Pressed(void)
 }
 
 
-DCP::DCP06SpecialMenuControllerC::DCP06SpecialMenuControllerC(DCP06ModelC* pDCP06Model,int showItems) 
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::SpecialMenuController::SpecialMenuController(Model* pModel,int showItems) 
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -156,7 +156,7 @@ DCP::DCP06SpecialMenuControllerC::DCP06SpecialMenuControllerC(DCP06ModelC* pDCP0
     SetTitle(StringC( AT_DCP06, T_DCP_SPECIAL_MENU_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06SpecialMenuDlgC(m_pDCP06Model, showItems);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::SpecialMenuDialog(m_pModel, showItems);  //lint !e1524 new in constructor for class 
     (void)AddDialog( SPECIAL_MENU, m_pDlg, true );
 
     // Set the function key
@@ -178,12 +178,12 @@ DCP::DCP06SpecialMenuControllerC::DCP06SpecialMenuControllerC(DCP06ModelC* pDCP0
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06SpecialMenuControllerC::~DCP06SpecialMenuControllerC()
+DCP::SpecialMenuController::~SpecialMenuController()
 {
 }
 
 // Description: Handle change of position values
-void DCP::DCP06SpecialMenuControllerC::OnF1Pressed()
+void DCP::SpecialMenuController::OnF1Pressed()
 {
     // Remove the following statement if you don't want an exit
     // to the main menu
@@ -193,6 +193,6 @@ void DCP::DCP06SpecialMenuControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06SpecialMenuControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::SpecialMenuController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }

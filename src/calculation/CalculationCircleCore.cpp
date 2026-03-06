@@ -78,32 +78,32 @@ using namespace DCP;
 
 
 // ================================================================================================
-// ====================================  DCP06CalcCircleC  ========================================
+// ====================================  CalcCircle  ========================================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06CalcCircleC::DCP06CalcCircleC(short plane_type,
+DCP::CalcCircle::CalcCircle(short plane_type,
 										S_CIRCLE_BUFF *circle_points, 
 										 S_PLANE_BUFF* planes,
 										S_CIRCLE_BUFF *circle_points_in_plane,
-										double dToolRadius,DCP06ModelC* pDCP06Model ): 
+										double dToolRadius,Model* pModel ): 
 				m_iPlaneType(plane_type),
 				m_pCircle_points(circle_points),
 				m_pCircle_points_in_plane(circle_points_in_plane),
 				m_pPlanes(planes),
 				m_dToolRadius(dToolRadius)
 {
-	m_pMsgBox = new DCP06MsgBoxC;
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pMsgBox = new MsgBox;
+	m_pCommon = new Common(pModel);
 }
 
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06CalcCircleC::~DCP06CalcCircleC()
+DCP::CalcCircle::~CalcCircle()
 {
 	if(m_pMsgBox)
 	{
@@ -121,7 +121,7 @@ DCP::DCP06CalcCircleC::~DCP06CalcCircleC()
 // ================================================================================================
 // Description: calc_center_of_circle
 // ================================================================================================
-short DCP::DCP06CalcCircleC::calc_center_of_circle(/*S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane*/)
+short DCP::CalcCircle::calc_center_of_circle(/*S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane*/)
 {
 //short ret;
 double cx_,cy_,cz_;
@@ -129,7 +129,7 @@ double mea1[4];
 double point1[4];
 short i,count,ret1,count1;
 StringC sMsg;
-DCP06CalcPlaneC temp_calc_plane;
+CalcPlane temp_calc_plane;
 S_PLANE_BUFF temp_plane_buffer[1];
 
 	if(m_iPlaneType == 0)
@@ -314,7 +314,7 @@ S_PLANE_BUFF temp_plane_buffer[1];
 // ================================================================================================
 // Description: calc_matrix
 // ================================================================================================
-short DCP::DCP06CalcCircleC::calc_matrix(S_POINT_BUFF *points)
+short DCP::CalcCircle::calc_matrix(S_POINT_BUFF *points)
 {
 short i,ret,count,cc;
 double mea1[4],mea2[4],mea3[4], uni[4];
@@ -353,7 +353,7 @@ double dist;
 		// ********************************************************
 		// Lasketaan taso
 		// ********************************************************
-		DCP06CalcPlaneC calc_plane;
+		CalcPlane calc_plane;
 		if(calc_plane.calc(&temp_plane_table[0], ACTUAL))
 		{
 			//PrintLn("Tason normaali");
@@ -502,7 +502,7 @@ double dist;
 // ================================================================================================
 // Description: convert_points_to_plane
 // ================================================================================================
-short DCP::DCP06CalcCircleC::convert_points_to_plane(S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane, short count)
+short DCP::CalcCircle::convert_points_to_plane(S_CIRCLE_BUFF *circle_points, S_CIRCLE_BUFF *circle_points_in_plane, short count)
 {
 short i;
 double mea1[4],point1[4];
@@ -621,7 +621,7 @@ short count1;
 // ================================================================================================
 // Description: get_results
 // ================================================================================================
-void DCP::DCP06CalcCircleC::get_results(double* dCx, double* dCy, double* dCz, double* dVi, double* dVj, double* dVk, double* dDiameter, double* rms, short* iPno)
+void DCP::CalcCircle::get_results(double* dCx, double* dCy, double* dCz, double* dVi, double* dVj, double* dVk, double* dDiameter, double* rms, short* iPno)
 {
 	
 	*dCx = cx;
@@ -639,7 +639,7 @@ void DCP::DCP06CalcCircleC::get_results(double* dCx, double* dCy, double* dCz, d
 // ================================================================================================
 // Description: get_max_dist_and_rms_circle
 // ================================================================================================
-double DCP::DCP06CalcCircleC::get_max_dist_and_rms_circle(S_CIRCLE_BUFF *circle_, short *pno, double *rms_diameter)
+double DCP::CalcCircle::get_max_dist_and_rms_circle(S_CIRCLE_BUFF *circle_, short *pno, double *rms_diameter)
 {
 
 short i, count=0;
@@ -701,7 +701,7 @@ double max=0.0, dist, dist2=0.0, dist3;
 // ================================================================================================
 // Description: calc_circle
 // ================================================================================================
-short DCP::DCP06CalcCircleC::calc_circle(S_CIRCLE_BUFF *points, int count, double *cxtod,double *cytod, double *diameter)
+short DCP::CalcCircle::calc_circle(S_CIRCLE_BUFF *points, int count, double *cxtod,double *cytod, double *diameter)
 {
 	short i,a,j,k,ret;
 	double cx,cy,sx=0,sy=0,x1,x2,x3,y1,y2,y3,radius,srad=0.0,dist;
@@ -762,8 +762,8 @@ short DCP::DCP06CalcCircleC::calc_circle(S_CIRCLE_BUFF *points, int count, doubl
 }
 
 
-//double DCP::DCP06CalcCircleC::pns_ymp(double x[], double y[], double& x0,double& y0,int ndata)
-short DCP::DCP06CalcCircleC::pns_ymp(S_CIRCLE_BUFF *points, int count, double *cxtod,double *cytod, double *diameter)
+//double DCP::CalcCircle::pns_ymp(double x[], double y[], double& x0,double& y0,int ndata)
+short DCP::CalcCircle::pns_ymp(S_CIRCLE_BUFF *points, int count, double *cxtod,double *cytod, double *diameter)
 {
 	double AtA[3][3];
 	//Matrix AtA(3,3);
@@ -876,13 +876,13 @@ short DCP::DCP06CalcCircleC::pns_ymp(S_CIRCLE_BUFF *points, int count, double *c
 	return 1;
 }
 
-// ========== DCP06CalcCircleControllerC ==========
-DCP::DCP06CalcCircleControllerC::DCP06CalcCircleControllerC(DCP06CircleModelC* pCircleModel, short iDisplay):
-	m_pDataModel(pCircleModel), m_iDisplay(iDisplay), m_pCommon(0), m_pDCP06Model(0)
+// ========== CalcCircleontrollerC ==========
+DCP::CalcCircleontrollerC::CalcCircleontrollerC(CircleModel* pCircleModel, short iDisplay):
+	m_pDataModel(pCircleModel), m_iDisplay(iDisplay), m_pCommon(0), m_pModel(0)
 {
 }
 
-DCP::DCP06CalcCircleControllerC::~DCP06CalcCircleControllerC()
+DCP::CalcCircleontrollerC::~CalcCircleontrollerC()
 {
 	if(m_pCommon)
 	{
@@ -891,17 +891,17 @@ DCP::DCP06CalcCircleControllerC::~DCP06CalcCircleControllerC()
 	}
 }
 
-void DCP::DCP06CalcCircleControllerC::OnControllerActivated(void)
+void DCP::CalcCircleontrollerC::OnControllerActivated(void)
 {
 }
 
-void DCP::DCP06CalcCircleControllerC::Run(void)
+void DCP::CalcCircleontrollerC::Run(void)
 {
-	DCP06CalcCircleC circle(m_pDataModel->PLANE_TYPE, 
+	CalcCircle circle(m_pDataModel->PLANE_TYPE, 
 								&m_pDataModel->circle_points[0],
 								&m_pDataModel->planes[0],
 								&m_pDataModel->circle_points_in_plane[0],
-								m_pDataModel->bR, m_pDCP06Model);
+								m_pDataModel->bR, m_pModel);
 	
 	if(circle.calc_center_of_circle())
 	{
@@ -909,7 +909,7 @@ void DCP::DCP06CalcCircleControllerC::Run(void)
 			circle.get_results(&m_pDataModel->cx, &m_pDataModel->cy,&m_pDataModel->cz,&m_pDataModel->vi, &m_pDataModel->vj,&m_pDataModel->vk,&m_pDataModel->diameter, &m_pDataModel->rms_diameter,&m_pDataModel->max_dev_in_point);
 			if(m_pDataModel->show_circle_points() == 1)
 			{
-						DCP::DCP06CircleModelC* pModel = new DCP06CircleModelC(m_pDCP06Model);
+						DCP::CircleModel* pModel = new CircleModel(m_pModel);
 						pModel->bR = m_pDataModel->bR;
 						pModel->cx = m_pDataModel->cx;
 						pModel->cy = m_pDataModel->cy;
@@ -929,9 +929,9 @@ void DCP::DCP06CalcCircleControllerC::Run(void)
 						memcpy(&pModel->circle_points[0],&m_pDataModel->circle_points[0],sizeof(S_CIRCLE_BUFF ));
 						memcpy(&pModel->circle_points_in_plane[0],&m_pDataModel->circle_points_in_plane[0],sizeof(S_CIRCLE_BUFF ));
 						
-						if(GetController(RES_CIRCLE_CONTROLLER) == NULL)
+						if(GetController(RES_CIRCLE_CONTROLLER) == nullptr)
 						{
-							(void)AddController( RES_CIRCLE_CONTROLLER, new DCP::DCP06ResCircleControllerC(m_pDCP06Model, m_iDisplay) );
+							(void)AddController( RES_CIRCLE_CONTROLLER, new DCP::ResCircleController(m_pModel, m_iDisplay) );
 						}
 
 						(void)GetController(RES_CIRCLE_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DEV_OF_CIRCLE_TOK));
@@ -946,24 +946,24 @@ void DCP::DCP06CalcCircleControllerC::Run(void)
 		Close(EC_KEY_ESC);
 }
 
-bool DCP::DCP06CalcCircleControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::CalcCircleontrollerC::SetModel( GUI::ModelC* pModel )
 {
-	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pModel = dynamic_cast< DCP::Model* >( pModel );
+	m_pCommon = new Common(m_pModel);
 	return ControllerC::SetModel( pModel );
 }
 
-void DCP::DCP06CalcCircleControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::CalcCircleontrollerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	(void)lDlgID;
 	(void)lExitCode;
 }
 
-void DCP::DCP06CalcCircleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::CalcCircleontrollerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == RES_CIRCLE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06CircleModelC* pModel = (DCP::DCP06CircleModelC*) GetController( RES_CIRCLE_CONTROLLER )->GetModel();	
+		DCP::CircleModel* pModel = (DCP::CircleModel*) GetController( RES_CIRCLE_CONTROLLER )->GetModel();	
 
 		m_pDataModel->bR = pModel->bR;
 		m_pDataModel->cx = pModel->cx;

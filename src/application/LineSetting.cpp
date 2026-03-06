@@ -54,7 +54,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -68,21 +68,21 @@
 
 // USER DIALOG
 
-DCP::DCP06LineSettingDlgC::DCP06LineSettingDlgC(DCP::DCP06LSetModelC* pDCP06LSetModel):
+DCP::LineSettingDialog::LineSettingDialog(DCP::LineSettingModel* pLineSettingModel):
 		GUI::ModelHandlerC(),GUI::StandardDialogC(),m_pHor(0),m_pVer(0),
-		m_pDataModel(pDCP06LSetModel)
+		m_pDataModel(pLineSettingModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
 }
 
 
             // Description: Destructor
-DCP::DCP06LineSettingDlgC::~DCP06LineSettingDlgC()
+DCP::LineSettingDialog::~LineSettingDialog()
 {
 	//m_pTimer.KillTimer();
 }
 
-void DCP::DCP06LineSettingDlgC::OnInitDialog(void)
+void DCP::LineSettingDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -121,7 +121,7 @@ void DCP::DCP06LineSettingDlgC::OnInitDialog(void)
 	//m_pTimer.SetTimer( 100/*2000*/ / GUI::TimerC::iMS_PER_TICK , 100 / GUI::TimerC::iMS_PER_TICK );
 }
 
-//void DCP::DCP06LineSettingDlgC::OnTimer(void)
+//void DCP::LineSettingDialog::OnTimer(void)
 //{
 //	/*
 //	unsigned short unMeasHandle =
@@ -136,17 +136,17 @@ void DCP::DCP06LineSettingDlgC::OnInitDialog(void)
 //	RefreshControls();
 //}
 
-double DCP::DCP06LineSettingDlgC::get_hor_angle()
+double DCP::LineSettingDialog::get_hor_angle()
 {
 	return m_pHor->GetFloatInputCtrl()->GetDouble();
 }
 
-double DCP::DCP06LineSettingDlgC::get_ver_angle()
+double DCP::LineSettingDialog::get_ver_angle()
 {
 	return m_pVer->GetFloatInputCtrl()->GetDouble();
 }
 
-void DCP::DCP06LineSettingDlgC::OnDialogActivated()
+void DCP::LineSettingDialog::OnDialogActivated()
 {
 	// Calc angle to xy-plane
 	m_pDataModel->ang1 = acos(m_pDataModel->line[0].uz / 1.00) * (180/PII);
@@ -161,7 +161,7 @@ void DCP::DCP06LineSettingDlgC::OnDialogActivated()
 
 	if(m_pDataModel->left_cds == LEFTHAND)
 	{
-		//DCP06MsgBoxC msgbox;
+		//MsgBox msgbox;
 		//msgbox.ShowMessageOk(L"LeftHand");
 		m_pDataModel->ang_h = m_pDataModel->ang;
 	}
@@ -178,12 +178,12 @@ void DCP::DCP06LineSettingDlgC::OnDialogActivated()
 	RefreshControls();
 }
 
-void DCP::DCP06LineSettingDlgC::UpdateData()
+void DCP::LineSettingDialog::UpdateData()
 {
 }
 
 // Description: refresh all controls
-void DCP::DCP06LineSettingDlgC::RefreshControls()
+void DCP::LineSettingDialog::RefreshControls()
 {
 	if(m_pHor && m_pVer)
 	{
@@ -210,18 +210,18 @@ void DCP::DCP06LineSettingDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06LineSettingDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::LineSettingDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
 		// kopioidaan tarvittavat arvot
-		m_pDataModel->left_cds = pDCP06Model->m_nLeftRightHand;
-		memcpy(&m_pDataModel->line_dom[0],&pDCP06Model->dom_line_buff[0],sizeof(S_LINE_BUFF));
+		m_pDataModel->left_cds = pModel->m_nLeftRightHand;
+		memcpy(&m_pDataModel->line_dom[0],&pModel->dom_line_buff[0],sizeof(S_LINE_BUFF));
 		m_pDataModel->line = m_pDataModel->line_dom;
 
         RefreshControls();
@@ -232,30 +232,30 @@ bool DCP::DCP06LineSettingDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06LineSettingDlgC::GetDCP06Model() const
+DCP::Model* DCP::LineSettingDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06LineSettingControllerC::DCP06LineSettingControllerC()
-    : m_pDlg( NULL )
+DCP::LineSettingController::LineSettingController()
+    : m_pDlg( nullptr )
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
     SetTitle( StringC(AT_DCP06, T_DCP_LINE_SETTING_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
-	m_pDataModel = new DCP06LSetModelC;
+	m_pDataModel = new LineSettingModel;
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06LineSettingDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::LineSettingDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( LINE_SETTING_DLG, m_pDlg, true );
 
     // Set the function key
@@ -286,13 +286,13 @@ DCP::DCP06LineSettingControllerC::DCP06LineSettingControllerC()
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06LineSettingControllerC::~DCP06LineSettingControllerC()
+DCP::LineSettingController::~LineSettingController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06LineSettingControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::LineSettingController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -304,12 +304,12 @@ bool DCP::DCP06LineSettingControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -320,28 +320,28 @@ bool DCP::DCP06LineSettingControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // SET
-void DCP::DCP06LineSettingControllerC::OnF1Pressed()
+void DCP::LineSettingController::OnF1Pressed()
 {
-	DCP06LSetConfModelC* pDCP06LSetConfModel = new DCP06LSetConfModelC;
+	LineSettingConfModel* pLineSettingConfModel = new LineSettingConfModel;
 	
 
-	pDCP06LSetConfModel->dHor = m_pDlg->get_hor_angle();
-	pDCP06LSetConfModel->dVer = m_pDlg->get_ver_angle();
+	pLineSettingConfModel->dHor = m_pDlg->get_hor_angle();
+	pLineSettingConfModel->dVer = m_pDlg->get_ver_angle();
 
-	if(GetController(LINE_SETTING_CONF_CONTROLLER) == NULL)
+	if(GetController(LINE_SETTING_CONF_CONTROLLER) == nullptr)
 	{
-		(void)AddController( LINE_SETTING_CONF_CONTROLLER, new DCP::DCP06LineSettingConfControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( LINE_SETTING_CONF_CONTROLLER, new DCP::LineSettingConfController(m_pDlg->GetModel()));
 	}
-	(void)GetController( LINE_SETTING_CONF_CONTROLLER )->SetModel(pDCP06LSetConfModel);
+	(void)GetController( LINE_SETTING_CONF_CONTROLLER )->SetModel(pLineSettingConfModel);
 	SetActiveController(LINE_SETTING_CONF_CONTROLLER, true);
 
 }
 
 // TEST
 /*
-void DCP::DCP06LineSettingControllerC::OnF3Pressed()
+void DCP::LineSettingController::OnF3Pressed()
 {
-   if (m_pDlg == NULL)
+   if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -359,15 +359,15 @@ void DCP::DCP06LineSettingControllerC::OnF3Pressed()
 		char temp[200];
 		sprintf(temp,"H:%.4f, V:%.4f", dHor, dVer);
 
-		DCP06MsgBoxC msgBox;
+		MsgBox msgBox;
 		msgBox.ShowMessageOk(StringC(temp));
 
 }
 */
 // CONT
-void DCP::DCP06LineSettingControllerC::OnF6Pressed()
+void DCP::LineSettingController::OnF6Pressed()
 {
-   if (m_pDlg == NULL)
+   if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -385,17 +385,17 @@ void DCP::DCP06LineSettingControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06LineSettingControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::LineSettingController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06LineSettingControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::LineSettingController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == LINE_SETTING_CONF_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		
-		DCP::DCP06LSetConfModelC* pModel = (DCP::DCP06LSetConfModelC*) GetController( LINE_SETTING_CONF_CONTROLLER )->GetModel();		
+		DCP::LineSettingConfModel* pModel = (DCP::LineSettingConfModel*) GetController( LINE_SETTING_CONF_CONTROLLER )->GetModel();		
 		
 		double dHor = pModel->dHor;
 		double dVer = pModel->dVer;
@@ -424,14 +424,14 @@ void DCP::DCP06LineSettingControllerC::OnActiveControllerClosed( int lCtrlID, in
 }
 
 // ===========================================================================================
-// DCP05LineSettingModelC
+// LineSettingModel
 // ===========================================================================================
-DCP::DCP06LSetModelC::DCP06LSetModelC()
+DCP::LineSettingModel::LineSettingModel()
 {
 	dHor = 0.0;
 	dVer = 0.0;
 	
 }
-DCP::DCP06LSetModelC::~DCP06LSetModelC()
+DCP::LineSettingModel::~LineSettingModel()
 {
 }

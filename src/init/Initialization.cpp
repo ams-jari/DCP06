@@ -54,7 +54,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -67,8 +67,8 @@
 
 
 // Description: Constructor
-DCP::DCP06InitDlgC::DCP06InitDlgC(bool disableFileStorage) :// m_pCombo( NULL ), m_pCombo2(NULL), m_pComboBox(NULL),
-	//m_pComboBoxObserver(OBS_METHOD_TO_PARAM0(DCP06InitDlgC, OnComboBoxChanged), this),
+DCP::InitializationDialog::InitializationDialog(bool disableFileStorage) :// m_pCombo( nullptr ), m_pCombo2(nullptr), m_pComboBox(nullptr),
+	//m_pComboBoxObserver(OBS_METHOD_TO_PARAM0(InitializationDialog, OnComboBoxChanged), this),
 	m_pTextTarget(0), m_pUser(0), m_pUnit(0),m_pAtmCorr(0),m_p2Face(0),m_pDesignValues(0),
 	m_pOverwriteInfo(0), m_ToolInfo(0), m_pAutoIncrement(0), m_pAverageCount(0), m_pLeftRightHand(0),
 	m_pAutoMatch(0), m_pAmsLog(0),m_pSaveTool(0), m_pFileStorage(0), m_pDisableFileStorage(disableFileStorage)
@@ -84,7 +84,7 @@ DCP::DCP06InitDlgC::DCP06InitDlgC(bool disableFileStorage) :// m_pCombo( NULL ),
 //
 // On Initialize Dialog
 //
-void DCP::DCP06InitDlgC::OnInitDialog()
+void DCP::InitializationDialog::OnInitDialog()
 {
 	GUI::BaseDialogC::OnInitDialog();
 	int textW = 9 * 22;
@@ -295,14 +295,14 @@ void DCP::DCP06InitDlgC::OnInitDialog()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06InitDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::InitializationDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -312,7 +312,7 @@ bool DCP::DCP06InitDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: refresh all controls
-void DCP::DCP06InitDlgC::RefreshControls()
+void DCP::InitializationDialog::RefreshControls()
 {
 	if (m_pTextTarget && m_pUser && m_pUnit && m_pAtmCorr && m_p2Face && m_pDesignValues && 
 		m_pOverwriteInfo && m_ToolInfo && m_pAutoIncrement &&   m_pAverageCount && 
@@ -332,8 +332,8 @@ void DCP::DCP06InitDlgC::RefreshControls()
 		m_pTextTarget->GetStringInputCtrl()->SetString(temp);
 
 		// USER	
-		if(!GetDCP06Model()->m_sUser.IsEmpty())
-			m_pUser->GetStringInputCtrl()->SetString(GetDCP06Model()->m_sUser);
+		if(!GetModel()->m_sUser.IsEmpty())
+			m_pUser->GetStringInputCtrl()->SetString(GetModel()->m_sUser);
 		else
 			m_pUser->GetStringInputCtrl()->SetString(L" ");
 	
@@ -342,16 +342,16 @@ void DCP::DCP06InitDlgC::RefreshControls()
 		StringC sUnit;
 		StringC sDec;
 
-		if(GetDCP06Model()->m_nUnit == MM)
+		if(GetModel()->m_nUnit == MM)
 			sUnit = m_sMMText;
 
-		else if(GetDCP06Model()->m_nUnit == FEET)
+		else if(GetModel()->m_nUnit == FEET)
 			sUnit = m_sFEETText;
 
 		else
 			sUnit = m_sINCHText;
 
-		short iDec = GetDCP06Model()->m_nDecimals;
+		short iDec = GetModel()->m_nDecimals;
 		
 		if(iDec == 1)
 			sDec = "0.1";
@@ -374,64 +374,64 @@ void DCP::DCP06InitDlgC::RefreshControls()
 		sTemp.Format(L"%5.4f",fPPM);
 		m_pAtmCorr->GetStringInputCtrl()->SetString(sTemp);
 
-		m_p2Face->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_n2FaceMeas);
-		m_pDesignValues->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nDesignValues);
-		m_pOverwriteInfo->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nOverWriteInfo);
-		m_ToolInfo->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nToolInfo);
-		m_pAutoIncrement->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nAutoIncrement);
-		m_pAverageCount->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nAverageCount);
-		m_pLeftRightHand->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nLeftRightHand);
-		m_pAutoMatch->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nAutoMatch);
-		m_pAmsLog->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nAmsLog);
-		m_pSaveTool->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nSaveTool);
+		m_p2Face->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_n2FaceMeas);
+		m_pDesignValues->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nDesignValues);
+		m_pOverwriteInfo->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nOverWriteInfo);
+		m_ToolInfo->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nToolInfo);
+		m_pAutoIncrement->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nAutoIncrement);
+		m_pAverageCount->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nAverageCount);
+		m_pLeftRightHand->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nLeftRightHand);
+		m_pAutoMatch->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nAutoMatch);
+		m_pAmsLog->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nAmsLog);
+		m_pSaveTool->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nSaveTool);
 
 #ifdef CS35
-		m_pFileStorage->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->FILE_STORAGE1 == CPI::deviceLocalMemory ? LOCAL_MEMORY: USB_STICK );
+		m_pFileStorage->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->FILE_STORAGE1 == CPI::deviceLocalMemory ? LOCAL_MEMORY: USB_STICK );
 #else
-		m_pFileStorage->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->FILE_STORAGE1 == CPI::deviceSdCard ? SD_CARD: USB_STICK );
+		m_pFileStorage->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->FILE_STORAGE1 == CPI::deviceSdCard ? SD_CARD: USB_STICK );
 #endif
 
 	}
 }
 
 // Description: update the road model with the new values
-void DCP::DCP06InitDlgC::UpdateData()
+void DCP::InitializationDialog::UpdateData()
 {
 	//m_pTextTarget(0), 
-	GetDCP06Model()->m_sUser = m_pUser->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser = m_pUser->GetStringInputCtrl()->GetString();
     //m_pUnit(0),
 	//m_pAtmCorr(0),
-	GetDCP06Model()->m_n2FaceMeas		= m_p2Face->GetComboBoxInputCtrl()->GetSelectedId();
-	GetDCP06Model()->m_nDesignValues	= m_pDesignValues->GetComboBoxInputCtrl()->GetSelectedId();
-	GetDCP06Model()->m_nOverWriteInfo	= m_pOverwriteInfo->GetComboBoxInputCtrl()->GetSelectedId();
-	GetDCP06Model()->m_nToolInfo		= m_ToolInfo->GetComboBoxInputCtrl()->GetSelectedId();
-    GetDCP06Model()->m_nAutoIncrement	= m_pAutoIncrement->GetComboBoxInputCtrl()->GetSelectedId();
-	GetDCP06Model()->m_nAverageCount	= m_pAverageCount->GetComboBoxInputCtrl()->GetSelectedId();
-	GetDCP06Model()->m_nLeftRightHand	= m_pLeftRightHand->GetComboBoxInputCtrl()->GetSelectedId();
-	GetDCP06Model()->m_nAutoMatch		= m_pAutoMatch->GetComboBoxInputCtrl()->GetSelectedId();
-	GetDCP06Model()->m_nAmsLog			= m_pAmsLog->GetComboBoxInputCtrl()->GetSelectedId();
-	GetDCP06Model()->m_nSaveTool		= m_pSaveTool->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_n2FaceMeas		= m_p2Face->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nDesignValues	= m_pDesignValues->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nOverWriteInfo	= m_pOverwriteInfo->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nToolInfo		= m_ToolInfo->GetComboBoxInputCtrl()->GetSelectedId();
+    GetModel()->m_nAutoIncrement	= m_pAutoIncrement->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nAverageCount	= m_pAverageCount->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nLeftRightHand	= m_pLeftRightHand->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nAutoMatch		= m_pAutoMatch->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nAmsLog			= m_pAmsLog->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nSaveTool		= m_pSaveTool->GetComboBoxInputCtrl()->GetSelectedId();
 
 #ifdef CS35
-	GetDCP06Model()->FILE_STORAGE1		= m_pFileStorage->GetComboBoxInputCtrl()->GetSelectedId() == LOCAL_MEMORY ? CPI::deviceLocalMemory : CPI::deviceUSB;
+	GetModel()->FILE_STORAGE1		= m_pFileStorage->GetComboBoxInputCtrl()->GetSelectedId() == LOCAL_MEMORY ? CPI::deviceLocalMemory : CPI::deviceUSB;
 #else
-	GetDCP06Model()->FILE_STORAGE1		= m_pFileStorage->GetComboBoxInputCtrl()->GetSelectedId() == SD_CARD ? CPI::deviceSdCard : CPI::deviceUSB;
+	GetModel()->FILE_STORAGE1		= m_pFileStorage->GetComboBoxInputCtrl()->GetSelectedId() == SD_CARD ? CPI::deviceSdCard : CPI::deviceUSB;
 #endif
 
-	GetDCP06Model()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
-	GetDCP06Model()->poConfigController->StoreConfigData();
+	GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
+	GetModel()->poConfigController->StoreConfigData();
 
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06InitDlgC::GetDCP06Model() const
+DCP::Model* DCP::InitializationDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
-//void DCP::DCP06InitDlgC::OnComboBoxChanged(int unNotifyCode, int ulParam2)
+//void DCP::InitializationDialog::OnComboBoxChanged(int unNotifyCode, int ulParam2)
 //{
 //	if(unNotifyCode == GUI::NC_ONCOMBOBOX_SELECTION_CHANGED)
 //	{
@@ -443,12 +443,12 @@ DCP::DCP06ModelC* DCP::DCP06InitDlgC::GetDCP06Model() const
 //	}
 //}
 
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitControllerC);
+OBS_IMPLEMENT_EXECUTE(DCP::InitializationController);
 //-------------------------------------------------------------------------------------------------
-// DCP06InitControllerC
+// InitializationController
 // 
-DCP::DCP06InitControllerC::DCP06InitControllerC(bool disableFileStorage)
-    : m_pDlg( NULL ),m_pOnApplicationClosedObserver(OBS_METHOD_TO_PARAM0(DCP06InitControllerC, OnApplicationClosed), this)
+DCP::InitializationController::InitializationController(bool disableFileStorage)
+    : m_pDlg( nullptr ),m_pOnApplicationClosedObserver(OBS_METHOD_TO_PARAM0(InitializationController, OnApplicationClosed), this)
 {
 	int ii = GetTxtApplicationId(); 
 	SetTxtApplicationId(AT_DCP06);
@@ -458,7 +458,7 @@ DCP::DCP06InitControllerC::DCP06InitControllerC(bool disableFileStorage)
     SetTitle(StringC( AT_DCP06, T_DCP_INIT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06InitDlgC(disableFileStorage);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::InitializationDialog(disableFileStorage);  //lint !e1524 new in constructor for class 
     (void)AddDialog( INIT_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -497,13 +497,13 @@ DCP::DCP06InitControllerC::DCP06InitControllerC(bool disableFileStorage)
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06InitControllerC::~DCP06InitControllerC()
+DCP::InitializationController::~InitializationController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06InitControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::InitializationController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
@@ -514,9 +514,9 @@ bool DCP::DCP06InitControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Handle change of position values
-void DCP::DCP06InitControllerC::OnF1Pressed()
+void DCP::InitializationController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -527,9 +527,9 @@ void DCP::DCP06InitControllerC::OnF1Pressed()
 }
 
 // TARGET
-void DCP::DCP06InitControllerC::OnF2Pressed()
+void DCP::InitializationController::OnF2Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -538,7 +538,7 @@ void DCP::DCP06InitControllerC::OnF2Pressed()
 	ABL::CommandFactoryI* poCommandFactory = 
 		 ABL::CommandFactoryContainerC::Instance()->GetFactory((unsigned int) ulCommandId);
 	
-	if(NULL != poCommandFactory)
+	if(nullptr != poCommandFactory)
 	{
 		if(poCommandFactory->CanExecute())
 			poCommandFactory->Execute();
@@ -548,44 +548,44 @@ void DCP::DCP06InitControllerC::OnF2Pressed()
 }
 
 // Description: Handle change of position values
-void DCP::DCP06InitControllerC::OnF3Pressed()
+void DCP::InitializationController::OnF3Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	if(GetController(INIT_USER_CONTROLLER) == NULL)
+	if(GetController(INIT_USER_CONTROLLER) == nullptr)
 	{
-		(void)AddController( INIT_USER_CONTROLLER, new DCP::DCP06UserControllerC );
+		(void)AddController( INIT_USER_CONTROLLER, new DCP::UserController );
 	}
-	(void)GetController( INIT_USER_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+	(void)GetController( INIT_USER_CONTROLLER )->SetModel(m_pDlg->GetModel());
 	SetActiveController(INIT_USER_CONTROLLER, true);
 
 }
 
-void DCP::DCP06InitControllerC::OnF4Pressed()
+void DCP::InitializationController::OnF4Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	if(GetController(INIT_UNIT_CONTROLLER) == NULL)
+	if(GetController(INIT_UNIT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( INIT_UNIT_CONTROLLER, new DCP::DCP06UnitControllerC );
+		(void)AddController( INIT_UNIT_CONTROLLER, new DCP::UnitController );
 	}
-	(void)GetController( INIT_UNIT_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( INIT_UNIT_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(INIT_UNIT_CONTROLLER, true);
 }
 
 
 // PPM
-void DCP::DCP06InitControllerC::OnF5Pressed()
+void DCP::InitializationController::OnF5Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -599,12 +599,12 @@ void DCP::DCP06InitControllerC::OnF5Pressed()
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06InitControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::InitializationController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06InitControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::InitializationController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == ABL::CTL_ID_PPM_REFRACT_CORR)
 	{
@@ -614,7 +614,7 @@ void DCP::DCP06InitControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 	DestroyController( lCtrlID );
 }
 
-void DCP::DCP06InitControllerC::OnApplicationClosed( int unNewApp,  int ulAppOwner)
+void DCP::InitializationController::OnApplicationClosed( int unNewApp,  int ulAppOwner)
 {
 	if(unNewApp == 	ABL::CMD_MGMT_REFLECTORS_ID)
 		m_pDlg->RefreshControls();

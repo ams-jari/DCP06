@@ -17,16 +17,16 @@
 #define new DEBUG_NEW
 #endif
 
-// ========== DCP06EditCalcAngleDlgC ==========
-DCP::DCP06EditCalcAngleDlgC::DCP06EditCalcAngleDlgC(DCP::DCP06ModelC* pDCP06Model)
-    : GUI::ModelHandlerC(), GUI::StandardDialogC(), m_pDistId(0), m_pRefId(0), m_pTrgtId(0), m_pNote(0), m_pDCP06Model(pDCP06Model), m_pCommon(0) {}
+// ========== EditCalculationAngleDialog ==========
+DCP::EditCalculationAngleDialog::EditCalculationAngleDialog(DCP::Model* pModel)
+    : GUI::ModelHandlerC(), GUI::StandardDialogC(), m_pDistId(0), m_pRefId(0), m_pTrgtId(0), m_pNote(0), m_pModel(pModel), m_pCommon(0) {}
 
-DCP::DCP06EditCalcAngleDlgC::~DCP06EditCalcAngleDlgC()
+DCP::EditCalculationAngleDialog::~EditCalculationAngleDialog()
 {
     if (m_pCommon) { delete m_pCommon; m_pCommon = 0; }
 }
 
-void DCP::DCP06EditCalcAngleDlgC::OnInitDialog(void)
+void DCP::EditCalculationAngleDialog::OnInitDialog(void)
 {
     GUI::BaseDialogC::OnInitDialog();
     m_pDistId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -43,13 +43,13 @@ void DCP::DCP06EditCalcAngleDlgC::OnInitDialog(void)
     m_pNote->GetStringInputCtrl()->SetCharsCountMax(8); m_pNote->SetEmptyAllowed(true); AddCtrl(m_pNote);
 }
 
-void DCP::DCP06EditCalcAngleDlgC::OnDialogActivated()
+void DCP::EditCalculationAngleDialog::OnDialogActivated()
 {
-    m_pCommon = new DCP06CommonC(m_pDCP06Model);
+    m_pCommon = new Common(m_pModel);
     RefreshControls();
 }
 
-void DCP::DCP06EditCalcAngleDlgC::UpdateData()
+void DCP::EditCalculationAngleDialog::UpdateData()
 {
     GetDataModel()->sDistId = m_pDistId->GetStringInputCtrl()->GetString();
     GetDataModel()->sRefId = m_pRefId->GetStringInputCtrl()->GetString();
@@ -57,7 +57,7 @@ void DCP::DCP06EditCalcAngleDlgC::UpdateData()
     GetDataModel()->sNote = m_pNote->GetStringInputCtrl()->GetString();
 }
 
-void DCP::DCP06EditCalcAngleDlgC::RefreshControls()
+void DCP::EditCalculationAngleDialog::RefreshControls()
 {
     if (m_pDistId && m_pRefId && m_pNote && m_pTrgtId) {
         m_pDistId->GetStringInputCtrl()->SetString(GetDataModel()->sDistId);
@@ -67,43 +67,43 @@ void DCP::DCP06EditCalcAngleDlgC::RefreshControls()
     }
 }
 
-bool DCP::DCP06EditCalcAngleDlgC::SetModel(GUI::ModelC* pModel)
+bool DCP::EditCalculationAngleDialog::SetModel(GUI::ModelC* pModel)
 {
-    DCP::DCP06EditCalcAngleModelC* p = dynamic_cast<DCP::DCP06EditCalcAngleModelC*>(pModel);
-    if (p != NULL && ModelHandlerC::SetModel(pModel)) { RefreshControls(); return true; }
+    DCP::EditCalculationAngleModel* p = dynamic_cast<DCP::EditCalculationAngleModel*>(pModel);
+    if (p != nullptr && ModelHandlerC::SetModel(pModel)) { RefreshControls(); return true; }
     USER_APP_VERIFY(false); return false;
 }
 
-DCP::DCP06EditCalcAngleModelC* DCP::DCP06EditCalcAngleDlgC::GetDataModel() const { return (DCP::DCP06EditCalcAngleModelC*)GetModel(); }
+DCP::EditCalculationAngleModel* DCP::EditCalculationAngleDialog::GetDataModel() const { return (DCP::EditCalculationAngleModel*)GetModel(); }
 
-// ========== DCP06EditCalcAngleControllerC ==========
-DCP::DCP06EditCalcAngleControllerC::DCP06EditCalcAngleControllerC(DCP::DCP06ModelC* pDCP06Model)
-    : m_pDlg(NULL), m_pDCP06Model(pDCP06Model), m_pCommon(0)
+// ========== EditCalculationAngleController ==========
+DCP::EditCalculationAngleController::EditCalculationAngleController(DCP::Model* pModel)
+    : m_pDlg(nullptr), m_pModel(pModel), m_pCommon(0)
 {
     SetTitle(StringC(AT_DCP06, T_DCP_CALC_ANGLE_EDIT_TOK));
-    m_pDlg = new DCP::DCP06EditCalcAngleDlgC(pDCP06Model);
+    m_pDlg = new DCP::EditCalculationAngleDialog(pModel);
     (void)AddDialog(XORYORZ_DLG, m_pDlg, true);
-    m_pCommon = new DCP06CommonC(pDCP06Model);
+    m_pCommon = new Common(pModel);
     FKDef vDef; vDef.poOwner = this; vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK); SetFunctionKey(FK1, vDef);
     FKDef vDef1; vDef1.poOwner = this; vDef1.strLable = L" "; SetFunctionKey(SHFK6, vDef1);
 }
 
-DCP::DCP06EditCalcAngleControllerC::~DCP06EditCalcAngleControllerC() { if (m_pCommon) { delete m_pCommon; m_pCommon = 0; } }
-bool DCP::DCP06EditCalcAngleControllerC::SetModel(GUI::ModelC* pModel) { (void)ControllerC::SetModel(pModel); return m_pDlg->SetModel(pModel); }
-void DCP::DCP06EditCalcAngleControllerC::OnF1Pressed() { m_pDlg->UpdateData(); (void)Close(EC_KEY_CONT); }
-void DCP::DCP06EditCalcAngleControllerC::OnActiveDialogClosed(int, int) {}
-void DCP::DCP06EditCalcAngleControllerC::OnActiveControllerClosed(int lCtrlID, int lExitCode) { m_pDlg->RefreshControls(); DestroyController(lCtrlID); }
+DCP::EditCalculationAngleController::~EditCalculationAngleController() { if (m_pCommon) { delete m_pCommon; m_pCommon = 0; } }
+bool DCP::EditCalculationAngleController::SetModel(GUI::ModelC* pModel) { (void)ControllerC::SetModel(pModel); return m_pDlg->SetModel(pModel); }
+void DCP::EditCalculationAngleController::OnF1Pressed() { m_pDlg->UpdateData(); (void)Close(EC_KEY_CONT); }
+void DCP::EditCalculationAngleController::OnActiveDialogClosed(int, int) {}
+void DCP::EditCalculationAngleController::OnActiveControllerClosed(int lCtrlID, int lExitCode) { m_pDlg->RefreshControls(); DestroyController(lCtrlID); }
 
-// ========== DCP06EditCalcDistDlgC ==========
-DCP::DCP06EditCalcDistDlgC::DCP06EditCalcDistDlgC(DCP::DCP06ModelC* pDCP06Model)
-    : GUI::ModelHandlerC(), GUI::StandardDialogC(), m_pDistId(0), m_pRefId(0), m_pNote(0), m_pDCP06Model(pDCP06Model), m_pCommon(0) {}
+// ========== EditCalculationDistDialog ==========
+DCP::EditCalculationDistDialog::EditCalculationDistDialog(DCP::Model* pModel)
+    : GUI::ModelHandlerC(), GUI::StandardDialogC(), m_pDistId(0), m_pRefId(0), m_pNote(0), m_pModel(pModel), m_pCommon(0) {}
 
-DCP::DCP06EditCalcDistDlgC::~DCP06EditCalcDistDlgC()
+DCP::EditCalculationDistDialog::~EditCalculationDistDialog()
 {
     if (m_pCommon) { delete m_pCommon; m_pCommon = 0; }
 }
 
-void DCP::DCP06EditCalcDistDlgC::OnInitDialog(void)
+void DCP::EditCalculationDistDialog::OnInitDialog(void)
 {
     GUI::BaseDialogC::OnInitDialog();
     m_pDistId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -117,20 +117,20 @@ void DCP::DCP06EditCalcDistDlgC::OnInitDialog(void)
     m_pNote->GetStringInputCtrl()->SetCharsCountMax(8); m_pNote->SetEmptyAllowed(true); AddCtrl(m_pNote);
 }
 
-void DCP::DCP06EditCalcDistDlgC::OnDialogActivated()
+void DCP::EditCalculationDistDialog::OnDialogActivated()
 {
-    m_pCommon = new DCP06CommonC(m_pDCP06Model);
+    m_pCommon = new Common(m_pModel);
     RefreshControls();
 }
 
-void DCP::DCP06EditCalcDistDlgC::UpdateData()
+void DCP::EditCalculationDistDialog::UpdateData()
 {
     GetDataModel()->sDistId = m_pDistId->GetStringInputCtrl()->GetString();
     GetDataModel()->sRefId = m_pRefId->GetStringInputCtrl()->GetString();
     GetDataModel()->sNote = m_pNote->GetStringInputCtrl()->GetString();
 }
 
-void DCP::DCP06EditCalcDistDlgC::RefreshControls()
+void DCP::EditCalculationDistDialog::RefreshControls()
 {
     if (m_pDistId && m_pRefId && m_pNote) {
         m_pDistId->GetStringInputCtrl()->SetString(GetDataModel()->sDistId);
@@ -139,29 +139,29 @@ void DCP::DCP06EditCalcDistDlgC::RefreshControls()
     }
 }
 
-bool DCP::DCP06EditCalcDistDlgC::SetModel(GUI::ModelC* pModel)
+bool DCP::EditCalculationDistDialog::SetModel(GUI::ModelC* pModel)
 {
-    DCP::DCP06EditCalcDistModelC* p = dynamic_cast<DCP::DCP06EditCalcDistModelC*>(pModel);
-    if (p != NULL && ModelHandlerC::SetModel(pModel)) { RefreshControls(); return true; }
+    DCP::EditCalculationDistModel* p = dynamic_cast<DCP::EditCalculationDistModel*>(pModel);
+    if (p != nullptr && ModelHandlerC::SetModel(pModel)) { RefreshControls(); return true; }
     USER_APP_VERIFY(false); return false;
 }
 
-DCP::DCP06EditCalcDistModelC* DCP::DCP06EditCalcDistDlgC::GetDataModel() const { return (DCP::DCP06EditCalcDistModelC*)GetModel(); }
+DCP::EditCalculationDistModel* DCP::EditCalculationDistDialog::GetDataModel() const { return (DCP::EditCalculationDistModel*)GetModel(); }
 
-// ========== DCP06EditCalcDistControllerC ==========
-DCP::DCP06EditCalcDistControllerC::DCP06EditCalcDistControllerC(DCP::DCP06ModelC* pDCP06Model)
-    : m_pDlg(NULL), m_pDCP06Model(pDCP06Model), m_pCommon(0)
+// ========== EditCalculationDistController ==========
+DCP::EditCalculationDistController::EditCalculationDistController(DCP::Model* pModel)
+    : m_pDlg(nullptr), m_pModel(pModel), m_pCommon(0)
 {
     SetTitle(StringC(AT_DCP06, T_DCP_CALC_DIST_EDIT_TOK));
-    m_pDlg = new DCP::DCP06EditCalcDistDlgC(pDCP06Model);
+    m_pDlg = new DCP::EditCalculationDistDialog(pModel);
     (void)AddDialog(XORYORZ_DLG, m_pDlg, true);
-    m_pCommon = new DCP06CommonC(pDCP06Model);
+    m_pCommon = new Common(pModel);
     FKDef vDef; vDef.poOwner = this; vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK); SetFunctionKey(FK1, vDef);
     FKDef vDef1; vDef1.poOwner = this; vDef1.strLable = L" "; SetFunctionKey(SHFK6, vDef1);
 }
 
-DCP::DCP06EditCalcDistControllerC::~DCP06EditCalcDistControllerC() { if (m_pCommon) { delete m_pCommon; m_pCommon = 0; } }
-bool DCP::DCP06EditCalcDistControllerC::SetModel(GUI::ModelC* pModel) { (void)ControllerC::SetModel(pModel); return m_pDlg->SetModel(pModel); }
-void DCP::DCP06EditCalcDistControllerC::OnF1Pressed() { m_pDlg->UpdateData(); (void)Close(EC_KEY_CONT); }
-void DCP::DCP06EditCalcDistControllerC::OnActiveDialogClosed(int, int) {}
-void DCP::DCP06EditCalcDistControllerC::OnActiveControllerClosed(int lCtrlID, int lExitCode) { m_pDlg->RefreshControls(); DestroyController(lCtrlID); }
+DCP::EditCalculationDistController::~EditCalculationDistController() { if (m_pCommon) { delete m_pCommon; m_pCommon = 0; } }
+bool DCP::EditCalculationDistController::SetModel(GUI::ModelC* pModel) { (void)ControllerC::SetModel(pModel); return m_pDlg->SetModel(pModel); }
+void DCP::EditCalculationDistController::OnF1Pressed() { m_pDlg->UpdateData(); (void)Close(EC_KEY_CONT); }
+void DCP::EditCalculationDistController::OnActiveDialogClosed(int, int) {}
+void DCP::EditCalculationDistController::OnActiveControllerClosed(int lCtrlID, int lExitCode) { m_pDlg->RefreshControls(); DestroyController(lCtrlID); }

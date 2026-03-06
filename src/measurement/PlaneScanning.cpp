@@ -60,7 +60,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06PlaneScanDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::PlaneScanDialog);
 // ================================================================================================
 // =====================================  Static Functions  =======================================
 // ================================================================================================
@@ -72,13 +72,13 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06PlaneScanDlgC);
 
 // Unit
 
-DCP::DCP06PlaneScanDlgC::DCP06PlaneScanDlgC(DCP::DCP06PlaneScanModelC* pPlaneScanModel,DCP06PlaneScanControllerC* controller):m_pFile(0), m_pBoundary(0), 
+DCP::PlaneScanDialog::PlaneScanDialog(DCP::PlaneScanModel* pPlaneScanModel,PlaneScanController* controller):m_pFile(0), m_pBoundary(0), 
 		m_pResolutionHeigth(0), m_pResolutionWidth(0),m_pPointId(0),
 		m_pDataModel(pPlaneScanModel), pController(controller),
-		m_pResolutionHeigthObserver(OBS_METHOD_TO_PARAM0(DCP06PlaneScanDlgC, OnValueChanged), this),
-		m_pResolutionWidthObserver(OBS_METHOD_TO_PARAM0(DCP06PlaneScanDlgC, OnValueChanged), this),
-		m_pFileObserver(OBS_METHOD_TO_PARAM0(DCP06PlaneScanDlgC, OnValueChanged), this),
-		m_pPointIdObserver(OBS_METHOD_TO_PARAM0(DCP06PlaneScanDlgC, OnValueChanged), this)
+		m_pResolutionHeigthObserver(OBS_METHOD_TO_PARAM0(PlaneScanDialog, OnValueChanged), this),
+		m_pResolutionWidthObserver(OBS_METHOD_TO_PARAM0(PlaneScanDialog, OnValueChanged), this),
+		m_pFileObserver(OBS_METHOD_TO_PARAM0(PlaneScanDialog, OnValueChanged), this),
+		m_pPointIdObserver(OBS_METHOD_TO_PARAM0(PlaneScanDialog, OnValueChanged), this)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
 	//SetTxtApplicationId(AT_DCP06);
@@ -86,12 +86,12 @@ DCP::DCP06PlaneScanDlgC::DCP06PlaneScanDlgC(DCP::DCP06PlaneScanModelC* pPlaneSca
 
 
             // Description: Destructor
-DCP::DCP06PlaneScanDlgC::~DCP06PlaneScanDlgC()
+DCP::PlaneScanDialog::~PlaneScanDialog()
 {
 
 }
 
-void DCP::DCP06PlaneScanDlgC::OnInitDialog(void)
+void DCP::PlaneScanDialog::OnInitDialog(void)
 {
 	
 	GUI::BaseDialogC::OnInitDialog();
@@ -147,21 +147,21 @@ void DCP::DCP06PlaneScanDlgC::OnInitDialog(void)
 
 }
 
-void DCP::DCP06PlaneScanDlgC::OnDialogActivated()
+void DCP::PlaneScanDialog::OnDialogActivated()
 {
 	/*
-	m_pDataModel->old_active_coodinate_system = GetDCP06Model()->active_coodinate_system;
-	memcpy(m_pDataModel->matrix,GetDCP06Model()->ocsp_matrix, sizeof(double) * 16);
-	memcpy(m_pDataModel->inv_matrix,GetDCP06Model()->ocsp_inv_matrix, sizeof(double) * 16);
-	m_pDataModel->calculated = (GetDCP06Model()->ocsp_defined  && GetDCP06Model()->active_coodinate_system == OCSP) ? true :false;
+	m_pDataModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
+	memcpy(m_pDataModel->matrix,GetModel()->ocsp_matrix, sizeof(double) * 16);
+	memcpy(m_pDataModel->inv_matrix,GetModel()->ocsp_inv_matrix, sizeof(double) * 16);
+	m_pDataModel->calculated = (GetModel()->ocsp_defined  && GetModel()->active_coodinate_system == OCSP) ? true :false;
 
-	memcpy(&m_pDataModel->point_DCS[0], &GetDCP06Model()->POM_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_OCS[0], &GetDCP06Model()->POM_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_RES[0], &GetDCP06Model()->POM_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_DCS[0], &GetModel()->POM_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_OCS[0], &GetModel()->POM_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_RES[0], &GetModel()->POM_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	
-	m_pDataModel->INTO_CAPTURE = GetDCP06Model()->pom_into_capture;
-	m_pDataModel->INTO_TEMPLATE = GetDCP06Model()->pom_into_template;
-	m_pDataModel->ocs_defined = GetDCP06Model()->ocsp_defined;
+	m_pDataModel->INTO_CAPTURE = GetModel()->pom_into_capture;
+	m_pDataModel->INTO_TEMPLATE = GetModel()->pom_into_template;
+	m_pDataModel->ocs_defined = GetModel()->ocsp_defined;
 	*/
 	RefreshControls();
 }
@@ -169,7 +169,7 @@ void DCP::DCP06PlaneScanDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: OnValueChanged
 // ================================================================================================
-void DCP::DCP06PlaneScanDlgC::OnValueChanged(int unNotifyCode, int ulParam2)
+void DCP::PlaneScanDialog::OnValueChanged(int unNotifyCode, int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
@@ -201,7 +201,7 @@ void DCP::DCP06PlaneScanDlgC::OnValueChanged(int unNotifyCode, int ulParam2)
 }
 
 // Description: refresh all controls
-void DCP::DCP06PlaneScanDlgC::RefreshControls()
+void DCP::PlaneScanDialog::RefreshControls()
 {	
 	if(m_pFile && m_pBoundary && m_pResolutionHeigth && m_pResolutionWidth && m_pPointId)
 	{	
@@ -213,7 +213,7 @@ void DCP::DCP06PlaneScanDlgC::RefreshControls()
 
 		StringC sStat = L"-";
 		
-		DCP06CommonC common(GetDCP06Model());
+		Common common(GetModel());
 		
 		int boundaryPoints = common.get_OCS_points_count(&m_pDataModel->boundary_plane[0].points[0],3);
 		if(boundaryPoints == 3)
@@ -252,21 +252,21 @@ void DCP::DCP06PlaneScanDlgC::RefreshControls()
 	}
 }
 
-void DCP::DCP06PlaneScanDlgC::UpdateData()
+void DCP::PlaneScanDialog::UpdateData()
 {
 
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06PlaneScanDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::PlaneScanDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -276,21 +276,21 @@ bool DCP::DCP06PlaneScanDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06PlaneScanDlgC::GetDCP06Model() const
+DCP::Model* DCP::PlaneScanDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06PlaneScanControllerC::DCP06PlaneScanControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pCommon(0),m_pDataModel(0),m_pDCP06Model(pDCP06Model)
+DCP::PlaneScanController::PlaneScanController(Model* pModel)
+    : m_pDlg( nullptr ),m_pCommon(0),m_pDataModel(0),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -298,13 +298,13 @@ DCP::DCP06PlaneScanControllerC::DCP06PlaneScanControllerC(DCP06ModelC* pDCP06Mod
 
     SetTitle(StringC( AT_DCP06, T_DCP_SCAN_TOK));
 
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 	// create model
-	m_pDataModel = new DCP06PlaneScanModelC(m_pDCP06Model);
+	m_pDataModel = new PlaneScanModel(m_pModel);
 	//m_pDataModel->pom_chst = 0;
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06PlaneScanDlgC(m_pDataModel, this);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::PlaneScanDialog(m_pDataModel, this);  //lint !e1524 new in constructor for class 
     (void)AddDialog( SCAN_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -343,12 +343,12 @@ DCP::DCP06PlaneScanControllerC::DCP06PlaneScanControllerC(DCP06ModelC* pDCP06Mod
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06PlaneScanControllerC::~DCP06PlaneScanControllerC()
+DCP::PlaneScanController::~PlaneScanController()
 {
-	if(GetController(AIM_CONTROLLER) != NULL)
+	if(GetController(AIM_CONTROLLER) != nullptr)
 		DestroyController(AIM_CONTROLLER);
 
-	if(GetController(MEAS_XYZ_CONTROLLER) != NULL)
+	if(GetController(MEAS_XYZ_CONTROLLER) != nullptr)
 		DestroyController(MEAS_XYZ_CONTROLLER);
 
 	if(m_pDataModel)
@@ -364,7 +364,7 @@ DCP::DCP06PlaneScanControllerC::~DCP06PlaneScanControllerC()
 	}
 }
 // Description: Route model to everybody else
-bool DCP::DCP06PlaneScanControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::PlaneScanController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
@@ -374,15 +374,15 @@ bool DCP::DCP06PlaneScanControllerC::SetModel( GUI::ModelC* pModel )
     return m_pDlg->SetModel( pModel );
 }
 
-void DCP::DCP06PlaneScanControllerC::OnF1Pressed()
+void DCP::PlaneScanController::OnF1Pressed()
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
 
-		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+		DCP::MeasureModel* pModel = new MeasureModel;
 
 		pModel->m_iMaxPoint = BOUNDARY_PLANE_POINTS;
 		pModel->m_iMinPoint = BOUNDARY_PLANE_POINTS;
@@ -393,9 +393,9 @@ void DCP::DCP06PlaneScanControllerC::OnF1Pressed()
 		memcpy(&pModel->point_table[0],&m_pDataModel->boundary_plane[0].points[0], sizeof(S_POINT_BUFF) * BOUNDARY_PLANE_POINTS);
 
 		
-		if(GetController(MEAS_CONTROLLER) == NULL)
+		if(GetController(MEAS_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 		}
 		(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_SCAN_BOUNDARY_MEAS_TOK));
 		
@@ -404,9 +404,9 @@ void DCP::DCP06PlaneScanControllerC::OnF1Pressed()
 }
 
 // BOUNDARY MEAS
-void DCP::DCP06PlaneScanControllerC::OnF4Pressed()
+void DCP::PlaneScanController::OnF4Pressed()
 {	
-	if(m_pDataModel->generate_points(m_pDlg->GetDCP06Model()))
+	if(m_pDataModel->generate_points(m_pDlg->GetModel()))
 	{
 		CancelMeas = false;
 		DisableFunctionKey(FK1);
@@ -439,36 +439,36 @@ void DCP::DCP06PlaneScanControllerC::OnF4Pressed()
 
 			m_pDataModel->isRunning = true;
 		
-			if(GetController(AIM_CONTROLLER) == NULL)
+			if(GetController(AIM_CONTROLLER) == nullptr)
 			{
-				(void)AddController( AIM_CONTROLLER, new DCP::DCP06AimControllerC(	x,//atof(m_pDataModel->xdes_ptr),
+				(void)AddController( AIM_CONTROLLER, new DCP::AimController(	x,//atof(m_pDataModel->xdes_ptr),
 																					y,//atof(m_pDataModel->ydes_ptr),
 																					z, //atof(m_pDataModel->zdes_ptr),
-																					m_pDlg->GetDCP06Model()->active_coodinate_system) );
-				(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+																					m_pDlg->GetModel()->active_coodinate_system) );
+				(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetModel());
 			}
 			else
 			{
-				DCP06AimControllerC* pCont = (DCP06AimControllerC*)(GetController( AIM_CONTROLLER ));
-				pCont->set_values(x,y,z,m_pDlg->GetDCP06Model()->active_coodinate_system);
+				AimController* pCont = (AimController*)(GetController( AIM_CONTROLLER ));
+				pCont->set_values(x,y,z,m_pDlg->GetModel()->active_coodinate_system);
 			}
 
-//			(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+//			(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetModel());
 			SetActiveController(AIM_CONTROLLER, true);
 
 		}	
 	}
 }
 // CANCEL SCAN MEAS
-void DCP::DCP06PlaneScanControllerC::OnF5Pressed()
+void DCP::PlaneScanController::OnF5Pressed()
 {
 	CancelMeas = true;
 	m_pDataModel->isRunning = false;
 }
 // Description: Handle change of position values
-void DCP::DCP06PlaneScanControllerC::OnF6Pressed()
+void DCP::PlaneScanController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -483,11 +483,11 @@ void DCP::DCP06PlaneScanControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 
-void DCP::DCP06PlaneScanControllerC::OnSHF2Pressed()
+void DCP::PlaneScanController::OnSHF2Pressed()
 {	
 	StringC strMsg;
 	strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_SCAN_TOK);
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
 		m_pDataModel->iResolutionHeigth = 100;
@@ -506,7 +506,7 @@ void DCP::DCP06PlaneScanControllerC::OnSHF2Pressed()
 
 // VIEW
 // ******************************************************************************************
-void DCP::DCP06PlaneScanControllerC::OnSHF5Pressed()
+void DCP::PlaneScanController::OnSHF5Pressed()
 {
 	/*
 	if(!m_pDataModel->m_pScanFile->IsOpen())
@@ -521,11 +521,11 @@ void DCP::DCP06PlaneScanControllerC::OnSHF5Pressed()
 	 m_pDataModel->m_pAdfFile->form_pnt(1);
 
 	m_pDataModel->fileModel.m_pAdfFile = m_pDataModel->m_pAdfFile;
-	if(GetController(_3DFILEVIEW_CONTROLLER) == NULL)		
+	if(GetController(_3DFILEVIEW_CONTROLLER) == nullptr)		
 	{
-		(void)AddController( _3DFILEVIEW_CONTROLLER, new DCP::DCP063DFileViewControllerC (&m_pDataModel->fileModel, false));
+		(void)AddController( _3DFILEVIEW_CONTROLLER, new DCP::FileView3DController (&m_pDataModel->fileModel, false));
 	}
-	(void)GetController( _3DFILEVIEW_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+	(void)GetController( _3DFILEVIEW_CONTROLLER )->SetModel(m_pDlg->GetModel());
 	SetActiveController(_3DFILEVIEW_CONTROLLER, true);
 	*/
 	
@@ -533,16 +533,16 @@ void DCP::DCP06PlaneScanControllerC::OnSHF5Pressed()
 
 // ******************************************************************************************
 // Description: React on close of tabbed dialog
-void DCP::DCP06PlaneScanControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::PlaneScanController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
  
 // Description: React on close of controller
-void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::PlaneScanController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {	
 	if(lCtrlID == MEAS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();		
+		DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();		
 		
 		// copy values
 		memcpy(&m_pDataModel->boundary_plane[0].points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * BOUNDARY_PLANE_POINTS);
@@ -552,7 +552,7 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 	/*
 	else if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		StringC strSelectedFile = pModel->m_strSelectedFile;
 		//m_pDataModel->m_pFileFunc->setFile(strSelectedFile);
 	}
@@ -562,12 +562,12 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 		if(lExitCode == EC_KEY_CONT && !CancelMeas)
 		{
 			
-			DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC();
+			DCP::MeasXYZModel* pModel = new MeasXYZModel();
 
-			if(GetController(MEAS_XYZ_CONTROLLER) == NULL)
+			if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
 			{
-				//DCP06Log("(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DCP06DoMeasXYZControllerC );");		
-				(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::DCP06ScanMeasXYZControllerC(m_pDlg->GetDCP06Model()) );
+				//Log("(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DoMeasXYZController );");		
+				(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::ScanMeasXYZController(m_pDlg->GetModel()) );
 				(void)GetController( MEAS_XYZ_CONTROLLER )->SetModel(pModel);
 			}
 			else
@@ -575,7 +575,7 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			
 			}
 		
-			//pMeasXYZModel =  new DCP06MeasXYZModelC();
+			//pMeasXYZModel =  new MeasXYZModel();
 			//(void)GetController( MEAS_XYZ_CONTROLLER )->SetModel(pModel);
 			SetActiveController(MEAS_XYZ_CONTROLLER, true);
 			
@@ -593,7 +593,7 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 		{
 
 			
-			DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
+			DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
 		
 			//m_pDataModel->m_pScanFile
 			/*
@@ -603,9 +603,9 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			}
 			*/
 			/*
-			sprintf(m_pDataModel->m_pAdfFile->xmea_front,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, pModel->m_dX);
-			sprintf(m_pDataModel->m_pAdfFile->ymea_front,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, pModel->m_dY);
-			sprintf(m_pDataModel->m_pAdfFile->zmea_front,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, pModel->m_dZ);
+			sprintf(m_pDataModel->m_pAdfFile->xmea_front,"%9.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dX);
+			sprintf(m_pDataModel->m_pAdfFile->ymea_front,"%9.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dY);
+			sprintf(m_pDataModel->m_pAdfFile->zmea_front,"%9.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dZ);
 			
 			sprintf(m_pDataModel->m_pAdfFile->xdes_front,"%s","");
 			sprintf(m_pDataModel->m_pAdfFile->ydes_front,"%s","");
@@ -618,9 +618,9 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			char temp_y[20];
 			char temp_z[20];
 
-			sprintf(temp_x,"%.*f",m_pDlg->GetDCP06Model()->m_nDecimals, pModel->m_dX);
-			sprintf(temp_y,"%.*f",m_pDlg->GetDCP06Model()->m_nDecimals, pModel->m_dY);
-			sprintf(temp_z,"%.*f",m_pDlg->GetDCP06Model()->m_nDecimals, pModel->m_dZ);
+			sprintf(temp_x,"%.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dX);
+			sprintf(temp_y,"%.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dY);
+			sprintf(temp_z,"%.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dZ);
 		
 
 			if(lExitCode == EC_KEY_CONT)
@@ -653,21 +653,21 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 					y = atof(m_pDataModel->m_pAdfFile->ydes_front);
 					z = atof(m_pDataModel->m_pAdfFile->zdes_front);
 					*/
-					if(GetController(AIM_CONTROLLER) == NULL)
+					if(GetController(AIM_CONTROLLER) == nullptr)
 					{
-						(void)AddController( AIM_CONTROLLER, new DCP::DCP06AimControllerC(	x,//atof(m_pDataModel->xdes_ptr),
+						(void)AddController( AIM_CONTROLLER, new DCP::AimController(	x,//atof(m_pDataModel->xdes_ptr),
 																							y,//atof(m_pDataModel->ydes_ptr),
 																							z, //atof(m_pDataModel->zdes_ptr),
-																							m_pDlg->GetDCP06Model()->active_coodinate_system) );
+																							m_pDlg->GetModel()->active_coodinate_system) );
 						
-						(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+						(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetModel());
 					}
 					else
 					{
-						DCP06AimControllerC* pCont = (DCP06AimControllerC*)(GetController( AIM_CONTROLLER ));
-						pCont->set_values(x,y,z,m_pDlg->GetDCP06Model()->active_coodinate_system);
+						AimController* pCont = (AimController*)(GetController( AIM_CONTROLLER ));
+						pCont->set_values(x,y,z,m_pDlg->GetModel()->active_coodinate_system);
 					}
-					//(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+					//(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetModel());
 					SetActiveController(AIM_CONTROLLER, true);
 
 				}
@@ -712,7 +712,7 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06PlaneScanModelC::DCP06PlaneScanModelC(DCP06ModelC* pDCP06Model)
+DCP::PlaneScanModel::PlaneScanModel(Model* pModel)
 {
 	iResolutionHeigth = 100;
 	iResolutionWidth = 100;
@@ -741,11 +741,11 @@ DCP::DCP06PlaneScanModelC::DCP06PlaneScanModelC(DCP06ModelC* pDCP06Model)
 	boundary_plane[0].points[2].z = 0.0;
 	boundary_plane[0].points[2].sta = 1;
 	*/
-	m_pScanFile = new ScanFileFunc(pDCP06Model);
+	m_pScanFile = new ScanFileFunc(pModel);
 }
 
 
-DCP::DCP06PlaneScanModelC::~DCP06PlaneScanModelC()
+DCP::PlaneScanModel::~PlaneScanModel()
 {
 		if(m_pScanFile)
 		{
@@ -755,7 +755,7 @@ DCP::DCP06PlaneScanModelC::~DCP06PlaneScanModelC()
 		}
 }
 
-bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
+bool DCP::PlaneScanModel::generate_points(DCP::Model *pModel)
 {
 	bool ret = false;
 	struct ams_vector plane_p1,plane_p2,plane_p3;
@@ -765,7 +765,7 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 	struct line lineP2P3, lineP1P2, lineP4P3;
 	StringC strMsg;
 	bool too_many_points = false;
-	//DCP06MsgBoxC MsgBox;
+	//MsgBox MsgBox;
 	//MsgBox.ShowMessageOk(L"generate points");
 	// check that two points is defined
 	memset(&des_points[0], 0, sizeof(S_SCAN_POINT_BUFF)* MAX_SCAN_POINTS);
@@ -776,7 +776,7 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 	if(boundary_plane[0].points[0].sta != 0 && boundary_plane[0].points[1].sta !=0 && boundary_plane[0].points[2].sta !=0)
 	{
 		/*
-		DCP06CalcPlaneC calcPlane;
+		CalcPlane calcPlane;
 		if(calcPlane.calc(&boundary_plane[0],ACTUAL))
 		{
 				
@@ -876,7 +876,7 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 
 					equation_of_line(&po1, &po2, &line1);
 
-					if(add_line_points(m_pScanFile, &line1, i, pointCountWidth, distWidth, iResolutionWidth, first_pointid,pDCP06Model) == false)
+					if(add_line_points(m_pScanFile, &line1, i, pointCountWidth, distWidth, iResolutionWidth, first_pointid,pModel) == false)
 					{
 						too_many_points = true;
 						//break;
@@ -902,7 +902,7 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 
 								equation_of_line(&po11, &po22, &line2);
 
-								if(add_line_points(m_pScanFile, &line2, i, pointCountWidth, distWidth, iResolutionWidth, first_pointid,pDCP06Model) == false)
+								if(add_line_points(m_pScanFile, &line2, i, pointCountWidth, distWidth, iResolutionWidth, first_pointid,pModel) == false)
 								{
 									too_many_points = true;
 									//break;
@@ -920,7 +920,7 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 
 				if(too_many_points == true)
 				{
-					DCP06MsgBoxC msgbox;	
+					MsgBox msgbox;	
 					StringC msg;
 					msg.LoadTxt(AT_DCP06,M_DCP_SCAN_TOO_MANY_POINTS_TOK);
 					msg.Format(msg,total_points, MAX_SCAN_POINTS);
@@ -935,7 +935,7 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 				ret = too_many_points ? false : true;
 
 				
-				DCP06CommonC common(pDCP06Model);
+				Common common(pModel);
 				common.delay();
 			}
 			/*
@@ -949,9 +949,9 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 	return ret;
 }
 
-bool DCP::DCP06PlaneScanModelC::add_line_points(ScanFileFunc* m_pScanFile, struct line* line1, 
+bool DCP::PlaneScanModel::add_line_points(ScanFileFunc* m_pScanFile, struct line* line1, 
 							short i, short pointCountWidth, double distWidth, double resolutionWidth, char* first_pointid,
-							DCP::DCP06ModelC *pDCP06Model)
+							DCP::Model *pModel)
 {
 	char pointIdBuffer[STRING_BUFFER_SMALL];
 	bool ret = true;
@@ -972,9 +972,9 @@ bool DCP::DCP06PlaneScanModelC::add_line_points(ScanFileFunc* m_pScanFile, struc
 			m_pAdfFile->form_pnt((long) m_pAdfFile->points);
 		}
 		
-		sprintf(m_pAdfFile->xdes_front,"%9.*f",pDCP06Model->m_nDecimals, line1->px + (j * resolutionWidth) * line1->ux);
-		sprintf(m_pAdfFile->ydes_front,"%9.*f",pDCP06Model->m_nDecimals, line1->py + (j * resolutionWidth) * line1->uy);
-		sprintf(m_pAdfFile->zdes_front,"%9.*f",pDCP06Model->m_nDecimals, line1->pz + (j * resolutionWidth) * line1->uz);
+		sprintf(m_pAdfFile->xdes_front,"%9.*f",pModel->m_nDecimals, line1->px + (j * resolutionWidth) * line1->ux);
+		sprintf(m_pAdfFile->ydes_front,"%9.*f",pModel->m_nDecimals, line1->py + (j * resolutionWidth) * line1->uy);
+		sprintf(m_pAdfFile->zdes_front,"%9.*f",pModel->m_nDecimals, line1->pz + (j * resolutionWidth) * line1->uz);
 		
 		m_pAdfFile->form_save_pnt();
 		*/
@@ -1014,9 +1014,9 @@ bool DCP::DCP06PlaneScanModelC::add_line_points(ScanFileFunc* m_pScanFile, struc
 	               
 					m_pAdfFile->form_pnt((long) m_pAdfFile->points);
 
-					sprintf(m_pAdfFile->xdes_front,"%9.*f",pDCP06Model->m_nDecimals, line1->px + (j * resolutionWidth + ((int) distWidth % (int) resolutionWidth) * line1->ux ));
-					sprintf(m_pAdfFile->ydes_front,"%9.*f",pDCP06Model->m_nDecimals, line1->py + (j * resolutionWidth + ((int) distWidth % (int) resolutionWidth) * line1->uy ));
-					sprintf(m_pAdfFile->zdes_front,"%9.*f",pDCP06Model->m_nDecimals, line1->pz + (j * resolutionWidth + ((int) distWidth % (int) resolutionWidth) * line1->uz ));
+					sprintf(m_pAdfFile->xdes_front,"%9.*f",pModel->m_nDecimals, line1->px + (j * resolutionWidth + ((int) distWidth % (int) resolutionWidth) * line1->ux ));
+					sprintf(m_pAdfFile->ydes_front,"%9.*f",pModel->m_nDecimals, line1->py + (j * resolutionWidth + ((int) distWidth % (int) resolutionWidth) * line1->uy ));
+					sprintf(m_pAdfFile->zdes_front,"%9.*f",pModel->m_nDecimals, line1->pz + (j * resolutionWidth + ((int) distWidth % (int) resolutionWidth) * line1->uz ));
 					m_pAdfFile->form_save_pnt();
 					*/
 					if(points_count < MAX_SCAN_POINTS)

@@ -55,7 +55,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06CircleDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::CircleDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -70,11 +70,11 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06CircleDlgC);
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06CircleDlgC::DCP06CircleDlgC(DCP::DCP06ModelC * pDCP06Model, DCP06CircleModelC* pCircleModel, short iDisplay):
+DCP::CircleDialog::CircleDialog(DCP::Model * pModel, CircleModel* pCircleModel, short iDisplay):
 		GUI::ModelHandlerC(),
-		GUI::StandardDialogC(),m_pDCP06Model(pDCP06Model),m_pDefinePlaneInfo(0),m_pPlane(0),m_iDisplay(iDisplay),
+		GUI::StandardDialogC(),m_pModel(pModel),m_pDefinePlaneInfo(0),m_pPlane(0),m_iDisplay(iDisplay),
 		m_pToolRadius(0),m_pMeasureCirclePoints(0),m_pCirclePoints(0),m_pDataModel(pCircleModel),
-		m_pToolRadiusObserver(OBS_METHOD_TO_PARAM0(DCP06CircleDlgC, OnValueChanged), this)
+		m_pToolRadiusObserver(OBS_METHOD_TO_PARAM0(CircleDialog, OnValueChanged), this)
 {
 	
 	//SetTxtApplicationId(AT_DCP06);
@@ -91,14 +91,14 @@ DCP::DCP06CircleDlgC::DCP06CircleDlgC(DCP::DCP06ModelC * pDCP06Model, DCP06Circl
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06CircleDlgC::~DCP06CircleDlgC()
+DCP::CircleDialog::~CircleDialog()
 {
 }
 
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP06CircleDlgC::OnInitDialog(void)
+void DCP::CircleDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -126,7 +126,7 @@ void DCP::DCP06CircleDlgC::OnInitDialog(void)
 	m_pToolRadius = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pToolRadius->SetId(eToolRadius);
 	m_pToolRadius->SetText(StringC(AT_DCP06,P_DCP_TOOL_RADIUS_TOK));
-	m_pToolRadius->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pDCP06Model->m_nDecimals);
+	m_pToolRadius->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pModel->m_nDecimals);
 	//m_pToolRadius->SetAutoColon(false);
 	//m_pToolRadius->SetColonPosition(9*22);
 	// m_pToolRadius->SetTextWidth(9*40); CAPTIVATE
@@ -173,7 +173,7 @@ void DCP::DCP06CircleDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP::DCP06CircleDlgC::OnDialogActivated()
+void DCP::CircleDialog::OnDialogActivated()
 {
 	
 	
@@ -185,55 +185,55 @@ void DCP::DCP06CircleDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP06CircleDlgC::UpdateData()
+void DCP::CircleDialog::UpdateData()
 {
 	// copy values from DCP05MOdel
 	if(m_iDisplay != SHAFT_DLG)
 	{
 
-		memcpy(&m_pDCP06Model->circle_planes[0],&m_pDataModel->planes[0],  sizeof(S_PLANE_BUFF));
-		memcpy(&m_pDCP06Model->circle_points[0],&m_pDataModel->circle_points[0],  sizeof(S_CIRCLE_BUFF));
-		memcpy(&m_pDCP06Model->circle_points_in_plane[0], &m_pDataModel->circle_points_in_plane[0],  sizeof(S_CIRCLE_BUFF));
-		m_pDCP06Model->circle_plane_type = m_pDataModel->PLANE_TYPE;
-		m_pDCP06Model->circle_cx = m_pDataModel->cx;
-		m_pDCP06Model->circle_cy = m_pDataModel->cy;
-		m_pDCP06Model->circle_cz = m_pDataModel->cz;
-		m_pDCP06Model->circle_vi = m_pDataModel->vi;
-		m_pDCP06Model->circle_vj = m_pDataModel->vj;
-		m_pDCP06Model->circle_vk = m_pDataModel->vk;
+		memcpy(&m_pModel->circle_planes[0],&m_pDataModel->planes[0],  sizeof(S_PLANE_BUFF));
+		memcpy(&m_pModel->circle_points[0],&m_pDataModel->circle_points[0],  sizeof(S_CIRCLE_BUFF));
+		memcpy(&m_pModel->circle_points_in_plane[0], &m_pDataModel->circle_points_in_plane[0],  sizeof(S_CIRCLE_BUFF));
+		m_pModel->circle_plane_type = m_pDataModel->PLANE_TYPE;
+		m_pModel->circle_cx = m_pDataModel->cx;
+		m_pModel->circle_cy = m_pDataModel->cy;
+		m_pModel->circle_cz = m_pDataModel->cz;
+		m_pModel->circle_vi = m_pDataModel->vi;
+		m_pModel->circle_vj = m_pDataModel->vj;
+		m_pModel->circle_vk = m_pDataModel->vk;
 
-		m_pDCP06Model->circle_diameter = m_pDataModel->diameter;
+		m_pModel->circle_diameter = m_pDataModel->diameter;
 
-		m_pDCP06Model->poConfigController->GetModel()->SetConfigKey(CNF_KEY_CIRCLE);
-		m_pDCP06Model->poConfigController->StoreConfigData();
-		m_pDCP06Model->circle_rms = m_pDataModel->rms_diameter;
+		m_pModel->poConfigController->GetModel()->SetConfigKey(CNF_KEY_CIRCLE);
+		m_pModel->poConfigController->StoreConfigData();
+		m_pModel->circle_rms = m_pDataModel->rms_diameter;
 
 	}
 	else
 	{
-		//memcpy(&m_pDCP06Model->circle_planes[0],&m_pDataModel->planes[0],  sizeof(S_PLANE_BUFF));
-		memcpy(&m_pDCP06Model->shaft_circle_points[0],&m_pDataModel->circle_points[0],  sizeof(S_CIRCLE_BUFF));
-		memcpy(&m_pDCP06Model->shaft_circle_points_in_plane[0], &m_pDataModel->circle_points_in_plane[0],  sizeof(S_CIRCLE_BUFF));
-		m_pDCP06Model->shaft_circle_plane_type = m_pDataModel->PLANE_TYPE;
-		m_pDCP06Model->shaft_circle_cx = m_pDataModel->cx;
-		m_pDCP06Model->shaft_circle_cy = m_pDataModel->cy;
-		m_pDCP06Model->shaft_circle_cz = m_pDataModel->cz;
-		m_pDCP06Model->shaft_circle_vi = m_pDataModel->vi;
-		m_pDCP06Model->shaft_circle_vj = m_pDataModel->vj;
-		m_pDCP06Model->shaft_circle_vk = m_pDataModel->vk;
+		//memcpy(&m_pModel->circle_planes[0],&m_pDataModel->planes[0],  sizeof(S_PLANE_BUFF));
+		memcpy(&m_pModel->shaft_circle_points[0],&m_pDataModel->circle_points[0],  sizeof(S_CIRCLE_BUFF));
+		memcpy(&m_pModel->shaft_circle_points_in_plane[0], &m_pDataModel->circle_points_in_plane[0],  sizeof(S_CIRCLE_BUFF));
+		m_pModel->shaft_circle_plane_type = m_pDataModel->PLANE_TYPE;
+		m_pModel->shaft_circle_cx = m_pDataModel->cx;
+		m_pModel->shaft_circle_cy = m_pDataModel->cy;
+		m_pModel->shaft_circle_cz = m_pDataModel->cz;
+		m_pModel->shaft_circle_vi = m_pDataModel->vi;
+		m_pModel->shaft_circle_vj = m_pDataModel->vj;
+		m_pModel->shaft_circle_vk = m_pDataModel->vk;
 
-		m_pDCP06Model->shaft_circle_diameter = m_pDataModel->diameter;
-		m_pDCP06Model->shaft_circle_rms = m_pDataModel->rms_diameter;
+		m_pModel->shaft_circle_diameter = m_pDataModel->diameter;
+		m_pModel->shaft_circle_rms = m_pDataModel->rms_diameter;
 
-		m_pDCP06Model->poConfigController->GetModel()->SetConfigKey(CNF_KEY_SHAFT);
-		m_pDCP06Model->poConfigController->StoreConfigData();
+		m_pModel->poConfigController->GetModel()->SetConfigKey(CNF_KEY_SHAFT);
+		m_pModel->poConfigController->StoreConfigData();
 	}
 
 }
 // ================================================================================================
 // Description: OnValueChanged
 // ================================================================================================
-void DCP::DCP06CircleDlgC::OnValueChanged( int unNotifyCode,  int ulParam2)
+void DCP::CircleDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
@@ -253,7 +253,7 @@ void DCP::DCP06CircleDlgC::OnValueChanged( int unNotifyCode,  int ulParam2)
 // Description: refresh all controls
 // ================================================================================================
 
-void DCP::DCP06CircleDlgC::RefreshControls()
+void DCP::CircleDialog::RefreshControls()
 {
 	if(m_pDefinePlaneInfo && m_pPlane && m_pToolRadius && m_pMeasureCirclePoints &&  m_pCirclePoints)
 	{	
@@ -305,14 +305,14 @@ void DCP::DCP06CircleDlgC::RefreshControls()
 // ================================================================================================
 // Description: only accept hello world Model objects
 // ================================================================================================
-bool DCP::DCP06CircleDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::CircleDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06PointBuffModelC* pDCP06Model = dynamic_cast< DCP::DCP06PointBuffModelC* >( pModel );
+    DCP::PointBuffModel* pModel = dynamic_cast< DCP::PointBuffModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -322,23 +322,23 @@ bool DCP::DCP06CircleDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // ================================================================================================
-// Description: only accept DCP06PointBuffModelC objects
+// Description: only accept PointBuffModel objects
 // ================================================================================================
-DCP::DCP06PointBuffModelC* DCP::DCP06CircleDlgC::GetPointBuffModelModel() const
+DCP::PointBuffModel* DCP::CircleDialog::GetPointBuffModelModel() const
 {
-    return (DCP::DCP06PointBuffModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::PointBuffModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-// ====================================  DCP06CircleControllerC  ===================================
+// ====================================  CircleController  ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: constructor
 // ================================================================================================
-DCP::DCP06CircleControllerC::DCP06CircleControllerC(DCP::DCP06ModelC *pDCP06Model, short iDisplay)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model),m_pDataModel(0), m_iDisplay(iDisplay)
+DCP::CircleController::CircleController(DCP::Model *pModel, short iDisplay)
+    : m_pDlg( nullptr ),m_pModel(pModel),m_pDataModel(0), m_iDisplay(iDisplay)
 
 {
     // Set title token
@@ -351,28 +351,28 @@ DCP::DCP06CircleControllerC::DCP06CircleControllerC(DCP::DCP06ModelC *pDCP06Mode
 	
 
 	// create local data
-	m_pDataModel = new DCP06CircleModelC(pDCP06Model);
+	m_pDataModel = new CircleModel(pModel);
 
 	// copy values from DCP05MOdel
 	if(m_iDisplay != SHAFT_DLG)
 	{
 
-		memcpy(&m_pDataModel->planes[0], &pDCP06Model->circle_planes[0], sizeof(S_PLANE_BUFF));
-		memcpy(&m_pDataModel->circle_points[0], &pDCP06Model->circle_points[0], sizeof(S_CIRCLE_BUFF));
-		memcpy(&m_pDataModel->circle_points_in_plane[0], &pDCP06Model->circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
+		memcpy(&m_pDataModel->planes[0], &pModel->circle_planes[0], sizeof(S_PLANE_BUFF));
+		memcpy(&m_pDataModel->circle_points[0], &pModel->circle_points[0], sizeof(S_CIRCLE_BUFF));
+		memcpy(&m_pDataModel->circle_points_in_plane[0], &pModel->circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
 
-		m_pDataModel->PLANE_TYPE = pDCP06Model->circle_plane_type;
+		m_pDataModel->PLANE_TYPE = pModel->circle_plane_type;
 
 	}
 	else
 	{
-		memcpy(&m_pDataModel->circle_points[0], &pDCP06Model->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
-		memcpy(&m_pDataModel->circle_points_in_plane[0], &pDCP06Model->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
+		memcpy(&m_pDataModel->circle_points[0], &pModel->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
+		memcpy(&m_pDataModel->circle_points_in_plane[0], &pModel->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
 		m_pDataModel->PLANE_TYPE = CIRCLE_POINTS_PLANE;
 	}
 
 	// Create a dialog
-    m_pDlg = new DCP::DCP06CircleDlgC(pDCP06Model, m_pDataModel, m_iDisplay);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::CircleDialog(pModel, m_pDataModel, m_iDisplay);  //lint !e1524 new in constructor for class 
 
     (void)AddDialog( CIRCLE_DLG, m_pDlg, true );
 
@@ -390,7 +390,7 @@ DCP::DCP06CircleControllerC::DCP06CircleControllerC(DCP::DCP06ModelC *pDCP06Mode
 // ================================================================================================
 // Description: destructor
 // ================================================================================================
-DCP::DCP06CircleControllerC::~DCP06CircleControllerC()
+DCP::CircleController::~CircleController()
 {
 	if(m_pDataModel)
 	{
@@ -401,7 +401,7 @@ DCP::DCP06CircleControllerC::~DCP06CircleControllerC()
 // ================================================================================================
 // Description: set_function_keys
 // ================================================================================================
-void DCP::DCP06CircleControllerC::set_function_keys()
+void DCP::CircleController::set_function_keys()
 {
 	ResetFunctionKeys();
 
@@ -473,7 +473,7 @@ void DCP::DCP06CircleControllerC::set_function_keys()
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP06CircleControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::CircleController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -485,12 +485,12 @@ bool DCP::DCP06CircleControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -503,9 +503,9 @@ bool DCP::DCP06CircleControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: OnF1Pressed PLANE
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnF1Pressed()
+void DCP::CircleController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -520,7 +520,7 @@ void DCP::DCP06CircleControllerC::OnF1Pressed()
 		PLANE_KEYS = 0;
 		set_function_keys();
 		
-		if(m_pDCP06Model->active_coodinate_system == DCS)
+		if(m_pModel->active_coodinate_system == DCS)
 		{
 			StringC sMsg;
 			sMsg.LoadTxt(AT_DCP06,M_DCP_CANNOT_USE_XY_YZ_ZX_IN_SCS_TOK);
@@ -535,9 +535,9 @@ void DCP::DCP06CircleControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: OnF2Pressed XY-PLANE
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnF2Pressed()
+void DCP::CircleController::OnF2Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -550,7 +550,7 @@ void DCP::DCP06CircleControllerC::OnF2Pressed()
 	{
 		PLANE_KEYS = 0;
 		set_function_keys();
-		if(m_pDCP06Model->active_coodinate_system == DCS)
+		if(m_pModel->active_coodinate_system == DCS)
 		{
 			StringC sMsg;
 			sMsg.LoadTxt(AT_DCP06,M_DCP_CANNOT_USE_XY_YZ_ZX_IN_SCS_TOK);
@@ -566,9 +566,9 @@ void DCP::DCP06CircleControllerC::OnF2Pressed()
 // ================================================================================================
 // Description: OnF3Pressed ZX-PLANE
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnF3Pressed()
+void DCP::CircleController::OnF3Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -581,7 +581,7 @@ void DCP::DCP06CircleControllerC::OnF3Pressed()
 	{
 		PLANE_KEYS = 0;
 		set_function_keys();
-		if(m_pDCP06Model->active_coodinate_system == DCS)
+		if(m_pModel->active_coodinate_system == DCS)
 		{
 			StringC sMsg;
 			sMsg.LoadTxt(AT_DCP06,M_DCP_CANNOT_USE_XY_YZ_ZX_IN_SCS_TOK);
@@ -598,9 +598,9 @@ void DCP::DCP06CircleControllerC::OnF3Pressed()
 // ================================================================================================
 // Description: OnF4Pressed YZ-PLANE
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnF4Pressed()
+void DCP::CircleController::OnF4Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -609,7 +609,7 @@ void DCP::DCP06CircleControllerC::OnF4Pressed()
 	if(PLANE_KEYS == 1)
 	{
 		// mitataan taso
-		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+		DCP::MeasureModel* pModel = new MeasureModel;
 		pModel->m_iPointsCount = m_pDataModel->pCommon->points_count_in_plane(&m_pDataModel->planes[0]);
 		if(pModel->m_iPointsCount < 3) pModel->m_iPointsCount = 3;
 		pModel->m_iMaxPoint = MAX_POINTS_IN_PLANE;
@@ -619,9 +619,9 @@ void DCP::DCP06CircleControllerC::OnF4Pressed()
 		memcpy(&pModel->point_table[0],&m_pDataModel->planes[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
 
 	
-		if(GetController(CIRCLE_PLANE_MEAS_CONTROLLER) == NULL)
+		if(GetController(CIRCLE_PLANE_MEAS_CONTROLLER) == nullptr)
 		{
-			(void)AddController( CIRCLE_PLANE_MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDCP06Model) );
+			(void)AddController( CIRCLE_PLANE_MEAS_CONTROLLER, new DCP::MeasureController(m_pModel) );
 		}
 
 		(void)GetController(CIRCLE_PLANE_MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_CIRCLE_PLANE_MEAS_TOK));
@@ -643,9 +643,9 @@ void DCP::DCP06CircleControllerC::OnF4Pressed()
 // Description: OnF5Pressed CIRCLE or Circlepoints
 // ================================================================================================
 
-void DCP::DCP06CircleControllerC::OnF5Pressed()
+void DCP::CircleController::OnF5Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -654,7 +654,7 @@ void DCP::DCP06CircleControllerC::OnF5Pressed()
 	if(PLANE_KEYS == 0)
 	{
 		// measure circle points
-		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+		DCP::MeasureModel* pModel = new MeasureModel;
 		pModel->m_iPointsCount = m_pDataModel->pCommon->get_max_defined_point_circle(&m_pDataModel->circle_points[0]);
 		if(pModel->m_iPointsCount < 3) pModel->m_iPointsCount = 3;
 		pModel->m_iMaxPoint = MAX_POINTS_IN_CIRCLE;
@@ -664,9 +664,9 @@ void DCP::DCP06CircleControllerC::OnF5Pressed()
 		memcpy(&pModel->point_table[0],&m_pDataModel->circle_points[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
 
 	
-		if(GetController(MEAS_CONTROLLER) == NULL)
+		if(GetController(MEAS_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDCP06Model) );
+			(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pModel) );
 		}
 
 		if(m_iDisplay != SHAFT_DLG)
@@ -692,9 +692,9 @@ void DCP::DCP06CircleControllerC::OnF5Pressed()
 // ================================================================================================
 // Description: F6, CONT
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnF6Pressed()
+void DCP::CircleController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -727,7 +727,7 @@ void DCP::DCP06CircleControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: OnSHF2Pressed DELETE
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnSHF2Pressed()
+void DCP::CircleController::OnSHF2Pressed()
 {
 	m_pDataModel->delete_circle();
 	if(m_iDisplay == SHAFT_DLG)
@@ -739,14 +739,14 @@ void DCP::DCP06CircleControllerC::OnSHF2Pressed()
 // ================================================================================================
 // Description: OnSHF3Pressed DELETE
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnSHF3Pressed()
+void DCP::CircleController::OnSHF3Pressed()
 {	/*
-		DCP::DCP06ResCircleModelC* pModel = new DCP06ResCircleModelC;
+		DCP::ResCircleModel* pModel = new ResCircleModel;
 		//memset(&pModel->circle_points[0]->points[0],0,sizeof(S_POINT_BUFF) * MAX_POINT_IN_CIRCLE);
 		pModel->circle_points = &m_pDataModel->circle_points[0];
-		if(GetController(RES_CIRCLE_CONTROLLER) == NULL)
+		if(GetController(RES_CIRCLE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( RES_CIRCLE_CONTROLLER, new DCP::DCP06ResCircleControllerC(m_pDCP06Model) );
+			(void)AddController( RES_CIRCLE_CONTROLLER, new DCP::ResCircleController(m_pModel) );
 		}
 
 		(void)GetController(RES_CIRCLE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK);
@@ -767,7 +767,7 @@ void DCP::DCP06CircleControllerC::OnSHF3Pressed()
 	m_pDataModel->circle_points[0].points[4].x = 745; m_pDataModel->circle_points[0].points[4].y = 2626;m_pDataModel->circle_points[0].points[4].z = -408;m_pDataModel->circle_points[0].points[4].sta = 1;
 			m_pDataModel->m_iCounts = m_pDataModel->pCommon->defined_circle_points(&m_pDataModel->circle_points[0],0);
 	/*	
-			DCP06CalcCircleC circle(m_pDataModel->PLANE_TYPE, 
+			CalcCircle circle(m_pDataModel->PLANE_TYPE, 
 								&m_pDataModel->circle_points[0],
 								&m_pDataModel->planes[0],
 								&m_pDataModel->circle_points_in_plane[0],
@@ -784,17 +784,17 @@ void DCP::DCP06CircleControllerC::OnSHF3Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::CircleController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP06CircleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::CircleController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == MEAS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();		
+		DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();		
 		
 		// copy values
 		memcpy(&m_pDataModel->circle_points[0].points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
@@ -808,18 +808,18 @@ void DCP::DCP06CircleControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 				m_pDataModel->circle_points[0].points[i].sta = 2;
 		}
 		
-		if(GetController(CALC_CIRCLE_CONTROLLER) == NULL)
+		if(GetController(CALC_CIRCLE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( CALC_CIRCLE_CONTROLLER, new DCP::DCP06CalcCircleControllerC(m_pDataModel, m_iDisplay) );
+			(void)AddController( CALC_CIRCLE_CONTROLLER, new DCP::CalcCircleontrollerC(m_pDataModel, m_iDisplay) );
 		}
 
 		(void)GetController(CALC_CIRCLE_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK));
 
-		(void)GetController( CALC_CIRCLE_CONTROLLER )->SetModel(m_pDCP06Model);
+		(void)GetController( CALC_CIRCLE_CONTROLLER )->SetModel(m_pModel);
 		SetActiveController(CALC_CIRCLE_CONTROLLER, true);
 		
 		/*
-		DCP06CalcCircleC circle(m_pDataModel->PLANE_TYPE, 
+		CalcCircle circle(m_pDataModel->PLANE_TYPE, 
 								&m_pDataModel->circle_points[0],
 								&m_pDataModel->planes[0],
 								&m_pDataModel->circle_points_in_plane[0],
@@ -834,11 +834,11 @@ void DCP::DCP06CircleControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 				//m_pDataModel->circle_points[0].sta = 1;
 				//m_pDataModel->circle_points[0].calc = 1;
 
-				DCP::DCP06ResCircleModelC* pModel = new DCP06ResCircleModelC;
+				DCP::ResCircleModel* pModel = new ResCircleModel;
 				pModel->circle_points = &m_pDataModel->circle_points[0];
-				if(GetController(RES_CIRCLE_CONTROLLER) == NULL)
+				if(GetController(RES_CIRCLE_CONTROLLER) == nullptr)
 				{
-					(void)AddController( RES_CIRCLE_CONTROLLER, new DCP::DCP06ResCircleControllerC(m_pDCP06Model) );
+					(void)AddController( RES_CIRCLE_CONTROLLER, new DCP::ResCircleController(m_pModel) );
 				}
 
 				(void)GetController(RES_CIRCLE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK);
@@ -857,7 +857,7 @@ void DCP::DCP06CircleControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 	// CIRCLE PLANE MEAS
 	if(lCtrlID == CIRCLE_PLANE_MEAS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( CIRCLE_PLANE_MEAS_CONTROLLER )->GetModel();		
+		DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( CIRCLE_PLANE_MEAS_CONTROLLER )->GetModel();		
 		
 		// copy values
 		memcpy(&m_pDataModel->planes[0].points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
@@ -872,7 +872,7 @@ void DCP::DCP06CircleControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 // ================================================================================================
 // Description: ConfirmClose
 // ================================================================================================
-bool DCP::DCP06CircleControllerC::ConfirmClose(bool bEsc)
+bool DCP::CircleController::ConfirmClose(bool bEsc)
 {
 	if(bEsc && PLANE_KEYS != 0)
 	{
@@ -886,27 +886,27 @@ bool DCP::DCP06CircleControllerC::ConfirmClose(bool bEsc)
 	}
 }
 /*
-bool DCP::DCP06CircleControllerC::Close(int lExitCode, bool bConfirmation)
+bool DCP::CircleController::Close(int lExitCode, bool bConfirmation)
 {
 	return true;
 }
 */
 // LOCAL
 // ================================================================================================
-// ====================================  DCP06CircleModelC  ===================================
+// ====================================  CircleModel  ===================================
 // ================================================================================================
 
 
 // ===========================================================================================
 // Description: Constructor
 // ===========================================================================================
-DCP::DCP06CircleModelC::DCP06CircleModelC(DCP06ModelC* pDCP06Model):m_pDCP06Model(pDCP06Model)
+DCP::CircleModel::CircleModel(Model* pModel):m_pModel(pModel)
 {
 	cx = 0.0;cy=0.0;cz=0.0, diameter=0.0,bR=0.0;
 	PLANE_TYPE = CIRCLE_POINTS_PLANE;
 	
-	pCommon = new DCP06CommonC(pDCP06Model);
-	pMsgBox = new DCP06MsgBoxC;
+	pCommon = new Common(pModel);
+	pMsgBox = new MsgBox;
 
 	memset(&temp_plane_table[0],0, sizeof(S_PLANE_BUFF));
 	memset(&planes[0],0, sizeof(S_PLANE_BUFF));
@@ -917,7 +917,7 @@ DCP::DCP06CircleModelC::DCP06CircleModelC(DCP06ModelC* pDCP06Model):m_pDCP06Mode
 // ===========================================================================================
 // Description: Destructor
 // ===========================================================================================
-DCP::DCP06CircleModelC::~DCP06CircleModelC()
+DCP::CircleModel::~CircleModel()
 {
 	if(pCommon)
 	{
@@ -936,7 +936,7 @@ DCP::DCP06CircleModelC::~DCP06CircleModelC()
 // ================================================================================================
 // Description: delete_circle
 // ================================================================================================
-void DCP::DCP06CircleModelC::delete_circle()
+void DCP::CircleModel::delete_circle()
 {
 	StringC msg;
 	StringC strActivePoint(L"");
@@ -963,7 +963,7 @@ void DCP::DCP06CircleModelC::delete_circle()
 // *************************************************************************************************
 //
 //**************************************************************************************************
-short DCP::DCP06CircleModelC::show_circle_points()
+short DCP::CircleModel::show_circle_points()
 {
 	StringC sMsg;
 	StringC sX(L" ");
@@ -1007,15 +1007,15 @@ short DCP::DCP06CircleModelC::show_circle_points()
 	sDiameter.LoadTxt(AT_DCP06, P_DCP_DIAMETER_TOK);
 	sRMS.LoadTxt(AT_DCP06, P_DCP_RMS_TOK);
 	*/
-	sprintf(cX,"%9.*f", m_pDCP06Model->m_nDecimals,cx);
-	sprintf(cY,"%9.*f", m_pDCP06Model->m_nDecimals,cy);
-	sprintf(cZ,"%9.*f", m_pDCP06Model->m_nDecimals,cz);
-	sprintf(cRadius,"%9.*f", m_pDCP06Model->m_nDecimals,diameter);
-	//sprintf(cDiameter,"%9.*f", m_pDCP06Model->m_nDecimals, diameter *2);
-	sprintf(vI,"%9.*f", 6 /*m_pDCP06Model->m_nDecimals*/,vi);
-	sprintf(vJ,"%9.*f", 6 /*m_pDCP06Model->m_nDecimals*/,vj);
-	sprintf(vK,"%9.*f", 6 /*m_pDCP06Model->m_nDecimals*/,vk);
-	sprintf(cRms,"%9.*f", m_pDCP06Model->m_nDecimals,rms_diameter);
+	sprintf(cX,"%9.*f", m_pModel->m_nDecimals,cx);
+	sprintf(cY,"%9.*f", m_pModel->m_nDecimals,cy);
+	sprintf(cZ,"%9.*f", m_pModel->m_nDecimals,cz);
+	sprintf(cRadius,"%9.*f", m_pModel->m_nDecimals,diameter);
+	//sprintf(cDiameter,"%9.*f", m_pModel->m_nDecimals, diameter *2);
+	sprintf(vI,"%9.*f", 6 /*m_pModel->m_nDecimals*/,vi);
+	sprintf(vJ,"%9.*f", 6 /*m_pModel->m_nDecimals*/,vj);
+	sprintf(vK,"%9.*f", 6 /*m_pModel->m_nDecimals*/,vk);
+	sprintf(cRms,"%9.*f", m_pModel->m_nDecimals,rms_diameter);
 
 	
 	sMsg = sCenterPoint;

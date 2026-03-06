@@ -54,7 +54,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -68,19 +68,19 @@
 
 // USER DIALOG
 
-DCP::DCP06SeparateRecDlgC::DCP06SeparateRecDlgC(DCP::DCP06ModelC *pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pDCP06Model(pDCP06Model), angle_ok(false), dist_ok(false), dDist(0.0), dHor(0.0), 
+DCP::SeparateRecDialog::SeparateRecDialog(DCP::Model *pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+	m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel), angle_ok(false), dist_ok(false), dDist(0.0), dHor(0.0), 
 	dVer(0.0),m_pCommon(0)/*,m_pInfo(0)*/,iInfoInd(0)
 {
 	//SetTxtApplicationId(AT_DCP06);
 	strInfoText.LoadTxt(AT_DCP06,P_DCP_INFO_TOK);
 
-	m_pDCP06Model->active_tool = 0;
+	m_pModel->active_tool = 0;
 }
 
 
             // Description: Destructor
-DCP::DCP06SeparateRecDlgC::~DCP06SeparateRecDlgC()
+DCP::SeparateRecDialog::~SeparateRecDialog()
 {
    	 //m_pTimer.KillTimer();
 
@@ -91,11 +91,11 @@ DCP::DCP06SeparateRecDlgC::~DCP06SeparateRecDlgC()
 	 }
 }
 
-void DCP::DCP06SeparateRecDlgC::OnInitDialog(void)
+void DCP::SeparateRecDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 
 	// Add fields to dialog
 	m_pPointId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -150,7 +150,7 @@ void DCP::DCP06SeparateRecDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_SEPARATE_RECORDING_TOK,0);
 }
 
-void DCP::DCP06SeparateRecDlgC::OnDialogActivated()
+void DCP::SeparateRecDialog::OnDialogActivated()
 {
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );	
 	//StartCycle( 2000 / GUI::TimerC::iMS_PER_TICK);
@@ -158,20 +158,20 @@ void DCP::DCP06SeparateRecDlgC::OnDialogActivated()
 	
 }
 
-//void DCP::DCP06SeparateRecDlgC::OnTimer(void)
+//void DCP::SeparateRecDialog::OnTimer(void)
 //{
 //	StringC sMsg = m_pCommon->get_info_text(iInfoInd);
 //	
 //	//m_pInfo->SetText(strInfoText + sMsg);
 //	GUI::DesktopC::Instance()->MessageShow(strInfoText + sMsg,true);
 //}
-void DCP::DCP06SeparateRecDlgC::UpdateData()
+void DCP::SeparateRecDialog::UpdateData()
 {
 
 }
 
 // Description: refresh all controls
-void DCP::DCP06SeparateRecDlgC::RefreshControls()
+void DCP::SeparateRecDialog::RefreshControls()
 {
 	if(m_pPointId &&  m_pX && m_pY && m_pZ)
 	{
@@ -188,26 +188,26 @@ void DCP::DCP06SeparateRecDlgC::RefreshControls()
 			GetDataModel()->m_pPointBuff[0].z = dZ;
 			
 			char temp[100];
-			sprintf(temp,"%9.*f",m_pDCP06Model->m_nDecimals,GetDataModel()->m_pPointBuff[0].x); 
+			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].x); 
 			m_pX->GetStringInputCtrl()->SetString(temp);
 
-			sprintf(temp,"%9.*f",m_pDCP06Model->m_nDecimals,GetDataModel()->m_pPointBuff[0].y); 
+			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].y); 
 			m_pY->GetStringInputCtrl()->SetString(temp);
 
-			sprintf(temp,"%9.*f",m_pDCP06Model->m_nDecimals,GetDataModel()->m_pPointBuff[0].z); 
+			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].z); 
 			m_pZ->GetStringInputCtrl()->SetString(temp);
 		}
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06SeparateRecDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::SeparateRecDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06PointBuffModelC* pDCP06Model = dynamic_cast< DCP::DCP06PointBuffModelC* >( pModel );
+    DCP::PointBuffModel* pModel = dynamic_cast< DCP::PointBuffModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -216,16 +216,16 @@ bool DCP::DCP06SeparateRecDlgC::SetModel( GUI::ModelC* pModel )
     return false;
 }
 // Description: Hello World model
-DCP::DCP06PointBuffModelC* DCP::DCP06SeparateRecDlgC::GetDataModel() const
+DCP::PointBuffModel* DCP::SeparateRecDialog::GetDataModel() const
 {
-    return (DCP::DCP06PointBuffModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::PointBuffModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-void DCP::DCP06SeparateRecDlgC::PointDelete()
+void DCP::SeparateRecDialog::PointDelete()
 {
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 	StringC strActivePoint(L"");
 
@@ -238,29 +238,29 @@ void DCP::DCP06SeparateRecDlgC::PointDelete()
 }
 
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06SeparateRecControllerC::DCP06SeparateRecControllerC(DCP::DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model),m_pCommon(0), poVideoDlg(0), m_bCamera(false)
+DCP::SeparateRecController::SeparateRecController(DCP::Model *pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel),m_pCommon(0), poVideoDlg(0), m_bCamera(false)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
     SetTitle(StringC( AT_DCP06, T_DCP_SEPARATE_RECORDING_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06SeparateRecDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::SeparateRecDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( SEPARATE_RECORDING_DLG, m_pDlg, true );
 
     // Set the function key
 	
-	isATR = pDCP06Model->isATR;
+	isATR = pModel->isATR;
     show_function_keys();
 
     
@@ -269,7 +269,7 @@ DCP::DCP06SeparateRecControllerC::DCP06SeparateRecControllerC(DCP::DCP06ModelC *
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-void DCP::DCP06SeparateRecControllerC::show_function_keys()
+void DCP::SeparateRecController::show_function_keys()
 {
 
 	ResetFunctionKeys();
@@ -334,7 +334,7 @@ void DCP::DCP06SeparateRecControllerC::show_function_keys()
 	GUI::DesktopC::Instance()->UpdateFunctionKeys();
 }
 
-DCP::DCP06SeparateRecControllerC::~DCP06SeparateRecControllerC()
+DCP::SeparateRecController::~SeparateRecController()
 {
 	if(m_pCommon)
 	{
@@ -343,7 +343,7 @@ DCP::DCP06SeparateRecControllerC::~DCP06SeparateRecControllerC()
 	}
 }
 // Description: Route model to everybody else
-bool DCP::DCP06SeparateRecControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::SeparateRecController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -354,12 +354,12 @@ bool DCP::DCP06SeparateRecControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -370,7 +370,7 @@ bool DCP::DCP06SeparateRecControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Handle change of position values
-void DCP::DCP06SeparateRecControllerC::OnF2Pressed()
+void DCP::SeparateRecController::OnF2Pressed()
 {
 	if(m_bCamera)
 	{
@@ -390,18 +390,18 @@ void DCP::DCP06SeparateRecControllerC::OnF2Pressed()
 		//DisableFunctionKey(FK5);
 		DisableFunctionKey(FK6);
 
-		DCP::DCP06MeasDistModelC* pModel = new DCP06MeasDistModelC;
+		DCP::MeasDistModel* pModel = new MeasDistModel;
 
-		if(GetController(MEAS_DIST_CONTROLLER) == NULL)
+		if(GetController(MEAS_DIST_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::DCP06MeasDistControllerC(m_pDCP06Model));
+			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::MeasDistController(m_pModel));
 		}
 		(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MEAS_DIST_CONTROLLER, true);
 	}
 }
 // Description: Handle change of position values
-void DCP::DCP06SeparateRecControllerC::OnF3Pressed()
+void DCP::SeparateRecController::OnF3Pressed()
 {
 	if(m_bCamera)
 	{
@@ -427,7 +427,7 @@ void DCP::DCP06SeparateRecControllerC::OnF3Pressed()
 
 
 	/*
-    if (m_pDCP06MeasDlg == NULL)
+    if (m_pMeasureDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -435,7 +435,7 @@ void DCP::DCP06SeparateRecControllerC::OnF3Pressed()
 
     // Update model
     // Set it to hello world dialog
-    m_pDCP06MeasDlg->UpdateData();
+    m_pMeasureDlg->UpdateData();
 
     // Remove the following statement if you don't want an exit
     // to the main menu
@@ -443,9 +443,9 @@ void DCP::DCP06SeparateRecControllerC::OnF3Pressed()
 	*/
 }
 // Description: Handle change of position values
-void DCP::DCP06SeparateRecControllerC::OnF6Pressed()
+void DCP::SeparateRecController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -470,7 +470,7 @@ void DCP::DCP06SeparateRecControllerC::OnF6Pressed()
 	}
    
 }
-void DCP::DCP06SeparateRecControllerC::OnSHF1Pressed()
+void DCP::SeparateRecController::OnSHF1Pressed()
 {
 	/* CAPTIVATE
 	if( ABL::VideoDialogC::IsCameraAvailable(CFA::CT_OVC) )
@@ -505,48 +505,48 @@ void DCP::DCP06SeparateRecControllerC::OnSHF1Pressed()
 	show_function_keys();
 }
 // DEL
-void DCP::DCP06SeparateRecControllerC::OnSHF2Pressed()
+void DCP::SeparateRecController::OnSHF2Pressed()
 {
 	m_pDlg->PointDelete();
 }
 
 // INIT
-void DCP::DCP06SeparateRecControllerC::OnSHF3Pressed()
+void DCP::SeparateRecController::OnSHF3Pressed()
 {
-	if(GetController(INIT_CONTROLLER) == NULL)
+	if(GetController(INIT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC );
+		(void)AddController( INIT_CONTROLLER, new DCP::InitializationController );
 	}
-	(void)GetController( INIT_CONTROLLER )->SetModel( m_pDCP06Model);
+	(void)GetController( INIT_CONTROLLER )->SetModel( m_pModel);
 	SetActiveController(INIT_CONTROLLER, true);
 }
 
 // TOOL
-void DCP::DCP06SeparateRecControllerC::OnSHF4Pressed()
+void DCP::SeparateRecController::OnSHF4Pressed()
 {
 	/*
 	// SPECIAL MENU
-	DCP::DCP06SpecialMenuDlgC* poSpecialMenuDlg = new DCP::DCP06SpecialMenuDlgC();
+	DCP::SpecialMenuDialog* poSpecialMenuDlg = new DCP::SpecialMenuDialog();
 	AddDialog(SPECIAL_MENU,poSpecialMenuDlg); 	
 	SetActiveDialog(SPECIAL_MENU, true);
 	*/
-	if(GetController(TOOL_CONTROLLER) == NULL)
+	if(GetController(TOOL_CONTROLLER) == nullptr)
 	{
-		(void)AddController( TOOL_CONTROLLER, new DCP::DCP06ToolControllerC());
+		(void)AddController( TOOL_CONTROLLER, new DCP::ToolController());
 	}
-	(void)GetController( TOOL_CONTROLLER )->SetModel(m_pDCP06Model);
+	(void)GetController( TOOL_CONTROLLER )->SetModel(m_pModel);
 	SetActiveController(TOOL_CONTROLLER, true);
 
 }
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06SeparateRecControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::SeparateRecController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06SeparateRecControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::SeparateRecController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 		// MEASURE XYZ
 	if(lCtrlID == MEAS_DIST_CONTROLLER)
@@ -560,7 +560,7 @@ void DCP::DCP06SeparateRecControllerC::OnActiveControllerClosed( int lCtrlID, in
 
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06MeasDistModelC* pModel = (DCP::DCP06MeasDistModelC*) GetController( MEAS_DIST_CONTROLLER )->GetModel();		
+			DCP::MeasDistModel* pModel = (DCP::MeasDistModel*) GetController( MEAS_DIST_CONTROLLER )->GetModel();		
 			m_pDlg->dDist = pModel->m_dD;
 			m_pDlg->dist_ok = true;		
 

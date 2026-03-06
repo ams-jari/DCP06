@@ -81,7 +81,7 @@ using namespace DCP;
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP063DMeasDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::Meas3DDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -95,20 +95,20 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP063DMeasDlgC);
 
 
 // ================================================================================================
-// ====================================  DCP063DMeasDlgC             ==============================
+// ====================================  Meas3DDialog             ==============================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP063DMeasDlgC::DCP063DMeasDlgC(DCP063DMeasModelC* pMeasModel):GUI::ModelHandlerC(),GUI::/*Standard*/DialogC()
+DCP::Meas3DDialog::Meas3DDialog(Meas3DModel* pMeasModel):GUI::ModelHandlerC(),GUI::/*Standard*/DialogC()
 			,m_pFile(0),m_pPointId(0), m_pXDsg(0), m_pYDsg(0), m_pZDsg(0),
 			m_pXAct(0),m_pYAct(0),m_pZAct(0),m_pXDev(0),m_pYDev(0),m_pZDev(0),m_pDataModel(pMeasModel),
-			m_pPointIdObserver(OBS_METHOD_TO_PARAM0(DCP063DMeasDlgC, OnValueChanged), this),
-			m_pXObserver(OBS_METHOD_TO_PARAM0(DCP063DMeasDlgC, OnValueChanged), this),
-			m_pYObserver(OBS_METHOD_TO_PARAM0(DCP063DMeasDlgC, OnValueChanged), this),
-			m_pZObserver(OBS_METHOD_TO_PARAM0(DCP063DMeasDlgC, OnValueChanged), this),iInfoInd(0)
+			m_pPointIdObserver(OBS_METHOD_TO_PARAM0(Meas3DDialog, OnValueChanged), this),
+			m_pXObserver(OBS_METHOD_TO_PARAM0(Meas3DDialog, OnValueChanged), this),
+			m_pYObserver(OBS_METHOD_TO_PARAM0(Meas3DDialog, OnValueChanged), this),
+			m_pZObserver(OBS_METHOD_TO_PARAM0(Meas3DDialog, OnValueChanged), this),iInfoInd(0)
 
 			//,m_pInfo(0)
 {
@@ -119,7 +119,7 @@ DCP::DCP063DMeasDlgC::DCP063DMeasDlgC(DCP063DMeasModelC* pMeasModel):GUI::ModelH
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP063DMeasDlgC::~DCP063DMeasDlgC()
+DCP::Meas3DDialog::~Meas3DDialog()
 {
 	if(m_pCommon)
 	{
@@ -133,7 +133,7 @@ DCP::DCP063DMeasDlgC::~DCP063DMeasDlgC()
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP063DMeasDlgC::OnInitDialog(void)
+void DCP::Meas3DDialog::OnInitDialog(void)
 {
 	
 	GUI::BaseDialogC::OnInitDialog();
@@ -197,7 +197,7 @@ void DCP::DCP063DMeasDlgC::OnInitDialog(void)
 	m_pXDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pXDsg->SetId(eXDsg);
 	m_pXDsg->SetText(StringC(AT_DCP05,P_DCP_X_DSG_TOK));
-	m_pXDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short) GetDCP06Model()->m_nDecimals);
+	m_pXDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short) GetModel()->m_nDecimals);
 	//m_pXDsg->GetFloatInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	//m_pXDsg->GetFloatInputCtrl()->SetRange(SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	//m_pXDsg->SetAutoColon(false);
@@ -211,7 +211,7 @@ void DCP::DCP063DMeasDlgC::OnInitDialog(void)
 	m_pYDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pYDsg->SetId(eYDsg);
 	m_pYDsg->SetText(StringC(AT_DCP05,P_DCP_Y_DSG_TOK));
-	m_pYDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
+	m_pYDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	//m_pYDsg->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pYDsg->SetEmptyAllowed(true);
 	
@@ -225,7 +225,7 @@ void DCP::DCP063DMeasDlgC::OnInitDialog(void)
 	m_pZDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pZDsg->SetId(eZDsg);
 	m_pZDsg->SetText(StringC(AT_DCP05,P_DCP_Z_DSG_TOK));
-	m_pZDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
+	m_pZDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	m_pZDsg->SetEmptyAllowed(true);
 	//m_pZDsg->SetAutoColon(false);
 	//m_pZDsg->SetColonPosition(9 * 11);
@@ -400,7 +400,7 @@ void DCP::DCP063DMeasDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnTimer
 // ================================================================================================
-//void DCP::DCP063DMeasDlgC::OnTimer(void)
+//void DCP::Meas3DDialog::OnTimer(void)
 //{
 //
 //	StringC sMsg = m_pCommon->get_info_text(iInfoInd);
@@ -412,12 +412,12 @@ void DCP::DCP063DMeasDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP::DCP063DMeasDlgC::OnDialogActivated()
+void DCP::Meas3DDialog::OnDialogActivated()
 {	
-	//DCP06MsgBoxC msgbox;
-	//msgbox.ShowMessageOk(GetDCP06Model()->ADFFileName);
-	m_pDataModel->m_pFileFunc->setFile(GetDCP06Model()->ADFFileName);
-	m_pCommon = new DCP06CommonC(GetDCP06Model());
+	//MsgBox msgbox;
+	//msgbox.ShowMessageOk(GetModel()->ADFFileName);
+	m_pDataModel->m_pFileFunc->setFile(GetModel()->ADFFileName);
+	m_pCommon = new Common(GetModel());
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 	//m_pTimer.StartCycle(2000);//.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 	//m_pTimer.StartOneShot(5000);
@@ -427,14 +427,14 @@ void DCP::DCP063DMeasDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP063DMeasDlgC::UpdateData()
+void DCP::Meas3DDialog::UpdateData()
 {
 }
 
 // ================================================================================================
 // Description: refresh all controls
 // ================================================================================================
-void DCP::DCP063DMeasDlgC::RefreshControls()
+void DCP::Meas3DDialog::RefreshControls()
 {
 	if(m_pFile && m_pPointId && m_pXDsg && m_pYDsg && m_pZDsg && m_pXAct &&
 		m_pYAct && m_pZAct && m_pXDev &&
@@ -527,13 +527,13 @@ void DCP::DCP063DMeasDlgC::RefreshControls()
 // ================================================================================================
 // Description: OnValueChanged
 // ================================================================================================
-void DCP::DCP063DMeasDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
+void DCP::Meas3DDialog::OnValueChanged(int unNotifyCode,  int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
-		//short iCurrentPno = GetDCP06Model()->iCurrentPoint;
-		DCP06CommonC common(GetDCP06Model());
+		//short iCurrentPno = GetModel()->iCurrentPoint;
+		Common common(GetModel());
 		if(ulParam2 == ePointId)
 		{
 			StringC sPid;
@@ -559,7 +559,7 @@ void DCP::DCP063DMeasDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 			if (ulParam2 == eXDsg)
 			{
 				if(!m_pXDsg->GetFloatInputCtrl()->IsEmpty())
-					sprintf(m_pDataModel->xdes_ptr,"%9.*f",GetDCP06Model()->m_nDecimals,m_pXDsg->GetFloatInputCtrl()->GetDouble());
+					sprintf(m_pDataModel->xdes_ptr,"%9.*f",GetModel()->m_nDecimals,m_pXDsg->GetFloatInputCtrl()->GetDouble());
 				else
 					sprintf(m_pDataModel->xdes_ptr,"%9.9s"," ");
 				m_pDataModel->save_point();
@@ -568,7 +568,7 @@ void DCP::DCP063DMeasDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 			else if (ulParam2 == eYDsg)
 			{
 				if(!m_pYDsg->GetFloatInputCtrl()->IsEmpty())
-					sprintf(m_pDataModel->ydes_ptr,"%9.*f",GetDCP06Model()->m_nDecimals,m_pYDsg->GetFloatInputCtrl()->GetDouble());
+					sprintf(m_pDataModel->ydes_ptr,"%9.*f",GetModel()->m_nDecimals,m_pYDsg->GetFloatInputCtrl()->GetDouble());
 				else
 					sprintf(m_pDataModel->ydes_ptr,"%9.9s"," ");
 				m_pDataModel->save_point();
@@ -578,7 +578,7 @@ void DCP::DCP063DMeasDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 			else if(ulParam2 == eZDsg)
 			{
 				if(!m_pZDsg->GetFloatInputCtrl()->IsEmpty())
-					sprintf(m_pDataModel->zdes_ptr,"%9.*f",GetDCP06Model()->m_nDecimals,m_pZDsg->GetFloatInputCtrl()->GetDouble());
+					sprintf(m_pDataModel->zdes_ptr,"%9.*f",GetModel()->m_nDecimals,m_pZDsg->GetFloatInputCtrl()->GetDouble());
 				else
 					sprintf(m_pDataModel->zdes_ptr,"%9.9s"," ");
 
@@ -593,14 +593,14 @@ void DCP::DCP063DMeasDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
 // ================================================================================================
 // Description: SetModel
 // ================================================================================================
-bool DCP::DCP063DMeasDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::Meas3DDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -610,25 +610,25 @@ bool DCP::DCP063DMeasDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // ================================================================================================
-// Description: GetDCP06Model
+// Description: GetModel
 // ================================================================================================
-DCP::DCP06ModelC* DCP::DCP063DMeasDlgC::GetDCP06Model() const
+DCP::Model* DCP::Meas3DDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 
 // ================================================================================================
-// ====================================  DCP063DMeasControllerC ===================================
+// ====================================  Meas3DController ===================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP063DMeasControllerC::DCP063DMeasControllerC(bool bShaft, DCP::DCP06ModelC* pDCP06Model )
-    : m_pDlg( NULL ),m_bPointMenu(false),m_bShaft(bShaft),poVideoDlg(0),m_bCamera(false)
+DCP::Meas3DController::Meas3DController(bool bShaft, DCP::Model* pModel )
+    : m_pDlg( nullptr ),m_bPointMenu(false),m_bShaft(bShaft),poVideoDlg(0),m_bCamera(false)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -639,13 +639,13 @@ DCP::DCP063DMeasControllerC::DCP063DMeasControllerC(bool bShaft, DCP::DCP06Model
 	else
 		SetTitle( StringC(AT_DCP05, T_DCP_3DSHAFT_ALIGMENT_TOK ));
 
-	msgbox  = new DCP06MsgBoxC;
+	msgbox  = new MsgBox;
 		
 	// create model
-	m_pDataModel = new DCP063DMeasModelC(pDCP06Model);
+	m_pDataModel = new Meas3DModel(pModel);
     
 	// Create a dialog
-    m_pDlg = new DCP::DCP063DMeasDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::Meas3DDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( _3DMEAS_DLG, m_pDlg, true );
 
 	
@@ -658,7 +658,7 @@ DCP::DCP063DMeasControllerC::DCP063DMeasControllerC(bool bShaft, DCP::DCP06Model
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP063DMeasControllerC::~DCP063DMeasControllerC()
+DCP::Meas3DController::~Meas3DController()
 {
 	if(m_pDataModel)
 	{
@@ -680,17 +680,17 @@ DCP::DCP063DMeasControllerC::~DCP063DMeasControllerC()
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnControllerActivated(void)
+void DCP::Meas3DController::OnControllerActivated(void)
 {
 	show_function_keys();
-	m_pDataModel->set_dcp05_model(m_pDlg->GetDCP06Model());
-	m_pCommon = new DCP06CommonC(m_pDlg->GetDCP06Model());
+	m_pDataModel->set_dcp05_model(m_pDlg->GetModel());
+	m_pCommon = new Common(m_pDlg->GetModel());
 }
 
 // ================================================================================================
 // Description: show_function_keys
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::show_function_keys()
+void DCP::Meas3DController::show_function_keys()
 {
 	ResetFunctionKeys();
 
@@ -770,7 +770,7 @@ void DCP::DCP063DMeasControllerC::show_function_keys()
 			vDef.strLable = StringC(AT_DCP05,K_DCP_ALL_TOK);
 			SetFunctionKey( FK1, vDef );
 
-			if(m_pDlg->GetDCP06Model()->isATR)
+			if(m_pDlg->GetModel()->isATR)
 			{
 				vDef.strLable = StringC(AT_DCP05,K_DCP_DIST_TOK);
 				SetFunctionKey( FK2, vDef );
@@ -812,7 +812,7 @@ void DCP::DCP063DMeasControllerC::show_function_keys()
 			SetFunctionKey( SHFK5, vDef );
 
 
-			//if(m_pDlg->GetDCP06Model()->bDemoMode == true)
+			//if(m_pDlg->GetModel()->bDemoMode == true)
 			//{
  				//DisableFunctionKey(SHFK4);
 				//DisableFunctionKey(SHFK5);
@@ -829,7 +829,7 @@ void DCP::DCP063DMeasControllerC::show_function_keys()
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP063DMeasControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::Meas3DController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -840,12 +840,12 @@ bool DCP::DCP063DMeasControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -858,7 +858,7 @@ bool DCP::DCP063DMeasControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: F1
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnF1Pressed()
+void DCP::Meas3DController::OnF1Pressed()
 {
 	if(m_bPointMenu)
 	{
@@ -894,8 +894,8 @@ void DCP::DCP063DMeasControllerC::OnF1Pressed()
 
 		m_pDataModel->set_xyz_mea_ptr();
 
-		if(m_pDlg->GetDCP06Model()->m_nOverWriteInfo && 
-			!m_pDlg->GetDCP06Model()->m_nAutoMatch)
+		if(m_pDlg->GetModel()->m_nOverWriteInfo && 
+			!m_pDlg->GetModel()->m_nAutoMatch)
 		{
 			if(!m_pCommon->strblank(m_pDataModel->xmea_ptr) || 
 				!m_pCommon->strblank(m_pDataModel->ymea_ptr) || 
@@ -922,14 +922,14 @@ void DCP::DCP063DMeasControllerC::OnF1Pressed()
 			DisableFunctionKey(FK5);
 			DisableFunctionKey(FK6);
 
-			DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
+			DCP::MeasXYZModel* pModel = new MeasXYZModel;
 			pModel->tooli = 1;
 			sprintf(pModel->sPointId,"%6.6s",m_pDataModel->pid_ptr);
 			m_pCommon->strbtrim(pModel->sPointId);
 
-			if(GetController(MEAS_XYZ_CONTROLLER) == NULL)
+			if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
 			{
-				(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDlg->GetDCP06Model()));
+				(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::MeasXYZController(m_pDlg->GetModel()));
 			}
 			(void)GetController( MEAS_XYZ_CONTROLLER )->SetModel( pModel);
 			SetActiveController(MEAS_XYZ_CONTROLLER, true);
@@ -942,14 +942,14 @@ void DCP::DCP063DMeasControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F2
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnF2Pressed()
+void DCP::Meas3DController::OnF2Pressed()
 {
 	if(m_bPointMenu)
 	{	
 
 		// add point
 
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
@@ -962,7 +962,7 @@ void DCP::DCP063DMeasControllerC::OnF2Pressed()
 			m_pDataModel->m_pFileFunc->get_next_point_id(buffer);
 
 			//if(get_AUTO_MATCH() == FALSE)
-			if(!m_pDlg->GetDCP06Model()->m_nAutoMatch)
+			if(!m_pDlg->GetModel()->m_nAutoMatch)
 			{
 					/*
 					add_point(FormFile_,buff);
@@ -970,21 +970,21 @@ void DCP::DCP063DMeasControllerC::OnF2Pressed()
 						DSP_MODE = SINGLE;
 					}
 					*/
-				DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+				DCP::InputTextModel* pModel = new InputTextModel;
 				pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_POINT_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = StringC(buffer);
 
-				if ( NULL == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
+				if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
 				{
 					USER_APP_VERIFY( false );
 					return;
 				}
 
-				if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
+				if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
 				{
-					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC(m_pDlg->GetDCP06Model() ));
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController(m_pDlg->GetModel() ));
 				}
 
 				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -1020,11 +1020,11 @@ void DCP::DCP063DMeasControllerC::OnF2Pressed()
 			DisableFunctionKey(FK6);
 
 			// DIST
-			DCP::DCP06MeasDistModelC* pModel = new DCP06MeasDistModelC;
+			DCP::MeasDistModel* pModel = new MeasDistModel;
 
-			if(GetController(MEAS_DIST_CONTROLLER) == NULL)
+			if(GetController(MEAS_DIST_CONTROLLER) == nullptr)
 			{
-				(void)AddController( MEAS_DIST_CONTROLLER, new DCP::DCP06MeasDistControllerC(m_pDlg->GetDCP06Model()));
+				(void)AddController( MEAS_DIST_CONTROLLER, new DCP::MeasDistController(m_pDlg->GetModel()));
 			}
 			(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
 			SetActiveController(MEAS_DIST_CONTROLLER, true);
@@ -1036,7 +1036,7 @@ void DCP::DCP063DMeasControllerC::OnF2Pressed()
 // ================================================================================================
 // Description: F3
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnF3Pressed()
+void DCP::Meas3DController::OnF3Pressed()
 {
 	unsigned short unMeasHandle =
 		TPI::SensorC::Instance()->GetMeasHandleLast();
@@ -1083,7 +1083,7 @@ void DCP::DCP063DMeasControllerC::OnF3Pressed()
 // ================================================================================================
 // Description: F4
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnF4Pressed()
+void DCP::Meas3DController::OnF4Pressed()
 {
 
 	if(m_bPointMenu)
@@ -1124,22 +1124,22 @@ void DCP::DCP063DMeasControllerC::OnF4Pressed()
 		if(!m_bShaft)
 		{
 			m_pDataModel->set_xyz_des_ptr();
-			if(!m_pDlg->GetDCP06Model()->m_nDesignValues)	
+			if(!m_pDlg->GetModel()->m_nDesignValues)	
 				return;
 
 			if(m_pCommon->strblank(m_pDataModel->xdes_ptr) ||m_pCommon->strblank(m_pDataModel->ydes_ptr) ||m_pCommon->strblank(m_pDataModel->zdes_ptr))
 				return;
 			
-			//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetDCP06Model()->active_coodinate_system);		
-			if(GetController(AIM_CONTROLLER) == NULL)
+			//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetModel()->active_coodinate_system);		
+			if(GetController(AIM_CONTROLLER) == nullptr)
 			{
-				(void)AddController( AIM_CONTROLLER, new DCP::DCP06AimControllerC(	atof(m_pDataModel->xdes_ptr),
+				(void)AddController( AIM_CONTROLLER, new DCP::AimController(	atof(m_pDataModel->xdes_ptr),
 																					atof(m_pDataModel->ydes_ptr),
 																					atof(m_pDataModel->zdes_ptr),
-																					m_pDlg->GetDCP06Model()->active_coodinate_system) );
+																					m_pDlg->GetModel()->active_coodinate_system) );
 			}
 
-			(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+			(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetModel());
 			SetActiveController(AIM_CONTROLLER, true);
 		}
 
@@ -1160,13 +1160,13 @@ void DCP::DCP063DMeasControllerC::OnF4Pressed()
 					return;
 				}
 			}
-			DCP06ShaftLineModelC *pModel = new DCP06ShaftLineModelC();
+			ShaftLineModel *pModel = new ShaftLineModel();
 			sprintf(pModel->pid,"%6.6s", m_pDataModel->pid_ptr);
 
-			//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetDCP06Model()->active_coodinate_system);		
-			if(GetController(SHAFT_ALIGMENT_LINE_CONTROLLER) == NULL)
+			//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetModel()->active_coodinate_system);		
+			if(GetController(SHAFT_ALIGMENT_LINE_CONTROLLER) == nullptr)
 			{
-				(void)AddController( SHAFT_ALIGMENT_LINE_CONTROLLER, new DCP::DCP06ShaftLineControllerC(m_pDlg->GetDCP06Model()));
+				(void)AddController( SHAFT_ALIGMENT_LINE_CONTROLLER, new DCP::ShaftLineController(m_pDlg->GetModel()));
 			}
 
 			(void)GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->SetModel(pModel);
@@ -1181,11 +1181,11 @@ void DCP::DCP063DMeasControllerC::OnF4Pressed()
 // ================================================================================================
 // Description: F5
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnF5Pressed()
+void DCP::Meas3DController::OnF5Pressed()
 {
 	if(m_bPointMenu)
 	{
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
@@ -1194,14 +1194,14 @@ void DCP::DCP063DMeasControllerC::OnF5Pressed()
 		if(m_pDataModel->m_pFileFunc->IsOpen() && m_pDataModel->file_updated == 1)
 			m_pDataModel->m_pFileFunc->add_header_to_adf();
 
-		if(GetController(FILE_CONTROLLER) == NULL)
+		if(GetController(FILE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( FILE_CONTROLLER, new DCP::DCP06FileControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( FILE_CONTROLLER, new DCP::FileController(m_pDlg->GetModel()) );
 		}
 
 		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_PLANE_MEAS_TOK);
 
-		(void)GetController( FILE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		(void)GetController( FILE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(FILE_CONTROLLER, true);
 
 		m_bPointMenu = false;	
@@ -1210,7 +1210,7 @@ void DCP::DCP063DMeasControllerC::OnF5Pressed()
 	}
 	else
 	{
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
@@ -1228,9 +1228,9 @@ void DCP::DCP063DMeasControllerC::OnF5Pressed()
 // ================================================================================================
 // Description: F6
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnF6Pressed()
+void DCP::Meas3DController::OnF6Pressed()
 {
-  if (m_pDlg == NULL)
+  if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -1254,7 +1254,7 @@ void DCP::DCP063DMeasControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: SHF2
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnSHF1Pressed()
+void DCP::Meas3DController::OnSHF1Pressed()
 {
 	
 	/* CAPTIVATE TBD 
@@ -1291,7 +1291,7 @@ void DCP::DCP063DMeasControllerC::OnSHF1Pressed()
 // ================================================================================================
 // Description: SHF2
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnSHF2Pressed()
+void DCP::Meas3DController::OnSHF2Pressed()
 {
 	if(m_bPointMenu)
 	{
@@ -1326,11 +1326,11 @@ void DCP::DCP063DMeasControllerC::OnSHF2Pressed()
 	else
 	{
 		// INIT
-		if(GetController(INIT_CONTROLLER) == NULL)
+		if(GetController(INIT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC );
+			(void)AddController( INIT_CONTROLLER, new DCP::InitializationController );
 		}
-		(void)GetController( INIT_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+		(void)GetController( INIT_CONTROLLER )->SetModel( m_pDlg->GetModel());
 		SetActiveController(INIT_CONTROLLER, true);
 	}
 }
@@ -1338,13 +1338,13 @@ void DCP::DCP063DMeasControllerC::OnSHF2Pressed()
 // ================================================================================================
 // Description: SHF3
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnSHF3Pressed()
+void DCP::Meas3DController::OnSHF3Pressed()
 {
-	if(GetController(SPECIAL_MENU_CONTROLLER) == NULL)
+	if(GetController(SPECIAL_MENU_CONTROLLER) == nullptr)
 	{
-		(void)AddController( SPECIAL_MENU_CONTROLLER, new DCP::DCP06SpecialMenuControllerC (m_pDlg->GetDCP06Model()));
+		(void)AddController( SPECIAL_MENU_CONTROLLER, new DCP::SpecialMenuController (m_pDlg->GetModel()));
 	}
-	(void)GetController( SPECIAL_MENU_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( SPECIAL_MENU_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(SPECIAL_MENU_CONTROLLER, true);
 }
 
@@ -1352,7 +1352,7 @@ void DCP::DCP063DMeasControllerC::OnSHF3Pressed()
 // ================================================================================================
 // Description: SHF4
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnSHF4Pressed()
+void DCP::Meas3DController::OnSHF4Pressed()
 {
 	ShowToolDlg();
 	
@@ -1361,10 +1361,10 @@ void DCP::DCP063DMeasControllerC::OnSHF4Pressed()
 // ================================================================================================
 // Description: SHF5
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnSHF5Pressed()
+void DCP::Meas3DController::OnSHF5Pressed()
 {
 	
-	DCP06CalcDist2PointsModelC* pModel = new DCP06CalcDist2PointsModelC;
+	CalculationDist2PointsModel* pModel = new CalculationDist2PointsModel;
 	int iCount = m_pDataModel->m_pFileFunc->GetPointList(&pModel->points[0],MAX_SELECT_POINTS, BOTH);
 	pModel->sFile = StringC(m_pDataModel->m_pFileFunc->getFileName());
 	pModel->m_iCounts = iCount;
@@ -1376,9 +1376,9 @@ void DCP::DCP063DMeasControllerC::OnSHF5Pressed()
 	pModel->sTitle = GetTitle();
 	pModel->sTitle += sTemp;
 
-	if(GetController(CALC_2_POINTS_CONTROLLER) == NULL)
+	if(GetController(CALC_2_POINTS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( CALC_2_POINTS_CONTROLLER, new DCP::DCP06CalcDist2PointsControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( CALC_2_POINTS_CONTROLLER, new DCP::CalculationDist2PointsController(m_pDlg->GetModel()));
 	}
 	(void)GetController( CALC_2_POINTS_CONTROLLER )->SetModel(pModel);
 	SetActiveController(CALC_2_POINTS_CONTROLLER, true);
@@ -1387,7 +1387,7 @@ void DCP::DCP063DMeasControllerC::OnSHF5Pressed()
 // ================================================================================================
 // Description: SHF6
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnSHF6Pressed()
+void DCP::Meas3DController::OnSHF6Pressed()
 {
 		// I<>II
 		TBL::ChangeFaceControllerC* poChangeFace = new TBL::ChangeFaceControllerC();
@@ -1399,7 +1399,7 @@ void DCP::DCP063DMeasControllerC::OnSHF6Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::Meas3DController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == CAMERA_DLG)
 	{
@@ -1417,14 +1417,14 @@ void DCP::DCP063DMeasControllerC::OnActiveDialogClosed( int lDlgID, int lExitCod
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	// File
 	if(lCtrlID == FILE_CONTROLLER) // && lExitCode == EC_KEY_CONT)
 	{
 		m_pDataModel->file_updated = 0;	
 		if(lExitCode == EC_KEY_CONT)
-			m_pDataModel->m_pFileFunc->setFile(m_pDlg->GetDCP06Model()->ADFFileName);
+			m_pDataModel->m_pFileFunc->setFile(m_pDlg->GetModel()->ADFFileName);
 	}
 
 	// MEASURE DIST
@@ -1439,7 +1439,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06MeasDistModelC* pModel = (DCP::DCP06MeasDistModelC*) GetController( MEAS_DIST_CONTROLLER )->GetModel();
+			DCP::MeasDistModel* pModel = (DCP::MeasDistModel*) GetController( MEAS_DIST_CONTROLLER )->GetModel();
 			int x;
 			x=1;
 		}
@@ -1456,12 +1456,12 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 		
 		if(lExitCode == EC_KEY_CONT)
 		{
-		DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
+		DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
 		m_pDataModel->x_temp = pModel->m_dX;
 		m_pDataModel->y_temp = pModel->m_dY;
 		m_pDataModel->z_temp= pModel->m_dZ;
 
-		if(m_pDlg->GetDCP06Model()->m_nAutoMatch)
+		if(m_pDlg->GetModel()->m_nAutoMatch)
 		{
 			int pno = m_pDataModel->m_pFileFunc->find_point(m_pDataModel->x_temp, m_pDataModel->y_temp, m_pDataModel->z_temp);
 
@@ -1472,7 +1472,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 					m_pDataModel->set_xyz_mea_ptr();
 
 					// show dialog
-					DCP06AutoMatchModelC* pModel = new DCP06AutoMatchModelC;
+					AutoMatchModel* pModel = new AutoMatchModel;
 					pModel->pno = pno;
 					pModel->xdsg = atof(m_pDataModel->xdes_ptr);
 					// 280110
@@ -1491,9 +1491,9 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 
 					pModel->pointid = StringC(m_pDataModel->pid_ptr);
 
-					if(GetController(AUTOMATCH_CONTROLLER) == NULL)
+					if(GetController(AUTOMATCH_CONTROLLER) == nullptr)
 					{
-						(void)AddController( AUTOMATCH_CONTROLLER, new DCP::DCP06AutoMatchControllerC(m_pDlg->GetDCP06Model()));
+						(void)AddController( AUTOMATCH_CONTROLLER, new DCP::AutoMatchController(m_pDlg->GetModel()));
 					}
 					(void)GetController( AUTOMATCH_CONTROLLER )->SetModel(pModel);
 					SetActiveController(AUTOMATCH_CONTROLLER, true);
@@ -1503,7 +1503,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 					m_pDataModel->DSP_MODE = SINGLE;
 					m_pDataModel->set_xyz_mea_ptr();
 					
-					if(m_pDlg->GetDCP06Model()->m_nOverWriteInfo)
+					if(m_pDlg->GetModel()->m_nOverWriteInfo)
 					//if(get_show_overwrite_info() == TRUE)
 					{
 						if( !m_pCommon->strblank(m_pDataModel->xmea_ptr) || 
@@ -1522,7 +1522,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 						}
 					}
 							
-					m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+					m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 					m_pDataModel->save_point();
 					*/
 				}	
@@ -1530,20 +1530,20 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 			}
 			else
 			{
-				m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+				m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 				m_pDataModel->save_point();
 
 				// Tool values to file
 				if(m_pDataModel->m_pFileFunc->IsOpen())
 				{
-					DCP06AmsToolLogC tool_log(m_pDataModel->m_pFileFunc->getFileName(),m_pDataModel->pid_ptr,m_pCommon,m_pDlg->GetDCP06Model());
+					AmsToolLog tool_log(m_pDataModel->m_pFileFunc->getFileName(),m_pDataModel->pid_ptr,m_pCommon,m_pDlg->GetModel());
 				}
 			}
 				
 			// Auto Increment codes
 			if(m_pDataModel->m_pFileFunc->IsOpen())
 			{
-				if(m_pDlg->GetDCP06Model()->m_nAutoIncrement)
+				if(m_pDlg->GetModel()->m_nAutoIncrement)
 				//if(get_AUTO_INCREMENT() == TRUE)
 				{
 					short ret = m_pDataModel->m_pFileFunc->form_next_pnt();
@@ -1561,7 +1561,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 	}
 	else if(lCtrlID == MEAS_XYZ_CONTROLLER)
 	{	/*
-		DCP06MsgBoxC MsgBox;
+		MsgBox MsgBox;
 		char temp[100];
 		sprintf(temp,"%s (%d)", "Exit code", lExitCode);
 		MsgBox.ShowMessageOk(StringC(temp));
@@ -1570,14 +1570,14 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 
 	if(lCtrlID == AUTOMATCH_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-			DCP::DCP06AutoMatchModelC* pModel = (DCP::DCP06AutoMatchModelC*) GetController( AUTOMATCH_CONTROLLER )->GetModel();		
+			DCP::AutoMatchModel* pModel = (DCP::AutoMatchModel*) GetController( AUTOMATCH_CONTROLLER )->GetModel();		
 			short pno = pModel->pno;
 			
 			m_pDataModel->m_pFileFunc->form_pnt(pno);
 			m_pDataModel->DSP_MODE = SINGLE;
 			m_pDataModel->set_xyz_mea_ptr();
 					
-			if(m_pDlg->GetDCP06Model()->m_nOverWriteInfo)
+			if(m_pDlg->GetModel()->m_nOverWriteInfo)
 					//if(get_show_overwrite_info() == TRUE)
 			{
 				if( !m_pCommon->strblank(m_pDataModel->xmea_ptr) || 
@@ -1593,38 +1593,38 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 						}
 						else
 						{
-							m_pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+							m_pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 							m_pDataModel->save_point();
 
 							// Tool values to file
 							if(m_pDataModel->m_pFileFunc->IsOpen())
 							{
-								DCP06AmsToolLogC tool_log(m_pDataModel->m_pFileFunc->getFileName(),m_pDataModel->pid_ptr,m_pCommon,m_pDlg->GetDCP06Model());
+								AmsToolLog tool_log(m_pDataModel->m_pFileFunc->getFileName(),m_pDataModel->pid_ptr,m_pCommon,m_pDlg->GetModel());
 							}
 
 						}
 					}
 					else
 					{
-							m_pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+							m_pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 							m_pDataModel->save_point();
 							// Tool values to file
 							if(m_pDataModel->m_pFileFunc->IsOpen())
 							{
-								DCP06AmsToolLogC tool_log(m_pDataModel->m_pFileFunc->getFileName(),m_pDataModel->pid_ptr,m_pCommon,m_pDlg->GetDCP06Model());
+								AmsToolLog tool_log(m_pDataModel->m_pFileFunc->getFileName(),m_pDataModel->pid_ptr,m_pCommon,m_pDlg->GetModel());
 							}
 					}
 
 			}
 			else
 			{
-				m_pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+				m_pCommon->copy_xyz_to_buffer(&pModel->xmea, &pModel->ymea, &pModel->zmea, m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 				m_pDataModel->save_point();
 
 				// Tool values to file
 				if(m_pDataModel->m_pFileFunc->IsOpen())
 				{
-					DCP06AmsToolLogC tool_log(m_pDataModel->m_pFileFunc->getFileName(),m_pDataModel->pid_ptr,m_pCommon,m_pDlg->GetDCP06Model());
+					AmsToolLog tool_log(m_pDataModel->m_pFileFunc->getFileName(),m_pDataModel->pid_ptr,m_pCommon,m_pDlg->GetModel());
 				}
 
 			}
@@ -1634,7 +1634,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 	// select point
 	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectPointModelC* pModel = (DCP::DCP06SelectPointModelC*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
+		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
 		StringC strSelectedPoint = pModel->m_strSelectedPoint;
 		short iSelectedPointId = pModel->m_iSelectedId;
 		m_pDataModel->m_pFileFunc->form_pnt(pModel->m_iSelectedId);
@@ -1663,7 +1663,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 	// Add point
 	if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 			char buffer[10]; buffer[0] = '\0';
 			m_pCommon->convert_to_ascii(strNewFile, buffer,DCP_POINT_ID_LENGTH + 1); // +1 280508
@@ -1674,45 +1674,45 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 	// CIRCLE
 	if(lCtrlID == CIRCLE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( CIRCLE_CONTROLLER )->GetModel();		
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( CIRCLE_CONTROLLER )->GetModel();		
 		m_pDataModel->x_temp = pModel->m_pPointBuff[0].x;
 		m_pDataModel->y_temp = pModel->m_pPointBuff[0].y;
 		m_pDataModel->z_temp= pModel->m_pPointBuff[0].z;
 			
-		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 		
 		// also diamter
-		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
+		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
 		m_pDataModel->save_point();
 	}
 
 	// SEPARATE
 	if(lCtrlID == SEPARATE_RECORDING_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( SEPARATE_RECORDING_CONTROLLER )->GetModel();		
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( SEPARATE_RECORDING_CONTROLLER )->GetModel();		
 		
 		if(pModel->m_pPointBuff[0].xsta)
-			sprintf(m_pDataModel->xmea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].x);
+			sprintf(m_pDataModel->xmea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].x);
 
 		if(pModel->m_pPointBuff[0].ysta)
-			sprintf(m_pDataModel->ymea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].y);
+			sprintf(m_pDataModel->ymea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].y);
 		
 		if(pModel->m_pPointBuff[0].zsta)
-			sprintf(m_pDataModel->zmea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].z);
+			sprintf(m_pDataModel->zmea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].z);
 
 		// also diamter
-		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
+		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
 		m_pDataModel->save_point();
 	}
 	//hiddenpoint HIDDENPOINT_CONTROLLER
 	if(lCtrlID == HIDDENPOINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( HIDDENPOINT_CONTROLLER )->GetModel();		
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( HIDDENPOINT_CONTROLLER )->GetModel();		
 		m_pDataModel->x_temp = pModel->m_pPointBuff[0].x;
 		m_pDataModel->y_temp = pModel->m_pPointBuff[0].y;
 		m_pDataModel->z_temp= pModel->m_pPointBuff[0].z;
 			
-		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 		
 		m_pDataModel->save_point();
 	}
@@ -1720,30 +1720,30 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 	// XorYorZ XYZ_CONTROLLER
 	if(lCtrlID == XYZ_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( XYZ_CONTROLLER )->GetModel();		
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( XYZ_CONTROLLER )->GetModel();		
 		
 		if(pModel->m_pPointBuff[0].xsta)
-			sprintf(m_pDataModel->xmea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].x);
+			sprintf(m_pDataModel->xmea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].x);
 
 		if(pModel->m_pPointBuff[0].ysta)
-			sprintf(m_pDataModel->ymea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].y);
+			sprintf(m_pDataModel->ymea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].y);
 		
 		if(pModel->m_pPointBuff[0].zsta)
-			sprintf(m_pDataModel->zmea_ptr,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].z);
+			sprintf(m_pDataModel->zmea_ptr,"%9.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].z);
 
 		// also diamter
-		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
+		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetModel()->m_nDecimals,pModel->m_pPointBuff[0].diameter);
 		m_pDataModel->save_point();
 	}
 
 	if(lCtrlID == MID_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( MID_POINT_CONTROLLER )->GetModel();	
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( MID_POINT_CONTROLLER )->GetModel();	
 		m_pDataModel->x_temp = pModel->m_pPointBuff[0].x;
 		m_pDataModel->y_temp =  pModel->m_pPointBuff[0].y;
 		m_pDataModel->z_temp=   pModel->m_pPointBuff[0].z;
 		
-		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 	
 		m_pDataModel->save_point();
 	}
@@ -1753,7 +1753,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 	{
 		char pid[10];
 		
-		DCP06ShaftLineModelC *pModel = (DCP::DCP06ShaftLineModelC*) GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->GetModel();	
+		ShaftLineModel *pModel = (DCP::ShaftLineModel*) GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->GetModel();	
 		sprintf(pid,"%-s", pModel->pid);
 		m_pCommon->strbtrim(pid);
 
@@ -1761,10 +1761,10 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 		m_pDataModel->y_temp = pModel->cy;
 		m_pDataModel->z_temp= pModel->cz;
 			
-		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 		
 		// also diamter
-		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetDCP06Model()->m_nDecimals,pModel->diameter);
+		sprintf(m_pDataModel->note_ptr,"%6.*f",m_pDlg->GetModel()->m_nDecimals,pModel->diameter);
 		m_pDataModel->save_point();
 
 
@@ -1784,7 +1784,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 		m_pDataModel->y_temp = pModel->y;
 		m_pDataModel->z_temp= pModel->z;
 			
-		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetDCP06Model()->m_nDecimals);
+		m_pCommon->copy_xyz_to_buffer(&m_pDataModel->x_temp, &m_pDataModel->y_temp, &m_pDataModel->z_temp,m_pDataModel->xmea_ptr,m_pDataModel->ymea_ptr,m_pDataModel->zmea_ptr,9,m_pDlg->GetModel()->m_nDecimals);
 		
 		if(pModel->active_line == X_LINE)
 		{
@@ -1810,7 +1810,7 @@ void DCP::DCP063DMeasControllerC::OnActiveControllerClosed( int lCtrlID, int lEx
 // ================================================================================================
 // Description: ConfirmClose
 // ================================================================================================
-bool DCP::DCP063DMeasControllerC::ConfirmClose(bool bEsc)
+bool DCP::Meas3DController::ConfirmClose(bool bEsc)
 {
 	if(bEsc && m_bPointMenu)
 	{
@@ -1827,18 +1827,18 @@ bool DCP::DCP063DMeasControllerC::ConfirmClose(bool bEsc)
 // ================================================================================================
 // Description: ShowSelectPointDlg
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::ShowSelectPointDlg()
+void DCP::Meas3DController::ShowSelectPointDlg()
 {
 	if(m_pDataModel->m_pFileFunc->IsOpen())
 	{
-		DCP::DCP06SelectPointModelC* pModel = new DCP06SelectPointModelC;
+		DCP::SelectPointModel* pModel = new SelectPointModel;
 		int iCount = m_pDataModel->m_pFileFunc->GetPointList(&pModel->points[0],MAX_SELECT_POINTS);
 		pModel->m_iCounts = iCount;
 		pModel->m_iSelectedId = m_pDataModel->m_pFileFunc->active_point_front;
 		
-		if(GetController(SELECT_POINT_CONTROLLER) == NULL)
+		if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP06SelectPointControllerC );
+			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
 		}
 
 		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_PLANE_MEAS_TOK);
@@ -1851,14 +1851,14 @@ void DCP::DCP063DMeasControllerC::ShowSelectPointDlg()
 // ================================================================================================
 // Description: ShowHiddenPointDlg
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::ShowHiddenPointDlg()
+void DCP::Meas3DController::ShowHiddenPointDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+	DCP::PointBuffModel* pModel = new PointBuffModel;
 	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
 
-	if(GetController(HIDDENPOINT_CONTROLLER) == NULL)
+	if(GetController(HIDDENPOINT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::DCP06HiddenPointControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::HiddenPointController(m_pDlg->GetModel()));
 	}
 	(void)GetController( HIDDENPOINT_CONTROLLER )->SetModel( pModel);
 	SetActiveController(HIDDENPOINT_CONTROLLER, true);
@@ -1867,13 +1867,13 @@ void DCP::DCP063DMeasControllerC::ShowHiddenPointDlg()
 // ================================================================================================
 // Description: ShowXorYorZDlg
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::ShowXorYorZDlg()
+void DCP::Meas3DController::ShowXorYorZDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+	DCP::PointBuffModel* pModel = new PointBuffModel;
 	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
-	if(GetController(XYZ_CONTROLLER) == NULL)
+	if(GetController(XYZ_CONTROLLER) == nullptr)
 	{
-		(void)AddController( XYZ_CONTROLLER, new DCP::DCP06XYZControllerC(m_pDlg->GetDCP06Model()) );
+		(void)AddController( XYZ_CONTROLLER, new DCP::XYZController(m_pDlg->GetModel()) );
 	}
 	(void)GetController( XYZ_CONTROLLER )->SetModel( pModel);
 	SetActiveController(XYZ_CONTROLLER, true);
@@ -1882,12 +1882,12 @@ void DCP::DCP063DMeasControllerC::ShowXorYorZDlg()
 // ================================================================================================
 // Description: ShowCircleDlg
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::ShowCircleDlg()
+void DCP::Meas3DController::ShowCircleDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
-	if(GetController(CIRCLE_CONTROLLER) == NULL)
+	DCP::PointBuffModel* pModel = new PointBuffModel;
+	if(GetController(CIRCLE_CONTROLLER) == nullptr)
 	{
-		(void)AddController( CIRCLE_CONTROLLER, new DCP::DCP06CircleControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( CIRCLE_CONTROLLER, new DCP::CircleController(m_pDlg->GetModel()));
 	}
 	(void)GetController( CIRCLE_CONTROLLER )->SetModel(pModel);
 	SetActiveController(CIRCLE_CONTROLLER, true);
@@ -1896,16 +1896,16 @@ void DCP::DCP063DMeasControllerC::ShowCircleDlg()
 // ================================================================================================
 // Description: ShowSeparateRecDlg
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::ShowSeparateRecDlg()
+void DCP::Meas3DController::ShowSeparateRecDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+	DCP::PointBuffModel* pModel = new PointBuffModel;
 
 	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
-	if(GetController(SEPARATE_RECORDING_CONTROLLER) == NULL)
+	if(GetController(SEPARATE_RECORDING_CONTROLLER) == nullptr)
 	{
-		(void)AddController( SEPARATE_RECORDING_CONTROLLER, new DCP::DCP06SeparateRecControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( SEPARATE_RECORDING_CONTROLLER, new DCP::SeparateRecController(m_pDlg->GetModel()));
 	}
 	(void)GetController( SEPARATE_RECORDING_CONTROLLER )->SetModel( pModel);
 	SetActiveController(SEPARATE_RECORDING_CONTROLLER, true);
@@ -1914,43 +1914,43 @@ void DCP::DCP063DMeasControllerC::ShowSeparateRecDlg()
 // ================================================================================================
 // Description: ShowHomePointsDlg
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::ShowHomePointsDlg()
+void DCP::Meas3DController::ShowHomePointsDlg()
 {
-	if(GetController(HOME_POINTS_CONTROLLER) == NULL)
+	if(GetController(HOME_POINTS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( HOME_POINTS_CONTROLLER, new DCP::DCP06HomePointsControllerC(m_pDlg->GetDCP06Model()) );
+		(void)AddController( HOME_POINTS_CONTROLLER, new DCP::HomePointsController(m_pDlg->GetModel()) );
 	}
-	(void)GetController( HOME_POINTS_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( HOME_POINTS_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(HOME_POINTS_CONTROLLER, true); 
 }
 
 // ================================================================================================
 // Description: ShowHomePointsDlg
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::ShowMidPointDlg()
+void DCP::Meas3DController::ShowMidPointDlg()
 {
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+	DCP::PointBuffModel* pModel = new PointBuffModel;
 
 	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
-	if(GetController(MID_POINT_CONTROLLER) == NULL)
+	if(GetController(MID_POINT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MID_POINT_CONTROLLER, new DCP::DCP06MidPointControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( MID_POINT_CONTROLLER, new DCP::MidPointController(m_pDlg->GetModel()));
 	}
 	(void)GetController( MID_POINT_CONTROLLER )->SetModel( pModel);
 	SetActiveController(MID_POINT_CONTROLLER, true);
 
-		//DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+		//DCP::MeasureModel* pModel = new MeasureModel;
 		//pModel->m_iPointsCount = 2;
 		//pModel->m_iMaxPoint = 2;
 		//pModel->m_iMinPoint = 2;
 	
 		//memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * 2);
 	
-		//if(GetController(MID_POINT_CONTROLLER) == NULL)
+		//if(GetController(MID_POINT_CONTROLLER) == nullptr)
 		//{
-		//	(void)AddController( MID_POINT_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()) );
+		//	(void)AddController( MID_POINT_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 		//}
 
 		//(void)GetController(MID_POINT_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_MID_POINT_TOK));
@@ -1962,29 +1962,29 @@ void DCP::DCP063DMeasControllerC::ShowMidPointDlg()
 // ================================================================================================
 // Description: ShowToolDlg
 // ================================================================================================
-void DCP::DCP063DMeasControllerC::ShowToolDlg()
+void DCP::Meas3DController::ShowToolDlg()
 {
-	if(GetController(TOOL_CONTROLLER) == NULL)
+	if(GetController(TOOL_CONTROLLER) == nullptr)
 	{
-		(void)AddController( TOOL_CONTROLLER, new DCP::DCP06ToolControllerC());
+		(void)AddController( TOOL_CONTROLLER, new DCP::ToolController());
 	}
-	(void)GetController( TOOL_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( TOOL_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(TOOL_CONTROLLER, true);
 }
 
 
 // ================================================================================================
-// ====================================  DCP063DMeasModelC           ==============================
+// ====================================  Meas3DModel           ==============================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP063DMeasModelC::DCP063DMeasModelC(DCP::DCP06ModelC* pDCP06Model):m_pDCP06Model(pDCP06Model),m_pCommon(0)
+DCP::Meas3DModel::Meas3DModel(DCP::Model* pModel):m_pModel(pModel),m_pCommon(0)
 {
-	m_pFileFunc = new AdfFileFunc(m_pDCP06Model);
+	m_pFileFunc = new AdfFileFunc(m_pModel);
 	m_pFileFunc->always_single = 1;
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 
 	DSP_MODE = SINGLE;
 	Xdes = 0.0;
@@ -2015,7 +2015,7 @@ DCP::DCP063DMeasModelC::DCP063DMeasModelC(DCP::DCP06ModelC* pDCP06Model):m_pDCP0
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP063DMeasModelC::~DCP063DMeasModelC()
+DCP::Meas3DModel::~Meas3DModel()
 {
 	if(m_pFileFunc)
 	{	
@@ -2035,7 +2035,7 @@ DCP::DCP063DMeasModelC::~DCP063DMeasModelC()
 // ================================================================================================
 // Description: set_xyz_mea_ptr
 // ================================================================================================
-void DCP::DCP063DMeasModelC::set_xyz_mea_ptr()
+void DCP::Meas3DModel::set_xyz_mea_ptr()
 {
 	
 	if(m_pFileFunc->IsOpen())
@@ -2090,7 +2090,7 @@ void DCP::DCP063DMeasModelC::set_xyz_mea_ptr()
 // ================================================================================================
 // Description: set_xyz_des_ptr
 // ================================================================================================
-void DCP::DCP063DMeasModelC::set_xyz_des_ptr()
+void DCP::Meas3DModel::set_xyz_des_ptr()
 {
 
 	if(m_pFileFunc->IsOpen())
@@ -2140,15 +2140,15 @@ void DCP::DCP063DMeasModelC::set_xyz_des_ptr()
 // ================================================================================================
 // Description: save_point
 // ================================================================================================
-void DCP::DCP063DMeasModelC::save_point()
+void DCP::Meas3DModel::save_point()
 {
 	if(m_pFileFunc->IsOpen())
 	{
-		//if(m_pDCP06Model->bDemoMode == true)
+		//if(m_pModel->bDemoMode == true)
 		//{
   //            	if(m_pFileFunc->active_point_front-1 >= 3)
 		//		{
-		//			DCP06MsgBoxC msgbox;
+		//			MsgBox msgbox;
 		//			StringC sMsg;
 		//			sMsg.LoadTxt(AT_DCP05,M_DCP_DEMO_3_POINT_TOK);
 		//			msgbox.ShowMessageOk(sMsg);
@@ -2176,7 +2176,7 @@ void DCP::DCP063DMeasModelC::save_point()
 }
 
 
-void DCP::DCP063DMeasModelC::set_dcp05_model(DCP06ModelC *pModel)
+void DCP::Meas3DModel::set_dcp05_model(Model *pModel)
 {
-	m_pDCP06Model = pModel;
+	m_pModel = pModel;
 }

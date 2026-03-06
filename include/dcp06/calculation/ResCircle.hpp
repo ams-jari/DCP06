@@ -51,20 +51,20 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06ResCircleDlgC;
-	//class DCP06ResCircleModelC;
-	//class DCP06SelectOnePointModelC;
+    class Model;
+	class ResCircleDialog;
+	//class ResCircleModel;
+	//class SelectOnePointModel;
 
     // Description: Tabbed controller for the Hello World application
 	
-    class DCP06ResCircleControllerC : public GUI::ControllerC
+    class ResCircleController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06ResCircleControllerC(DCP06ModelC *pDCP06Model, short m_iDisplay = 0);
-			~DCP06ResCircleControllerC();
+            ResCircleController(Model *pModel, short m_iDisplay = 0);
+			~ResCircleController();
 
             // Description: Handle change of position values
             //virtual void OnF1Pressed();
@@ -87,27 +87,27 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06ResCircleControllerC( const DCP06ResCircleControllerC& oDCP06ResCircleController )
+            ResCircleController( const ResCircleController& oResCircleController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06ResCircleControllerC& operator=( const DCP06ResCircleControllerC& oDCP06ResCircleController )
+            ResCircleController& operator=( const ResCircleController& oResCircleController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06ResCircleDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
-			DCP06CircleModelC* pDataModel;
+            ResCircleDialog* m_pDlg;
+			Model* m_pModel;
+			CircleModel* pDataModel;
 			short m_iDisplay;
     };
 	
 
-	class DCP06ResCircleDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
+	class ResCircleDialog: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
 	{
 	 public:
 
@@ -133,10 +133,10 @@ namespace DCP
 				CI_Deviation
 			};
 
-		   DCP06ResCircleDlgC(DCP06ModelC *pDCP06Model);
+		   ResCircleDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06ResCircleDlgC();
+            virtual ~ResCircleDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -153,7 +153,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06CircleModelC* GetDataModel() const;
+            CircleModel* GetDataModel() const;
 
 			//OBS::ObserverC m_pMultiColCtrlObserver;
 			//virtual void OnChanged(int unNotifyCode, int ulParam2);
@@ -161,11 +161,11 @@ namespace DCP
 		protected:
 			GUI::TextCtrlC* m_pInfo1;
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			// Description: add all controls
        
 
-			//OBS_DECLARE_EXECUTE(DCP06SelectOnePointDlgC);
+			//OBS_DECLARE_EXECUTE(SelectOnePointDialog);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -175,29 +175,29 @@ namespace DCP
 				StringC sDesignNonSelected;
 				//virtual void OnTimer(void);
 
-				DCP06CommonC* m_pCommon;
+				Common* m_pCommon;
 				double calc_pdist(S_LINE_BUFF *line, short pno);
 				double get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/);
 
 				StringC sTitle;
 				
 
-				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::SelectMultiPointsDialog::remove_point_table(short sel);
+				//void DCP::SelectMultiPointsDialog::add_point_table(short sel, bool bActual);
  	};
 
 	/*
-	class DCP06ResCircleModelC : public GUI::ModelC
+	class ResCircleModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06ResCircleModelC();
+            ResCircleModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06ResCircleModelC();
+            virtual ~ResCircleModel();
 			S_CIRCLE_BUFF circle_points[1];
 			S_CIRCLE_BUFF circle_in_plane[1];
 			StringC sCaption;

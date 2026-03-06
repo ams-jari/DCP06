@@ -53,19 +53,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP063DFbsDlgC;
-	class DCP063DFBSMeasModelC;
+	class Model;
+	class Fbs3DDialog;
+	class Fbs3DMeasModel;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP063DFbsControllerC : public GUI::ControllerC
+    class Fbs3DController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP063DFbsControllerC(DCP06ModelC* pDCP06Model);
-			~DCP063DFbsControllerC();
+            Fbs3DController(Model* pModel);
+			~Fbs3DController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed(); 
@@ -95,21 +95,21 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP063DFbsControllerC( const DCP063DFbsControllerC& oDCP063DFbsController )
+            Fbs3DController( const Fbs3DController& oFbs3DController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP063DFbsControllerC& operator=( const DCP063DFbsControllerC& o3DFbsToolController )
+            Fbs3DController& operator=( const Fbs3DController& o3DFbsToolController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP063DFbsDlgC* m_pDlg;
-			DCP063DFBSMeasModelC* m_pDataModel;
+            Fbs3DDialog* m_pDlg;
+			Fbs3DMeasModel* m_pDataModel;
 			void change_dsp();
 			StringC sMsg;
 
@@ -126,7 +126,7 @@ namespace DCP
     };
 
 	
-	class DCP063DFbsDlgC:public GUI::DialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class Fbs3DDialog:public GUI::DialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -146,10 +146,10 @@ namespace DCP
 				eInfo
 			};
 
-		   DCP063DFbsDlgC(DCP063DFBSMeasModelC* pDataModel);
+		   Fbs3DDialog(Fbs3DMeasModel* pDataModel);
 
             // Description: Destructor
-            virtual ~DCP063DFbsDlgC();
+            virtual ~Fbs3DDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -161,7 +161,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06ModelC* GetDCP06Model() const;
+			Model* GetModel() const;
 			
 	protected:
   			
@@ -177,9 +177,9 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pYDev;
 			GUI::ComboLineCtrlC* m_pZDev;
 
-			OBS_DECLARE_EXECUTE(DCP063DFbsDlgC);
+			OBS_DECLARE_EXECUTE(Fbs3DDialog);
 	private:
-		DCP063DFBSMeasModelC* m_pDataModel;
+		Fbs3DMeasModel* m_pDataModel;
 		OBS::ObserverC m_pPointIdObserver;
 		OBS::ObserverC m_pXObserver;
 		OBS::ObserverC m_pYObserver;
@@ -189,27 +189,27 @@ namespace DCP
 		//GUI::TimerC m_pTimer;
 		short iInfoInd;
 		StringC strInfoText;
-		DCP06CommonC* m_pCommon;
+		Common* m_pCommon;
 			StringC sFront;
 			StringC sBack;
 			StringC sSingle;
 			StringC sFrontBack;
 	};
-	 class DCP063DFBSMeasModelC : public GUI::ModelC
+	 class Fbs3DMeasModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP063DFBSMeasModelC(DCP06ModelC* pDCP06Model);
+            Fbs3DMeasModel(Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP063DFBSMeasModelC();
+            virtual ~Fbs3DMeasModel();
 			
 			AdfFileFunc* pFileFunc;
-			DCP06CommonC* pCommon;
-			DCP06MsgBoxC* pMsgBox;
+			Common* pCommon;
+			MsgBox* pMsgBox;
 			char *xmea_ptr,*ymea_ptr,*zmea_ptr;
 			char *xdes_ptr,*ydes_ptr,*zdes_ptr;
 			char *pid_ptr,*note_ptr;

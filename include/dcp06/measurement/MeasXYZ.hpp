@@ -57,21 +57,21 @@ namespace ABL
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	//class DCP06MeasDlgC;
-	class DCP06MeasXYZModelC;
+	class Model;
+	//class MeasureDialog;
+	class MeasXYZModel;
 	class DCPSurveyModelC;
-	class DCP06ErrorHandlerC;
-	class DCP06AmsLogC;
+	class MeasErrorHandler;
+	class AmsLog;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06MeasXYZControllerC : public GUI::ControllerC, public TBL::MeasurementC
+    class MeasXYZController : public GUI::ControllerC, public TBL::MeasurementC
     {
         public:
 
             // Description: Constructor
-            DCP06MeasXYZControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06MeasXYZControllerC();
+            MeasXYZController(Model *pModel);
+			~MeasXYZController();
 
 
 			// Description: Route model to everybody else
@@ -89,27 +89,27 @@ namespace DCP
 			short get_xyz_values(double* x, double* y, double* z);
 
 			DCPSurveyModelC*   poSurveyModel;
-			DCP06ModelC*   poDCP06Model;
+			Model*   poModel;
 		protected:
 
 		private:
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06MeasXYZControllerC( const DCP06MeasXYZControllerC& oDCP05MeasXYZController )
+            MeasXYZController( const MeasXYZController& oMeasXYZController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06MeasXYZControllerC& operator=( const DCP06MeasXYZControllerC& oDCP05MeasXYZController )
+            MeasXYZController& operator=( const MeasXYZController& oMeasXYZController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP06MeasXYZModelC *m_pMeasXYZModel;
+			MeasXYZModel *m_pMeasXYZModel;
 
 			double m_dDist;
 			double m_dHor;
@@ -138,19 +138,19 @@ namespace DCP
 			double x_scs1, y_scs1, z_scs1, x_scs2, y_scs2, z_scs2, x_scs_tot, y_scs_tot, z_scs_tot;
 
 			void to_xyz(double dis, double hor, double ver, double *x, double *y, double *z, short tool, double *x_scs, double *y_scs, double *z_scs);
-			DCP06CommonC* m_pCommon;
+			Common* m_pCommon;
 			GUI::HourGlassC* poHourGlass;
 
     };
 
 	  // Description: Tabbed controller for the Hello World application
-    class DCP06DoMeasXYZControllerC : public GUI::ControllerC, public TBL::MeasurementC
+    class DoMeasXYZController : public GUI::ControllerC, public TBL::MeasurementC
     {
         public:
 
             // Description: Constructor
-            DCP06DoMeasXYZControllerC();
-			~DCP06DoMeasXYZControllerC();
+            DoMeasXYZController();
+			~DoMeasXYZController();
 
 
 			// Description: Route model to everybody else
@@ -168,7 +168,7 @@ namespace DCP
 			short get_xyz_values(double* x, double* y, double* z);
 
 			DCPSurveyModelC*   poSurveyModel;
-			DCP06ModelC*   poDCP06Model;
+			Model*   poModel;
 		protected:
 			virtual void OnOperationDistEvent(int unNotifyCode,  int ulOperationId);
 			virtual void OnOperationSearchEvent(int unNotifyCode, int ulOperationId);
@@ -180,26 +180,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06DoMeasXYZControllerC( const DCP06DoMeasXYZControllerC& oDCP06DoMeasXYZController )
+            DoMeasXYZController( const DoMeasXYZController& oDoMeasXYZController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06DoMeasXYZControllerC& operator=( const DCP06DoMeasXYZControllerC& oDCP06DoMeasXYZController )
+            DoMeasXYZController& operator=( const DoMeasXYZController& oDoMeasXYZController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-			DCP06MeasXYZModelC *m_pMeasXYZModel;
+			MeasXYZModel *m_pMeasXYZModel;
 
 			double m_dX;
 			double m_dY;
 			double m_dZ;
 			//TBL::MeasErrorHandlerC* poErrorHandler;
-			DCP06ErrorHandlerC* poErrorHandler;
+			MeasErrorHandler* poErrorHandler;
 
 			
 			
@@ -251,17 +251,17 @@ namespace DCP
             double           m_dDeltaHt;
     };
 
-	class DCP06MeasXYZModelC : public GUI::ModelC
+	class MeasXYZModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06MeasXYZModelC();
+            MeasXYZModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06MeasXYZModelC();
+            virtual ~MeasXYZModel();
 						
 			double m_dX;
 			double m_dY;
@@ -290,48 +290,48 @@ namespace DCP
 			*/
     };
 
-class DCP06Log
+class Log
 {
 	public:
-		DCP06Log(char* sMsg);
-		DCP06Log(char* sMsg, int ret);
-		DCP06Log(char* sMsg, int ctrl, int exit_code);
+		Log(char* sMsg);
+		Log(char* sMsg, int ret);
+		Log(char* sMsg, int ctrl, int exit_code);
 
-		~DCP06Log();
+		~Log();
 
 	private:
 		FILE* m_pFile;
 };
 
-class DCP06AmsLogC
+class AmsLog
 {
 	public:
 
-		DCP06AmsLogC(DCP06MeasXYZModelC* pModel, DCP06ModelC* pDCP06Model);
-	    ~DCP06AmsLogC();
+		AmsLog(MeasXYZModel* pModel, Model* pModel);
+	    ~AmsLog();
 
 	private:
 		FILE* m_pFile;
-		DCP06ModelC* m_pDCP06Model;
+		Model* m_pModel;
 		char* remove_dot(double dAngle, char* dest);
-		char* get_distance(double dDist, char* dest, DCP06ModelC* pDCP06Model);
-		char* get_xyz_distance(double dDist, char* dest, DCP06ModelC* pDCP06Model);
+		char* get_distance(double dDist, char* dest, Model* pModel);
+		char* get_xyz_distance(double dDist, char* dest, Model* pModel);
 };
 
-class DCP06AmsToolLogC
+class AmsToolLog
 {
 	public:
 
-		DCP06AmsToolLogC(char* pFileName, char* pointid, DCP06CommonC* pCommon, DCP06ModelC* pDCP06Model); 
-	    ~DCP06AmsToolLogC();
+		AmsToolLog(char* pFileName, char* pointid, Common* pCommon, Model* pModel); 
+	    ~AmsToolLog();
 
 	private:
 		FILE* m_pFile;
-		//DCP06ModelC* m_pDCP06Model;
+		//Model* m_pModel;
 };
 
 
-class DCP06ErrorHandlerC:public TBL::MeasErrorHandlerC,public GUI::ControllerC, public TBL::MeasurementC //, public OBS::SubjectC
+class MeasErrorHandler:public TBL::MeasErrorHandlerC,public GUI::ControllerC, public TBL::MeasurementC //, public OBS::SubjectC
 {
 public:
 	 virtual HandlingKindT HandleMeasError(MeasErrorT eMeasError, MeasErrorSourceT eSource, unsigned int ulErrorCodeSensor);

@@ -46,13 +46,13 @@ namespace DCP
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06AimControllerC : public GUI::ControllerC, public TBL::MeasurementC
+    class AimController : public GUI::ControllerC, public TBL::MeasurementC
     {
         public:
 
             // Description: Constructor
-            DCP06AimControllerC(double x, double y, double z, short cds);
-			~DCP06AimControllerC();
+            AimController(double x, double y, double z, short cds);
+			~AimController();
 
 
             // Description: Handle change of position values
@@ -81,14 +81,14 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06AimControllerC( const DCP06AimControllerC& oDCP05AimController )
+            AimController( const AimController& oAimController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06AimControllerC& operator=( const DCP06AimControllerC& oDCP05AimController )
+            AimController& operator=( const AimController& oAimController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
@@ -96,8 +96,8 @@ namespace DCP
 
 			
 
-			DCP06CommonC* m_pCommon;
-			DCP06ModelC* m_pDCP06Model;
+			Common* m_pCommon;
+			Model* m_pModel;
 
 			double m_dX,m_dY, m_dZ;
 			double theta1, fii1, dist1;

@@ -49,7 +49,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -63,8 +63,8 @@
 
 // USER DIALOG
 
-DCP::DCP06HomePointsDlgC::DCP06HomePointsDlgC(DCP06HomePointsModelC* pHomePointsModel):GUI::ModelHandlerC(),GUI::TableDialogC(),
-			poMultiColCtrl(NULL),m_pDataModel(pHomePointsModel)
+DCP::HomePointsDialog::HomePointsDialog(HomePointsModel* pHomePointsModel):GUI::ModelHandlerC(),GUI::TableDialogC(),
+			poMultiColCtrl(nullptr),m_pDataModel(pHomePointsModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
 
@@ -80,12 +80,12 @@ DCP::DCP06HomePointsDlgC::DCP06HomePointsDlgC(DCP06HomePointsModelC* pHomePoints
 
 
             // Description: Destructor
-DCP::DCP06HomePointsDlgC::~DCP06HomePointsDlgC()
+DCP::HomePointsDialog::~HomePointsDialog()
 {
 
 }
 
-void DCP::DCP06HomePointsDlgC::OnInitDialog(void)
+void DCP::HomePointsDialog::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 
@@ -118,7 +118,7 @@ void DCP::DCP06HomePointsDlgC::OnInitDialog(void)
 
 }
 
-void DCP::DCP06HomePointsDlgC::OnDialogActivated()
+void DCP::HomePointsDialog::OnDialogActivated()
 {
 	//BeginDraw();
 	StringC sPointNo;
@@ -141,15 +141,15 @@ void DCP::DCP06HomePointsDlgC::OnDialogActivated()
 	RefreshControls();
 }
 
-void DCP::DCP06HomePointsDlgC::UpdateData()
+void DCP::HomePointsDialog::UpdateData()
 {
 	 // save data into DCP05Model
-	 memcpy(&GetDCP06Model()->home_points[0],&m_pDataModel->home_points[0],sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
+	 memcpy(&GetModel()->home_points[0],&m_pDataModel->home_points[0],sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
 
 }
 
 // Description: refresh all controls
-void DCP::DCP06HomePointsDlgC::RefreshControls()
+void DCP::HomePointsDialog::RefreshControls()
 {
 	if(poMultiColCtrl)
 	{
@@ -193,14 +193,14 @@ void DCP::DCP06HomePointsDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06HomePointsDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::HomePointsDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
        // RefreshControls();
         return true;
@@ -210,26 +210,26 @@ bool DCP::DCP06HomePointsDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06HomePointsDlgC::GetDCP06Model() const
+DCP::Model* DCP::HomePointsDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
-short DCP::DCP06HomePointsDlgC::get_selected_id()
+short DCP::HomePointsDialog::get_selected_id()
 {
 	return poMultiColCtrl->GetSelectedId();
 }
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06HomePointsControllerC::DCP06HomePointsControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pCommon(0),m_pDCP06Model(pDCP06Model)
+DCP::HomePointsController::HomePointsController(Model* pModel)
+    : m_pDlg( nullptr ),m_pCommon(0),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -237,15 +237,15 @@ DCP::DCP06HomePointsControllerC::DCP06HomePointsControllerC(DCP06ModelC* pDCP06M
     SetTitle(StringC( AT_DCP06, T_DCP_HOME_POINTS_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// create model
-	m_pDataModel = new DCP06HomePointsModelC();
+	m_pDataModel = new HomePointsModel();
 
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06HomePointsDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::HomePointsDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( HOME_POINTS_DLG, m_pDlg, true );
 
 
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 
     // Set the function key
 	
@@ -278,10 +278,10 @@ DCP::DCP06HomePointsControllerC::DCP06HomePointsControllerC(DCP06ModelC* pDCP06M
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06HomePointsControllerC::~DCP06HomePointsControllerC()
+DCP::HomePointsController::~HomePointsController()
 {
 	// set old active cds back...
-	m_pDCP06Model->active_coodinate_system = m_pDataModel->iOldActiveCds;
+	m_pModel->active_coodinate_system = m_pDataModel->iOldActiveCds;
 
 	if(m_pCommon)
 	{
@@ -296,29 +296,29 @@ DCP::DCP06HomePointsControllerC::~DCP06HomePointsControllerC()
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06HomePointsControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::HomePointsController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	 m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	 m_pModel = dynamic_cast< DCP::Model* >( pModel );
 
 	 // load data from DCP05Model
-	 memcpy(&m_pDataModel->home_points[0],&m_pDCP06Model->home_points[0],sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
-	 m_pDataModel->iOldActiveCds = m_pDCP06Model->active_coodinate_system;
+	 memcpy(&m_pDataModel->home_points[0],&m_pModel->home_points[0],sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
+	 m_pDataModel->iOldActiveCds = m_pModel->active_coodinate_system;
 
     //Set it to hello world dialog
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -329,9 +329,9 @@ bool DCP::DCP06HomePointsControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // CONT
-void DCP::DCP06HomePointsControllerC::OnF1Pressed()
+void DCP::HomePointsController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -347,7 +347,7 @@ void DCP::DCP06HomePointsControllerC::OnF1Pressed()
 }
 
 // AIM
-void DCP::DCP06HomePointsControllerC::OnF2Pressed()
+void DCP::HomePointsController::OnF2Pressed()
 {
 		// selected id
 		short iId = m_pDlg->get_selected_id()+1;
@@ -359,22 +359,22 @@ void DCP::DCP06HomePointsControllerC::OnF2Pressed()
 			double z = m_pDataModel->home_points[iId-1].z;
 			short cds = m_pDataModel->home_points[iId-1].cds;
 		
-			//set_aim(atof(m_pMeasModel->xdes_ptr),atof(m_pMeasModel->ydes_ptr),atof(m_pMeasModel->zdes_ptr), m_pDlg->GetDCP06Model()->active_coodinate_system);		
-			if(GetController(AIM_CONTROLLER) == NULL)
+			//set_aim(atof(m_pMeasModel->xdes_ptr),atof(m_pMeasModel->ydes_ptr),atof(m_pMeasModel->zdes_ptr), m_pDlg->GetModel()->active_coodinate_system);		
+			if(GetController(AIM_CONTROLLER) == nullptr)
 			{
-				(void)AddController( AIM_CONTROLLER, new DCP::DCP06AimControllerC(x,y,z,cds) );
+				(void)AddController( AIM_CONTROLLER, new DCP::AimController(x,y,z,cds) );
 			}
 
-			(void)GetController( AIM_CONTROLLER )->SetModel(m_pDCP06Model);
+			(void)GetController( AIM_CONTROLLER )->SetModel(m_pModel);
 			SetActiveController(AIM_CONTROLLER, true);
 		}
 }
 
 
 // MEAS
-void DCP::DCP06HomePointsControllerC::OnF4Pressed()
+void DCP::HomePointsController::OnF4Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -383,15 +383,15 @@ void DCP::DCP06HomePointsControllerC::OnF4Pressed()
 
 	short active_point = m_pDlg->get_selected_id()+1;
 
-	active_cds = selected_cds = m_pDlg->GetDCP06Model()->active_coodinate_system;
+	active_cds = selected_cds = m_pDlg->GetModel()->active_coodinate_system;
 	
 	if(active_point <1) active_point = 1;
 
 	if (active_cds == OCSP || active_cds == OCSC || active_cds == OCSD || active_cds == OCSU)
 	{
 		//selected_cds = select_coordinate_system_line(T_HOME_POINTS_TOK);
-		DCP::DCP06SelectCoordinateSystemC* poDlg = new DCP::DCP06SelectCoordinateSystemC();
-		if(GetDialog(SELECT_COORDINATE_DLG) == NULL)
+		DCP::SelectCoordinateSystem* poDlg = new DCP::SelectCoordinateSystem();
+		if(GetDialog(SELECT_COORDINATE_DLG) == nullptr)
 		{
 			AddDialog(SELECT_COORDINATE_DLG,poDlg); 	
 		}
@@ -400,18 +400,18 @@ void DCP::DCP06HomePointsControllerC::OnF4Pressed()
 	}
 	else
 	{
-		m_pDCP06Model->active_coodinate_system = DCS;
+		m_pModel->active_coodinate_system = DCS;
 
-		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+		DCP::MeasureModel* pModel = new MeasureModel;
 		pModel->m_iMaxPoint = MAX_HOME_POINTS;
 		pModel->m_iMinPoint = MAX_HOME_POINTS;
 		pModel->m_iCurrentPoint = m_pDlg->get_selected_id()+1;
 
 		memcpy(&pModel->point_table[0],&m_pDataModel->home_points[0],sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
 	
-		if(GetController(MEAS_CONTROLLER) == NULL)
+		if(GetController(MEAS_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()));
+			(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()));
 		}
 		(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_HOME_POINTS_MEAS_TOK));
 
@@ -421,24 +421,24 @@ void DCP::DCP06HomePointsControllerC::OnF4Pressed()
 }
 
 // EDIT POINT ID
-void DCP::DCP06HomePointsControllerC::OnF5Pressed()
+void DCP::HomePointsController::OnF5Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 	short active_point = m_pDlg->get_selected_id()+1;
 
-	DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+	DCP::InputTextModel* pModel = new InputTextModel;
 	pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_POINT_ID_TOK);
 	pModel->m_StrTitle = GetTitle();
 	pModel->m_iTextLength = 6;
 	pModel->m_StrText = StringC(m_pDataModel->home_points[active_point-1].point_id);
 
-	if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
+	if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC( m_pDCP06Model));
+		(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController( m_pModel));
 	}
 
 	(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -447,52 +447,52 @@ void DCP::DCP06HomePointsControllerC::OnF5Pressed()
 }
 
 // DEL
-void DCP::DCP06HomePointsControllerC::OnSHF4Pressed()
+void DCP::HomePointsController::OnSHF4Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;	
 	msg.LoadTxt(AT_DCP06,M_DCP_DELETE_HOME_POINTS_TOK);
 	
 	if(msgbox.ShowMessageYesNo(msg))
 	{
 		memset(&m_pDataModel->home_points[0],0, sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
-		memset(&m_pDCP06Model->home_points[0],0,sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
+		memset(&m_pModel->home_points[0],0,sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
 		m_pDlg->RefreshControls();
 	}
 }
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06HomePointsControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::HomePointsController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == SELECT_COORDINATE_DLG && lExitCode == EC_KEY_CONT)
 	{
 		
-		DCP::DCP06SelectCoordinateSystemC* poDlg = (DCP::DCP06SelectCoordinateSystemC*)GetDialog(lDlgID);
+		DCP::SelectCoordinateSystem* poDlg = (DCP::SelectCoordinateSystem*)GetDialog(lDlgID);
 		if(poDlg)
 		{
 			short selected_id = poDlg->get_selected_id();
 			
 			if(selected_id == 1)
-				m_pDCP06Model->active_coodinate_system = DCS;
+				m_pModel->active_coodinate_system = DCS;
 			else
-				m_pDCP06Model->active_coodinate_system = m_pDataModel->iOldActiveCds;
+				m_pModel->active_coodinate_system = m_pDataModel->iOldActiveCds;
 
-			DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+			DCP::MeasureModel* pModel = new MeasureModel;
 			pModel->m_iMaxPoint = MAX_HOME_POINTS;
 			pModel->m_iMinPoint = MAX_HOME_POINTS;
 			pModel->m_iCurrentPoint = m_pDlg->get_selected_id()+1;
 
 			memcpy(&pModel->point_table[0],&m_pDataModel->home_points[0],sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
 	
-			if(GetController(MEAS_CONTROLLER) == NULL)
+			if(GetController(MEAS_CONTROLLER) == nullptr)
 			{
-				(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()));
+				(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()));
 			}
 			(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_HOME_POINTS_MEAS_TOK));
 
@@ -504,12 +504,12 @@ void DCP::DCP06HomePointsControllerC::OnActiveDialogClosed( int lDlgID, int lExi
 }
 
 // Description: React on close of controller
-void DCP::DCP06HomePointsControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::HomePointsController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	// MEAS
 	if(lCtrlID == MEAS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();		
+		DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();		
 		memcpy(&m_pDataModel->home_points[0], &pModel->point_table[0],sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
 		m_pDlg->RefreshControls();
 	}
@@ -517,7 +517,7 @@ void DCP::DCP06HomePointsControllerC::OnActiveControllerClosed( int lCtrlID, int
 	// Edit point id
 	if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 			char buffer[10]; buffer[0] = '\0';
 			m_pCommon->convert_to_ascii(strNewFile, buffer,DCP_POINT_ID_LENGTH +1 ); // 280508
@@ -542,13 +542,13 @@ void DCP::DCP06HomePointsControllerC::OnActiveControllerClosed( int lCtrlID, int
 
 
 // ================================================================================================
-// ====================================  DCP063DMeasModelC           ==============================
+// ====================================  Meas3DModel           ==============================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06HomePointsModelC::DCP06HomePointsModelC()
+DCP::HomePointsModel::HomePointsModel()
 {
 	memset(&home_points[0],0,sizeof(S_POINT_BUFF) * MAX_HOME_POINTS);
 }
@@ -556,7 +556,7 @@ DCP::DCP06HomePointsModelC::DCP06HomePointsModelC()
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06HomePointsModelC::~DCP06HomePointsModelC()
+DCP::HomePointsModel::~HomePointsModel()
 {
 
 }
@@ -564,10 +564,10 @@ DCP::DCP06HomePointsModelC::~DCP06HomePointsModelC()
 
 
 // ================================================================================================
-// ====================================  DCP063DMeasModelC           ==============================
+// ====================================  Meas3DModel           ==============================
 // ================================================================================================
 
-DCP::DCP06SelectCoordinateSystemC::DCP06SelectCoordinateSystemC():m_pLineInfo1(0),m_pLineInfo2(0),m_pLineInfo3(0),
+DCP::SelectCoordinateSystem::SelectCoordinateSystem():m_pLineInfo1(0),m_pLineInfo2(0),m_pLineInfo3(0),
 					m_iSelected(0)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
@@ -577,12 +577,12 @@ DCP::DCP06SelectCoordinateSystemC::DCP06SelectCoordinateSystemC():m_pLineInfo1(0
 
 
             // Description: Destructor
-DCP::DCP06SelectCoordinateSystemC::~DCP06SelectCoordinateSystemC()
+DCP::SelectCoordinateSystem::~SelectCoordinateSystem()
 {
 
 }
 
-void DCP::DCP06SelectCoordinateSystemC::OnInitDialog(void)
+void DCP::SelectCoordinateSystem::OnInitDialog(void)
 {
 	//GUI::BaseDialogC::OnInitDialog();
 	GUI::StandardDialogC::OnInitDialog();
@@ -643,7 +643,7 @@ void DCP::DCP06SelectCoordinateSystemC::OnInitDialog(void)
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 }
 
-void DCP::DCP06SelectCoordinateSystemC::OnDialogActivated()
+void DCP::SelectCoordinateSystem::OnDialogActivated()
 {
 	/*HideFunctionKey(FK2);
 	HideFunctionKey(FK4);
@@ -653,24 +653,24 @@ void DCP::DCP06SelectCoordinateSystemC::OnDialogActivated()
 }
 
 // Description: refresh all controls
-void DCP::DCP06SelectCoordinateSystemC::RefreshControls()
+void DCP::SelectCoordinateSystem::RefreshControls()
 {	
 }
 
-void DCP::DCP06SelectCoordinateSystemC::UpdateData()
+void DCP::SelectCoordinateSystem::UpdateData()
 {
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06SelectCoordinateSystemC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectCoordinateSystem::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         //RefreshControls();
         return true;
@@ -680,26 +680,26 @@ bool DCP::DCP06SelectCoordinateSystemC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06SelectCoordinateSystemC::GetDCP06Model() const
+DCP::Model* DCP::SelectCoordinateSystem::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
-void DCP::DCP06SelectCoordinateSystemC::OnF1Pressed()
+void DCP::SelectCoordinateSystem::OnF1Pressed()
 {
 	m_iSelected = 1;
 	Close(EC_KEY_CONT);
 }
 
-void DCP::DCP06SelectCoordinateSystemC::OnF3Pressed()
+void DCP::SelectCoordinateSystem::OnF3Pressed()
 {
 	m_iSelected = 2;
 	Close(EC_KEY_CONT);
 }
 
 
-short DCP::DCP06SelectCoordinateSystemC::get_selected_id()
+short DCP::SelectCoordinateSystem::get_selected_id()
 {
 	return m_iSelected;
 }

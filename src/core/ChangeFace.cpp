@@ -47,7 +47,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -61,7 +61,7 @@
 
 // USER DIALOG
 
-DCP::DCP06ChangeFaceC::DCP06ChangeFaceC(int iCtrlId)
+DCP::ChangeFace::ChangeFace(int iCtrlId)
 {
 		// I<>II
 		TBL::ChangeFaceControllerC* poChangeFace = new TBL::ChangeFaceControllerC();
@@ -70,7 +70,7 @@ DCP::DCP06ChangeFaceC::DCP06ChangeFaceC(int iCtrlId)
 		SetActiveController(iCtrlId, true);
 }
 // ****************************************************************************************
-DCP::DCP06ChangeFaceC::~DCP06ChangeFaceC()
+DCP::ChangeFace::~ChangeFace()
 {
 	
 }

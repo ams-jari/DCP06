@@ -48,7 +48,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
+// OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -61,7 +61,7 @@
 
 // Unit
 
-DCP::DCP06SaveShaftDlgC::DCP06SaveShaftDlgC(DCP::DCP06ShaftModelC* pShaftModel, DCP06SaveShaftModelC* pDataModel):m_pId(0),
+DCP::SaveShaftDialog::SaveShaftDialog(DCP::ShaftModel* pShaftModel, SaveShaftModel* pDataModel):m_pId(0),
 		m_pShaftModel(pShaftModel), m_pFile(0), m_pDataModel(pDataModel)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
@@ -70,12 +70,12 @@ DCP::DCP06SaveShaftDlgC::DCP06SaveShaftDlgC(DCP::DCP06ShaftModelC* pShaftModel, 
 
 
             // Description: Destructor
-DCP::DCP06SaveShaftDlgC::~DCP06SaveShaftDlgC()
+DCP::SaveShaftDialog::~SaveShaftDialog()
 {
 
 }
 
-void DCP::DCP06SaveShaftDlgC::OnInitDialog(void)
+void DCP::SaveShaftDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -109,15 +109,15 @@ void DCP::DCP06SaveShaftDlgC::OnInitDialog(void)
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 }
 
-void DCP::DCP06SaveShaftDlgC::OnDialogActivated()
+void DCP::SaveShaftDialog::OnDialogActivated()
 {
-	m_pDataModel->m_pFileFunc->setFile(GetDCP06Model()->sShaftFile);
+	m_pDataModel->m_pFileFunc->setFile(GetModel()->sShaftFile);
 	
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP06SaveShaftDlgC::RefreshControls()
+void DCP::SaveShaftDialog::RefreshControls()
 {	
 	if(m_pId && m_pFile)	
 	{
@@ -130,7 +130,7 @@ void DCP::DCP06SaveShaftDlgC::RefreshControls()
 	}
 }
 
-StringC DCP::DCP06SaveShaftDlgC::get_id()
+StringC DCP::SaveShaftDialog::get_id()
 {
 	StringC sTemp;
 
@@ -138,20 +138,20 @@ StringC DCP::DCP06SaveShaftDlgC::get_id()
 	return sTemp;
 }
 
-void DCP::DCP06SaveShaftDlgC::UpdateData()
+void DCP::SaveShaftDialog::UpdateData()
 {
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06SaveShaftDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::SaveShaftDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -161,22 +161,22 @@ bool DCP::DCP06SaveShaftDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06SaveShaftDlgC::GetDCP06Model() const
+DCP::Model* DCP::SaveShaftDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06SaveShaftControllerC::DCP06SaveShaftControllerC(DCP::DCP06ShaftModelC* pShaftModel, DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pShaftModel(pShaftModel),m_pDCP06Model(pDCP06Model)
+DCP::SaveShaftController::SaveShaftController(DCP::ShaftModel* pShaftModel, Model* pModel)
+    : m_pDlg( nullptr ),m_pShaftModel(pShaftModel),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -184,11 +184,11 @@ DCP::DCP06SaveShaftControllerC::DCP06SaveShaftControllerC(DCP::DCP06ShaftModelC*
     SetTitle(StringC( AT_DCP06, T_DCP_3DSHAFT_ALIGMENT_TOK));
 
 	// create model
-	m_pDataModel = new DCP06SaveShaftModelC(pDCP06Model);
+	m_pDataModel = new SaveShaftModel(pModel);
     
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06SaveShaftDlgC(pShaftModel, m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::SaveShaftDialog(pShaftModel, m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( SHAFT_SAVE_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -217,7 +217,7 @@ DCP::DCP06SaveShaftControllerC::DCP06SaveShaftControllerC(DCP::DCP06ShaftModelC*
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06SaveShaftControllerC::~DCP06SaveShaftControllerC()
+DCP::SaveShaftController::~SaveShaftController()
 {
 	if(m_pDataModel)
 	{
@@ -226,31 +226,31 @@ DCP::DCP06SaveShaftControllerC::~DCP06SaveShaftControllerC()
 	}
 }
 // Description: Route model to everybody else
-bool DCP::DCP06SaveShaftControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::SaveShaftController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	m_pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Set it to hello world dialog
     return m_pDlg->SetModel( pModel );
 }
 
-void DCP::DCP06SaveShaftControllerC::OnF1Pressed()
+void DCP::SaveShaftController::OnF1Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	if(GetController(SHAFT_FILE_CONTROLLER) == NULL)				
+	if(GetController(SHAFT_FILE_CONTROLLER) == nullptr)				
 	{
-		(void)AddController( SHAFT_FILE_CONTROLLER, new DCP::DCP06ShaftFileControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( SHAFT_FILE_CONTROLLER, new DCP::ShaftFileController(m_pDlg->GetModel()));
 	}
-	(void)GetController( SHAFT_FILE_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+	(void)GetController( SHAFT_FILE_CONTROLLER )->SetModel( m_pDlg->GetModel());
 	SetActiveController(SHAFT_FILE_CONTROLLER, true);
 
 	/*
@@ -260,9 +260,9 @@ void DCP::DCP06SaveShaftControllerC::OnF1Pressed()
 	
 }
 
-void DCP::DCP06SaveShaftControllerC::OnF3Pressed()
+void DCP::SaveShaftController::OnF3Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -279,7 +279,7 @@ void DCP::DCP06SaveShaftControllerC::OnF3Pressed()
 		}
 		else
 		{
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			StringC sMsg;
 			sMsg.LoadTxt(AT_DCP06, M_DCP_SELECT_SHAFT_FILE_TOK);
 			msgbox.ShowMessageOk(sMsg);
@@ -288,7 +288,7 @@ void DCP::DCP06SaveShaftControllerC::OnF3Pressed()
 	}
 	else
 	{
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			StringC sMsg;
 			sMsg.LoadTxt(AT_DCP06, M_DCP_ENTER_SHAFT_ID_TOK);
 			msgbox.ShowMessageOk(sMsg);
@@ -297,9 +297,9 @@ void DCP::DCP06SaveShaftControllerC::OnF3Pressed()
 
 }
 // Description: Handle change of position values
-void DCP::DCP06SaveShaftControllerC::OnF6Pressed()
+void DCP::SaveShaftController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -316,18 +316,18 @@ void DCP::DCP06SaveShaftControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06SaveShaftControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::SaveShaftController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 
 }
 
 // Description: React on close of controller
-void DCP::DCP06SaveShaftControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::SaveShaftController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 
 	if(lCtrlID == SHAFT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		m_pDataModel->m_pFileFunc->setFile(m_pDlg->GetDCP06Model()->sShaftFile);
+		m_pDataModel->m_pFileFunc->setFile(m_pDlg->GetModel()->sShaftFile);
 		
 	}
 	m_pDlg->RefreshControls();
@@ -336,14 +336,14 @@ void DCP::DCP06SaveShaftControllerC::OnActiveControllerClosed( int lCtrlID, int 
 
 
 
-DCP::DCP06SaveShaftModelC::DCP06SaveShaftModelC(DCP06ModelC* pDCP06Model)
+DCP::SaveShaftModel::SaveShaftModel(Model* pModel)
 {
-	m_pFileFunc = new ShaftFileFunc(pDCP06Model);
+	m_pFileFunc = new ShaftFileFunc(pModel);
 }
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06SaveShaftModelC::~DCP06SaveShaftModelC()
+DCP::SaveShaftModel::~SaveShaftModel()
 {
 	if(m_pFileFunc)
 	{

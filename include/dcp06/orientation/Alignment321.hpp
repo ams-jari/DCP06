@@ -45,18 +45,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06DomModelC;
-	class DCP06DomDlgC;
+    class Model;
+	class Alignment321Model;
+	class Alignment321Dialog;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06DomControllerC : public GUI::ControllerC
+    class Alignment321Controller : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06DomControllerC();
-			~DCP06DomControllerC();
+            Alignment321Controller();
+			~Alignment321Controller();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -81,25 +81,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06DomControllerC( const DCP06DomControllerC& oDCP05DomController )
+            Alignment321Controller( const Alignment321Controller& oAlignment321Controller )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06DomControllerC& operator=( const DCP06DomControllerC& oDCP05DomController )
+            Alignment321Controller& operator=( const Alignment321Controller& oAlignment321Controller )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06DomDlgC* m_pDlg;
-			DCP06DomModelC* m_pDataModel;
+            Alignment321Dialog* m_pDlg;
+			Alignment321Model* m_pDataModel;
     };
 
 
-    class DCP06DomDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class Alignment321Dialog:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -114,10 +114,10 @@ namespace DCP
 				eCalc
 			};
 
-		   DCP06DomDlgC(DCP06DomModelC* pDomModel);
+		   Alignment321Dialog(Alignment321Model* pDomModel);
 
             // Description: Destructor
-            virtual ~DCP06DomDlgC();
+            virtual ~Alignment321Dialog();
 
 			virtual void OnInitDialog(void);
 
@@ -131,7 +131,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			virtual void RefreshControls();
 
@@ -146,10 +146,10 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pRotPlane;
 			GUI::ComboLineCtrlC* m_pCalc;
 			GUI::ComboLineCtrlC* m_pRotLine;
-			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
+			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
 			// Description: add all controls
-			DCP06DomModelC* m_pDataModel;
+			Alignment321Model* m_pDataModel;
             
 
 	private:
@@ -166,18 +166,18 @@ namespace DCP
 			//virtual void OnComboBoxChanged(int unNotifyCode, int ulParam2);
 	};
 		
-   class DCP06DomModelC : public GUI::ModelC
+   class Alignment321Model : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06DomModelC();
-			//DCP06DomModelC(DCP06DomModelC* pModel);
+            Alignment321Model();
+			//Alignment321Model(Alignment321Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06DomModelC();
+            virtual ~Alignment321Model();
 
 			short /*DCP_PLANE_TYPE*/ dom_active_plane;
 			short /*DCP_LINE_TYPE*/  dom_active_line; 

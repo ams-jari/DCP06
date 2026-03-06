@@ -40,17 +40,17 @@ namespace DCP
 {
     // Description: Hello World application class
     //              
-    class DCP06InputTextModelC : public GUI::ModelC
+    class InputTextModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06InputTextModelC();
+            InputTextModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06InputTextModelC();
+            virtual ~InputTextModel();
 			
 			StringC m_StrTitle;
 			StringC m_StrInfoText;

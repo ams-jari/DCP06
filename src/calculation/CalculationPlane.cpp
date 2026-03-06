@@ -30,11 +30,11 @@
 
 using namespace DCP;
 
-// ========== DCP06CalcPlaneC ==========
-DCP::DCP06CalcPlaneC::DCP06CalcPlaneC() {}
-DCP::DCP06CalcPlaneC::~DCP06CalcPlaneC() {}
+// ========== CalcPlane ==========
+DCP::CalcPlane::CalcPlane() {}
+DCP::CalcPlane::~CalcPlane() {}
 
-short DCP::DCP06CalcPlaneC::calc(S_PLANE_BUFF* plane, short actdes)
+short DCP::CalcPlane::calc(S_PLANE_BUFF* plane, short actdes)
 {
 short points_defined,i, ret=true;
 struct ams_vector a,b,c,a_des,b_des,c_des;
@@ -46,7 +46,7 @@ double n[3];
 double dist;
 double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	(void)d; (void)d_des;
 
 	plane[0].calc = 0;
@@ -54,7 +54,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 	plane[0].des_calc = 0;
 	plane[0].des_sta = PLANE_NOT_DEFINED;
 
-	points_defined = defined_points_count_in_plane(plane, NULL);
+	points_defined = defined_points_count_in_plane(plane, nullptr);
 
 	if(points_defined < 3)
 	{
@@ -171,7 +171,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 	{
 		designValuesValid = true;
 
-		if(p_mat != NULL)
+		if(p_mat != nullptr)
 		{
 			count = 0;
 
@@ -271,7 +271,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 		{
 		designValuesValid = true;
 
-		if(p_mat != NULL)
+		if(p_mat != nullptr)
 		{
 			count = 0;
 
@@ -366,11 +366,11 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 	return ret;
 }
 
-short DCP::DCP06CalcPlaneC::defined_points_count_in_plane(S_PLANE_BUFF* plane,short* lastpoint)
+short DCP::CalcPlane::defined_points_count_in_plane(S_PLANE_BUFF* plane,short* lastpoint)
 {
 	short count=0,i,sta;
 
-	if(lastpoint != NULL)
+	if(lastpoint != nullptr)
 		*lastpoint = 0;
 
 	for(i=0; i< MAX_POINTS_IN_PLANE; i++)
@@ -382,20 +382,20 @@ short DCP::DCP06CalcPlaneC::defined_points_count_in_plane(S_PLANE_BUFF* plane,sh
 		
 		if(sta != 0)
 		{
-			if(lastpoint != NULL)
+			if(lastpoint != nullptr)
 				*lastpoint = i+1;
 		}
 	}
 	return count;
 }
 
-// ========== DCP06CalcPlaneControllerC ==========
-DCP::DCP06CalcPlaneControllerC::DCP06CalcPlaneControllerC(S_PLANE_BUFF* oLineBuff, short actdes, short iAskId):
-	m_pPlaneBuff(oLineBuff),m_iActDes(actdes), m_iAskId(iAskId), m_pCommon(0), m_pDCP06Model(0)
+// ========== CalcPlaneontrollerC ==========
+DCP::CalcPlaneontrollerC::CalcPlaneontrollerC(S_PLANE_BUFF* oLineBuff, short actdes, short iAskId):
+	m_pPlaneBuff(oLineBuff),m_iActDes(actdes), m_iAskId(iAskId), m_pCommon(0), m_pModel(0)
 {
 }
 
-DCP::DCP06CalcPlaneControllerC::~DCP06CalcPlaneControllerC()
+DCP::CalcPlaneontrollerC::~CalcPlaneontrollerC()
 {
 	if(m_pCommon)
 	{
@@ -404,13 +404,13 @@ DCP::DCP06CalcPlaneControllerC::~DCP06CalcPlaneControllerC()
 	}
 }
 
-void DCP::DCP06CalcPlaneControllerC::OnControllerActivated(void)
+void DCP::CalcPlaneontrollerC::OnControllerActivated(void)
 {
 }
 
-void DCP::DCP06CalcPlaneControllerC::Run(void)
+void DCP::CalcPlaneontrollerC::Run(void)
 {
-	DCP06CalcPlaneC calcplane;
+	CalcPlane calcplane;
 	if(calcplane.calc(m_pPlaneBuff,m_iActDes))
 	{
 		m_pPlaneBuff->calc = 1;
@@ -420,21 +420,21 @@ void DCP::DCP06CalcPlaneControllerC::Run(void)
 		{
 			if(m_iAskId)
 			{
-				DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+				DCP::InputTextModel* pModel = new InputTextModel;
 				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_PLANE_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = L" ";
 
-				if ( NULL == pModel)
+				if ( nullptr == pModel)
 				{
 					USER_APP_VERIFY( false );
 					return;
 				}
 
-				if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
+				if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
 				{
-					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC( m_pDCP06Model));
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController( m_pModel));
 				}
 
 				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -446,11 +446,11 @@ void DCP::DCP06CalcPlaneControllerC::Run(void)
 		
 		else if(m_pCommon->defined_points_count_in_plane(&m_pPlaneBuff[0],0) > 2)
 		{
-				DCP::DCP06DefinePlaneModelC* pModel = new DCP::DCP06DefinePlaneModelC;
+				DCP::DefinePlaneModel* pModel = new DCP::DefinePlaneModel;
 				memcpy(&pModel->plane_buff[0],&m_pPlaneBuff[0], sizeof(S_PLANE_BUFF));
-				if(GetController(RES_PLANE_CONTROLLER) == NULL)
+				if(GetController(RES_PLANE_CONTROLLER) == nullptr)
 				{
-					(void)AddController( RES_PLANE_CONTROLLER, new DCP::DCP06ResPlaneControllerC(m_pDCP06Model));
+					(void)AddController( RES_PLANE_CONTROLLER, new DCP::ResPlaneController(m_pModel));
 				}
 	
 				(void)GetController(RES_PLANE_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK));
@@ -463,43 +463,43 @@ void DCP::DCP06CalcPlaneControllerC::Run(void)
 		Close(EC_KEY_ESC);
 }
 
-bool DCP::DCP06CalcPlaneControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::CalcPlaneontrollerC::SetModel( GUI::ModelC* pModel )
 {
-	m_pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pModel = dynamic_cast< DCP::Model* >( pModel );
+	m_pCommon = new Common(m_pModel);
 	return ControllerC::SetModel( pModel );
 }
 
-void DCP::DCP06CalcPlaneControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::CalcPlaneontrollerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	(void)lDlgID;
 	(void)lExitCode;
 }
 
-void DCP::DCP06CalcPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::CalcPlaneontrollerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == RES_PLANE_CONTROLLER)
 	{
-		DCP::DCP06DefinePlaneModelC* pModel = (DCP::DCP06DefinePlaneModelC*) GetController( RES_PLANE_CONTROLLER )->GetModel();		
+		DCP::DefinePlaneModel* pModel = (DCP::DefinePlaneModel*) GetController( RES_PLANE_CONTROLLER )->GetModel();		
 		memcpy(&m_pPlaneBuff[0],&pModel->plane_buff[0], sizeof(S_PLANE_BUFF));
 		
 		if(m_iAskId)
 		{
-				DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+				DCP::InputTextModel* pModel = new InputTextModel;
 				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_PLANE_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = L" ";
 
-				if ( NULL == pModel)
+				if ( nullptr == pModel)
 				{
 					USER_APP_VERIFY( false );
 					return;
 				}
 
-				if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
+				if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
 				{
-					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC(m_pDCP06Model ));
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController(m_pModel ));
 				}
 
 				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
@@ -515,7 +515,7 @@ void DCP::DCP06CalcPlaneControllerC::OnActiveControllerClosed( int lCtrlID, int 
 
 	if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+		DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 		StringC strNewFile = pModel->m_StrText;
 		char buffer[10]; buffer[0] = '\0';
 		m_pCommon->convert_to_ascii(strNewFile, buffer,7);

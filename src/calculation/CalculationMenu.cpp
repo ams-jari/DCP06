@@ -69,33 +69,33 @@ using namespace DCP;
 
 // Calc MENU
 
-DCP06CalcMenuDlgC::DCP06CalcMenuDlgC(DCP06ModelC* pDCP06Model): m_pDCP06Model(pDCP06Model)
+CalculationMenuDialog::CalculationMenuDialog(Model* pModel): m_pModel(pModel)
 {
 	//SetTxtApplicationId( AT_DCP06 );
 }
 
 // Description: Destructor
-DCP06CalcMenuDlgC::~DCP06CalcMenuDlgC()
+CalculationMenuDialog::~CalculationMenuDialog()
 {
 }
 
-void DCP06CalcMenuDlgC::OnInitDialog(void)
+void CalculationMenuDialog::OnInitDialog(void)
 {
 		
 	SetTitle(StringC(AT_DCP06,T_DCP_CALCULATION_MENU_TOK ));
 	//SetHelpTok(H_DCP_CALCULATION_MENU_TOK,0);
 
 	/*
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_DISTANCE_TOK),L"", NULL,	CALC_DISTANCE);
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_ANGLE_TOK), L"", NULL,		CALC_ANGLE);
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_CIRCLE_TOK), L"", NULL,	CALC_CIRCLE);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_DISTANCE_TOK),L"", nullptr,	CALC_DISTANCE);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_ANGLE_TOK), L"", nullptr,		CALC_ANGLE);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_CIRCLE_TOK), L"", nullptr,	CALC_CIRCLE);
 	*/
 
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Distance_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Distance_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_DISTANCE_TOK),L"", NULL,	CALC_DISTANCE);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Angle_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Angle_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_ANGLE_TOK), L"", NULL,		CALC_ANGLE);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Calculation_circle_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Calculation_circle_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_CIRCLE_TOK), L"", NULL,	CALC_CIRCLE);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Distance_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Distance_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_DISTANCE_TOK),L"", nullptr,	CALC_DISTANCE);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Angle_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Angle_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_ANGLE_TOK), L"", nullptr,		CALC_ANGLE);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Calculation_circle_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Calculation_circle_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_CIRCLE_TOK), L"", nullptr,	CALC_CIRCLE);
 
-	if(m_pDCP06Model->bDemoMode)
+	if(m_pModel->bDemoMode)
 	{	
 		/* CAPTIVATE TBD
 		DisableMenuItem(CALC_DISTANCE);
@@ -124,18 +124,18 @@ void DCP06CalcMenuDlgC::OnInitDialog(void)
 // Description: Called if selection is completed (by ENTER, mouse click or numeric keys)
 //
 
-void DCP06CalcMenuDlgC::OnSelectionDone(void)
+void CalculationMenuDialog::OnSelectionDone(void)
 {
 	short unId = GetSelected();
 	
 	OnF1Pressed();
 }
 
-void DCP06CalcMenuDlgC::OnF1Pressed(void)
+void CalculationMenuDialog::OnF1Pressed(void)
 {
-	/*if(m_pDCP06Model->bDemoMode)
+	/*if(m_pModel->bDemoMode)
 	{
-		DCP06MsgBoxC msgBox;
+		MsgBox msgBox;
 		msgBox.ShowMessageOk(StringC(AT_DCP06,M_DCP_NOT_AVAILABLE_IN_DEMO_TOK ));
 		Close(EC_KEY_ESC);
 	}

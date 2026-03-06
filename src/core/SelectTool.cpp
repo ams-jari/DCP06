@@ -53,19 +53,19 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP06SelectToolDlgC::DCP06SelectToolDlgC():poMultiColCtrl(NULL)
+SelectToolDialog::SelectToolDialog():poMultiColCtrl(nullptr)
 	
 {
 	//SetTxtApplicationId(AT_DCP06);
 }
 
 // Description: Destructor
-DCP06SelectToolDlgC::~DCP06SelectToolDlgC()
+SelectToolDialog::~SelectToolDialog()
 {
 
 }
 
-void DCP06SelectToolDlgC::OnInitDialog(void)
+void SelectToolDialog::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 
@@ -89,11 +89,11 @@ void DCP06SelectToolDlgC::OnInitDialog(void)
 }
 
 
-void DCP06SelectToolDlgC::OnDialogActivated()
+void SelectToolDialog::OnDialogActivated()
 {
 	GUI::TableDialogC::OnDialogActivated();
 
-	DCP::DCP06SelectToolModelC* pModel = GetDataModel();
+	DCP::SelectToolModel* pModel = GetDataModel();
 	
 	StringC sTitle;
 	sTitle.LoadTxt(AT_DCP06,T_DCP_SELECT_TOOL_TOK);
@@ -126,7 +126,7 @@ void DCP06SelectToolDlgC::OnDialogActivated()
 	//EndDraw();
 }
 
-void DCP::DCP06SelectToolDlgC::UpdateData()
+void DCP::SelectToolDialog::UpdateData()
 {
 	
 	short iSelected = poMultiColCtrl->GetSelectedId();
@@ -137,14 +137,14 @@ void DCP::DCP06SelectToolDlgC::UpdateData()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06SelectToolDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectToolDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06SelectToolModelC* pDCP06Model = dynamic_cast< DCP::DCP06SelectToolModelC* >( pModel );
+    DCP::SelectToolModel* pModel = dynamic_cast< DCP::SelectToolModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -154,17 +154,17 @@ bool DCP::DCP06SelectToolDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06SelectToolModelC* DCP::DCP06SelectToolDlgC::GetDataModel() const
+DCP::SelectToolModel* DCP::SelectToolDialog::GetDataModel() const
 {
-    return (DCP::DCP06SelectToolModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::SelectToolModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP06SelectToolControllerC::DCP06SelectToolControllerC()
-    : m_pDlg( NULL )
+DCP::SelectToolController::SelectToolController()
+    : m_pDlg( nullptr )
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -172,7 +172,7 @@ DCP::DCP06SelectToolControllerC::DCP06SelectToolControllerC()
     SetTitle(StringC( AT_DCP06, T_DCP_SELECT_TOOL_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06SelectToolDlgC;  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::SelectToolDialog;  //lint !e1524 new in constructor for class 
     (void)AddDialog( SELECT_TOOL_DLG, m_pDlg, true );
 
     // Set the function key
@@ -194,13 +194,13 @@ DCP::DCP06SelectToolControllerC::DCP06SelectToolControllerC()
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06SelectToolControllerC::~DCP06SelectToolControllerC()
+DCP::SelectToolController::~SelectToolController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06SelectToolControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectToolController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -211,12 +211,12 @@ bool DCP::DCP06SelectToolControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -227,9 +227,9 @@ bool DCP::DCP06SelectToolControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // OPEN
-void DCP::DCP06SelectToolControllerC::OnF1Pressed()
+void DCP::SelectToolController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -246,12 +246,12 @@ void DCP::DCP06SelectToolControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06SelectToolControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::SelectToolController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06SelectToolControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::SelectToolController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -262,11 +262,11 @@ void DCP::DCP06SelectToolControllerC::OnActiveControllerClosed( int lCtrlID, int
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06SelectToolModelC::DCP06SelectToolModelC()
+DCP::SelectToolModel::SelectToolModel()
 {
 	m_iSelectedId = -1;
 }
-DCP::DCP06SelectToolModelC::~DCP06SelectToolModelC()
+DCP::SelectToolModel::~SelectToolModel()
 {
 	sqrt(4.0);
 }

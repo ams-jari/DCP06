@@ -45,7 +45,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -59,20 +59,20 @@
 
 // USER DIALOG
 
-DCP::DCP06RotatePlaneDlgC::DCP06RotatePlaneDlgC(DCP::DCP06ModelC *pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-			m_pInfo1(0),m_pInfo2(0), m_pAxis1(0),m_pAxis2(0),m_pDCP06Model(pDCP06Model)
+DCP::RotatePlaneDialog::RotatePlaneDialog(DCP::Model *pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+			m_pInfo1(0),m_pInfo2(0), m_pAxis1(0),m_pAxis2(0),m_pModel(pModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
 }
 
 
             // Description: Destructor
-DCP::DCP06RotatePlaneDlgC::~DCP06RotatePlaneDlgC()
+DCP::RotatePlaneDialog::~RotatePlaneDialog()
 {
 
 }
 
-void DCP::DCP06RotatePlaneDlgC::OnInitDialog(void)
+void DCP::RotatePlaneDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 
@@ -117,7 +117,7 @@ void DCP::DCP06RotatePlaneDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_ROTATE_PLANE_TOK,0);
 }
 
-void DCP::DCP06RotatePlaneDlgC::OnDialogActivated()
+void DCP::RotatePlaneDialog::OnDialogActivated()
 {
 	m_pAxis1->GetFloatInputCtrl()->SetFloat(0.0);
 	m_pAxis2->GetFloatInputCtrl()->SetFloat(0.0);
@@ -125,7 +125,7 @@ void DCP::DCP06RotatePlaneDlgC::OnDialogActivated()
 	RefreshControls();
 }
 
-void DCP::DCP06RotatePlaneDlgC::UpdateData()
+void DCP::RotatePlaneDialog::UpdateData()
 {
 	if(GetDataModel()->plane_type == XY_PLANE)
 	{
@@ -146,7 +146,7 @@ void DCP::DCP06RotatePlaneDlgC::UpdateData()
 }
 
 // Description: refresh all controls
-void DCP::DCP06RotatePlaneDlgC::RefreshControls()
+void DCP::RotatePlaneDialog::RefreshControls()
 {
 	if(m_pAxis1 && m_pAxis2)
 	{
@@ -170,14 +170,14 @@ void DCP::DCP06RotatePlaneDlgC::RefreshControls()
 	
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06RotatePlaneDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::RotatePlaneDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06RotatePlaneModelC* pDCP06Model = dynamic_cast< DCP::DCP06RotatePlaneModelC* >( pModel );
+    DCP::RotatePlaneModel* pModel = dynamic_cast< DCP::RotatePlaneModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -187,20 +187,20 @@ bool DCP::DCP06RotatePlaneDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06RotatePlaneModelC* DCP::DCP06RotatePlaneDlgC::GetDataModel() const
+DCP::RotatePlaneModel* DCP::RotatePlaneDialog::GetDataModel() const
 {
-    return (DCP::DCP06RotatePlaneModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::RotatePlaneModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06RotatePlaneControllerC::DCP06RotatePlaneControllerC(DCP::DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::RotatePlaneController::RotatePlaneController(DCP::Model *pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -208,7 +208,7 @@ DCP::DCP06RotatePlaneControllerC::DCP06RotatePlaneControllerC(DCP::DCP06ModelC *
    // SetTitleTok( AT_DCP06, T_DCP_ROTATE_PLANE_DLG_TOK /*C_DCP_APPLICATION_NAME_TOK */);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06RotatePlaneDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::RotatePlaneDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( ROTATE_PLANE_DLG, m_pDlg, true );
 
     // Set the function key
@@ -229,13 +229,13 @@ DCP::DCP06RotatePlaneControllerC::DCP06RotatePlaneControllerC(DCP::DCP06ModelC *
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06RotatePlaneControllerC::~DCP06RotatePlaneControllerC()
+DCP::RotatePlaneController::~RotatePlaneController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06RotatePlaneControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::RotatePlaneController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -246,12 +246,12 @@ bool DCP::DCP06RotatePlaneControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -262,9 +262,9 @@ bool DCP::DCP06RotatePlaneControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // CONT
-void DCP::DCP06RotatePlaneControllerC::OnF1Pressed()
+void DCP::RotatePlaneController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -282,12 +282,12 @@ void DCP::DCP06RotatePlaneControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06RotatePlaneControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::RotatePlaneController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06RotatePlaneControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::RotatePlaneController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -300,9 +300,9 @@ void DCP::DCP06RotatePlaneControllerC::OnActiveControllerClosed( int lCtrlID, in
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06RotatePlaneModelC::DCP06RotatePlaneModelC()
+DCP::RotatePlaneModel::RotatePlaneModel()
 {
 }
-DCP::DCP06RotatePlaneModelC::~DCP06RotatePlaneModelC()
+DCP::RotatePlaneModel::~RotatePlaneModel()
 {
 }

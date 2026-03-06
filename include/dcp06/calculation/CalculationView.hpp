@@ -21,18 +21,18 @@
 
 namespace DCP
 {
-    class DCP06ModelC;
-    class DCP06ViewAgfDlgC;
-    class DCP06ViewAgfModelC;
-    class DCP06ViewCdfDlgC;
-    class DCP06ViewCdfModelC;
+    class Model;
+    class ViewAgfDialog;
+    class ViewAgfModel;
+    class ViewCdfDialog;
+    class ViewCdfModel;
 
     // --- ViewAgf (Angle file view) ---
-    class DCP06ViewAgfControllerC : public GUI::ControllerC
+    class ViewAgfController : public GUI::ControllerC
     {
     public:
-        DCP06ViewAgfControllerC(AgfFileFunc* pFileFunc, DCP06ModelC* pDCP06Model);
-        ~DCP06ViewAgfControllerC();
+        ViewAgfController(AgfFileFunc* pFileFunc, Model* pModel);
+        ~ViewAgfController();
         virtual void OnF1Pressed();
         virtual void OnSHF5Pressed();
         virtual void OnF6Pressed();
@@ -40,43 +40,43 @@ namespace DCP
         virtual void OnActiveDialogClosed(int lDlgID, int lExitCode);
         void OnActiveControllerClosed(int lCtrlID, int lExitCode);
     private:
-        DCP06ViewAgfControllerC(const DCP06ViewAgfControllerC&) { USER_APP_VERIFY(false); }
-        DCP06ViewAgfControllerC& operator=(const DCP06ViewAgfControllerC&) { USER_APP_VERIFY(false); return *this; }
-        DCP06ViewAgfDlgC* m_pDlg;
+        ViewAgfController(const ViewAgfController&) { USER_APP_VERIFY(false); }
+        ViewAgfController& operator=(const ViewAgfController&) { USER_APP_VERIFY(false); return *this; }
+        ViewAgfDialog* m_pDlg;
         AgfFileFunc* m_pFileFunc;
-        DCP06ModelC* m_pDCP06Model;
+        Model* m_pModel;
     };
 
-    class DCP06ViewAgfDlgC : public GUI::TableDialogC, public GUI::ModelHandlerC
+    class ViewAgfDialog : public GUI::TableDialogC, public GUI::ModelHandlerC
     {
     public:
         enum CI_ColumnId { CI_No = 1, CI_AngleId, CI_Angle, CI_Note };
-        DCP06ViewAgfDlgC(AgfFileFunc* pFileFunc, DCP06ModelC* pDCP06Model);
-        virtual ~DCP06ViewAgfDlgC();
+        ViewAgfDialog(AgfFileFunc* pFileFunc, Model* pModel);
+        virtual ~ViewAgfDialog();
         virtual void OnInitDialog(void);
         virtual void OnDialogActivated();
         virtual void UpdateData();
         virtual bool SetModel(GUI::ModelC* pModel);
-        DCP06ModelC* GetDCP06Model() const;
+        Model* GetModel() const;
         virtual void RefreshControls();
         bool DeletePoint();
         bool GetSelectedData(StringC& dDistId, StringC& sRefId, StringC& sTrgtId, StringC& sNote);
     protected:
         GUI::ListMultiColCtrlC* poMultiColCtrl;
-        DCP06ModelC* m_pDCP06Model;
+        Model* m_pModel;
     private:
         short m_iSelectedCount;
         StringC m_strMaxPointSelected;
-        DCP06CommonC* m_pCommon;
+        Common* m_pCommon;
         AgfFileFunc* m_pFileFunc;
     };
 
     // --- ViewCdf (Distance file view) ---
-    class DCP06ViewCdfControllerC : public GUI::ControllerC
+    class ViewCdfController : public GUI::ControllerC
     {
     public:
-        DCP06ViewCdfControllerC(CdfFileFunc* pFileFunc, DCP06ModelC* pDCP06Model);
-        ~DCP06ViewCdfControllerC();
+        ViewCdfController(CdfFileFunc* pFileFunc, Model* pModel);
+        ~ViewCdfController();
         virtual void OnF1Pressed();
         virtual void OnSHF5Pressed();
         virtual void OnF6Pressed();
@@ -84,30 +84,30 @@ namespace DCP
         virtual void OnActiveDialogClosed(int lDlgID, int lExitCode);
         void OnActiveControllerClosed(int lCtrlID, int lExitCode);
     private:
-        DCP06ViewCdfControllerC(const DCP06ViewCdfControllerC&) { USER_APP_VERIFY(false); }
-        DCP06ViewCdfControllerC& operator=(const DCP06ViewCdfControllerC&) { USER_APP_VERIFY(false); return *this; }
-        DCP06ViewCdfDlgC* m_pDlg;
+        ViewCdfController(const ViewCdfController&) { USER_APP_VERIFY(false); }
+        ViewCdfController& operator=(const ViewCdfController&) { USER_APP_VERIFY(false); return *this; }
+        ViewCdfDialog* m_pDlg;
         CdfFileFunc* m_pFileFunc;
-        DCP06ModelC* m_pDCP06Model;
+        Model* m_pModel;
     };
 
-    class DCP06ViewCdfDlgC : public GUI::TableDialogC, public GUI::ModelHandlerC
+    class ViewCdfDialog : public GUI::TableDialogC, public GUI::ModelHandlerC
     {
     public:
         enum CI_ColumnId { CI_No = 1, CI_DistId, CI_Dist, CI_Note };
-        DCP06ViewCdfDlgC(CdfFileFunc* pFileFunc, DCP06ModelC* pDCP06Model);
-        virtual ~DCP06ViewCdfDlgC();
+        ViewCdfDialog(CdfFileFunc* pFileFunc, Model* pModel);
+        virtual ~ViewCdfDialog();
         virtual void OnInitDialog(void);
         virtual void OnDialogActivated();
         virtual void UpdateData();
         virtual bool SetModel(GUI::ModelC* pModel);
-        DCP06ModelC* GetDCP06Model() const;
+        Model* GetModel() const;
         virtual void RefreshControls();
         bool DeletePoint();
         bool GetSelectedData(StringC& dDistId, StringC& sRefId, StringC& sNote);
     protected:
         GUI::ListMultiColCtrlC* poMultiColCtrl;
-        DCP06ModelC* m_pDCP06Model;
+        Model* m_pModel;
     private:
         StringC sActualSelected;
         StringC sActualNonSelected;
@@ -115,7 +115,7 @@ namespace DCP
         StringC sDesignNonSelected;
         short m_iSelectedCount;
         StringC m_strMaxPointSelected;
-        DCP06CommonC* m_pCommon;
+        Common* m_pCommon;
         CdfFileFunc* m_pFileFunc;
     };
 }

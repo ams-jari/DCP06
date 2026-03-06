@@ -43,7 +43,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -56,7 +56,7 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
 
 // Unit
 
-DCP::DCP06UnitDlgC::DCP06UnitDlgC():m_pComboBoxObserver(OBS_METHOD_TO_PARAM0(DCP06UnitDlgC, OnComboBoxChanged), this),
+DCP::UnitDialog::UnitDialog():m_pComboBoxObserver(OBS_METHOD_TO_PARAM0(UnitDialog, OnComboBoxChanged), this),
 	m_pUnit(0), m_pDecimals(0)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
@@ -65,12 +65,12 @@ DCP::DCP06UnitDlgC::DCP06UnitDlgC():m_pComboBoxObserver(OBS_METHOD_TO_PARAM0(DCP
 
 
             // Description: Destructor
-DCP::DCP06UnitDlgC::~DCP06UnitDlgC()
+DCP::UnitDialog::~UnitDialog()
 {
 
 }
 
-void DCP::DCP06UnitDlgC::OnInitDialog(void)
+void DCP::UnitDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 		
@@ -90,12 +90,12 @@ void DCP::DCP06UnitDlgC::OnInitDialog(void)
 	m_pDecimals = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_ComboBox);
 	m_pDecimals->SetId(eDecimals);
 	m_pDecimals->SetText(StringC(AT_DCP06,P_DCP_DECIMALS_TOK));
-	if(GetDCP06Model()->m_nUnit == MM)
+	if(GetModel()->m_nUnit == MM)
 	{
 		m_pDecimals->GetComboBoxInputCtrl()->AddItem(L"1",1);
 		m_pDecimals->GetComboBoxInputCtrl()->AddItem(L"2",2);
 	}
-	else if(GetDCP06Model()->m_nUnit == INCH)
+	else if(GetModel()->m_nUnit == INCH)
 	{
 		m_pDecimals->GetComboBoxInputCtrl()->AddItem(L"2",1);
 		m_pDecimals->GetComboBoxInputCtrl()->AddItem(L"3",2);
@@ -118,11 +118,11 @@ void DCP::DCP06UnitDlgC::OnInitDialog(void)
 }
 
 
-void DCP::DCP06UnitDlgC::OnDialogActivated()
+void DCP::UnitDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
-void DCP::DCP06UnitDlgC::OnComboBoxChanged( int unNotifyCode,  int ulParam2)
+void DCP::UnitDialog::OnComboBoxChanged( int unNotifyCode,  int ulParam2)
 {
 	if(unNotifyCode == GUI::NC_ONCOMBOBOX_SELECTION_CHANGED)
 	{
@@ -165,54 +165,54 @@ void DCP::DCP06UnitDlgC::OnComboBoxChanged( int unNotifyCode,  int ulParam2)
 }
 
 // Description: refresh all controls
-void DCP::DCP06UnitDlgC::RefreshControls()
+void DCP::UnitDialog::RefreshControls()
 {	
-	if(m_pUnit) m_pUnit->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nUnit);
+	if(m_pUnit) m_pUnit->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nUnit);
 	if(m_pDecimals)
 	{	
-		if(GetDCP06Model()->m_nUnit == MM)
-			m_pDecimals->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nDecimals);
-		else if(GetDCP06Model()->m_nUnit == INCH)
+		if(GetModel()->m_nUnit == MM)
+			m_pDecimals->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nDecimals);
+		else if(GetModel()->m_nUnit == INCH)
 		{
-			m_pDecimals->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nDecimals-1);
+			m_pDecimals->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nDecimals-1);
 		}
 		else
 		{
-			m_pDecimals->GetComboBoxInputCtrl()->SetSelectedId(GetDCP06Model()->m_nDecimals-2);
+			m_pDecimals->GetComboBoxInputCtrl()->SetSelectedId(GetModel()->m_nDecimals-2);
 		}
 		
 	}
 }
 
-void DCP::DCP06UnitDlgC::UpdateData()
+void DCP::UnitDialog::UpdateData()
 {
-	GetDCP06Model()->m_nUnit		= m_pUnit->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nUnit		= m_pUnit->GetComboBoxInputCtrl()->GetSelectedId();
 
 	StringC sDec = m_pDecimals->GetComboBoxInputCtrl()->GetSelectedStr();
 	char cDec[10];
 	//UTL::UnicodeToAscii(cDec, sDec);
 	BSS::UTI::BSS_UTI_WCharToAscii( sDec, cDec );
 	
-	GetDCP06Model()->m_nDecimals	= atoi(cDec);
-	//GetDCP06Model()->m_nDecimals	= m_pDecimals->GetComboBoxInputCtrl()->GetSelectedId();
+	GetModel()->m_nDecimals	= atoi(cDec);
+	//GetModel()->m_nDecimals	= m_pDecimals->GetComboBoxInputCtrl()->GetSelectedId();
 	
 }
 
-DCP::DCP06ModelC* DCP::DCP06UnitDlgC::GetDCP06Model() const
+DCP::Model* DCP::UnitDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06UnitDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::UnitDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -224,14 +224,14 @@ bool DCP::DCP06UnitDlgC::SetModel( GUI::ModelC* pModel )
 
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06UnitControllerC::DCP06UnitControllerC()
-    : m_pDlg( NULL )
+DCP::UnitController::UnitController()
+    : m_pDlg( nullptr )
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -239,7 +239,7 @@ DCP::DCP06UnitControllerC::DCP06UnitControllerC()
     SetTitle(StringC( AT_DCP06, T_DCP_UNIT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06UnitDlgC;  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::UnitDialog;  //lint !e1524 new in constructor for class 
     (void)AddDialog( UNIT_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -262,12 +262,12 @@ DCP::DCP06UnitControllerC::DCP06UnitControllerC()
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06UnitControllerC::~DCP06UnitControllerC()
+DCP::UnitController::~UnitController()
 {
 
 }
 // Description: Route model to everybody else
-bool DCP::DCP06UnitControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::UnitController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
@@ -278,9 +278,9 @@ bool DCP::DCP06UnitControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Handle change of position values
-void DCP::DCP06UnitControllerC::OnF1Pressed()
+void DCP::UnitController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -298,6 +298,6 @@ void DCP::DCP06UnitControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06UnitControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::UnitController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }

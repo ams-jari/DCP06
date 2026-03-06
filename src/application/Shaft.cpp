@@ -48,7 +48,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
+// OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -61,7 +61,7 @@
 
 // Unit
 
-DCP::DCP06ShaftDlgC::DCP06ShaftDlgC(DCP::DCP06ShaftModelC* pModel):m_pLine(0),m_pCircle(0),
+DCP::ShaftDialog::ShaftDialog(DCP::ShaftModel* pModel):m_pLine(0),m_pCircle(0),
 		m_pShaftModel(pModel)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
@@ -78,12 +78,12 @@ DCP::DCP06ShaftDlgC::DCP06ShaftDlgC(DCP::DCP06ShaftModelC* pModel):m_pLine(0),m_
 
 
             // Description: Destructor
-DCP::DCP06ShaftDlgC::~DCP06ShaftDlgC()
+DCP::ShaftDialog::~ShaftDialog()
 {
 
 }
 
-void DCP::DCP06ShaftDlgC::OnInitDialog(void)
+void DCP::ShaftDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -130,14 +130,14 @@ void DCP::DCP06ShaftDlgC::OnInitDialog(void)
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 }
 
-void DCP::DCP06ShaftDlgC::OnDialogActivated()
+void DCP::ShaftDialog::OnDialogActivated()
 {
 
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP06ShaftDlgC::RefreshControls()
+void DCP::ShaftDialog::RefreshControls()
 {	
 	if(m_pLine && m_pCircle)	
 	{
@@ -179,34 +179,34 @@ void DCP::DCP06ShaftDlgC::RefreshControls()
 	}
 }
 
-void DCP::DCP06ShaftDlgC::UpdateData()
+void DCP::ShaftDialog::UpdateData()
 {
-	memcpy( &GetDCP06Model()->shaft_circle_points[0],&m_pShaftModel->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
-	memcpy( &GetDCP06Model()->shaft_circle_points_in_plane[0], &m_pShaftModel->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
-	GetDCP06Model()->shaft_circle_cx = m_pShaftModel->shaft_circle_cx;
-	GetDCP06Model()->shaft_circle_cy = m_pShaftModel->shaft_circle_cy ;
-	GetDCP06Model()->shaft_circle_cz = m_pShaftModel->shaft_circle_cz;
-	GetDCP06Model()->shaft_circle_vi = m_pShaftModel->shaft_circle_vi;
-	GetDCP06Model()->shaft_circle_vj = m_pShaftModel->shaft_circle_vj;
-	GetDCP06Model()->shaft_circle_vk = m_pShaftModel->shaft_circle_vk;
-	GetDCP06Model()->shaft_ref_line = m_pShaftModel->active_line ;
-	memcpy(&GetDCP06Model()->shaft_line[0], &m_pShaftModel->line_buff[0], sizeof(S_LINE_BUFF));
-	GetDCP06Model()->shaft_circle_diameter = m_pShaftModel->shaft_circle_diameter;
-	GetDCP06Model()->shaft_circle_rms = m_pShaftModel->shaft_circle_rms ;
+	memcpy( &GetModel()->shaft_circle_points[0],&m_pShaftModel->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
+	memcpy( &GetModel()->shaft_circle_points_in_plane[0], &m_pShaftModel->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
+	GetModel()->shaft_circle_cx = m_pShaftModel->shaft_circle_cx;
+	GetModel()->shaft_circle_cy = m_pShaftModel->shaft_circle_cy ;
+	GetModel()->shaft_circle_cz = m_pShaftModel->shaft_circle_cz;
+	GetModel()->shaft_circle_vi = m_pShaftModel->shaft_circle_vi;
+	GetModel()->shaft_circle_vj = m_pShaftModel->shaft_circle_vj;
+	GetModel()->shaft_circle_vk = m_pShaftModel->shaft_circle_vk;
+	GetModel()->shaft_ref_line = m_pShaftModel->active_line ;
+	memcpy(&GetModel()->shaft_line[0], &m_pShaftModel->line_buff[0], sizeof(S_LINE_BUFF));
+	GetModel()->shaft_circle_diameter = m_pShaftModel->shaft_circle_diameter;
+	GetModel()->shaft_circle_rms = m_pShaftModel->shaft_circle_rms ;
 
 
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06ShaftDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::ShaftDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -216,19 +216,19 @@ bool DCP::DCP06ShaftDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06ShaftDlgC::GetDCP06Model() const
+DCP::Model* DCP::ShaftDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-void DCP::DCP06ShaftDlgC::delete_line()
+void DCP::ShaftDialog::delete_line()
 {
 	/*
 	StringC strMsg;
 	strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_POINTS_OF_LINE_TOK);
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
 		GetDataModel()->active_line	= X_LINE;
@@ -238,7 +238,7 @@ void DCP::DCP06ShaftDlgC::delete_line()
 	*/
 }
 // ================================================================================================
-void DCP::DCP06ShaftDlgC:: x_line()
+void DCP::ShaftDialog:: x_line()
 {
 	/*
 	GetDataModel()->active_line = X_LINE;
@@ -247,7 +247,7 @@ void DCP::DCP06ShaftDlgC:: x_line()
 }
 
 // ================================================================================================
-void DCP::DCP06ShaftDlgC:: y_line()
+void DCP::ShaftDialog:: y_line()
 {
 	/*
 	GetDataModel()->active_line = Y_LINE;
@@ -255,7 +255,7 @@ void DCP::DCP06ShaftDlgC:: y_line()
 	*/
 }
 // ================================================================================================
-void DCP::DCP06ShaftDlgC::z_line()
+void DCP::ShaftDialog::z_line()
 {
 	/*
 	GetDataModel()->active_line = Z_LINE;
@@ -263,7 +263,7 @@ void DCP::DCP06ShaftDlgC::z_line()
 	*/
 }
 // ================================================================================================
-bool DCP::DCP06ShaftDlgC::CalculateLineAfterMeas()
+bool DCP::ShaftDialog::CalculateLineAfterMeas()
 {
 	/*
 	for(short i=0; i < MAX_POINTS_IN_LINE; i++)
@@ -276,7 +276,7 @@ bool DCP::DCP06ShaftDlgC::CalculateLineAfterMeas()
 
 
 	}
-	DCP06CalcLineC calcline;
+	CalcLine calcline;
 	if(calcline.calc(&GetDataModel()->line_buff[0],ACTUAL))
 	//if(calc_plane(&GetDataModel()->plane_buff[0],ACTUAL))
 	{
@@ -289,35 +289,35 @@ bool DCP::DCP06ShaftDlgC::CalculateLineAfterMeas()
 }
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06ShaftControllerC::DCP06ShaftControllerC(DCP::DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::ShaftController::ShaftController(DCP::Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
     SetTitle(StringC( AT_DCP05, T_DCP_SHAFT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
-	m_pShaftModel = new DCP06ShaftModelC();
+	m_pShaftModel = new ShaftModel();
 
-	memcpy(&m_pShaftModel->shaft_circle_points[0], &m_pDCP06Model->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
-	memcpy(&m_pShaftModel->shaft_circle_points_in_plane[0], &m_pDCP06Model->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
-	m_pShaftModel->shaft_circle_cx = m_pDCP06Model->shaft_circle_cx;
-	m_pShaftModel->shaft_circle_cy = m_pDCP06Model->shaft_circle_cy;
-	m_pShaftModel->shaft_circle_cz = m_pDCP06Model->shaft_circle_cz;
-	m_pShaftModel->shaft_circle_vi = m_pDCP06Model->shaft_circle_vi;
-	m_pShaftModel->shaft_circle_vj = m_pDCP06Model->shaft_circle_vj;
-	m_pShaftModel->shaft_circle_vk = m_pDCP06Model->shaft_circle_vk;
+	memcpy(&m_pShaftModel->shaft_circle_points[0], &m_pModel->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
+	memcpy(&m_pShaftModel->shaft_circle_points_in_plane[0], &m_pModel->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
+	m_pShaftModel->shaft_circle_cx = m_pModel->shaft_circle_cx;
+	m_pShaftModel->shaft_circle_cy = m_pModel->shaft_circle_cy;
+	m_pShaftModel->shaft_circle_cz = m_pModel->shaft_circle_cz;
+	m_pShaftModel->shaft_circle_vi = m_pModel->shaft_circle_vi;
+	m_pShaftModel->shaft_circle_vj = m_pModel->shaft_circle_vj;
+	m_pShaftModel->shaft_circle_vk = m_pModel->shaft_circle_vk;
 
-	m_pShaftModel->active_line = m_pDCP06Model->shaft_ref_line;
-	memcpy(&m_pShaftModel->line_buff[0],&m_pDCP06Model->shaft_line[0], sizeof(S_LINE_BUFF));
-	m_pShaftModel->shaft_circle_diameter = m_pDCP06Model->shaft_circle_diameter;
-	m_pShaftModel->shaft_circle_rms = m_pDCP06Model->shaft_circle_rms;
+	m_pShaftModel->active_line = m_pModel->shaft_ref_line;
+	memcpy(&m_pShaftModel->line_buff[0],&m_pModel->shaft_line[0], sizeof(S_LINE_BUFF));
+	m_pShaftModel->shaft_circle_diameter = m_pModel->shaft_circle_diameter;
+	m_pShaftModel->shaft_circle_rms = m_pModel->shaft_circle_rms;
 
 	/*
 	// TEST MUISTA POISTAA
@@ -331,25 +331,25 @@ DCP::DCP06ShaftControllerC::DCP06ShaftControllerC(DCP::DCP06ModelC* pDCP06Model)
 	m_pShaftModel->line_buff[0].points[1].z = 1.0;
 	m_pShaftModel->line_buff[0].points[1].sta  = 1;
 
-	m_pDCP06Model->shaft_circle_points[0].points[0].x = 4.0;
-	m_pDCP06Model->shaft_circle_points[0].points[0].y = 0.0;
-	m_pDCP06Model->shaft_circle_points[0].points[0].z = 0.0;
-	m_pDCP06Model->shaft_circle_points[0].points[0].sta = 1;
+	m_pModel->shaft_circle_points[0].points[0].x = 4.0;
+	m_pModel->shaft_circle_points[0].points[0].y = 0.0;
+	m_pModel->shaft_circle_points[0].points[0].z = 0.0;
+	m_pModel->shaft_circle_points[0].points[0].sta = 1;
 
-	m_pDCP06Model->shaft_circle_points[0].points[1].x = 5.0;
-	m_pDCP06Model->shaft_circle_points[0].points[1].y = -1.0;
-	m_pDCP06Model->shaft_circle_points[0].points[1].z = 0.0;
-	m_pDCP06Model->shaft_circle_points[0].points[1].sta = 1;
+	m_pModel->shaft_circle_points[0].points[1].x = 5.0;
+	m_pModel->shaft_circle_points[0].points[1].y = -1.0;
+	m_pModel->shaft_circle_points[0].points[1].z = 0.0;
+	m_pModel->shaft_circle_points[0].points[1].sta = 1;
 
 
-	m_pDCP06Model->shaft_circle_points[0].points[2].x = 5.0;
-	m_pDCP06Model->shaft_circle_points[0].points[2].y = 1.0;
-	m_pDCP06Model->shaft_circle_points[0].points[2].z = 0.0;
-	m_pDCP06Model->shaft_circle_points[0].points[2].sta = 1;
+	m_pModel->shaft_circle_points[0].points[2].x = 5.0;
+	m_pModel->shaft_circle_points[0].points[2].y = 1.0;
+	m_pModel->shaft_circle_points[0].points[2].z = 0.0;
+	m_pModel->shaft_circle_points[0].points[2].sta = 1;
 	*/
 	
     // Create a dialog
-    m_pDlg = new DCP::DCP06ShaftDlgC(m_pShaftModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::ShaftDialog(m_pShaftModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( SHAFT_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -383,46 +383,46 @@ DCP::DCP06ShaftControllerC::DCP06ShaftControllerC(DCP::DCP06ModelC* pDCP06Model)
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06ShaftControllerC::~DCP06ShaftControllerC()
+DCP::ShaftController::~ShaftController()
 {
 
 }
 // Description: Route model to everybody else
-bool DCP::DCP06ShaftControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::ShaftController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	DCP::DCP06ModelC* pLineModel = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	DCP::Model* pLineModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Set it to hello world dialog
     return m_pDlg->SetModel( pModel );
 }
 
-void DCP::DCP06ShaftControllerC::OnF1Pressed()
+void DCP::ShaftController::OnF1Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 	
-	DCP06ShaftLineModelC *pModel = new DCP06ShaftLineModelC();
+	ShaftLineModel *pModel = new ShaftLineModel();
 	memcpy(&pModel->line_buff[0], &m_pShaftModel->line_buff[0], sizeof(S_LINE_BUFF));
 	pModel->active_line = m_pShaftModel->active_line;
 	
-	if(GetController(SHAFT_ALIGMENT_LINE_CONTROLLER) == NULL)
+	if(GetController(SHAFT_ALIGMENT_LINE_CONTROLLER) == nullptr)
 	{
-		(void)AddController( SHAFT_ALIGMENT_LINE_CONTROLLER, new DCP::DCP06ShaftLineControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( SHAFT_ALIGMENT_LINE_CONTROLLER, new DCP::ShaftLineController(m_pDlg->GetModel()));
 	}
 
 	(void)GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->SetModel(pModel);
 	SetActiveController(SHAFT_ALIGMENT_LINE_CONTROLLER, true);
 }
-void DCP::DCP06ShaftControllerC::OnF2Pressed()
+void DCP::ShaftController::OnF2Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -430,23 +430,23 @@ void DCP::DCP06ShaftControllerC::OnF2Pressed()
 	m_pDlg->y_line();
 
 }
-void DCP::DCP06ShaftControllerC::OnF3Pressed()
+void DCP::ShaftController::OnF3Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
 	// call circle dialog
-	DCP::DCP06PointBuffModelC* pModel = new DCP06PointBuffModelC;
+	DCP::PointBuffModel* pModel = new PointBuffModel;
 
 
 
 	//pModel->display = SHAFT_DLG;
-	if(GetController(CIRCLE_CONTROLLER) == NULL)
+	if(GetController(CIRCLE_CONTROLLER) == nullptr)
 	{
-		(void)AddController( CIRCLE_CONTROLLER, new DCP::DCP06CircleControllerC(m_pDCP06Model, SHAFT_DLG));
+		(void)AddController( CIRCLE_CONTROLLER, new DCP::CircleController(m_pModel, SHAFT_DLG));
 	}
 	(void)GetController( CIRCLE_CONTROLLER )->SetModel(pModel);
 	SetActiveController(CIRCLE_CONTROLLER, true);
@@ -456,9 +456,9 @@ void DCP::DCP06ShaftControllerC::OnF3Pressed()
 }
 
 
-void DCP::DCP06ShaftControllerC::OnF5Pressed()
+void DCP::ShaftController::OnF5Pressed()
 {	
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -466,20 +466,20 @@ void DCP::DCP06ShaftControllerC::OnF5Pressed()
 	if(m_pShaftModel->calc_shaft())
 	{
 		
-			if(GetController(RES_SHAFT_CONTROLLER) == NULL)
+			if(GetController(RES_SHAFT_CONTROLLER) == nullptr)
 			{
-				(void)AddController( RES_SHAFT_CONTROLLER, new DCP::DCP06ResShaftControllerC(m_pDCP06Model, m_pShaftModel) );
+				(void)AddController( RES_SHAFT_CONTROLLER, new DCP::ResShaftController(m_pModel, m_pShaftModel) );
 			}
 
 			(void)GetController(RES_SHAFT_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_DEV_OF_SHAFT_TOK));
-			(void)GetController( RES_SHAFT_CONTROLLER )->SetModel(m_pDCP06Model);
+			(void)GetController( RES_SHAFT_CONTROLLER )->SetModel(m_pModel);
 			SetActiveController(RES_SHAFT_CONTROLLER, true);
 		}
 }
 // Description: Handle change of position values
-void DCP::DCP06ShaftControllerC::OnF6Pressed()
+void DCP::ShaftController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -495,7 +495,7 @@ void DCP::DCP06ShaftControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 
-void DCP::DCP06ShaftControllerC::OnSHF2Pressed()
+void DCP::ShaftController::OnSHF2Pressed()
 {	
 	
 		StringC strDomText;
@@ -504,7 +504,7 @@ void DCP::DCP06ShaftControllerC::OnSHF2Pressed()
 		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_ALL_TOK);
 		strMsg.Format(strMsg,(const wchar_t*)strDomText);
 		
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		if(msgbox.ShowMessageYesNo(strMsg))
 		{
 			m_pShaftModel->active_line =0; 
@@ -523,28 +523,28 @@ void DCP::DCP06ShaftControllerC::OnSHF2Pressed()
 			m_pShaftModel->shaft_circle_rms = 0.0;
 			m_pShaftModel->centerOfCircleDist = 0.0;
 			m_pShaftModel->angleLines = 0.0;
-			// delete from m_pDCP06Model-> !!!!!!!!!!!!!!!!!!!!!!
+			// delete from m_pModel-> !!!!!!!!!!!!!!!!!!!!!!
 
 			m_pDlg->RefreshControls();
 		}
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06ShaftControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::ShaftController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == RES_LINE_DLG)
 	{
-		DCP06MsgBoxC msgBox;
+		MsgBox msgBox;
 		msgBox.ShowMessageOk("OK");
 	}
 }
 
 // Description: React on close of controller
-void DCP::DCP06ShaftControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::ShaftController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SHAFT_ALIGMENT_LINE_CONTROLLER && lExitCode ==EC_KEY_CONT)
 	{
-		DCP::DCP06ShaftLineModelC* pModel = (DCP::DCP06ShaftLineModelC*) GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->GetModel();	
+		DCP::ShaftLineModel* pModel = (DCP::ShaftLineModel*) GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->GetModel();	
 
 		m_pShaftModel->active_line = pModel->active_line;
 		memcpy(&m_pShaftModel->line_buff[0], &pModel->line_buff[0], sizeof(S_LINE_BUFF));
@@ -552,20 +552,20 @@ void DCP::DCP06ShaftControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 
 	if(lCtrlID == CIRCLE_CONTROLLER && lExitCode ==EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( CIRCLE_CONTROLLER )->GetModel();	
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( CIRCLE_CONTROLLER )->GetModel();	
 
 
-		memcpy(&m_pShaftModel->shaft_circle_points[0], &m_pDCP06Model->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
-		memcpy(&m_pShaftModel->shaft_circle_points_in_plane[0], &m_pDCP06Model->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
-		m_pShaftModel->shaft_circle_cx = m_pDCP06Model->shaft_circle_cx;
-		m_pShaftModel->shaft_circle_cy = m_pDCP06Model->shaft_circle_cy;
-		m_pShaftModel->shaft_circle_cz = m_pDCP06Model->shaft_circle_cz;
-		m_pShaftModel->shaft_circle_vi = m_pDCP06Model->shaft_circle_vi;
-		m_pShaftModel->shaft_circle_vj = m_pDCP06Model->shaft_circle_vj;
-		m_pShaftModel->shaft_circle_vk = m_pDCP06Model->shaft_circle_vk;
+		memcpy(&m_pShaftModel->shaft_circle_points[0], &m_pModel->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
+		memcpy(&m_pShaftModel->shaft_circle_points_in_plane[0], &m_pModel->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
+		m_pShaftModel->shaft_circle_cx = m_pModel->shaft_circle_cx;
+		m_pShaftModel->shaft_circle_cy = m_pModel->shaft_circle_cy;
+		m_pShaftModel->shaft_circle_cz = m_pModel->shaft_circle_cz;
+		m_pShaftModel->shaft_circle_vi = m_pModel->shaft_circle_vi;
+		m_pShaftModel->shaft_circle_vj = m_pModel->shaft_circle_vj;
+		m_pShaftModel->shaft_circle_vk = m_pModel->shaft_circle_vk;
 
-		m_pShaftModel->shaft_circle_rms = m_pDCP06Model->shaft_circle_rms;
-		m_pShaftModel->shaft_circle_diameter = m_pDCP06Model->shaft_circle_diameter;
+		m_pShaftModel->shaft_circle_rms = m_pModel->shaft_circle_rms;
+		m_pShaftModel->shaft_circle_diameter = m_pModel->shaft_circle_diameter;
 	}
 
 
@@ -577,7 +577,7 @@ void DCP::DCP06ShaftControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 // ===========================================================================================
 // DefinePlaneModel
 // ===========================================================================================
-DCP::DCP06ShaftModelC::DCP06ShaftModelC()
+DCP::ShaftModel::ShaftModel()
 {
 	memset(&line_buff[0],0, sizeof(S_LINE_BUFF));
 	memset(&calc_plane[0],0, sizeof(S_PLANE_BUFF));
@@ -614,14 +614,14 @@ DCP::DCP06ShaftModelC::DCP06ShaftModelC()
 
 }
 
-DCP::DCP06ShaftModelC::~DCP06ShaftModelC()
+DCP::ShaftModel::~ShaftModel()
 {
 }
 
 
-short DCP::DCP06ShaftModelC::calc_shaft()
+short DCP::ShaftModel::calc_shaft()
 {
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC sMsg;
 	short ret = 0;
 
@@ -716,7 +716,7 @@ short DCP::DCP06ShaftModelC::calc_shaft()
 				calc_circle_plane[0].points[i].z = shaft_circle_points[0].points[i].z;
 				calc_circle_plane[0].points[i].sta = shaft_circle_points[0].points[i].sta;
 			}
-			DCP06CalcPlaneC laske_taso;
+			CalcPlane laske_taso;
 
 			laske_taso.calc(&calc_circle_plane[0], ACTUAL);
 

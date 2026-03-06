@@ -18,7 +18,7 @@ short FitLine(double *p_mat, short points, double *a, double *b, double *c)
 	double kx_tot = 0.0, ky_tot = 0.0, kz_tot = 0.0;
 	double kx_av, ky_av, kz_av, dist, dist_tot = 0.0;
 
-	if (v == NULL || k_table == NULL) {
+	if (v == nullptr || k_table == nullptr) {
 		*a = 0;
 		*b = 0;
 		*c = 0;

@@ -48,18 +48,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06SelectMultiPointsDlgC;
-	class DCP06SelectMultiPointsModelC;
+    class Model;
+	class SelectMultiPointsDialog;
+	class SelectMultiPointsModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06SelectMultiPointsControllerC : public GUI::ControllerC
+    class SelectMultiPointsController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06SelectMultiPointsControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06SelectMultiPointsControllerC();
+            SelectMultiPointsController(Model *pModel);
+			~SelectMultiPointsController();
 
             // Description: Handle change of position values
            	virtual void OnF6Pressed();
@@ -75,26 +75,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06SelectMultiPointsControllerC( const DCP06SelectMultiPointsControllerC& oDCP06SelectMultiPointsController )
+            SelectMultiPointsController( const SelectMultiPointsController& oSelectMultiPointsController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06SelectMultiPointsControllerC& operator=( const DCP06SelectMultiPointsControllerC& oDCP06SelectMultiPointsController )
+            SelectMultiPointsController& operator=( const SelectMultiPointsController& oSelectMultiPointsController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06SelectMultiPointsDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            SelectMultiPointsDialog* m_pDlg;
+			Model* m_pModel;
 			
     };
 
 
-    class DCP06SelectMultiPointsDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+    class SelectMultiPointsDialog:public GUI::TableDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 	 public:
 			/*
@@ -112,10 +112,10 @@ namespace DCP
 				CI_Selected
 			};
 
-		   DCP06SelectMultiPointsDlgC(DCP06ModelC *pDCP06Model);
+		   SelectMultiPointsDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06SelectMultiPointsDlgC();
+            virtual ~SelectMultiPointsDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -130,7 +130,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06SelectMultiPointsModelC* GetDataModel() const;
+            SelectMultiPointsModel* GetDataModel() const;
 
 			OBS::ObserverC m_pMultiColCtrlObserver;
 			virtual void OnChanged( int unNotifyCode,  int ulParam2);
@@ -140,9 +140,9 @@ namespace DCP
 		protected:
 			
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 
-			OBS_DECLARE_EXECUTE(DCP06SelectMultiPointsDlgC);
+			OBS_DECLARE_EXECUTE(SelectMultiPointsDialog);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -156,21 +156,21 @@ namespace DCP
 
 				short m_iSelectedCount;
 				StringC m_strMaxPointSelected;
-				DCP06CommonC* m_pCommon;
+				Common* m_pCommon;
  	};
 
 
-	class DCP06SelectMultiPointsModelC : public GUI::ModelC
+	class SelectMultiPointsModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06SelectMultiPointsModelC();
+            SelectMultiPointsModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06SelectMultiPointsModelC();
+            virtual ~SelectMultiPointsModel();
 						
 			short m_iMinPoint;
 			short m_iMaxPoint;

@@ -44,18 +44,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	//class DCP06ToolDlgC;
+	class Model;
+	//class ToolDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CalcChStC
+    class CalcChangeStation
     {
         public:
 
             // Description: Constructor
-			DCP06CalcChStC(DCP06PomModelC* pDCP06PomModel, DCP06ModelC* pDCP06Model, short active_plane_);//, DCP::DCP06ModelC* pDCP06Model);
-			~DCP06CalcChStC();
+			CalcChangeStation(BestFitModel* pBestFitModel, Model* pModel, short active_plane_);//, DCP::Model* pModel);
+			~CalcChangeStation();
 			
 			//bool calc();
 			short defined_pom_points(/*point_buff_ *point_OCS,*/ short *lastpoint);
@@ -71,8 +71,8 @@ namespace DCP
 			short calculate_3points_not_levelled();
 
 	private:
-		DCP06PomModelC *m_pDCP06PomModel;
-		DCP06ModelC *m_pDCP06Model;
+		BestFitModel *m_pBestFitModel;
+		Model *m_pModel;
 
 		short active_plane;
     };

@@ -48,19 +48,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06CalcDistDlgC;
-	class DCP06CalcDistModelC;
+	class Model;
+	class CalculationDistDialog;
+	class CalculationDistModel;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CalcDistControllerC : public GUI::ControllerC
+    class CalculationDistController : public GUI::ControllerC
     {
         public:
 		
             // Description: Constructor
-            DCP06CalcDistControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06CalcDistControllerC();
+            CalculationDistController(Model* pModel);
+			~CalculationDistController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -89,30 +89,30 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06CalcDistControllerC( const DCP06CalcDistControllerC& oDCP06CalcDistController )
+            CalculationDistController( const CalculationDistController& oCalcDistController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06CalcDistControllerC& operator=( const DCP06CalcDistControllerC& oDCP06CalcDistController )
+            CalculationDistController& operator=( const CalculationDistController& oCalcDistController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06CalcDistDlgC* m_pDlg;
-			DCP06CalcDistModelC * m_pDataModel;
+            CalculationDistDialog* m_pDlg;
+			CalculationDistModel * m_pDataModel;
 			void change_function_keys();
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 
 	private:
 			
     };
 
 
-	class DCP06CalcDistDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class CalculationDistDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -129,10 +129,10 @@ namespace DCP
 				eNote	
 			};
 
-		   DCP06CalcDistDlgC(DCP06CalcDistModelC * pCalcDistModel);
+		   CalculationDistDialog(CalculationDistModel * pCalcDistModel);
 
             // Description: Destructor
-            virtual ~DCP06CalcDistDlgC();
+            virtual ~CalculationDistDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -144,7 +144,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06ModelC* GetDCP06Model() const;
+			Model* GetModel() const;
 
 	protected:
 			GUI::ComboLineCtrlC* m_p3DFile;
@@ -157,7 +157,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pRefType;
 			GUI::ComboLineCtrlC* m_pTargetType;
 
-			OBS_DECLARE_EXECUTE(DCP06CalcDistDlgC);
+			OBS_DECLARE_EXECUTE(CalculationDistDialog);
 
 			/*
 			GUI::ComboLineCtrlC* m_pPointNo;
@@ -167,7 +167,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pZ;
 			*/
 	private:
-		DCP06CalcDistModelC * m_pDataModel;
+		CalculationDistModel * m_pDataModel;
 		OBS::ObserverC m_pDistIdObserver;
 		OBS::ObserverC m_pNoteObserver;
 		OBS::ObserverC m_pRefIdObserver;
@@ -175,18 +175,18 @@ namespace DCP
 		virtual void OnValueChanged(int unNotifyCode, int ulParam2);
 	};
 
-	 class DCP06CalcDistModelC : public GUI::ModelC
+	 class CalculationDistModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06CalcDistModelC(DCP06ModelC* pDCP06Model);
-			//DCP06DomModelC(DCP06DomModelC* pModel);
+            CalculationDistModel(Model* pModel);
+			//Alignment321Model(Alignment321Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06CalcDistModelC();
+            virtual ~CalculationDistModel();
 
 			enum eDisplayMode
 			{
@@ -212,8 +212,8 @@ namespace DCP
 			StringC sActualNonSelected;
 			StringC sDesignNonSelected;
 
-			DCP06CommonC* pCommon;
-			DCP06MsgBoxC* pMsgBox;
+			Common* pCommon;
+			MsgBox* pMsgBox;
 			double dCalculatedDist;
 			short iDistanceCalculated;
 			short all_defined();

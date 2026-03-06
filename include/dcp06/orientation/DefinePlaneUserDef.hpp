@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-	class DCP06DefinePlaneUserDefDlgC;
-    class DCP06ModelC;
-	class DCP06DefinePlaneUserDefModelC;
+	class DefinePlaneUserDefDialog;
+    class Model;
+	class DefinePlaneUserDefModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06DefinePlaneUserDefControllerC : public GUI::ControllerC
+    class DefinePlaneUserDefController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06DefinePlaneUserDefControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06DefinePlaneUserDefControllerC();
+            DefinePlaneUserDefController(Model* pModel);
+			~DefinePlaneUserDefController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -80,25 +80,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06DefinePlaneUserDefControllerC( const DCP06DefinePlaneUserDefControllerC& oDCP05DefinePlaneUserDefController )
+            DefinePlaneUserDefController( const DefinePlaneUserDefController& oDefinePlaneUserDefController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06DefinePlaneUserDefControllerC& operator=( const DCP06DefinePlaneUserDefControllerC& oDCP05DefinePlaneUserDefController )
+            DefinePlaneUserDefController& operator=( const DefinePlaneUserDefController& oDefinePlaneUserDefController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06DefinePlaneUserDefDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            DefinePlaneUserDefDialog* m_pDlg;
+			Model* m_pModel;
     };
 
 
-    class DCP06DefinePlaneUserDefDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class DefinePlaneUserDefDialog:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -115,10 +115,10 @@ namespace DCP
 				*/
 			};
 
-		   DCP06DefinePlaneUserDefDlgC(DCP06ModelC* pDCP06Model);
+		   DefinePlaneUserDefDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06DefinePlaneUserDefDlgC();
+            virtual ~DefinePlaneUserDefDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -132,7 +132,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06DefinePlaneUserDefModelC* GetDataModel() const;
+            DefinePlaneUserDefModel* GetDataModel() const;
 		
 			virtual void RefreshControls();
 
@@ -152,7 +152,7 @@ namespace DCP
 
 			// Description: add all controls
 
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
             
 	private:
 
@@ -168,19 +168,19 @@ namespace DCP
 
 	};
 	
-    class DCP06DefinePlaneUserDefModelC : public GUI::ModelC
+    class DefinePlaneUserDefModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06DefinePlaneUserDefModelC();
+            DefinePlaneUserDefModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06DefinePlaneUserDefModelC();
+            virtual ~DefinePlaneUserDefModel();
 
-			DCP06DefinePlaneModelC* planeModel;
+			DefinePlaneModel* planeModel;
 
 			
 			S_POINT_BUFF userdef_measured_points[MAX_USERDEF_POINTS];

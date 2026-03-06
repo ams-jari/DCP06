@@ -44,18 +44,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06OffsvDlgC;
-	class DCP06OffsVModelC;
+	class Model;
+	class OffsetVDialog;
+	class OffsetVModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06OffsvControllerC : public GUI::ControllerC
+    class OffsetVController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-			DCP06OffsvControllerC(DCP06ModelC* pDCP06Model, short display);
-			~DCP06OffsvControllerC();
+			OffsetVController(Model* pModel, short display);
+			~OffsetVController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -77,25 +77,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06OffsvControllerC( const DCP06OffsvControllerC& oDCP06OffsvController )
+            OffsetVController( const OffsetVController& oOffsetVController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06OffsvControllerC& operator=( const DCP06OffsvControllerC& oDCP06OffsvController )
+            OffsetVController& operator=( const OffsetVController& oOffsetVController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 			//AdfFileFunc* adf;
-            DCP06OffsvDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            OffsetVDialog* m_pDlg;
+			Model* m_pModel;
     };
 
 
-	class DCP06OffsvDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class OffsetVDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -108,10 +108,10 @@ namespace DCP
 				eZ
 			};
 
-		   DCP06OffsvDlgC(DCP06ModelC* pDCP06Model);
+		   OffsetVDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06OffsvDlgC();
+            virtual ~OffsetVDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -123,7 +123,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06OffsVModelC* GetDataModel() const;
+			OffsetVModel* GetDataModel() const;
 
 			virtual void delete_point();
 			virtual void SelectFile(StringC sFile);
@@ -138,22 +138,22 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pY;
 			GUI::ComboLineCtrlC* m_pZ;
 
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 	private:
 			StringC m_sFile;
 	};
 
-    class DCP06OffsVModelC : public GUI::ModelC
+    class OffsetVModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06OffsVModelC();
+            OffsetVModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06OffsVModelC();
+            virtual ~OffsetVModel();
 
 			S_POINT_BUFF	ovalues_buff;
 			S_POINT_BUFF	ovalues_tool_buff;

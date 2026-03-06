@@ -49,18 +49,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06MeasVDlgC;
+	class Model;
+	class MeasVDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06MeasVControllerC : public GUI::ControllerC
+    class MeasVController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06MeasVControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06MeasVControllerC();
+            MeasVController(Model* pModel);
+			~MeasVController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -86,22 +86,22 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06MeasVControllerC( const DCP06MeasVControllerC& oDCP05MeasVController )
+            MeasVController( const MeasVController& oMeasVController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06MeasVControllerC& operator=( const DCP06MeasVControllerC& oDCP05MeasVController )
+            MeasVController& operator=( const MeasVController& oMeasVController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06MeasVDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
-			DCP06CommonC* m_pCommon;
+            MeasVDialog* m_pDlg;
+			Model* m_pModel;
+			Common* m_pCommon;
 
 			bool m_bCamera;
 			GSV::GeospatialViewDialogC* poVideoDlg;
@@ -109,7 +109,7 @@ namespace DCP
     };
 
 
-	class DCP06MeasVDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class MeasVDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -122,10 +122,10 @@ namespace DCP
 				eInfo
 			};
 
-		   DCP06MeasVDlgC(DCP06ModelC* pDCP06Model);
+		   MeasVDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06MeasVDlgC();
+            virtual ~MeasVDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -137,7 +137,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06OffsVModelC* GetDataModel() const;
+			OffsetVModel* GetDataModel() const;
 
 			virtual void delete_point();
 			virtual void set_values(double x, double y, double z);
@@ -150,11 +150,11 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pZ;
 			//GUI::TextCtrlC* m_pInfo;
 
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 	private:
 		//virtual void OnTimer(void);
 		//GUI::TimerC m_pTimer;
-		DCP06CommonC* m_pCommon;
+		Common* m_pCommon;
 		short iInfoInd;
 		StringC strInfoText;
 	};

@@ -54,7 +54,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06LineFitDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::LineFitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -67,16 +67,16 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06LineFitDlgC);
 
 // Unit
 
-DCP::DCP06LineFitDlgC::DCP06LineFitDlgC(DCP06LineFitModelC* pModel,DCP06CalcLineFitC* calcLineFit):m_pLine(0),m_pUsedHeight(0), m_pRefLine(0),
+DCP::LineFitDialog::LineFitDialog(LineFitModel* pModel,CalcLineFit* calcLineFit):m_pLine(0),m_pUsedHeight(0), m_pRefLine(0),
 		m_pShiftLine(0), m_pRotateLine(0),m_pEnteredHeight(0), m_pShiftValue(0), m_pRotateValue(0),m_pLineFitModel(pModel),m_pCalcLineFit(calcLineFit),
-		m_pUsedHeightObserver(OBS_METHOD_TO_PARAM0(DCP06LineFitDlgC, OnValueChanged), this),
-		m_pShiftLineObserver(OBS_METHOD_TO_PARAM0(DCP06LineFitDlgC, OnValueChanged), this),
-		m_pRotateLineObserver(OBS_METHOD_TO_PARAM0(DCP06LineFitDlgC, OnValueChanged), this),
+		m_pUsedHeightObserver(OBS_METHOD_TO_PARAM0(LineFitDialog, OnValueChanged), this),
+		m_pShiftLineObserver(OBS_METHOD_TO_PARAM0(LineFitDialog, OnValueChanged), this),
+		m_pRotateLineObserver(OBS_METHOD_TO_PARAM0(LineFitDialog, OnValueChanged), this),
 		
-		m_pManualHeightObserver(OBS_METHOD_TO_PARAM0(DCP06LineFitDlgC, OnValueChanged), this),
-		m_pShiftValueObserver(OBS_METHOD_TO_PARAM0(DCP06LineFitDlgC, OnValueChanged), this),
-		m_pRotateAngleObserver(OBS_METHOD_TO_PARAM0(DCP06LineFitDlgC, OnValueChanged), this),
-		m_pRefLineObserver(OBS_METHOD_TO_PARAM0(DCP06LineFitDlgC, OnValueChanged), this),
+		m_pManualHeightObserver(OBS_METHOD_TO_PARAM0(LineFitDialog, OnValueChanged), this),
+		m_pShiftValueObserver(OBS_METHOD_TO_PARAM0(LineFitDialog, OnValueChanged), this),
+		m_pRotateAngleObserver(OBS_METHOD_TO_PARAM0(LineFitDialog, OnValueChanged), this),
+		m_pRefLineObserver(OBS_METHOD_TO_PARAM0(LineFitDialog, OnValueChanged), this),
 
 		GUI::ModelHandlerC(),GUI::StandardDialogC()
 {
@@ -94,12 +94,12 @@ DCP::DCP06LineFitDlgC::DCP06LineFitDlgC(DCP06LineFitModelC* pModel,DCP06CalcLine
 
 
             // Description: Destructor
-DCP::DCP06LineFitDlgC::~DCP06LineFitDlgC()
+DCP::LineFitDialog::~LineFitDialog()
 {
  
 }
 
-void DCP::DCP06LineFitDlgC::OnInitDialog(void)
+void DCP::LineFitDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -140,7 +140,7 @@ void DCP::DCP06LineFitDlgC::OnInitDialog(void)
 	m_pEnteredHeight = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pEnteredHeight->SetId(eEnteredHeight);
 	m_pEnteredHeight->SetText(StringC(AT_DCP05,P_DCP_MANUAL_HEIGHT_TOK));
-	m_pEnteredHeight->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
+	m_pEnteredHeight->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	m_pEnteredHeight->SetEmptyAllowed(true);
 
 	m_pEnteredHeight->SetCtrlState( m_pLineFitModel->selectedHeight != MANUALLY_ENTERED ? GUI::BaseCtrlC::CS_Disabled : GUI::BaseCtrlC::CS_ReadWrite);
@@ -170,7 +170,7 @@ void DCP::DCP06LineFitDlgC::OnInitDialog(void)
 	m_pShiftValue = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pShiftValue->SetId(eShiftValue);
 	m_pShiftValue->SetText(StringC(AT_DCP05,P_DCP_SHIFT_VALUE_TOK));
-	m_pShiftValue->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetDCP06Model()->m_nDecimals);
+	m_pShiftValue->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	m_pShiftValue->SetEmptyAllowed(true);
 	m_pShiftValue->SetCtrlState( m_pLineFitModel->selectedShift != SHIFT_NO ? GUI::BaseCtrlC::CS_ReadWrite : GUI::BaseCtrlC::CS_Disabled);
 	//m_pShiftValue->SetCtrlState(GUI::BaseCtrlC::CS_Disabled);
@@ -240,7 +240,7 @@ void DCP::DCP06LineFitDlgC::OnInitDialog(void)
 	
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 }
-void DCP::DCP06LineFitDlgC::OnValueChanged( int unNotifyCode,  int ulParam2)
+void DCP::LineFitDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 {
 	if(unNotifyCode == GUI::NC_ONCOMBOBOX_SELECTION_CHANGED)
 	{
@@ -347,14 +347,14 @@ void DCP::DCP06LineFitDlgC::OnValueChanged( int unNotifyCode,  int ulParam2)
 	
 }
 
-void DCP::DCP06LineFitDlgC::OnDialogActivated()
+void DCP::LineFitDialog::OnDialogActivated()
 {
 
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP06LineFitDlgC::RefreshControls()
+void DCP::LineFitDialog::RefreshControls()
 {	
 	if(m_pLine && m_pUsedHeight && m_pShiftLine && m_pRotateLine && m_pEnteredHeight && m_pShiftValue && m_pRotateValue && m_pRefLine)	
 	{
@@ -450,34 +450,34 @@ void DCP::DCP06LineFitDlgC::RefreshControls()
 	}
 }
 
-void DCP::DCP06LineFitDlgC::UpdateData()
+void DCP::LineFitDialog::UpdateData()
 {
-	memcpy(&GetDCP06Model()->linefitting_line[0], &m_pLineFitModel->line_buff[0], sizeof(S_LINE_BUFF));
-	memcpy(&GetDCP06Model()->linefitting_points,&m_pLineFitModel->points_buff[0],   sizeof(S_POINT_BUFF) * MAX_LINEFIT_POINTS);
-	memcpy(&GetDCP06Model()->linefitting_results[0],&m_pLineFitModel->linefit_results[0],  sizeof(S_LINE_FITTING_RESULTS) * MAX_LINEFIT_POINTS);
+	memcpy(&GetModel()->linefitting_line[0], &m_pLineFitModel->line_buff[0], sizeof(S_LINE_BUFF));
+	memcpy(&GetModel()->linefitting_points,&m_pLineFitModel->points_buff[0],   sizeof(S_POINT_BUFF) * MAX_LINEFIT_POINTS);
+	memcpy(&GetModel()->linefitting_results[0],&m_pLineFitModel->linefit_results[0],  sizeof(S_LINE_FITTING_RESULTS) * MAX_LINEFIT_POINTS);
 
-	GetDCP06Model()->linefitting_manualHeight = m_pLineFitModel->manualHeight;
-	GetDCP06Model()->linefitting_rotateAngle = m_pLineFitModel->rotateAngle;
-	GetDCP06Model()->linefitting_shiftValue = m_pLineFitModel->shiftValue;
-	GetDCP06Model()->linefitting_selectedHeight = m_pLineFitModel->selectedHeight;
-	GetDCP06Model()->linefitting_selectedRotate = m_pLineFitModel->selectedRotate;
-	GetDCP06Model()->linefitting_selectedShift = m_pLineFitModel->selectedShift;
-	GetDCP06Model()->linefitting_selectedRefLine = m_pLineFitModel->selectedRefLine;
+	GetModel()->linefitting_manualHeight = m_pLineFitModel->manualHeight;
+	GetModel()->linefitting_rotateAngle = m_pLineFitModel->rotateAngle;
+	GetModel()->linefitting_shiftValue = m_pLineFitModel->shiftValue;
+	GetModel()->linefitting_selectedHeight = m_pLineFitModel->selectedHeight;
+	GetModel()->linefitting_selectedRotate = m_pLineFitModel->selectedRotate;
+	GetModel()->linefitting_selectedShift = m_pLineFitModel->selectedShift;
+	GetModel()->linefitting_selectedRefLine = m_pLineFitModel->selectedRefLine;
 	
-	GetDCP06Model()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_LINE_FITTING);
-	GetDCP06Model()->poConfigController->StoreConfigData();
+	GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_LINE_FITTING);
+	GetModel()->poConfigController->StoreConfigData();
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06LineFitDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::LineFitDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -487,19 +487,19 @@ bool DCP::DCP06LineFitDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06LineFitDlgC::GetDCP06Model() const
+DCP::Model* DCP::LineFitDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-void DCP::DCP06LineFitDlgC::delete_line()
+void DCP::LineFitDialog::delete_line()
 {
 	/*
 	StringC strMsg;
 	strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_POINTS_OF_LINE_TOK);
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
 		GetDataModel()->active_line	= X_LINE;
@@ -509,7 +509,7 @@ void DCP::DCP06LineFitDlgC::delete_line()
 	*/
 }
 // ================================================================================================
-void DCP::DCP06LineFitDlgC:: x_line()
+void DCP::LineFitDialog:: x_line()
 {
 	/*
 	GetDataModel()->active_line = X_LINE;
@@ -518,7 +518,7 @@ void DCP::DCP06LineFitDlgC:: x_line()
 }
 
 // ================================================================================================
-void DCP::DCP06LineFitDlgC:: y_line()
+void DCP::LineFitDialog:: y_line()
 {
 	/*
 	GetDataModel()->active_line = Y_LINE;
@@ -526,7 +526,7 @@ void DCP::DCP06LineFitDlgC:: y_line()
 	*/
 }
 // ================================================================================================
-void DCP::DCP06LineFitDlgC::z_line()
+void DCP::LineFitDialog::z_line()
 {
 	/*
 	GetDataModel()->active_line = Z_LINE;
@@ -534,7 +534,7 @@ void DCP::DCP06LineFitDlgC::z_line()
 	*/
 }
 // ================================================================================================
-bool DCP::DCP06LineFitDlgC::CalculateLineAfterMeas()
+bool DCP::LineFitDialog::CalculateLineAfterMeas()
 {
 	/*
 	for(short i=0; i < MAX_POINTS_IN_LINE; i++)
@@ -547,7 +547,7 @@ bool DCP::DCP06LineFitDlgC::CalculateLineAfterMeas()
 
 
 	}
-	DCP06CalcLineC calcline;
+	CalcLine calcline;
 	if(calcline.calc(&GetDataModel()->line_buff[0],ACTUAL))
 	//if(calc_plane(&GetDataModel()->plane_buff[0],ACTUAL))
 	{
@@ -560,42 +560,42 @@ bool DCP::DCP06LineFitDlgC::CalculateLineAfterMeas()
 }
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06LineFitControllerC::DCP06LineFitControllerC(DCP::DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::LineFitController::LineFitController(DCP::Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
     SetTitle(StringC( AT_DCP05, T_DCP_LINE_FITTING_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 	
-	common = new DCP06CommonC(pDCP06Model);
+	common = new Common(pModel);
 
-	calcLineFit = new DCP06CalcLineFitC(pDCP06Model);
+	calcLineFit = new CalcLineFit(pModel);
 
-	m_pLineFitModel = new DCP06LineFitModelC();
+	m_pLineFitModel = new LineFitModel();
 
-	m_pLineFitModel->domModel->old_active_coodinate_system = pDCP06Model->active_coodinate_system;
+	m_pLineFitModel->domModel->old_active_coodinate_system = pModel->active_coodinate_system;
 
 	// set active coordinate system to scs
-	pDCP06Model->active_coodinate_system = DCS;
+	pModel->active_coodinate_system = DCS;
 
-	memcpy(&m_pLineFitModel->line_buff[0],  &pDCP06Model->linefitting_line[0], sizeof(S_LINE_BUFF));
-	memcpy(&m_pLineFitModel->points_buff[0],  &pDCP06Model->linefitting_points, sizeof(S_POINT_BUFF) * MAX_LINEFIT_POINTS);
-	memcpy(&m_pLineFitModel->linefit_results[0],  &pDCP06Model->linefitting_results[0], sizeof(S_LINE_FITTING_RESULTS) * MAX_LINEFIT_POINTS);
+	memcpy(&m_pLineFitModel->line_buff[0],  &pModel->linefitting_line[0], sizeof(S_LINE_BUFF));
+	memcpy(&m_pLineFitModel->points_buff[0],  &pModel->linefitting_points, sizeof(S_POINT_BUFF) * MAX_LINEFIT_POINTS);
+	memcpy(&m_pLineFitModel->linefit_results[0],  &pModel->linefitting_results[0], sizeof(S_LINE_FITTING_RESULTS) * MAX_LINEFIT_POINTS);
 
-	m_pLineFitModel->manualHeight = pDCP06Model->linefitting_manualHeight ;
-	m_pLineFitModel->rotateAngle = pDCP06Model->linefitting_rotateAngle;
-	m_pLineFitModel->shiftValue= pDCP06Model->linefitting_shiftValue;
-	m_pLineFitModel->selectedHeight = pDCP06Model->linefitting_selectedHeight;
-	m_pLineFitModel->selectedRotate = pDCP06Model->linefitting_selectedRotate;
-	m_pLineFitModel->selectedShift = pDCP06Model->linefitting_selectedShift;
-	m_pLineFitModel->selectedRefLine = pDCP06Model->linefitting_selectedRefLine;
+	m_pLineFitModel->manualHeight = pModel->linefitting_manualHeight ;
+	m_pLineFitModel->rotateAngle = pModel->linefitting_rotateAngle;
+	m_pLineFitModel->shiftValue= pModel->linefitting_shiftValue;
+	m_pLineFitModel->selectedHeight = pModel->linefitting_selectedHeight;
+	m_pLineFitModel->selectedRotate = pModel->linefitting_selectedRotate;
+	m_pLineFitModel->selectedShift = pModel->linefitting_selectedShift;
+	m_pLineFitModel->selectedRefLine = pModel->linefitting_selectedRefLine;
 	// lasketaan dom jos suora on laskettu koska emme nyt talleta matriisia.. 
 	if(m_pLineFitModel->line_buff[0].calc)
 	{
@@ -615,7 +615,7 @@ DCP::DCP06LineFitControllerC::DCP06LineFitControllerC(DCP::DCP06ModelC* pDCP06Mo
 	}
 		
     // Create a dialog
-    m_pDlg = new DCP::DCP06LineFitDlgC(m_pLineFitModel, calcLineFit);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::LineFitDialog(m_pLineFitModel, calcLineFit);  //lint !e1524 new in constructor for class 
     (void)AddDialog( LINEFIT_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -652,7 +652,7 @@ DCP::DCP06LineFitControllerC::DCP06LineFitControllerC(DCP::DCP06ModelC* pDCP06Mo
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06LineFitControllerC::~DCP06LineFitControllerC()
+DCP::LineFitController::~LineFitController()
 {
 	if(common != 0)
 	{
@@ -666,29 +666,29 @@ DCP::DCP06LineFitControllerC::~DCP06LineFitControllerC()
 		calcLineFit = 0;
 	}
 
-	m_pDCP06Model->active_coodinate_system = m_pLineFitModel->domModel->old_active_coodinate_system;
+	m_pModel->active_coodinate_system = m_pLineFitModel->domModel->old_active_coodinate_system;
 }
 // Description: Route model to everybody else
-bool DCP::DCP06LineFitControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::LineFitController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	DCP::DCP06ModelC* pLineModel = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	DCP::Model* pLineModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Set it to hello world dialog
     return m_pDlg->SetModel( pModel );
 }
 
-void DCP::DCP06LineFitControllerC::OnF1Pressed()
+void DCP::LineFitController::OnF1Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
-	DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+	DCP::MeasureModel* pModel = new MeasureModel;
 
 	pModel->m_iMaxPoint = MAX_POINTS_IN_LINE;
 	pModel->m_iMinPoint = 2;
@@ -759,9 +759,9 @@ void DCP::DCP06LineFitControllerC::OnF1Pressed()
 	memcpy(&pModel->point_table[0],&m_pLineFitModel->line_buff[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_LINE);
 
 	
-	if(GetController(MEAS_CONTROLLER) == NULL)
+	if(GetController(MEAS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDCP06Model) );
+		(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pModel) );
 	}
 	(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_LINE_FITTING_LINE_MEAS_TOK));
 	
@@ -769,9 +769,9 @@ void DCP::DCP06LineFitControllerC::OnF1Pressed()
 	SetActiveController(MEAS_CONTROLLER, true);
 }
 
-void DCP::DCP06LineFitControllerC::OnF2Pressed()
+void DCP::LineFitController::OnF2Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -779,20 +779,20 @@ void DCP::DCP06LineFitControllerC::OnF2Pressed()
 	m_pDlg->y_line();
 
 }
-void DCP::DCP06LineFitControllerC::OnF3Pressed()
+void DCP::LineFitController::OnF3Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
-	DCP::DCP06LineFitMeasModelC* pModel = new DCP06LineFitMeasModelC;
+	DCP::LineFitMeasModel* pModel = new LineFitMeasModel;
 
 	pModel->m_iMaxPoint = MAX_LINEFIT_POINTS;
 	pModel->m_iMinPoint = 1;
@@ -820,9 +820,9 @@ void DCP::DCP06LineFitControllerC::OnF3Pressed()
 	pModel->selectedRotate = m_pLineFitModel->selectedRotate;
 	pModel->selectedRefLine = m_pLineFitModel->selectedRefLine;
 
-	if(GetController(LINEFIT_MEAS_CONTROLLER) == NULL)
+	if(GetController(LINEFIT_MEAS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( LINEFIT_MEAS_CONTROLLER, new DCP::DCP06LineFitMeasControllerC(m_pDCP06Model) );
+		(void)AddController( LINEFIT_MEAS_CONTROLLER, new DCP::LineFitMeasController(m_pModel) );
 	}
 	(void)GetController(LINEFIT_MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_LINE_FITTING_POINTS_TOK));
 	
@@ -834,9 +834,9 @@ void DCP::DCP06LineFitControllerC::OnF3Pressed()
 }
 
 // save
-void DCP::DCP06LineFitControllerC::OnF5Pressed()
+void DCP::LineFitController::OnF5Pressed()
 {	
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -844,24 +844,24 @@ void DCP::DCP06LineFitControllerC::OnF5Pressed()
 
 	if(m_pLineFitModel->line_buff[0].calc != 0 && m_pLineFitModel->domModel->calculated)
 	{
-		DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+		DCP::InputTextModel* pModel = new InputTextModel;
 		pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_NEW_FILENAME_TOK);
 		pModel->m_StrTitle = GetTitle();
 		pModel->m_iTextLength = 20;
 		pModel->m_StrText = L" ";
 
-		if ( NULL == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
+		if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
 		{
 			USER_APP_VERIFY( false );
 			return;
 		}
 
-		if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
+		if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC( m_pDCP06Model));
+			(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController( m_pModel));
 		}
 
-		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDCP06FileDlg->GetDCP06Model());
+		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDCP06FileDlg->GetModel());
 		(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(INPUT_TEXT_CONTROLLER, true);
 	}
@@ -872,20 +872,20 @@ void DCP::DCP06LineFitControllerC::OnF5Pressed()
 	/*if(m_pLineFitModel->calc_LineFit())
 	{
 		
-			if(GetController(RES_LineFit_CONTROLLER) == NULL)
+			if(GetController(RES_LineFit_CONTROLLER) == nullptr)
 			{
-				(void)AddController( RES_LineFit_CONTROLLER, new DCP::DCP06ResLineFitControllerC(m_pDCP06Model, m_pLineFitModel) );
+				(void)AddController( RES_LineFit_CONTROLLER, new DCP::ResLineFitController(m_pModel, m_pLineFitModel) );
 			}
 
 			(void)GetController(RES_LineFit_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_DEV_OF_SHAFT_TOK));
-			(void)GetController( RES_SHAFT_CONTROLLER )->SetModel(m_pDCP06Model);
+			(void)GetController( RES_SHAFT_CONTROLLER )->SetModel(m_pModel);
 			SetActiveController(RES_SHAFT_CONTROLLER, true);
 		}*/
 }
 // Description: Handle change of position values
-void DCP::DCP06LineFitControllerC::OnF6Pressed()
+void DCP::LineFitController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -901,7 +901,7 @@ void DCP::DCP06LineFitControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 
-void DCP::DCP06LineFitControllerC::OnSHF2Pressed()
+void DCP::LineFitController::OnSHF2Pressed()
 {	
 	
 		StringC strDomText;
@@ -910,7 +910,7 @@ void DCP::DCP06LineFitControllerC::OnSHF2Pressed()
 		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_ALL_LINE_FITTING_TOK);
 		strMsg.Format(strMsg,(const wchar_t*)strDomText);
 		
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		if(msgbox.ShowMessageYesNo(strMsg))
 		{
 			memset(&m_pLineFitModel->line_buff[0],0, sizeof(S_LINE_BUFF));
@@ -940,28 +940,28 @@ void DCP::DCP06LineFitControllerC::OnSHF2Pressed()
 			m_pShaftModel->shaft_circle_rms = 0.0;
 			m_pShaftModel->centerOfCircleDist = 0.0;
 			m_pShaftModel->angleLines = 0.0;*/
-			// delete from m_pDCP06Model-> !!!!!!!!!!!!!!!!!!!!!!
+			// delete from m_pModel-> !!!!!!!!!!!!!!!!!!!!!!
 			
 			m_pDlg->RefreshControls();
 		}
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06LineFitControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::LineFitController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == RES_LINE_DLG)
 	{
-		//DCP06MsgBoxC msgBox;
+		//MsgBox msgBox;
 		//msgBox.ShowMessageOk("OK");
 	}
 }
 
 // Description: React on close of controller
-void DCP::DCP06LineFitControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::LineFitController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == MEAS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();		
+		DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();		
 		
 		// copy values
 		memcpy(&m_pLineFitModel->line_buff[0].points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_LINE);
@@ -1002,25 +1002,25 @@ void DCP::DCP06LineFitControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 		m_pDlg->GetDataModel()->line_buff[0].points[3].z = 0.1;
 		m_pDlg->GetDataModel()->line_buff[0].points[3].sta = 1;
 		*/
-		if(GetController(CALC_LINE_CONTROLLER) == NULL)
+		if(GetController(CALC_LINE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( CALC_LINE_CONTROLLER, new DCP::DCP06CalcLineControllerC(&m_pLineFitModel->line_buff[0],ACTUAL, 0) );
+			(void)AddController( CALC_LINE_CONTROLLER, new DCP::CalcLineController(&m_pLineFitModel->line_buff[0],ACTUAL, 0) );
 		}
 
-		(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDCP06Model);
+		(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pModel);
 		SetActiveController(CALC_LINE_CONTROLLER, true);
 
 		/*
 		if(m_pDlg->CalculateLineAfterMeas())
 		{
-			DCP06CommonC common;
+			Common common;
 	
 			short iCount = common.get_max_defined_point_line(&m_pDlg->GetDataModel()->line_buff[0]);
 			if(iCount >=3)
 			{
-				if(GetController(RES_LINE_CONTROLLER) == NULL)
+				if(GetController(RES_LINE_CONTROLLER) == nullptr)
 				{
-					(void)AddController( RES_LINE_CONTROLLER, new DCP::DCP06ResLineControllerC(m_pDCP06Model) );
+					(void)AddController( RES_LINE_CONTROLLER, new DCP::ResLineController(m_pModel) );
 				}
 
 				(void)GetController(RES_LINE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_LINE_MEAS_TOK);
@@ -1066,7 +1066,7 @@ void DCP::DCP06LineFitControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 	else if(lCtrlID == CALC_LINE_CONTROLLER && lExitCode != EC_KEY_CONT)
 	{
 		GUI::DesktopC::Instance()->MessageShow(L"Line calculation error!");
-		//DCP06MsgBoxC msgBox;
+		//MsgBox msgBox;
 		//msgBox.ShowMessageOk("Line calculation error!");
 	}
 
@@ -1074,7 +1074,7 @@ void DCP::DCP06LineFitControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 	{
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06LineFitMeasModelC* pModel = (DCP::DCP06LineFitMeasModelC*) GetController( LINEFIT_MEAS_CONTROLLER )->GetModel();
+			DCP::LineFitMeasModel* pModel = (DCP::LineFitMeasModel*) GetController( LINEFIT_MEAS_CONTROLLER )->GetModel();
 
 			
 			//memcpy(&pModel->point_table[0],&m_pLineFitModel->line_buff[0].points[0], sizeof(S_POINT_BUFF) * MAX_LINEFIT_POINTS);
@@ -1102,7 +1102,7 @@ void DCP::DCP06LineFitControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 	}
 	if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 			strNewFile.Trim();
 			if(strNewFile.Length() > 0)
@@ -1117,7 +1117,7 @@ void DCP::DCP06LineFitControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 	}
 	/*if(lCtrlID == SHAFT_ALIGMENT_LINE_CONTROLLER && lExitCode ==EC_KEY_CONT)
 	{
-		DCP::DCP06ShaftLineModelC* pModel = (DCP::DCP06ShaftLineModelC*) GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->GetModel();	
+		DCP::ShaftLineModel* pModel = (DCP::ShaftLineModel*) GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->GetModel();	
 
 		m_pShaftModel->active_line = pModel->active_line;
 		memcpy(&m_pShaftModel->line_buff[0], &pModel->line_buff[0], sizeof(S_LINE_BUFF));
@@ -1125,16 +1125,16 @@ void DCP::DCP06LineFitControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 
 	if(lCtrlID == CIRCLE_CONTROLLER && lExitCode ==EC_KEY_CONT)
 	{
-		DCP::DCP06PointBuffModelC* pModel = (DCP::DCP06PointBuffModelC*) GetController( CIRCLE_CONTROLLER )->GetModel();	
+		DCP::PointBuffModel* pModel = (DCP::PointBuffModel*) GetController( CIRCLE_CONTROLLER )->GetModel();	
 
 
-		memcpy(&m_pShaftModel->shaft_circle_points[0], &m_pDCP06Model->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
-		memcpy(&m_pShaftModel->shaft_circle_points_in_plane[0], &m_pDCP06Model->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
-		m_pShaftModel->shaft_circle_cx = m_pDCP06Model->shaft_circle_cx;
-		m_pShaftModel->shaft_circle_cy = m_pDCP06Model->shaft_circle_cy;
-		m_pShaftModel->shaft_circle_cz = m_pDCP06Model->shaft_circle_cz;
-		m_pShaftModel->shaft_circle_rms = m_pDCP06Model->shaft_circle_rms;
-		m_pShaftModel->shaft_circle_diameter = m_pDCP06Model->shaft_circle_diameter;
+		memcpy(&m_pShaftModel->shaft_circle_points[0], &m_pModel->shaft_circle_points[0], sizeof(S_CIRCLE_BUFF));
+		memcpy(&m_pShaftModel->shaft_circle_points_in_plane[0], &m_pModel->shaft_circle_points_in_plane[0], sizeof(S_CIRCLE_BUFF));
+		m_pShaftModel->shaft_circle_cx = m_pModel->shaft_circle_cx;
+		m_pShaftModel->shaft_circle_cy = m_pModel->shaft_circle_cy;
+		m_pShaftModel->shaft_circle_cz = m_pModel->shaft_circle_cz;
+		m_pShaftModel->shaft_circle_rms = m_pModel->shaft_circle_rms;
+		m_pShaftModel->shaft_circle_diameter = m_pModel->shaft_circle_diameter;
 	}*/
 
 
@@ -1144,7 +1144,7 @@ void DCP::DCP06LineFitControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 
 /**************************************************************
 **************************************************************/
-short  DCP::DCP06LineFitControllerC::SaveLineFitting(char *fname)
+short  DCP::LineFitController::SaveLineFitting(char *fname)
 {
 //char apu[100];
 int attr = 0;
@@ -1156,7 +1156,7 @@ char sPath[CPI::LEN_PATH_MAX];
 	//char filename_temp[20];
 	//UTL::UnicodeToAscii(filename_temp, fname);
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, sPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, sPath);
 	
 	char filePathBuffer[CPI::LEN_PATH_MAX];
 	filePathBuffer[0] = '\0';
@@ -1165,11 +1165,11 @@ char sPath[CPI::LEN_PATH_MAX];
 	strcat(filePathBuffer, fname);
 	char* pSearch = &filePathBuffer[0];
 
-	//DCP06CommonC common(m_pDCP06Model);
+	//Common common(m_pModel);
 
 	if(common->find_first_file(pSearch, &FileInfo) == 0)
 	{
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			StringC msg;
 			msg.LoadTxt(AT_DCP05,M_DCP_DELETE_OLD_FILE_TOK);
 			msg.Format(msg,StringC(fname));
@@ -1234,9 +1234,9 @@ char sPath[CPI::LEN_PATH_MAX];
 			if(m_pLineFitModel->line_buff[0].points[i].sta != 0)
 			{
 				sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f%c%c", i+1, m_pLineFitModel->line_ocs[0].points[i].point_id, 
-							m_pDCP06Model->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].x,
-							m_pDCP06Model->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].y,
-							m_pDCP06Model->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].z,
+							m_pModel->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].x,
+							m_pModel->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].y,
+							m_pModel->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].z,
 
 							13,10);
 				fputs(lineBuffer,m_pFile);
@@ -1264,7 +1264,7 @@ char sPath[CPI::LEN_PATH_MAX];
 		else
 		{
 			sHeight = StringC(AT_DCP05,V_DCP_MANUALLY_ENTERED_TOK);
-			sprintf(valueBuffer,"%*.f", m_pDCP06Model->m_nDecimals, m_pLineFitModel->manualHeight);
+			sprintf(valueBuffer,"%*.f", m_pModel->m_nDecimals, m_pLineFitModel->manualHeight);
 		}
 		common->convert_to_ascii(sHeight, userBuffer,sHeight.Length()); 
 		
@@ -1280,7 +1280,7 @@ char sPath[CPI::LEN_PATH_MAX];
 
 		if(m_pLineFitModel->selectedShift != SHIFT_NO)
 		{
-			sprintf(valueBuffer,"%.*f",m_pDCP06Model->m_nDecimals, m_pLineFitModel->shiftValue);
+			sprintf(valueBuffer,"%.*f",m_pModel->m_nDecimals, m_pLineFitModel->shiftValue);
 		}
 
 		if(m_pLineFitModel->selectedShift == SHIFT_NO)
@@ -1365,18 +1365,18 @@ char sPath[CPI::LEN_PATH_MAX];
 				{
 					sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Height:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
 								i+1, m_pLineFitModel->points_buff[i].point_id, 
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].xdes,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].ydes,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].zdes,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].xdes,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].ydes,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].zdes,
 		
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_in_line[i].x,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_in_line[i].y,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_in_line[i].z,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_in_line[i].x,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_in_line[i].y,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_in_line[i].z,
 		
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->linefit_results[i].height_diff,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->linefit_results[i].distance_along_line,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->linefit_results[i].line_offset,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->linefit_results[i].points_distance,
+								m_pModel->m_nDecimals, m_pLineFitModel->linefit_results[i].height_diff,
+								m_pModel->m_nDecimals, m_pLineFitModel->linefit_results[i].distance_along_line,
+								m_pModel->m_nDecimals, m_pLineFitModel->linefit_results[i].line_offset,
+								m_pModel->m_nDecimals, m_pLineFitModel->linefit_results[i].points_distance,
 
 								13,10);
 				}
@@ -1384,18 +1384,18 @@ char sPath[CPI::LEN_PATH_MAX];
 				{
 						sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Depth:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
 								i+1, m_pLineFitModel->points_buff[i].point_id, 
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].xdes,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].ydes,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].zdes,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].xdes,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].ydes,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].zdes,
 		
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_in_line[i].x,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_in_line[i].y,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_in_line[i].z,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_in_line[i].x,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_in_line[i].y,
+								m_pModel->m_nDecimals, m_pLineFitModel->points_in_line[i].z,
 		
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->linefit_results[i].height_diff,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->linefit_results[i].distance_along_line,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->linefit_results[i].line_offset,
-								m_pDCP06Model->m_nDecimals, m_pLineFitModel->linefit_results[i].points_distance,
+								m_pModel->m_nDecimals, m_pLineFitModel->linefit_results[i].height_diff,
+								m_pModel->m_nDecimals, m_pLineFitModel->linefit_results[i].distance_along_line,
+								m_pModel->m_nDecimals, m_pLineFitModel->linefit_results[i].line_offset,
+								m_pModel->m_nDecimals, m_pLineFitModel->linefit_results[i].points_distance,
 
 								13,10);
 				}
@@ -1418,9 +1418,9 @@ char sPath[CPI::LEN_PATH_MAX];
 // ===========================================================================================
 // DefinePlaneModel
 // ===========================================================================================
-DCP::DCP06LineFitModelC::DCP06LineFitModelC()
+DCP::LineFitModel::LineFitModel()
 {
-	domModel = new DCP06DomModelC;
+	domModel = new Alignment321Model;
 	
 	memset(&line_buff[0],0, sizeof(S_LINE_BUFF));
 	memset(&line_ocs[0],0, sizeof(S_LINE_BUFF));
@@ -1456,7 +1456,7 @@ DCP::DCP06LineFitModelC::DCP06LineFitModelC()
 	angleLines = 0.0;*/
 }
 
-DCP::DCP06LineFitModelC::~DCP06LineFitModelC()
+DCP::LineFitModel::~LineFitModel()
 {
 	if(domModel != 0)
 	{
@@ -1466,9 +1466,9 @@ DCP::DCP06LineFitModelC::~DCP06LineFitModelC()
 }
 
 
-//short DCP::DCP06LineFitModelC::calc_shaft()
+//short DCP::LineFitModel::calc_shaft()
 //{
-//	DCP06MsgBoxC msgbox;
+//	MsgBox msgbox;
 //	StringC sMsg;
 //	short ret = 0;
 //
@@ -1563,7 +1563,7 @@ DCP::DCP06LineFitModelC::~DCP06LineFitModelC()
 //	//			calc_circle_plane[0].points[i].z = shaft_circle_points[0].points[i].z;
 //	//			calc_circle_plane[0].points[i].sta = shaft_circle_points[0].points[i].sta;
 //	//		}
-//	//		DCP06CalcPlaneC laske_taso;
+//	//		CalcPlane laske_taso;
 //
 //	//		laske_taso.calc(&calc_circle_plane[0], ACTUAL);
 //

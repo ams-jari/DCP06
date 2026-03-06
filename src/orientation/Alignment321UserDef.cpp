@@ -64,7 +64,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
+// OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -77,7 +77,7 @@
 
 // Unit
 //-------------------------------------------------------------------------------------------------
-DCP::DCP06DomUserDefDlgC::DCP06DomUserDefDlgC(DCP::DCP06DomUserDefModelC* pDomUserDefModel):m_pPlane(0),m_pLine(0),m_pPointOffs(0),m_pPointMeas(0),
+DCP::Alignment321UserDefDialog::Alignment321UserDefDialog(DCP::Alignment321UserDefModel* pDomUserDefModel):m_pPlane(0),m_pLine(0),m_pPointOffs(0),m_pPointMeas(0),
 								m_pRotPlane(0),m_pCalc(0),m_pRotLine(0),m_pDataModel(pDomUserDefModel)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
@@ -99,12 +99,12 @@ DCP::DCP06DomUserDefDlgC::DCP06DomUserDefDlgC(DCP::DCP06DomUserDefModelC* pDomUs
 
 // Description: Destructor
 //-------------------------------------------------------------------------------------------------
-DCP::DCP06DomUserDefDlgC::~DCP06DomUserDefDlgC()
+DCP::Alignment321UserDefDialog::~Alignment321UserDefDialog()
 {
 
 }
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefDlgC::OnInitDialog(void)
+void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 {
 	
 	GUI::BaseDialogC::OnInitDialog();
@@ -194,33 +194,33 @@ void DCP::DCP06DomUserDefDlgC::OnInitDialog(void)
 	
 }
 
-void DCP::DCP06DomUserDefDlgC::load_data_from_dcp05model()
+void DCP::Alignment321UserDefDialog::load_data_from_dcp05model()
 {
-	m_pDataModel->domModel->old_active_coodinate_system = GetDCP06Model()->active_coodinate_system;
-	memcpy(m_pDataModel->domModel->matrix,GetDCP06Model()->ocsu_matrix, sizeof(double) * 16);
-	memcpy(m_pDataModel->domModel->inv_matrix,GetDCP06Model()->ocsu_inv_matrix, sizeof(double) * 16);
+	m_pDataModel->domModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
+	memcpy(m_pDataModel->domModel->matrix,GetModel()->ocsu_matrix, sizeof(double) * 16);
+	memcpy(m_pDataModel->domModel->inv_matrix,GetModel()->ocsu_inv_matrix, sizeof(double) * 16);
 
-	m_pDataModel->domModel->dom_active_plane	= GetDCP06Model()->userdef_active_plane;
-	m_pDataModel->domModel->dom_active_line	= GetDCP06Model()->userdef_active_line; 
-	m_pDataModel->domModel->dom_hz_plane		=GetDCP06Model()->userdef_hz_plane;
-	memcpy(&m_pDataModel->domModel->dom_plane_buff[0], &GetDCP06Model()->userdef_plane_buff[0], sizeof(S_PLANE_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_hz_plane_buff[0], &GetDCP06Model()->userdef_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_line_buff[0], &GetDCP06Model()->userdef_line_buff[0], sizeof(S_LINE_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_ovalues_buff, &GetDCP06Model()->userdef_ovalues_buff, sizeof(S_POINT_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_ovalues_tool_buff, &GetDCP06Model()->userdef_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_ref_point_buff, &GetDCP06Model()->userdef_ref_point_buff, sizeof(S_POINT_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_rot_plane_buff, &GetDCP06Model()->userdef_rot_plane_buff, sizeof(S_POINT_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_rot_line_buff, &GetDCP06Model()->userdef_rot_line_buff, sizeof(S_POINT_BUFF));
-	m_pDataModel->domModel->ocsd_defined = GetDCP06Model()->ocsu_defined;
+	m_pDataModel->domModel->dom_active_plane	= GetModel()->userdef_active_plane;
+	m_pDataModel->domModel->dom_active_line	= GetModel()->userdef_active_line; 
+	m_pDataModel->domModel->dom_hz_plane		=GetModel()->userdef_hz_plane;
+	memcpy(&m_pDataModel->domModel->dom_plane_buff[0], &GetModel()->userdef_plane_buff[0], sizeof(S_PLANE_BUFF));
+	memcpy(&m_pDataModel->domModel->dom_hz_plane_buff[0], &GetModel()->userdef_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+	memcpy(&m_pDataModel->domModel->dom_line_buff[0], &GetModel()->userdef_line_buff[0], sizeof(S_LINE_BUFF));
+	memcpy(&m_pDataModel->domModel->dom_ovalues_buff, &GetModel()->userdef_ovalues_buff, sizeof(S_POINT_BUFF));
+	memcpy(&m_pDataModel->domModel->dom_ovalues_tool_buff, &GetModel()->userdef_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+	memcpy(&m_pDataModel->domModel->dom_ref_point_buff, &GetModel()->userdef_ref_point_buff, sizeof(S_POINT_BUFF));
+	memcpy(&m_pDataModel->domModel->dom_rot_plane_buff, &GetModel()->userdef_rot_plane_buff, sizeof(S_POINT_BUFF));
+	memcpy(&m_pDataModel->domModel->dom_rot_line_buff, &GetModel()->userdef_rot_line_buff, sizeof(S_POINT_BUFF));
+	m_pDataModel->domModel->ocsd_defined = GetModel()->ocsu_defined;
 	
-	memcpy(&m_pDataModel->userdef_measured_points, &GetDCP06Model()->userdef_measured_points, sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
-	memcpy(&m_pDataModel->userdef_plane_points_no, &GetDCP06Model()->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
-	memcpy(&m_pDataModel->userdef_line_points_no, &GetDCP06Model()->userdef_line_points_no, sizeof(short) * MAX_USERDEF_POINTS);
-	m_pDataModel->userdef_point_no = GetDCP06Model()->userdef_point_no;
+	memcpy(&m_pDataModel->userdef_measured_points, &GetModel()->userdef_measured_points, sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
+	memcpy(&m_pDataModel->userdef_plane_points_no, &GetModel()->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
+	memcpy(&m_pDataModel->userdef_line_points_no, &GetModel()->userdef_line_points_no, sizeof(short) * MAX_USERDEF_POINTS);
+	m_pDataModel->userdef_point_no = GetModel()->userdef_point_no;
 }
 
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefDlgC::OnDialogActivated()
+void DCP::Alignment321UserDefDialog::OnDialogActivated()
 {
 	
 	
@@ -231,7 +231,7 @@ void DCP::DCP06DomUserDefDlgC::OnDialogActivated()
 
 // Description: refresh all controls
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefDlgC::RefreshControls()
+void DCP::Alignment321UserDefDialog::RefreshControls()
 {	
 	if( m_pPlane && m_pLine && m_pPointOffs && m_pPointMeas &&	m_pRotPlane && m_pRotLine)
 	{
@@ -357,7 +357,7 @@ void DCP::DCP06DomUserDefDlgC::RefreshControls()
 				sStatus = L"+";
 		}
 
-		else //(GetDCP06Model()->dom_active_plane == YZ_PLANE)
+		else //(GetModel()->dom_active_plane == YZ_PLANE)
 		{
 			if(m_pDataModel->domModel->dom_rot_line_buff.x != 0.0 )
 				sStatus = L"+";
@@ -366,59 +366,59 @@ void DCP::DCP06DomUserDefDlgC::RefreshControls()
 		
 		// calculate status
 		sStatus = L"-";
-		if(GetDCP06Model()->ocsu_defined == true  && m_pDataModel->domModel->old_active_coodinate_system == OCSU)
+		if(GetModel()->ocsu_defined == true  && m_pDataModel->domModel->old_active_coodinate_system == OCSU)
 			sStatus = L"+";
 
 		m_pCalc->GetStringInputCtrl()->SetString(sStatus);
 	}
 }
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefDlgC::UpdateData()
+void DCP::Alignment321UserDefDialog::UpdateData()
 {
-		memcpy(GetDCP06Model()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
-		memcpy(GetDCP06Model()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
-		GetDCP06Model()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
-		GetDCP06Model()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
-		GetDCP06Model()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-		memcpy(&GetDCP06Model()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&GetDCP06Model()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&GetDCP06Model()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
-		memcpy(&GetDCP06Model()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
-		memcpy(&GetDCP06Model()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-		memcpy(&GetDCP06Model()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
-		memcpy(&GetDCP06Model()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-		memcpy(&GetDCP06Model()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
-		GetDCP06Model()->ocsu_defined = m_pDataModel->domModel->ocsd_defined;
+		memcpy(GetModel()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
+		memcpy(GetModel()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
+		GetModel()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
+		GetModel()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
+		GetModel()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
+		memcpy(&GetModel()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&GetModel()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
+		memcpy(&GetModel()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
+		memcpy(&GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+		memcpy(&GetModel()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
+		memcpy(&GetModel()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
+		memcpy(&GetModel()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
+		GetModel()->ocsu_defined = m_pDataModel->domModel->ocsd_defined;
 		
 
-		memcpy(&GetDCP06Model()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
-		memcpy(&GetDCP06Model()->userdef_plane_points_no,&m_pDataModel->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
-		memcpy(&GetDCP06Model()->userdef_line_points_no,&m_pDataModel->userdef_line_points_no,  sizeof(short) * MAX_USERDEF_POINTS);
-		GetDCP06Model()->userdef_point_no = m_pDataModel->userdef_point_no; 
+		memcpy(&GetModel()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
+		memcpy(&GetModel()->userdef_plane_points_no,&m_pDataModel->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
+		memcpy(&GetModel()->userdef_line_points_no,&m_pDataModel->userdef_line_points_no,  sizeof(short) * MAX_USERDEF_POINTS);
+		GetModel()->userdef_point_no = m_pDataModel->userdef_point_no; 
 		
 		if(m_pDataModel->domModel->ocsd_defined == true)
-			GetDCP06Model()->active_coodinate_system = OCSU;
+			GetModel()->active_coodinate_system = OCSU;
 		//else
-		//	GetDCP06Model()->active_coodinate_system = DCS;
+		//	GetModel()->active_coodinate_system = DCS;
 
 		// TODO CNF_KEY_USERDEF
-		GetDCP06Model()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_USERDEF);
-		GetDCP06Model()->poConfigController->StoreConfigData();
+		GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_USERDEF);
+		GetModel()->poConfigController->StoreConfigData();
 
-		GetDCP06Model()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
-		GetDCP06Model()->poConfigController->StoreConfigData();
+		GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
+		GetModel()->poConfigController->StoreConfigData();
 }
 
 // Description: only accept hello world Model objects
 //-------------------------------------------------------------------------------------------------
-bool DCP::DCP06DomUserDefDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::Alignment321UserDefDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
 		load_data_from_dcp05model();
         RefreshControls();
@@ -431,14 +431,14 @@ bool DCP::DCP06DomUserDefDlgC::SetModel( GUI::ModelC* pModel )
 
 // Description: Hello World model
 //-------------------------------------------------------------------------------------------------
-DCP::DCP06ModelC* DCP::DCP06DomUserDefDlgC::GetDCP06Model() const
+DCP::Model* DCP::Alignment321UserDefDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefDlgC::delete_dom()
+void DCP::Alignment321UserDefDialog::delete_dom()
 {
 		StringC strDomText;
 		strDomText.LoadTxt(AT_DCP05,L_DCP_USERDEF_TEXT_TOK);
@@ -446,7 +446,7 @@ void DCP::DCP06DomUserDefDlgC::delete_dom()
 		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_ALL_TOK);
 		strMsg.Format(strMsg,(const wchar_t*)strDomText);
 		
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		if(msgbox.ShowMessageYesNo(strMsg))
 		{
 			m_pDataModel->domModel->old_active_coodinate_system = DCS;
@@ -473,14 +473,14 @@ void DCP::DCP06DomUserDefDlgC::delete_dom()
 }
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06DomUserDefControllerC::DCP06DomUserDefControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::Alignment321UserDefController::Alignment321UserDefController(Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -488,10 +488,10 @@ DCP::DCP06DomUserDefControllerC::DCP06DomUserDefControllerC(DCP06ModelC* pDCP06M
     SetTitle(StringC( AT_DCP05, T_DCP_USERDEF_CONFIG_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// create model
-	m_pDataModel = new DCP06DomUserDefModelC(m_pDCP06Model);
+	m_pDataModel = new Alignment321UserDefModel(m_pModel);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06DomUserDefDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::Alignment321UserDefDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( DOM_USERDEF_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -500,7 +500,7 @@ DCP::DCP06DomUserDefControllerC::DCP06DomUserDefControllerC(DCP06ModelC* pDCP06M
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06DomUserDefControllerC::~DCP06DomUserDefControllerC()
+DCP::Alignment321UserDefController::~Alignment321UserDefController()
 {
 	if(m_pDataModel)
 	{
@@ -509,7 +509,7 @@ DCP::DCP06DomUserDefControllerC::~DCP06DomUserDefControllerC()
 	}
 }
 
-void DCP::DCP06DomUserDefControllerC::show_function_keys()
+void DCP::Alignment321UserDefController::show_function_keys()
 {
     FKDef vDef;
 	vDef.poOwner = this;
@@ -555,7 +555,7 @@ void DCP::DCP06DomUserDefControllerC::show_function_keys()
 
 // Description: Route model to everybody else
 //-------------------------------------------------------------------------------------------------
-bool DCP::DCP06DomUserDefControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::Alignment321UserDefController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
@@ -566,17 +566,17 @@ bool DCP::DCP06DomUserDefControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnF1Pressed()
+void DCP::Alignment321UserDefController::OnF1Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+	m_pDlg->GetModel()->active_coodinate_system = DCS;
 
-	DCP::DCP06DefinePlaneUserDefModelC* pModel = new DCP::DCP06DefinePlaneUserDefModelC();
+	DCP::DefinePlaneUserDefModel* pModel = new DCP::DefinePlaneUserDefModel();
 
 	pModel->planeModel->active_plane	= m_pDataModel->domModel->dom_active_plane;
 	pModel->planeModel->active_line		= m_pDataModel->domModel->dom_active_line;
@@ -592,26 +592,26 @@ void DCP::DCP06DomUserDefControllerC::OnF1Pressed()
 	memcpy(&pModel->select_point_list[0], &m_pDataModel->select_point_list[0], sizeof(S_SELECT_POINTS) * MAX_USERDEF_POINTS);
 
 
-	if(GetController(DEFINE_PLANE_USERDEF_CONTROLLER) == NULL)
+	if(GetController(DEFINE_PLANE_USERDEF_CONTROLLER) == nullptr)
 	{
-		(void)AddController(DEFINE_PLANE_USERDEF_CONTROLLER, new DCP::DCP06DefinePlaneUserDefControllerC(m_pDlg->GetDCP06Model()) );
+		(void)AddController(DEFINE_PLANE_USERDEF_CONTROLLER, new DCP::DefinePlaneUserDefController(m_pDlg->GetModel()) );
 	}
 	(void)GetController(DEFINE_PLANE_USERDEF_CONTROLLER )->SetModel(pModel);
 	SetActiveController(DEFINE_PLANE_USERDEF_CONTROLLER, true);
 	
 }
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnF2Pressed()
+void DCP::Alignment321UserDefController::OnF2Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+	m_pDlg->GetModel()->active_coodinate_system = DCS;
 
-	DCP::DCP06DefineLineUserDefModelC* pModel = new DCP::DCP06DefineLineUserDefModelC();
+	DCP::DefineLineUserDefModel* pModel = new DCP::DefineLineUserDefModel();
 	pModel->lineModel->active_plane	= m_pDataModel->domModel->dom_active_plane;
 	pModel->lineModel->active_line		= m_pDataModel->domModel->dom_active_line;
 	//pModel->hz_plane		= m_pDataModel->dom_hz_plane;
@@ -624,34 +624,34 @@ void DCP::DCP06DomUserDefControllerC::OnF2Pressed()
 	m_pDataModel->build_select_point_list();
 	memcpy(&pModel->select_point_list[0], &m_pDataModel->select_point_list[0], sizeof(S_SELECT_POINTS) * MAX_USERDEF_POINTS);
 
-	if(GetController(DEFINE_LINE_USERDEF_CONTROLLER) == NULL)
+	if(GetController(DEFINE_LINE_USERDEF_CONTROLLER) == nullptr)
 	{
-		(void)AddController( DEFINE_LINE_USERDEF_CONTROLLER, new DCP::DCP06DefineLineUserDefControllerC(m_pDlg->GetDCP06Model()) );
+		(void)AddController( DEFINE_LINE_USERDEF_CONTROLLER, new DCP::DefineLineUserDefController(m_pDlg->GetModel()) );
 	}
 	(void)GetController( DEFINE_LINE_USERDEF_CONTROLLER )->SetModel(pModel);
 	SetActiveController(DEFINE_LINE_USERDEF_CONTROLLER, true);
 	
 }
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnF3Pressed()
+void DCP::Alignment321UserDefController::OnF3Pressed()
 {	
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+	m_pDlg->GetModel()->active_coodinate_system = DCS;
 
-	DCP::DCP06OffsVModelC* pModel = new DCP::DCP06OffsVModelC();
+	DCP::OffsetVModel* pModel = new DCP::OffsetVModel();
 	memcpy(&pModel->ovalues_buff,&m_pDataModel->domModel->dom_ovalues_buff,sizeof(S_POINT_BUFF));
 	memcpy(&pModel->ref_point_buff,&m_pDataModel->domModel->dom_ref_point_buff,sizeof(S_POINT_BUFF));
 	memcpy(&pModel->ovalues_tool_buff,&m_pDataModel->domModel->dom_ovalues_tool_buff,sizeof(S_POINT_BUFF));
 	pModel->display = DOM_USERDEF_DLG;
 
-	if(GetController(OFFSV_CONTROLLER) == NULL)
+	if(GetController(OFFSV_CONTROLLER) == nullptr)
 	{
-		(void)AddController( OFFSV_CONTROLLER, new DCP::DCP06OffsvControllerC(m_pDlg->GetDCP06Model(),pModel->display));
+		(void)AddController( OFFSV_CONTROLLER, new DCP::OffsetVController(m_pDlg->GetModel(),pModel->display));
 	}
 	(void)GetController( OFFSV_CONTROLLER )->SetModel(pModel);
 	SetActiveController(OFFSV_CONTROLLER, true);
@@ -659,9 +659,9 @@ void DCP::DCP06DomUserDefControllerC::OnF3Pressed()
 }
 
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnF4Pressed()
+void DCP::Alignment321UserDefController::OnF4Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -676,7 +676,7 @@ void DCP::DCP06DomUserDefControllerC::OnF4Pressed()
 	//UTL::UnicodeToAscii(cActSelected, 2, sActualSelected);
 	BSS::UTI::BSS_UTI_WCharToAscii(sActualSelected, cActSelected,2);
 
-	DCP::DCP06SelectPointModelC* pModel = new DCP06SelectPointModelC;
+	DCP::SelectPointModel* pModel = new SelectPointModel;
 	
 	memset(&pModel->points[0], 0, sizeof(S_SELECT_POINT) * MAX_SELECT_POINTS);
 	// build pointlist
@@ -698,9 +698,9 @@ void DCP::DCP06DomUserDefControllerC::OnF4Pressed()
 	pModel->m_iCounts = iLastDefined;
 	pModel->m_iSelectedId = 0;
 	
-	if(GetController(SELECT_POINT_CONTROLLER) == NULL)
+	if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP06SelectPointControllerC );
+		(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
 	}
 
 	//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_PLANE_MEAS_TOK);
@@ -712,9 +712,9 @@ void DCP::DCP06DomUserDefControllerC::OnF4Pressed()
 
 //-------------------------------------------------------------------------------------------------
 // CALC
-void DCP::DCP06DomUserDefControllerC::OnF5Pressed()
+void DCP::Alignment321UserDefController::OnF5Pressed()
 {	
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -724,45 +724,45 @@ void DCP::DCP06DomUserDefControllerC::OnF5Pressed()
 	m_pDataModel->copy_measured_points();
 
 	// calc line
-	if(GetController(CALC_LINE_CONTROLLER) == NULL)
+	if(GetController(CALC_LINE_CONTROLLER) == nullptr)
 	{
-		(void)AddController( CALC_LINE_CONTROLLER, new DCP::DCP06CalcLineControllerC(&m_pDataModel->domModel->dom_line_buff[0],ACTUAL, 0) );
+		(void)AddController( CALC_LINE_CONTROLLER, new DCP::CalcLineController(&m_pDataModel->domModel->dom_line_buff[0],ACTUAL, 0) );
 	}
 
-	(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+	(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 	SetActiveController(CALC_LINE_CONTROLLER, true);
 
 	/* siirr� t�m� oikeaan paikkaan
 
-	DCP06CalcDomC calc_dom(m_pDataModel->domModel);
+	CalcAlignment321 calc_dom(m_pDataModel->domModel);
 	if(calc_dom.calc())
 	{	
-		m_pDlg->GetDCP06Model()->active_coodinate_system = OCSU;
+		m_pDlg->GetModel()->active_coodinate_system = OCSU;
 		m_pDataModel->domModel->ocsd_defined = true;
-		m_pDlg->GetDCP06Model()->ocsu_defined = true;
+		m_pDlg->GetModel()->ocsu_defined = true;
 		// kopioi arvot DCP05Model:iin
-		memcpy(m_pDlg->GetDCP06Model()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
-		memcpy(m_pDlg->GetDCP06Model()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
-		m_pDlg->GetDCP06Model()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
-		m_pDlg->GetDCP06Model()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
-		m_pDlg->GetDCP06Model()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-		memcpy(&m_pDlg->GetDCP06Model()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&m_pDlg->GetDCP06Model()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&m_pDlg->GetDCP06Model()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
-		memcpy(&m_pDlg->GetDCP06Model()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDlg->GetDCP06Model()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDlg->GetDCP06Model()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDlg->GetDCP06Model()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDlg->GetDCP06Model()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
+		memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
+		memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
+		m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
+		m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
+		m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
+		memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
 		Close(EC_KEY_CONT);
 	}
 	*/
 }
 
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnF6Pressed()
+void DCP::Alignment321UserDefController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -778,19 +778,19 @@ void DCP::DCP06DomUserDefControllerC::OnF6Pressed()
 }
 
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnSHF2Pressed()
+void DCP::Alignment321UserDefController::OnSHF2Pressed()
 {	
 	m_pDlg->delete_dom();
 }
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnSHF3Pressed()
+void DCP::Alignment321UserDefController::OnSHF3Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
-	DCP::DCP06RotatePlaneModelC* pModel = new DCP::DCP06RotatePlaneModelC();
+	DCP::RotatePlaneModel* pModel = new DCP::RotatePlaneModel();
 	
 	memcpy(&pModel->point_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
 	pModel->plane_type = m_pDataModel->domModel->dom_active_plane;
@@ -799,9 +799,9 @@ void DCP::DCP06DomUserDefControllerC::OnSHF3Pressed()
 	sTitle.LoadTxt(AT_DCP05,T_DCP_USERDEF_ROTATE_PLANE_TOK);
 	pModel->sTitle = sTitle;
 
-	if(GetController(ROTATE_PLANE_CONTROLLER) == NULL)
+	if(GetController(ROTATE_PLANE_CONTROLLER) == nullptr)
 	{
-		(void)AddController( ROTATE_PLANE_CONTROLLER, new DCP::DCP06RotatePlaneControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( ROTATE_PLANE_CONTROLLER, new DCP::RotatePlaneController(m_pDlg->GetModel()));
 	}
 	(void)GetController( ROTATE_PLANE_CONTROLLER )->SetModel(pModel);
 	SetActiveController(ROTATE_PLANE_CONTROLLER, true);
@@ -809,17 +809,17 @@ void DCP::DCP06DomUserDefControllerC::OnSHF3Pressed()
 }
 
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnSHF4Pressed()
+void DCP::Alignment321UserDefController::OnSHF4Pressed()
 {
 	
 
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	DCP::DCP06RotateLineModelC* pModel = new DCP::DCP06RotateLineModelC();
+	DCP::RotateLineModel* pModel = new DCP::RotateLineModel();
 	
 	memcpy(&pModel->point_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
 	pModel->plane_type = m_pDataModel->domModel->dom_active_plane;
@@ -828,25 +828,25 @@ void DCP::DCP06DomUserDefControllerC::OnSHF4Pressed()
 	sTitle.LoadTxt(AT_DCP05,T_DCP_USERDEF_ROTATE_LINE_TOK);
 	pModel->sTitle = sTitle;
 
-	if(GetController(ROTATE_LINE_CONTROLLER) == NULL)
+	if(GetController(ROTATE_LINE_CONTROLLER) == nullptr)
 	{
-		(void)AddController( ROTATE_LINE_CONTROLLER, new DCP::DCP06RotateLineControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( ROTATE_LINE_CONTROLLER, new DCP::RotateLineController(m_pDlg->GetModel()));
 	}
 	(void)GetController( ROTATE_LINE_CONTROLLER )->SetModel(pModel);
 	SetActiveController(ROTATE_LINE_CONTROLLER, true);
 	
 }
 
-void DCP::DCP06DomUserDefControllerC::open_meas_display() 
+void DCP::Alignment321UserDefController::open_meas_display() 
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	DCP06CommonC common(m_pDCP06Model);
-	DCP06MsgBoxC msgBox;
+	Common common(m_pModel);
+	MsgBox msgBox;
 
 	int iCount = m_pDataModel->get_measured_points_count();
 	bool delete_pid = true;
@@ -910,9 +910,9 @@ void DCP::DCP06DomUserDefControllerC::open_meas_display()
 	
 	//int iLastDefinedPoint = m_pDataModel->get_last_defined_point();
 
-	m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+	m_pDlg->GetModel()->active_coodinate_system = DCS;
 
-	DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+	DCP::MeasureModel* pModel = new MeasureModel;
 	pModel->m_iMaxPoint = MAX_USERDEF_POINTS;
 	pModel->m_iMinPoint = 2;
 	pModel->m_iPointsCount = (iLastDefinedPoint < 2) ? 2 : iLastDefinedPoint;
@@ -923,9 +923,9 @@ void DCP::DCP06DomUserDefControllerC::open_meas_display()
 
 	//memcpy(&pModel->point_table[0], &m_pDlg->GetDataModel()->plane_buff[0].points[0], sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
 
-	if(GetController(MEAS_CONTROLLER) == NULL)
+	if(GetController(MEAS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()));
 	}
 	(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_USERDEF_MEAS_TOK));
 
@@ -933,30 +933,30 @@ void DCP::DCP06DomUserDefControllerC::open_meas_display()
 	SetActiveController(MEAS_CONTROLLER, true);
 }
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnSHF5Pressed()
+void DCP::Alignment321UserDefController::OnSHF5Pressed()
 {
 	open_meas_display();
 	/*
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+	DCP::MeasureModel* pModel = new MeasureModel;
 	pModel->m_iMaxPoint = MAX_BESTFIT_POINTS;
 	pModel->m_iMinPoint = 2;
 	pModel->m_iPointsCount = 3;
 	pModel->m_iCurrentPoint = 1;
 
 	memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&pModel->point_table[0], &m_pDlg->GetDCP06Model()->userdef_measured_points[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&pModel->point_table[0], &m_pDlg->GetModel()->userdef_measured_points[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 
 	//memcpy(&pModel->point_table[0], &m_pDlg->GetDataModel()->plane_buff[0].points[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 
-	if(GetController(MEAS_CONTROLLER) == NULL)
+	if(GetController(MEAS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()));
 	}
 	(void)GetController(MEAS_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_USERDEF_MEAS_TOK);
 
@@ -965,7 +965,7 @@ void DCP::DCP06DomUserDefControllerC::OnSHF5Pressed()
 	*/
 }
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::Alignment321UserDefController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == A321_USERDEF_STATUS_DLG)
 	{
@@ -982,7 +982,7 @@ void DCP::DCP06DomUserDefControllerC::OnActiveDialogClosed( int lDlgID, int lExi
 		*/
 		if(lExitCode == 100 || lExitCode == 200)
 		{
-			//if(GetController(A321_USERDEF_CONTROLLER) == NULL)
+			//if(GetController(A321_USERDEF_CONTROLLER) == nullptr)
 				SetActiveDialog(DOM_USERDEF_DLG, true);
 
 				if(lExitCode == 100)
@@ -1004,7 +1004,7 @@ void DCP::DCP06DomUserDefControllerC::OnActiveDialogClosed( int lDlgID, int lExi
 // ================================================================================================
 // Description: OnControllerActivated
 // ================================================================================================
-void DCP::DCP06DomUserDefControllerC::OnControllerActivated(void)
+void DCP::Alignment321UserDefController::OnControllerActivated(void)
 {
 	ResetFunctionKeys();
 	/*
@@ -1019,14 +1019,14 @@ void DCP::DCP06DomUserDefControllerC::OnControllerActivated(void)
 	*/
 	short count = m_pDataModel->get_measured_points_count();
 	bool defined = count >= 2 ? true: false;
-	DCP06UserDefStatusDlgC* poStatusDlg = new DCP06UserDefStatusDlgC(m_pDlg->GetDCP06Model(), defined);
+	UserDefStatusDialog* poStatusDlg = new UserDefStatusDialog(m_pDlg->GetModel(), defined);
 	(void) AddDialog(A321_USERDEF_STATUS_DLG, poStatusDlg); 	
 	SetActiveDialog(A321_USERDEF_STATUS_DLG, true);
 
 	
 }
 //-------------------------------------------------------------------------------------------------
-void DCP::DCP06DomUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 
 
@@ -1034,14 +1034,14 @@ void DCP::DCP06DomUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int
 	{
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();		
+			DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();		
 
 			// copy values
 			memcpy(&m_pDataModel->userdef_measured_points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
 			
 			m_pDataModel->build_select_point_list();
 			m_pDataModel->domModel->old_active_coodinate_system = DCS;
-			m_pDlg->GetDCP06Model()->ocsu_defined = false;
+			m_pDlg->GetModel()->ocsu_defined = false;
 		}
 		else if(lExitCode == EC_KEY_ESC)
 		{
@@ -1051,7 +1051,7 @@ void DCP::DCP06DomUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int
 
 	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectPointModelC* pModel = (DCP::DCP06SelectPointModelC*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
+		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
 		StringC strSelectedPoint = pModel->m_strSelectedPoint;
 		short iSelectedPointId = pModel->m_iSelectedId;
 
@@ -1060,13 +1060,13 @@ void DCP::DCP06DomUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int
 			m_pDataModel->userdef_point_no = iSelectedPointId;
 		}
 		m_pDataModel->domModel->old_active_coodinate_system = DCS;
-		m_pDlg->GetDCP06Model()->ocsu_defined = false;
+		m_pDlg->GetModel()->ocsu_defined = false;
 	}
 
 	if(lCtrlID == DEFINE_PLANE_USERDEF_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		
-		DCP::DCP06DefinePlaneUserDefModelC* pModel = (DCP::DCP06DefinePlaneUserDefModelC*) GetController( DEFINE_PLANE_USERDEF_CONTROLLER )->GetModel();		
+		DCP::DefinePlaneUserDefModel* pModel = (DCP::DefinePlaneUserDefModel*) GetController( DEFINE_PLANE_USERDEF_CONTROLLER )->GetModel();		
 
 		// copy values into dommodel
 		m_pDataModel->domModel->dom_active_plane	= pModel->planeModel->active_plane;
@@ -1083,68 +1083,68 @@ void DCP::DCP06DomUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int
 			m_pDataModel->domModel->dom_active_line = Y_LINE;
 
 		m_pDataModel->domModel->old_active_coodinate_system = DCS;
-		m_pDlg->GetDCP06Model()->ocsu_defined = false;
+		m_pDlg->GetModel()->ocsu_defined = false;
 
 	}
 	if(lCtrlID == DEFINE_LINE_USERDEF_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06DefineLineUserDefModelC* pModel = (DCP::DCP06DefineLineUserDefModelC*) GetController( DEFINE_LINE_USERDEF_CONTROLLER )->GetModel();		
+		DCP::DefineLineUserDefModel* pModel = (DCP::DefineLineUserDefModel*) GetController( DEFINE_LINE_USERDEF_CONTROLLER )->GetModel();		
 		// copy values into dommodel
 		m_pDataModel->domModel->dom_active_line	= pModel->lineModel->active_line; 
 		memcpy(&m_pDataModel->domModel->dom_line_buff[0], &pModel->lineModel->line_buff[0], sizeof(S_LINE_BUFF));
 		memcpy(&m_pDataModel->userdef_line_points_no[0], &pModel->userdef_line_points_no[0], sizeof(short)* MAX_USERDEF_POINTS);
 
 		m_pDataModel->domModel->old_active_coodinate_system = DCS;
-		m_pDlg->GetDCP06Model()->ocsu_defined = false;
+		m_pDlg->GetModel()->ocsu_defined = false;
 		
 	}
 
 	if(lCtrlID == OFFSV_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06OffsVModelC* pModel = (DCP::DCP06OffsVModelC*) GetController( OFFSV_CONTROLLER )->GetModel();		
+		DCP::OffsetVModel* pModel = (DCP::OffsetVModel*) GetController( OFFSV_CONTROLLER )->GetModel();		
 		// copy values into dommodel
 		memcpy(&m_pDataModel->domModel->dom_ovalues_buff, &pModel->ovalues_buff, sizeof(S_POINT_BUFF));
 		memcpy(&m_pDataModel->domModel->dom_ovalues_tool_buff, &pModel->ovalues_tool_buff, sizeof(S_POINT_BUFF));
 		memcpy(&m_pDataModel->domModel->dom_ref_point_buff, &pModel->ref_point_buff, sizeof(S_POINT_BUFF));
 
 		m_pDataModel->domModel->old_active_coodinate_system = DCS;
-		m_pDlg->GetDCP06Model()->ocsu_defined = false;
+		m_pDlg->GetModel()->ocsu_defined = false;
 
 	}
 	/*
 	if(lCtrlID == MEASV_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06OffsVModelC* pModel = (DCP::DCP06OffsVModelC*) GetController( MEASV_CONTROLLER )->GetModel();		
+		DCP::OffsetVModel* pModel = (DCP::OffsetVModel*) GetController( MEASV_CONTROLLER )->GetModel();		
 		// copy values into dommodel
 		memcpy(&m_pDataModel->domModel->dom_ovalues_buff, &pModel->ovalues_buff, sizeof(S_POINT_BUFF));
 		memcpy(&m_pDataModel->domModel->dom_ovalues_tool_buff,&pModel->ovalues_tool_buff, sizeof(S_POINT_BUFF));
 		memcpy(&m_pDataModel->domModel->dom_ref_point_buff, &pModel->ref_point_buff, sizeof(S_POINT_BUFF));
 
 		m_pDataModel->domModel->old_active_coodinate_system = DCS;
-		m_pDlg->GetDCP06Model()->ocsu_defined = false;
+		m_pDlg->GetModel()->ocsu_defined = false;
 
 	}
 	*/
 	if(lCtrlID == ROTATE_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06RotatePlaneModelC* pModel = (DCP::DCP06RotatePlaneModelC*) GetController( ROTATE_PLANE_CONTROLLER )->GetModel();		
+		DCP::RotatePlaneModel* pModel = (DCP::RotatePlaneModel*) GetController( ROTATE_PLANE_CONTROLLER )->GetModel();		
 		// copy values into dommodel
 				
 		memcpy(&m_pDataModel->domModel->dom_rot_plane_buff, &pModel->point_buff, sizeof(S_POINT_BUFF));
 		
 		m_pDataModel->domModel->old_active_coodinate_system = DCS;
-		m_pDlg->GetDCP06Model()->ocsu_defined = false;
+		m_pDlg->GetModel()->ocsu_defined = false;
 	}
 
 	if(lCtrlID == ROTATE_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06RotatePlaneModelC* pModel = (DCP::DCP06RotatePlaneModelC*) GetController( ROTATE_LINE_CONTROLLER )->GetModel();		
+		DCP::RotatePlaneModel* pModel = (DCP::RotatePlaneModel*) GetController( ROTATE_LINE_CONTROLLER )->GetModel();		
 		// copy values into dommodel
 				
 		memcpy(&m_pDataModel->domModel->dom_rot_line_buff, &pModel->point_buff, sizeof(S_POINT_BUFF));
 
 		m_pDataModel->domModel->old_active_coodinate_system = DCS;
-		m_pDlg->GetDCP06Model()->ocsu_defined = false;
+		m_pDlg->GetModel()->ocsu_defined = false;
 	}
 	
 	if(lCtrlID == CALC_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
@@ -1157,42 +1157,42 @@ void DCP::DCP06DomUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int
 			//if(m_pDlg->GetDataModel()->display == DOM_USERDEF_DLG)
 			//	m_pDlg->GetDataModel()->hz_plane = false;
 			
-			if(GetController(CALC_PLANE_CONTROLLER) == NULL)
+			if(GetController(CALC_PLANE_CONTROLLER) == nullptr)
 			{
-				(void)AddController( CALC_PLANE_CONTROLLER, new DCP::DCP06CalcPlaneControllerC(&m_pDataModel->domModel->dom_plane_buff[0],ACTUAL, 0) );
+				(void)AddController( CALC_PLANE_CONTROLLER, new DCP::CalcPlaneontrollerC(&m_pDataModel->domModel->dom_plane_buff[0],ACTUAL, 0) );
 			}
 
-			(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+			(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 			SetActiveController(CALC_PLANE_CONTROLLER, true);
 		}
 		else
 		{
 			
-			DCP06CalcDomC calc_dom(m_pDataModel->domModel);
+			CalcAlignment321 calc_dom(m_pDataModel->domModel);
 			if(calc_dom.calc())
 			{	
-				m_pDlg->GetDCP06Model()->active_coodinate_system = OCSU;
+				m_pDlg->GetModel()->active_coodinate_system = OCSU;
 				m_pDataModel->domModel->ocsd_defined = true;
-				m_pDlg->GetDCP06Model()->ocsu_defined = true;
+				m_pDlg->GetModel()->ocsu_defined = true;
 				// kopioi arvot DCP05Model:iin
-				memcpy(m_pDlg->GetDCP06Model()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
-				memcpy(m_pDlg->GetDCP06Model()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
-				m_pDlg->GetDCP06Model()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
-				m_pDlg->GetDCP06Model()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
-				m_pDlg->GetDCP06Model()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
+				memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
+				memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
+				m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
+				m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
+				m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
+				memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
 
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_plane_points_no,&m_pDataModel->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_line_points_no,&m_pDataModel->userdef_line_points_no,  sizeof(short) * MAX_USERDEF_POINTS);
-				m_pDlg->GetDCP06Model()->userdef_point_no = m_pDataModel->userdef_point_no; 
+				memcpy(&m_pDlg->GetModel()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
+				memcpy(&m_pDlg->GetModel()->userdef_plane_points_no,&m_pDataModel->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
+				memcpy(&m_pDlg->GetModel()->userdef_line_points_no,&m_pDataModel->userdef_line_points_no,  sizeof(short) * MAX_USERDEF_POINTS);
+				m_pDlg->GetModel()->userdef_point_no = m_pDataModel->userdef_point_no; 
 
 				Close(EC_KEY_CONT);
 			}
@@ -1201,32 +1201,32 @@ void DCP::DCP06DomUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int
 	if(lCtrlID == CALC_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 			// calc_dom
-		DCP06CalcDomC calc_dom(m_pDataModel->domModel);
+		CalcAlignment321 calc_dom(m_pDataModel->domModel);
 		if(calc_dom.calc())
 		{	
-			m_pDlg->GetDCP06Model()->active_coodinate_system = OCSU;
+			m_pDlg->GetModel()->active_coodinate_system = OCSU;
 			m_pDataModel->domModel->ocsd_defined = true;
-			m_pDlg->GetDCP06Model()->ocsu_defined = true;
+			m_pDlg->GetModel()->ocsu_defined = true;
 			// kopioi arvot DCP05Model:iin
-			memcpy(m_pDlg->GetDCP06Model()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
-			memcpy(m_pDlg->GetDCP06Model()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
-			m_pDlg->GetDCP06Model()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
-			m_pDlg->GetDCP06Model()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
-			m_pDlg->GetDCP06Model()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
+			memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
+			memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
+			m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
+			m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
+			m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
+			memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
 
 			
-			memcpy(&m_pDlg->GetDCP06Model()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_plane_points_no,&m_pDataModel->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
-				memcpy(&m_pDlg->GetDCP06Model()->userdef_line_points_no,&m_pDataModel->userdef_line_points_no,  sizeof(short) * MAX_USERDEF_POINTS);
-				m_pDlg->GetDCP06Model()->userdef_point_no = m_pDataModel->userdef_point_no; 
+			memcpy(&m_pDlg->GetModel()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
+				memcpy(&m_pDlg->GetModel()->userdef_plane_points_no,&m_pDataModel->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
+				memcpy(&m_pDlg->GetModel()->userdef_line_points_no,&m_pDataModel->userdef_line_points_no,  sizeof(short) * MAX_USERDEF_POINTS);
+				m_pDlg->GetModel()->userdef_point_no = m_pDataModel->userdef_point_no; 
 
 			Close(EC_KEY_CONT);
 		}
@@ -1243,15 +1243,15 @@ void DCP::DCP06DomUserDefControllerC::OnActiveControllerClosed( int lCtrlID, int
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06DomUserDefModelC::DCP06DomUserDefModelC(DCP06ModelC* pDCP06Model): m_pDCP06Model(pDCP06Model)
+DCP::Alignment321UserDefModel::Alignment321UserDefModel(Model* pModel): m_pModel(pModel)
 {
-	domModel = new DCP06DomModelC;
+	domModel = new Alignment321Model;
 	memset(&userdef_measured_points, 0, sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
 
 	memset(&select_point_list[0], 0, sizeof(S_SELECT_POINTS) * MAX_USERDEF_POINTS);
 }
 
-DCP::DCP06DomUserDefModelC::~DCP06DomUserDefModelC()
+DCP::Alignment321UserDefModel::~Alignment321UserDefModel()
 {
 	if(domModel != 0)
 	{
@@ -1260,7 +1260,7 @@ DCP::DCP06DomUserDefModelC::~DCP06DomUserDefModelC()
 	}
 }
 
-short DCP::DCP06DomUserDefModelC::get_measured_points_count()
+short DCP::Alignment321UserDefModel::get_measured_points_count()
 {
 int i,count;
 		
@@ -1276,10 +1276,10 @@ int i,count;
 		return count;
 }
 
-short DCP::DCP06DomUserDefModelC::get_last_defined_point()
+short DCP::Alignment321UserDefModel::get_last_defined_point()
 {
 	short last = 0;
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 
 	for(int i = MAX_USERDEF_POINTS; i >=1; i--)
 	{
@@ -1292,11 +1292,11 @@ short DCP::DCP06DomUserDefModelC::get_last_defined_point()
 	return last;
 }
 
-bool DCP::DCP06DomUserDefModelC::is_point_id_defined()
+bool DCP::Alignment321UserDefModel::is_point_id_defined()
 {
 	char pid[10];
 	bool ret = false;
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 	
 	for(int i = 0; i < MAX_USERDEF_POINTS; i++)
 	{
@@ -1310,11 +1310,11 @@ bool DCP::DCP06DomUserDefModelC::is_point_id_defined()
 	return ret;
 }
 
-short DCP::DCP06DomUserDefModelC::build_select_point_list()
+short DCP::Alignment321UserDefModel::build_select_point_list()
 {
 	memset(&select_point_list[0],0,sizeof(S_SELECT_POINTS) * MAX_USERDEF_POINTS);
 	
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
     bool mea = false;
 	short iCount = common.get_last_defined_point(&userdef_measured_points[0],MAX_USERDEF_POINTS);
 
@@ -1341,7 +1341,7 @@ short DCP::DCP06DomUserDefModelC::build_select_point_list()
 
 }
 
-short DCP::DCP06DomUserDefModelC::copy_measured_points()
+short DCP::Alignment321UserDefModel::copy_measured_points()
 {
 	short point_no = 0;
 	int i = 0;

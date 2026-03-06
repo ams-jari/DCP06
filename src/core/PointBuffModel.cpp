@@ -47,7 +47,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06MeasDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::MeasureDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -59,11 +59,11 @@
 // ================================================================================================
 
 // Instantiate template classes
-DCP::DCP06PointBuffModelC::DCP06PointBuffModelC()
+DCP::PointBuffModel::PointBuffModel()
 {
 	memset(&m_pPointBuff[0],0,sizeof(S_POINT_BUFF));
 	
 }
-DCP::DCP06PointBuffModelC::~DCP06PointBuffModelC()
+DCP::PointBuffModel::~PointBuffModel()
 {
 }

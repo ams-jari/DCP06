@@ -47,20 +47,20 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06CircleFileDlgC;
-	class DCP06CircleFileModelC;
+    class Model;
+	class CircleFileDialog;
+	class CircleFileModel;
 
 	class CircleFileFunc;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CircleFileControllerC : public GUI::ControllerC
+    class CircleFileController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06CircleFileControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06CircleFileControllerC();
+            CircleFileController(Model* pModel);
+			~CircleFileController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -81,25 +81,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06CircleFileControllerC( const DCP06CircleFileControllerC& oDCP06CircleFileController )
+            CircleFileController( const CircleFileController& oCircleFileController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06CircleFileControllerC& operator=( const DCP06CircleFileControllerC& oDCP06CircleFileController )
+            CircleFileController& operator=( const CircleFileController& oCircleFileController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
-			DCP06ModelC* m_pDCP06Model;
-            DCP06CircleFileDlgC* m_pDlg;
-			DCP06CircleFileModelC* m_pDataModel;
+			Model* m_pModel;
+            CircleFileDialog* m_pDlg;
+			CircleFileModel* m_pDataModel;
     };
 
 
-    class DCP06CircleFileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+    class CircleFileDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 	 public:
 
@@ -112,10 +112,10 @@ namespace DCP
 				eFreeSpace
 			};
 
-		   DCP06CircleFileDlgC(DCP06CircleFileModelC* pModel);
+		   CircleFileDialog(CircleFileModel* pModel);
 
             // Description: Destructor
-            virtual ~DCP06CircleFileDlgC();
+            virtual ~CircleFileDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -130,7 +130,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			virtual void RefreshControls();
 
@@ -143,28 +143,28 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pTime;
 			GUI::ComboLineCtrlC* m_pFreeSpace;
 
-			DCP06CircleFileModelC* m_pDataModel;
+			CircleFileModel* m_pDataModel;
 	};
 
-	class DCP06CircleFileModelC : public GUI::ModelC
+	class CircleFileModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06CircleFileModelC(DCP06ModelC* pDCP06Model);
+            CircleFileModel(Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06CircleFileModelC();
-			DCP06CommonC* pCommon;
+            virtual ~CircleFileModel();
+			Common* pCommon;
 			CircleFileFunc* m_pFileFunc;
 			char x_diff[20];
 			char y_diff[20];
 			char z_def[20];
 
 	private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
     };
 
    // Description: Tabbed controller for the Hello World application
@@ -175,8 +175,8 @@ namespace DCP
             // Description: Constructor
             //CircleFileFunc();
 			//AdfFileFunc(const char* filename, bool bCreate=false);
-			CircleFileFunc(boost::filesystem::path * FileInfo,DCP06ModelC* pDCP06Model);
-			CircleFileFunc(DCP06ModelC* pDCP06Model);
+			CircleFileFunc(boost::filesystem::path * FileInfo,Model* pModel);
+			CircleFileFunc(Model* pModel);
 
 			~CircleFileFunc();
 
@@ -192,7 +192,7 @@ namespace DCP
 			//short get_next_id(char *did);
 			//short delete_point_from_cdf(short pno);
 			//short open_crl_file();
-			short save_circle_to_file(StringC id, DCP06CircleModelC* pModel);
+			short save_circle_to_file(StringC id, CircleModel* pModel);
 			short create_new_circlefile(char  *fname);
 			short create_new_file(char  *fname);
 			short delete_file(void);
@@ -201,7 +201,7 @@ namespace DCP
 
 
 	private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			char m_cPath[CPI::LEN_PATH_MAX];
 			short opened;
 			bool m_bExists;
@@ -223,7 +223,7 @@ namespace DCP
 			short access1(char *fname);
 			short remove1(char *fname);
 			char trow[0xFF];
-			DCP06CommonC* m_pCommon;
+			Common* m_pCommon;
     };
 
 };

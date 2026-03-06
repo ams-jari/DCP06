@@ -1,6 +1,16 @@
 # DCP06 Code Cleanup Status
 
-## Completed
+## Latest: Class renames + ANSI C → C++ (committed)
+
+- **DCP06 class renames**: 150+ classes renamed (DCP06ModelC→Model, DCP06CalcDistDlgC→CalculationDistanceDialog, etc.)
+- **Method/variable renames**: GetDCP06Model→GetModel, m_pDCP06Model→m_pModel, pDCP06Model→pModel
+- **NULL→nullptr**: Replaced across Src/ and include/
+- **sprintf→snprintf**: CalculationDist.cpp and other key files (buffer-safe)
+- **DCP06CS35C→CS35**: Hardware interface class
+
+---
+
+## Completed (earlier)
 
 ### 1. Defines and constants (Defs.hpp)
 - **Added buffer size constants**: `STRING_BUFFER_SMALL` (20), `STRING_BUFFER_MEDIUM` (100), `STRING_BUFFER_LARGE` (512), `STRING_BUFFER_PATH` (1024)

@@ -43,18 +43,18 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP06ModelC;
-	//class DCP06ToolDlgC;
+	//class Model;
+	//class ToolDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-	class DCP06ChangeFaceC: public TBL::ChangeFaceControllerC
+	class ChangeFace: public TBL::ChangeFaceControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06ChangeFaceC(int iCtrlId);
-			~DCP06ChangeFaceC();
+            ChangeFace(int iCtrlId);
+			~ChangeFace();
 
 	private:
     };

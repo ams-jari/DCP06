@@ -48,7 +48,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -62,18 +62,18 @@
 
 // USER DIALOG
 
-DCP::DCP06CalcDomC::DCP06CalcDomC(DCP06DomModelC* pDCP06DomModel)://,DCP06ModelC* pDCP06Model): 
-	m_pDCP06DomModel(pDCP06DomModel)//,m_pDCP06Model(pDCP06Model)
+DCP::CalcAlignment321::CalcAlignment321(Alignment321Model* pAlignment321Model):
+	m_pAlignment321Model(pAlignment321Model)
 {
 	
 }
 // ****************************************************************************************
-DCP::DCP06CalcDomC::~DCP06CalcDomC()
+DCP::CalcAlignment321::~CalcAlignment321()
 {
 	
 }
 // ****************************************************************************************
-bool DCP::DCP06CalcDomC::calc(bool show_message)
+bool DCP::CalcAlignment321::calc(bool show_message)
 {
 double nz[4]; 		// normal of xy-plane
 double ny[4];		// normal of xz-plane
@@ -92,12 +92,12 @@ S_PLANE_BUFF *pPlane;
 
 StringC msg;
 
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	
-	if(m_pDCP06DomModel->dom_hz_plane)
-		pPlane = &m_pDCP06DomModel->dom_hz_plane_buff[0];
+	if(m_pAlignment321Model->dom_hz_plane)
+		pPlane = &m_pAlignment321Model->dom_hz_plane_buff[0];
 	else
-		pPlane = &m_pDCP06DomModel->dom_plane_buff[0];
+		pPlane = &m_pAlignment321Model->dom_plane_buff[0];
 
 	if(pPlane[0].calc == 0)
 	{	
@@ -106,14 +106,14 @@ StringC msg;
 		return false;
 	}
 
-	if(m_pDCP06DomModel->dom_line_buff[0].calc == 0)
+	if(m_pAlignment321Model->dom_line_buff[0].calc == 0)
 	{
 		msg.LoadTxt(AT_DCP05, M_DCP_DEFINE_REF_LINE_TOK);
 		msgbox.ShowMessageOk(msg);
 		return false;
 	}
 
-	if(m_pDCP06DomModel->dom_ref_point_buff.sta == 0)
+	if(m_pAlignment321Model->dom_ref_point_buff.sta == 0)
 	{
 		msg.LoadTxt(AT_DCP05, M_DCP_DEFINE_REF_POINT_TOK);
 		msgbox.ShowMessageOk(msg);
@@ -121,16 +121,16 @@ StringC msg;
 	}
 
 
-	if(m_pDCP06DomModel->dom_ovalues_buff.sta == 0)
+	if(m_pAlignment321Model->dom_ovalues_buff.sta == 0)
 	{
-		m_pDCP06DomModel->dom_ovalues_buff.x = 0.0;
-		m_pDCP06DomModel->dom_ovalues_buff.y = 0.0;
-		m_pDCP06DomModel->dom_ovalues_buff.z = 0.0;
+		m_pAlignment321Model->dom_ovalues_buff.x = 0.0;
+		m_pAlignment321Model->dom_ovalues_buff.y = 0.0;
+		m_pAlignment321Model->dom_ovalues_buff.z = 0.0;
 	}
 
-	n_line[0] = m_pDCP06DomModel->dom_line_buff[0].ux;
-	n_line[1] = m_pDCP06DomModel->dom_line_buff[0].uy;
-	n_line[2] = m_pDCP06DomModel->dom_line_buff[0].uz;
+	n_line[0] = m_pAlignment321Model->dom_line_buff[0].ux;
+	n_line[1] = m_pAlignment321Model->dom_line_buff[0].uy;
+	n_line[2] = m_pAlignment321Model->dom_line_buff[0].uz;
 	n_line[3] = 1;
 
 
@@ -139,7 +139,7 @@ StringC msg;
 	************************************ */
 
 
-	if(m_pDCP06DomModel->dom_active_plane == XY_PLANE)
+	if(m_pAlignment321Model->dom_active_plane == XY_PLANE)
 	{
 		// normal of xy-plane
 
@@ -149,7 +149,7 @@ StringC msg;
 		nz[3] = 1.0;
 
 		// normal of x-line
-		if(m_pDCP06DomModel->dom_active_line == X_LINE)
+		if(m_pAlignment321Model->dom_active_line == X_LINE)
 		{
 			// ny
 			vec_product(nz, n_line, &temp1);
@@ -160,7 +160,7 @@ StringC msg;
 			unit_vector(temp1, &nx);
 
 		}
-		else if(m_pDCP06DomModel->dom_active_line == Y_LINE)
+		else if(m_pAlignment321Model->dom_active_line == Y_LINE)
 		{
 			// nx
 			vec_product(n_line, nz, &temp1);
@@ -176,7 +176,7 @@ StringC msg;
 	/************************************
 		XZ-PLANE
 	*************************************/
-	else if(m_pDCP06DomModel->dom_active_plane == ZX_PLANE)
+	else if(m_pAlignment321Model->dom_active_plane == ZX_PLANE)
 	{
 		// normal of xz-plane
 
@@ -186,7 +186,7 @@ StringC msg;
 		ny[3] = 1.0;
 
 
-		if(m_pDCP06DomModel->dom_active_line == X_LINE)
+		if(m_pAlignment321Model->dom_active_line == X_LINE)
 		{
 
 			// nz
@@ -198,7 +198,7 @@ StringC msg;
 			unit_vector(temp1, &nx);
 
 		}
-		else if(m_pDCP06DomModel->dom_active_line == Z_LINE)
+		else if(m_pAlignment321Model->dom_active_line == Z_LINE)
 		{
 			// nx
 			vec_product(ny, n_line, &temp1);
@@ -213,7 +213,7 @@ StringC msg;
 	/************************************
 		YZ-PLANE
 	*************************************/
-	else if(m_pDCP06DomModel->dom_active_plane == YZ_PLANE)
+	else if(m_pAlignment321Model->dom_active_plane == YZ_PLANE)
 	{
 		// normal of yz-plane
 
@@ -223,7 +223,7 @@ StringC msg;
 		nx[3] = 1.0;
 
 
-		if(m_pDCP06DomModel->dom_active_line == Y_LINE)
+		if(m_pAlignment321Model->dom_active_line == Y_LINE)
 		{
 
 			// nz
@@ -235,7 +235,7 @@ StringC msg;
 			unit_vector(temp1, &ny);
 
 		}
-		else if(m_pDCP06DomModel->dom_active_line == Z_LINE)
+		else if(m_pAlignment321Model->dom_active_line == Z_LINE)
 		{
 			// ny
 			vec_product(n_line, nx, &temp1);
@@ -254,122 +254,122 @@ StringC msg;
 				rpoint_buff.x,rpoint_buff.y,rpoint_buff.z, 1.0);
 		*/
  		/*  Removed 1.4.1998 */
-		m_pDCP06DomModel->matrix[0][0] = nx[0];
-		m_pDCP06DomModel->matrix[1][0] = nx[1];
-		m_pDCP06DomModel->matrix[2][0] = nx[2];
-		m_pDCP06DomModel->matrix[3][0] = 0.0;
+		m_pAlignment321Model->matrix[0][0] = nx[0];
+		m_pAlignment321Model->matrix[1][0] = nx[1];
+		m_pAlignment321Model->matrix[2][0] = nx[2];
+		m_pAlignment321Model->matrix[3][0] = 0.0;
 
 
-		m_pDCP06DomModel->matrix[0][1] = ny[0];
-		m_pDCP06DomModel->matrix[1][1] = ny[1];
-		m_pDCP06DomModel->matrix[2][1] = ny[2];
-		m_pDCP06DomModel->matrix[3][1] = 0.0;
+		m_pAlignment321Model->matrix[0][1] = ny[0];
+		m_pAlignment321Model->matrix[1][1] = ny[1];
+		m_pAlignment321Model->matrix[2][1] = ny[2];
+		m_pAlignment321Model->matrix[3][1] = 0.0;
 
-		m_pDCP06DomModel->matrix[0][2] = nz[0];
-		m_pDCP06DomModel->matrix[1][2] = nz[1];
-		m_pDCP06DomModel->matrix[2][2] = nz[2];
-		m_pDCP06DomModel->matrix[3][2] = 0.0;
+		m_pAlignment321Model->matrix[0][2] = nz[0];
+		m_pAlignment321Model->matrix[1][2] = nz[1];
+		m_pAlignment321Model->matrix[2][2] = nz[2];
+		m_pAlignment321Model->matrix[3][2] = 0.0;
 
-		m_pDCP06DomModel->matrix[0][3] = m_pDCP06DomModel->dom_ref_point_buff.x;
-		m_pDCP06DomModel->matrix[1][3] = m_pDCP06DomModel->dom_ref_point_buff.y;
-		m_pDCP06DomModel->matrix[2][3] = m_pDCP06DomModel->dom_ref_point_buff.z;
-		m_pDCP06DomModel->matrix[3][3] = 1.0;
+		m_pAlignment321Model->matrix[0][3] = m_pAlignment321Model->dom_ref_point_buff.x;
+		m_pAlignment321Model->matrix[1][3] = m_pAlignment321Model->dom_ref_point_buff.y;
+		m_pAlignment321Model->matrix[2][3] = m_pAlignment321Model->dom_ref_point_buff.z;
+		m_pAlignment321Model->matrix[3][3] = 1.0;
 		
 
 		//get_ocsd_table(&ocsd_table);
 		//get_ocsd_table(&ocsd_inv_table);
 
-		if(m_pDCP06DomModel->dom_active_plane == XY_PLANE)
+		if(m_pAlignment321Model->dom_active_plane == XY_PLANE)
 		{
-			deg = m_pDCP06DomModel->dom_rot_plane_buff.x;
+			deg = m_pAlignment321Model->dom_rot_plane_buff.x;
 			if(deg != 0.0)
 			{
 				rad = degtorad(deg);
 			
-				rotate_about_x_axis(m_pDCP06DomModel->matrix /*ocsd_table*/, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);//ocsd_table[0][0]);
+				rotate_about_x_axis(m_pAlignment321Model->matrix /*ocsd_table*/, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);//ocsd_table[0][0]);
 				
 			}
 
-			deg = m_pDCP06DomModel->dom_rot_plane_buff.y;
+			deg = m_pAlignment321Model->dom_rot_plane_buff.y;
 			if(deg != 0.0)
 			{
 				
 				rad = degtorad(deg);
-				rotate_about_y_axis(m_pDCP06DomModel->matrix, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);
+				rotate_about_y_axis(m_pAlignment321Model->matrix, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);
 				
 			}
 
-			deg = m_pDCP06DomModel->dom_rot_line_buff.z;
+			deg = m_pAlignment321Model->dom_rot_line_buff.z;
 			if(deg != 0.0)
 			{
 				rad = degtorad(deg);
-				 rotate_about_z_axis(m_pDCP06DomModel->matrix, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);
+				 rotate_about_z_axis(m_pAlignment321Model->matrix, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);
 
 			}
 		}
 
-		else if(m_pDCP06DomModel->dom_active_plane == ZX_PLANE)
+		else if(m_pAlignment321Model->dom_active_plane == ZX_PLANE)
 		{
 
-			deg = m_pDCP06DomModel->dom_rot_plane_buff.x;
+			deg = m_pAlignment321Model->dom_rot_plane_buff.x;
 			if(deg != 0.0)
 			{
 				rad = degtorad(deg);
-				rotate_about_x_axis(m_pDCP06DomModel->matrix, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);
+				rotate_about_x_axis(m_pAlignment321Model->matrix, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);
 
 			}
 
-			deg = m_pDCP06DomModel->dom_rot_plane_buff.z;
+			deg = m_pAlignment321Model->dom_rot_plane_buff.z;
 			if(deg != 0.0)
 			{
 				rad = degtorad(deg);
-				rotate_about_z_axis(m_pDCP06DomModel->matrix, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);
+				rotate_about_z_axis(m_pAlignment321Model->matrix, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);
 			}
 
-			deg = m_pDCP06DomModel->dom_rot_line_buff.y;
+			deg = m_pAlignment321Model->dom_rot_line_buff.y;
 			if(deg != 0.0)
 			{
 				rad = degtorad(deg);
-				rotate_about_y_axis(m_pDCP06DomModel->matrix, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);
+				rotate_about_y_axis(m_pAlignment321Model->matrix, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);
 			}
 		}
-		else if(m_pDCP06DomModel->dom_active_plane == YZ_PLANE)
+		else if(m_pAlignment321Model->dom_active_plane == YZ_PLANE)
 		{
 
-			deg = m_pDCP06DomModel->dom_rot_plane_buff.y;
+			deg = m_pAlignment321Model->dom_rot_plane_buff.y;
 			if(deg != 0.0)
 			{
 				rad = degtorad(deg);
-				rotate_about_y_axis(m_pDCP06DomModel->matrix, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);
+				rotate_about_y_axis(m_pAlignment321Model->matrix, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);
 			}
 
-			deg = m_pDCP06DomModel->dom_rot_plane_buff.z;
+			deg = m_pAlignment321Model->dom_rot_plane_buff.z;
 			if(deg != 0.0)
 			{
 				rad = degtorad(deg);
-				rotate_about_z_axis(m_pDCP06DomModel->matrix, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);
+				rotate_about_z_axis(m_pAlignment321Model->matrix, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);
 			}
 
-			deg = m_pDCP06DomModel->dom_rot_line_buff.x;
+			deg = m_pAlignment321Model->dom_rot_line_buff.x;
 			if(deg != 0.0)
 			{
 				rad = degtorad(deg);
-				rotate_about_x_axis(m_pDCP06DomModel->matrix, rad, &tempmat2);
-				matcopy_n(&tempmat2[0][0], 4,4, &m_pDCP06DomModel->matrix[0][0]);
+				rotate_about_x_axis(m_pAlignment321Model->matrix, rad, &tempmat2);
+				matcopy_n(&tempmat2[0][0], 4,4, &m_pAlignment321Model->matrix[0][0]);
 			}
 		}
 
-		ovalues[0] = m_pDCP06DomModel->dom_ovalues_buff.x + m_pDCP06DomModel->dom_ovalues_tool_buff.x;
-		ovalues[1] = m_pDCP06DomModel->dom_ovalues_buff.y + m_pDCP06DomModel->dom_ovalues_tool_buff.y;
-		ovalues[2] = m_pDCP06DomModel->dom_ovalues_buff.z + m_pDCP06DomModel->dom_ovalues_tool_buff.z;
+		ovalues[0] = m_pAlignment321Model->dom_ovalues_buff.x + m_pAlignment321Model->dom_ovalues_tool_buff.x;
+		ovalues[1] = m_pAlignment321Model->dom_ovalues_buff.y + m_pAlignment321Model->dom_ovalues_tool_buff.y;
+		ovalues[2] = m_pAlignment321Model->dom_ovalues_buff.z + m_pAlignment321Model->dom_ovalues_tool_buff.z;
 		ovalues[3] = 1.0;
 		
 		//PrintLn("ofs values");
@@ -396,12 +396,12 @@ StringC msg;
 		{
 			msg.LoadTxt(AT_DCP05, M_DCP_CANNOT_CALC_TOK);
 			msgbox.ShowMessageOk(msg);
-			//m_pDCP06Model->ocsd_defined=false;
+			//m_pModel->ocsd_defined=false;
 			return false;
 		}
 
-		matcopy_n(&m_pDCP06DomModel->matrix[0][0],4,4,&tempmat2[0][0]);
-		matmul4x4(tempmat2, tempmat3, &m_pDCP06DomModel->matrix); // HOX pit�� asettaa my�s ocsd_matrix
+		matcopy_n(&m_pAlignment321Model->matrix[0][0],4,4,&tempmat2[0][0]);
+		matmul4x4(tempmat2, tempmat3, &m_pAlignment321Model->matrix); // HOX pit�� asettaa my�s ocsd_matrix
 		
 		/*
 		set_ocsd_matrix(ocsd_table[0][0], ocsd_table[1][0],ocsd_table[2][0],ocsd_table[3][0],
@@ -409,12 +409,12 @@ StringC msg;
 						ocsd_table[0][2], ocsd_table[1][2],ocsd_table[2][2],ocsd_table[3][2],
 						ocsd_table[0][3], ocsd_table[1][3],ocsd_table[2][3],ocsd_table[3][3]);
 				
-		m_pDCP06Model->ocsd_defined=true;
+		m_pModel->ocsd_defined=true;
 		*/
 
 		//show_matrix4x4(ocsd_matrix);
 		
-		matinv4x4(m_pDCP06DomModel->matrix, &m_pDCP06DomModel->inv_matrix);	    // HOX pit�� asettaa my�s ocsd_inv_matrix
+		matinv4x4(m_pAlignment321Model->matrix, &m_pAlignment321Model->inv_matrix);	    // HOX pit�� asettaa my�s ocsd_inv_matrix
 		
 		/*
 		set_ocsd_inv_matrix( ocsd_inv_table[0][0], ocsd_inv_table[1][0],ocsd_inv_table[2][0],ocsd_inv_table[3][0],

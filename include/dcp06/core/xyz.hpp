@@ -49,18 +49,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06XYZDlgC;
+	class Model;
+	class XYZDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06XYZControllerC : public GUI::ControllerC
+    class XYZController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06XYZControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06XYZControllerC();
+            XYZController(Model *pModel);
+			~XYZController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -86,29 +86,29 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06XYZControllerC( const DCP06XYZControllerC& oDCP05XYZController )
+            XYZController( const XYZController& oXYZController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06XYZControllerC& operator=( const DCP06XYZControllerC& oDCP05XYZController )
+            XYZController& operator=( const XYZController& oXYZController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06XYZDlgC* m_pDlg;
-			DCP06ModelC * m_pDCP06Model;
-			DCP06CommonC* m_pCommon;
+            XYZDialog* m_pDlg;
+			Model * m_pModel;
+			Common* m_pCommon;
 			bool m_bCamera;
 			GSV::GeospatialViewDialogC* poVideoDlg;
 			bool isATR;
     };
 
 
-	class DCP06XYZDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class XYZDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -121,10 +121,10 @@ namespace DCP
 				eInfo
 			};
 
-		   DCP06XYZDlgC(DCP06ModelC *pDCP06Model);
+		   XYZDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06XYZDlgC();
+            virtual ~XYZDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -136,7 +136,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06PointBuffModelC* GetDataModel() const;
+			PointBuffModel* GetDataModel() const;
 
 			virtual void delete_point();
 
@@ -148,13 +148,13 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pZ;
 			//GUI::TextCtrlC* m_pInfo;
 
-			DCP06ModelC * m_pDCP06Model;
+			Model * m_pModel;
 	private:
 			short iInfoInd;
 			StringC strInfoText;
 			//virtual void OnTimer(void);
 			//GUI::TimerC m_pTimer;
-			DCP06CommonC* m_pCommon;
+			Common* m_pCommon;
 			
 	};
 };

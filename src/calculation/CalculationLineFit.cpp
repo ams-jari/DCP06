@@ -55,7 +55,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -69,12 +69,12 @@
 
 // USER DIALOG
 
-DCP::DCP06CalcLineFitC::DCP06CalcLineFitC(DCP06ModelC* pDCP06Model) : m_pDCP06Model(pDCP06Model) 
+DCP::CalcLineFit::CalcLineFit(Model* pModel) : m_pModel(pModel) 
 {
-		common = new DCP06CommonC(pDCP06Model);
+		common = new Common(pModel);
 }
 // ****************************************************************************************
-DCP::DCP06CalcLineFitC::~DCP06CalcLineFitC()
+DCP::CalcLineFit::~CalcLineFit()
 {
 	if(common != 0)
 	{
@@ -83,9 +83,9 @@ DCP::DCP06CalcLineFitC::~DCP06CalcLineFitC()
 	}
 }
 
-short DCP::DCP06CalcLineFitC::CalcLineFitDom(DCP06DomModelC* domModel, S_LINE_BUFF* line_buff, int refLine)
+short DCP::CalcLineFit::CalcLineFitDom(Alignment321Model* domModel, S_LINE_BUFF* line_buff, int refLine)
 {
-DCP06MsgBoxC msgbox;
+MsgBox msgbox;
 
 	domModel->calculated = 0;
 
@@ -141,11 +141,11 @@ DCP06MsgBoxC msgbox;
 		domModel->dom_line_buff[0].points[1].sta = 1;
 		
 		// laske suora uudestaan
-		DCP06CalcLineC calcLine;
+		CalcLine calcLine;
 		calcLine.calc(&domModel->dom_line_buff[0], ACTUAL);
 	}
 
-	DCP06CalcDomC calc_dom(domModel);
+	CalcAlignment321 calc_dom(domModel);
 	if(!calc_dom.calc(false))
 	{
 		GUI::DesktopC::Instance()->MessageShow(L"Calculation LineFit/Dom error!");
@@ -160,7 +160,7 @@ DCP06MsgBoxC msgbox;
 	return 1;
 }
 
-void DCP::DCP06CalcLineFitC::delete_dom_values(DCP06DomModelC* domModel)
+void DCP::CalcLineFit::delete_dom_values(Alignment321Model* domModel)
 {
 	// delete old values
 	domModel->ocsd_defined = false;
@@ -178,7 +178,7 @@ void DCP::DCP06CalcLineFitC::delete_dom_values(DCP06DomModelC* domModel)
 }
 
 // ****************************************************************************************
-short DCP::DCP06CalcLineFitC::CalcAllPoints(S_LINE_BUFF* line_buff,
+short DCP::CalcLineFit::CalcAllPoints(S_LINE_BUFF* line_buff,
 								 S_POINT_BUFF* points,	
 								 S_LINE_FITTING_RESULTS* results,
  								 double manualHeight,
@@ -186,7 +186,7 @@ short DCP::DCP06CalcLineFitC::CalcAllPoints(S_LINE_BUFF* line_buff,
 								double rotateAngle,
 								int selectedHeight,
 								int selectedShift,
-								int selectedRotate,DCP06DomModelC* domModel,
+								int selectedRotate,Alignment321Model* domModel,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* points_in_line,
 								int selectedRefLine)
@@ -208,7 +208,7 @@ short DCP::DCP06CalcLineFitC::CalcAllPoints(S_LINE_BUFF* line_buff,
 }
 
 // ****************************************************************************************
-short DCP::DCP06CalcLineFitC::CalcPoint(short index, 
+short DCP::CalcLineFit::CalcPoint(short index, 
 								  S_LINE_BUFF* line_buff,
 								 S_POINT_BUFF* points,	
 								 S_LINE_FITTING_RESULTS* results,
@@ -218,7 +218,7 @@ short DCP::DCP06CalcLineFitC::CalcPoint(short index,
 								int selectedHeight,
 								int selectedShift,
 								int selectedRotate,
-								DCP06DomModelC* domModel,
+								Alignment321Model* domModel,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* points_in_line,
 								int selectedRefLine)
@@ -474,7 +474,7 @@ short DCP::DCP06CalcLineFitC::CalcPoint(short index,
 	
 
 		// ja laske line
-		DCP06CalcLineC calcLine;
+		CalcLine calcLine;
 		if(!calcLine.calc(&line_ocs[0], ACTUAL))
 			return 0;
 		
@@ -652,7 +652,7 @@ short DCP::DCP06CalcLineFitC::CalcPoint(short index,
 	return 1;
 }
 
-short DCP::DCP06CalcLineFitC::convert_point_to_ocs(double p_in[4], DCP06DomModelC* domModel, double (*p_out)[4])
+short DCP::CalcLineFit::convert_point_to_ocs(double p_in[4], Alignment321Model* domModel, double (*p_out)[4])
 {
 	double x[4];
 	double xu[4];
@@ -671,7 +671,7 @@ short DCP::DCP06CalcLineFitC::convert_point_to_ocs(double p_in[4], DCP06DomModel
 		return 1;
 }
 
-short DCP::DCP06CalcLineFitC::convert_point_to_scs(double p_in[4], DCP06DomModelC* domModel, double (*p_out)[4])
+short DCP::CalcLineFit::convert_point_to_scs(double p_in[4], Alignment321Model* domModel, double (*p_out)[4])
 {
 	double x[4];
 	double xu[4];
@@ -691,7 +691,7 @@ short DCP::DCP06CalcLineFitC::convert_point_to_scs(double p_in[4], DCP06DomModel
 }
 
 //double v[4],double a[4][4], double (*w)[4])
-short DCP::DCP06CalcLineFitC::convert_point_to_ocs(S_POINT_BUFF* points, short index, DCP06DomModelC* domModel, double (*p_out)[4])
+short DCP::CalcLineFit::convert_point_to_ocs(S_POINT_BUFF* points, short index, Alignment321Model* domModel, double (*p_out)[4])
 {
 
 	double x[4];
@@ -716,14 +716,14 @@ short DCP::DCP06CalcLineFitC::convert_point_to_ocs(S_POINT_BUFF* points, short i
 		
 }
 // ================================================================================================
-short DCP::DCP06CalcLineFitC::set_hz_plane1(DCP06DomModelC* domModel,short actualdesign)
+short DCP::CalcLineFit::set_hz_plane1(Alignment321Model* domModel,short actualdesign)
 {
 short dist_count,ret;
 
 ret = false;
 	
-	//DCP06CommonC common(m_pDCP06Model);
-	DCP06MsgBoxC msgbox;
+	//Common common(m_pModel);
+	MsgBox msgbox;
 
 	dist_count = common->points_count_in_plane(&domModel->dom_hz_plane_buff[0]);
 	
@@ -769,7 +769,7 @@ ret = false;
 				domModel->dom_hz_plane = false;
 			
 			//else if(display == DLG_DOMUSER)
-			//	GetDCP06Model()->hz_plane = false;
+			//	GetModel()->hz_plane = false;
 		}
 	 }
 	 else
@@ -780,16 +780,16 @@ ret = false;
 	return ret;
 }
 
-short DCP::DCP06CalcLineFitC::calc_plane(S_PLANE_BUFF *plane, short actdes)
+short DCP::CalcLineFit::calc_plane(S_PLANE_BUFF *plane, short actdes)
 {
-	DCP06CalcPlaneC calcplane;
+	CalcPlane calcplane;
 
 	return calcplane.calc(plane,actdes);
 
 }
 
 // ================================================================================================
-short DCP::DCP06CalcLineFitC::set_horizontal_plane(DCP06DomModelC* domModel/*plane_buff_ *planes, short DISPLAY, short PLANE_TYPE*/)
+short DCP::CalcLineFit::set_horizontal_plane(Alignment321Model* domModel/*plane_buff_ *planes, short DISPLAY, short PLANE_TYPE*/)
 {
 short points;
 short ret;
@@ -797,7 +797,7 @@ short ret;
 	ret = false;
 	points  = 0;	
 
-	//DCP06CommonC common(m_pDCP06Model);//(/*m_pDCP06Model*/);
+	//Common common(m_pModel);//(/*m_pModel*/);
 
 	points = common->points_count_in_plane(&domModel->dom_hz_plane_buff[0]);
 

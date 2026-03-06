@@ -43,19 +43,19 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP06ModelC;
-	//class DCP06ToolDlgC;
+	//class Model;
+	//class ToolDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CommonC
+    class Common
     {
         public:
 
             // Description: Constructor
-            DCP06CommonC(DCP06ModelC* pDCP06Model);
-			// DCP06CommonC();
-			~DCP06CommonC();
+            Common(Model* pModel);
+			// Common();
+			~Common();
 			  
 			bool check_distance(double x, double y, double z, S_POINT_BUFF* points, short iCount, short iCurrentPoint);
 			double to_mm(double dist);
@@ -122,9 +122,9 @@ namespace DCP
 
 			short calc_mid_point(S_POINT_BUFF *points ,double *x, double *y, double *z);
 
-			DCP06ModelC *m_pDCP06Model;
+			Model *m_pModel;
 	private:
-			//DCP06ModelC *m_pDCP06Model;
+			//Model *m_pModel;
     };
 };
 

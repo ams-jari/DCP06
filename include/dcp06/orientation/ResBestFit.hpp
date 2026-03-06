@@ -49,19 +49,19 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06ResPomDlgC;
-	//class DCP06SelectOnePointModelC;
+    class Model;
+	class ResBestFitDialog;
+	//class SelectOnePointModel;
 
     // Description: Tabbed controller for the Hello World application
 	
-    class DCP06ResPomControllerC : public GUI::ControllerC
+    class ResBestFitController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06ResPomControllerC(DCP06PomModelC *pModel);
-			~DCP06ResPomControllerC();
+            ResBestFitController(BestFitModel *pModel);
+			~ResBestFitController();
 
             // Description: Handle change of position values
             //virtual void OnF1Pressed();
@@ -83,25 +83,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06ResPomControllerC( const DCP06ResPomControllerC& oDCP06ResPomController )
+            ResBestFitController( const ResBestFitController& oResBestFitController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06ResPomControllerC& operator=( const DCP06ResPomControllerC& oDCP06ResPomController )
+            ResBestFitController& operator=( const ResBestFitController& oResBestFitController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06ResPomDlgC* m_pDlg;
-			DCP06PomModelC* m_pDataModel;
+            ResBestFitDialog* m_pDlg;
+			BestFitModel* m_pDataModel;
     };
 	
 
-	class DCP06ResPomDlgC: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
+	class ResBestFitDialog: public GUI::TableDialogC,public GUI::ModelHandlerC//, public OBS::CommandC
 	{
 	 public:
 
@@ -132,10 +132,10 @@ namespace DCP
 				CI_Z
 			};
 
-		   DCP06ResPomDlgC(DCP06PomModelC *pModel);
+		   ResBestFitDialog(BestFitModel *pModel);
 
             // Description: Destructor
-            virtual ~DCP06ResPomDlgC();
+            virtual ~ResBestFitDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -152,7 +152,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			//OBS::ObserverC m_pMultiColCtrlObserver;
 			//virtual void OnChanged(int unNotifyCode, int ulParam2);
@@ -160,11 +160,11 @@ namespace DCP
 		protected:
 			GUI::TextCtrlC* m_pInfo1;
 			GUI::ListMultiColCtrlC* poMultiColCtrl;	
-			DCP06PomModelC* m_pDataModel;
+			BestFitModel* m_pDataModel;
 			// Description: add all controls
        
 
-			//OBS_DECLARE_EXECUTE(DCP06SelectOnePointDlgC);
+			//OBS_DECLARE_EXECUTE(SelectOnePointDialog);
 		
 		private:
 				//S_SELECT_POINTS sel_points[MAX_POINTS_IN_FILE];
@@ -174,16 +174,16 @@ namespace DCP
 				StringC sDesignNonSelected;
 				//virtual void OnTimer(void);
 
-				DCP06CommonC* m_pCommon;
+				Common* m_pCommon;
 				//double calc_pdist(S_LINE_BUFF *line, short pno);
 				//double get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/);
 
 				StringC sTitle;
-				short DCP06ResPomDlgC::get_max_res();
+				short ResBestFitDialog::get_max_res();
 				
 
-				//void DCP::DCP06SelectMultiPointsDlgC::remove_point_table(short sel);
-				//void DCP::DCP06SelectMultiPointsDlgC::add_point_table(short sel, bool bActual);
+				//void DCP::SelectMultiPointsDialog::remove_point_table(short sel);
+				//void DCP::SelectMultiPointsDialog::add_point_table(short sel, bool bActual);
  	};
 };
 

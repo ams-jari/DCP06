@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06PomDlgC;
-	class DCP06PomModelC;
+    class Model;
+	class BestFitDialog;
+	class BestFitModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06PomControllerC : public GUI::ControllerC
+    class BestFitController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06PomControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06PomControllerC();
+            BestFitController(Model* pModel);
+			~BestFitController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -82,22 +82,22 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06PomControllerC( const DCP06PomControllerC& oDCP06PomController )
+            BestFitController( const BestFitController& oBestFitController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06PomControllerC& operator=( const DCP06PomControllerC& oDCP06PomController )
+            BestFitController& operator=( const BestFitController& oBestFitController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06PomDlgC* m_pDlg;
-			DCP06PomModelC* m_pDataModel;
-			DCP06ModelC* m_pDCP06Model;
+            BestFitDialog* m_pDlg;
+			BestFitModel* m_pDataModel;
+			Model* m_pModel;
 
 			short/*DCP_COORDINATE_SYSTEM*/ old_coordinate;
 			//AdfFileFunc* adf;
@@ -106,7 +106,7 @@ namespace DCP
     };
 
 
-    class DCP06PomDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class BestFitDialog:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -120,10 +120,10 @@ namespace DCP
 				eCalc
 			};
 
-			DCP06PomDlgC(DCP06PomModelC* pPomModel);
+			BestFitDialog(BestFitModel* pPomModel);
 
             // Description: Destructor
-            virtual ~DCP06PomDlgC();
+            virtual ~BestFitDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -137,12 +137,12 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			virtual void RefreshControls();
 			
 			void update_bft_adf();
-			DCP06CommonC* m_pCommon;
+			Common* m_pCommon;
 
 	protected:
 			
@@ -152,9 +152,9 @@ namespace DCP
 			GUI::TextCtrlC* m_pInfo2;
 			GUI::ComboLineCtrlC* m_pPointMeas;
 			GUI::ComboLineCtrlC* m_pCalc;
-			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
+			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
-			DCP06PomModelC* m_pDataModel;
+			BestFitModel* m_pDataModel;
             
 
 	private:
@@ -162,18 +162,18 @@ namespace DCP
 			//virtual void OnComboBoxChanged(int unNotifyCode, int ulParam2);
 	};
 
-   class DCP06PomModelC : public GUI::ModelC
+   class BestFitModel : public GUI::ModelC
     {
         public: 
 
             // Description: Constructor
             //
-            DCP06PomModelC();
-			//DCP06DomModelC(DCP06DomModelC* pModel);
+            BestFitModel();
+			//Alignment321Model(Alignment321Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06PomModelC();
+            virtual ~BestFitModel();
 
 			S_POINT_BUFF	point_DCS[MAX_BESTFIT_POINTS];
 			S_POINT_BUFF	point_OCS[MAX_BESTFIT_POINTS];

@@ -23,20 +23,20 @@
 using namespace DCP;
 
 // ================================================================================================
-// --- DCP06ViewAgfDlgC ---
+// --- ViewAgfDialog ---
 // ================================================================================================
-DCP06ViewAgfDlgC::DCP06ViewAgfDlgC(DCP::AgfFileFunc* pFileFunc, DCP06ModelC* pDCP06Model)
-    : poMultiColCtrl(NULL), m_pFileFunc(pFileFunc), m_iSelectedCount(0)
+ViewAgfDialog::ViewAgfDialog(DCP::AgfFileFunc* pFileFunc, Model* pModel)
+    : poMultiColCtrl(nullptr), m_pFileFunc(pFileFunc), m_iSelectedCount(0)
 {
-    m_pCommon = new DCP06CommonC(pDCP06Model);
+    m_pCommon = new Common(pModel);
 }
 
-DCP06ViewAgfDlgC::~DCP06ViewAgfDlgC()
+ViewAgfDialog::~ViewAgfDialog()
 {
     if (m_pCommon) { delete m_pCommon; m_pCommon = 0; }
 }
 
-void DCP06ViewAgfDlgC::OnInitDialog(void)
+void ViewAgfDialog::OnInitDialog(void)
 {
     GUI::TableDialogC::OnInitDialog();
     poMultiColCtrl = new GUI::ListMultiColCtrlC();
@@ -51,7 +51,7 @@ void DCP06ViewAgfDlgC::OnInitDialog(void)
     AddTable(poMultiColCtrl);
 }
 
-void DCP06ViewAgfDlgC::RefreshControls()
+void ViewAgfDialog::RefreshControls()
 {
     if (poMultiColCtrl) {
         char temp[20];
@@ -68,17 +68,17 @@ void DCP06ViewAgfDlgC::RefreshControls()
     }
 }
 
-void DCP06ViewAgfDlgC::OnDialogActivated() { GUI::TableDialogC::OnDialogActivated(); }
-void DCP::DCP06ViewAgfDlgC::UpdateData() {}
+void ViewAgfDialog::OnDialogActivated() { GUI::TableDialogC::OnDialogActivated(); }
+void DCP::ViewAgfDialog::UpdateData() {}
 
-bool DCP::DCP06ViewAgfDlgC::DeletePoint()
+bool DCP::ViewAgfDialog::DeletePoint()
 {
     short iSelectedId = poMultiColCtrl->GetSelectedId();
     if (m_pFileFunc->delete_point_from_cdf(iSelectedId)) { RefreshControls(); return true; }
     return false;
 }
 
-bool DCP::DCP06ViewAgfDlgC::GetSelectedData(StringC& sDistId, StringC& sRefId, StringC& sTrgtId, StringC& sNote)
+bool DCP::ViewAgfDialog::GetSelectedData(StringC& sDistId, StringC& sRefId, StringC& sTrgtId, StringC& sNote)
 {
     short iSelectedId = poMultiColCtrl->GetSelectedId();
     if (iSelectedId == -1) return false;
@@ -90,25 +90,25 @@ bool DCP::DCP06ViewAgfDlgC::GetSelectedData(StringC& sDistId, StringC& sRefId, S
     return true;
 }
 
-bool DCP::DCP06ViewAgfDlgC::SetModel(GUI::ModelC* pModel)
+bool DCP::ViewAgfDialog::SetModel(GUI::ModelC* pModel)
 {
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast<DCP::DCP06ModelC*>(pModel);
-    if (pDCP06Model != NULL && ModelHandlerC::SetModel(pDCP06Model)) { RefreshControls(); return true; }
+    DCP::Model* pModel = dynamic_cast<DCP::Model*>(pModel);
+    if (pModel != nullptr && ModelHandlerC::SetModel(pModel)) { RefreshControls(); return true; }
     USER_APP_VERIFY(false);
     return false;
 }
 
-DCP::DCP06ModelC* DCP::DCP06ViewAgfDlgC::GetDCP06Model() const { return (DCP::DCP06ModelC*)GetModel(); }
+DCP::Model* DCP::ViewAgfDialog::GetModel() const { return (DCP::Model*)GetModel(); }
 
-// --- DCP06ViewAgfControllerC ---
-DCP::DCP06ViewAgfControllerC::DCP06ViewAgfControllerC(DCP::AgfFileFunc* pFileFunc, DCP06ModelC* pDCP06Model)
-    : m_pDlg(NULL), m_pFileFunc(pFileFunc), m_pDCP06Model(pDCP06Model)
+// --- ViewAgfController ---
+DCP::ViewAgfController::ViewAgfController(DCP::AgfFileFunc* pFileFunc, Model* pModel)
+    : m_pDlg(nullptr), m_pFileFunc(pFileFunc), m_pModel(pModel)
 {
     StringC sTitle;
     sTitle.LoadTxt(AT_DCP06, T_DCP_CALC_ANGLE_VIEW_TOK);
     sTitle += L" ("; sTitle += StringC(m_pFileFunc->getFileName()); sTitle += L")";
     SetTitle(sTitle);
-    m_pDlg = new DCP::DCP06ViewAgfDlgC(m_pFileFunc, pDCP06Model);
+    m_pDlg = new DCP::ViewAgfDialog(m_pFileFunc, pModel);
     (void)AddDialog(VIEWAGF_DLG, m_pDlg, true);
     FKDef vDef; vDef.poOwner = this;
     vDef.strLable = StringC(AT_DCP06, K_DCP_EDIT_TOK); SetFunctionKey(FK1, vDef);
@@ -117,36 +117,36 @@ DCP::DCP06ViewAgfControllerC::DCP06ViewAgfControllerC(DCP::AgfFileFunc* pFileFun
     FKDef vDef1; vDef1.poOwner = this; vDef1.strLable = L" "; SetFunctionKey(SHFK6, vDef1);
 }
 
-DCP::DCP06ViewAgfControllerC::~DCP06ViewAgfControllerC() {}
+DCP::ViewAgfController::~ViewAgfController() {}
 
-bool DCP::DCP06ViewAgfControllerC::SetModel(GUI::ModelC* pModel)
+bool DCP::ViewAgfController::SetModel(GUI::ModelC* pModel)
 {
     (void)ControllerC::SetModel(pModel);
     return m_pDlg->SetModel(pModel);
 }
 
-void DCP::DCP06ViewAgfControllerC::OnF1Pressed()
+void DCP::ViewAgfController::OnF1Pressed()
 {
-    if (m_pDlg == NULL) { USER_APP_VERIFY(false); return; }
+    if (m_pDlg == nullptr) { USER_APP_VERIFY(false); return; }
     StringC sDistId, sRefId, sNote, sTrgtId;
     if (m_pDlg->GetSelectedData(sDistId, sRefId, sTrgtId, sNote) == false) return;
-    DCP::DCP06EditCalcAngleModelC* pModel = new DCP06EditCalcAngleModelC;
+    DCP::EditCalculationAngleModel* pModel = new EditCalculationAngleModel;
     pModel->sDistId = sDistId; pModel->sRefId = sRefId; pModel->sTrgtId = sTrgtId; pModel->sNote = sNote;
-    if (GetController(VIEWAGF_EDIT_CONTROLLER) == NULL)
-        (void)AddController(VIEWAGF_EDIT_CONTROLLER, new DCP::DCP06EditCalcAngleControllerC(m_pDlg->GetDCP06Model()));
+    if (GetController(VIEWAGF_EDIT_CONTROLLER) == nullptr)
+        (void)AddController(VIEWAGF_EDIT_CONTROLLER, new DCP::EditCalculationAngleController(m_pDlg->GetModel()));
     (void)GetController(VIEWAGF_EDIT_CONTROLLER)->SetModel(pModel);
     SetActiveController(VIEWAGF_EDIT_CONTROLLER, true);
 }
 
-void DCP::DCP06ViewAgfControllerC::OnSHF5Pressed() { if (m_pDlg) m_pDlg->DeletePoint(); }
-void DCP::DCP06ViewAgfControllerC::OnF6Pressed() { if (m_pDlg) { m_pDlg->UpdateData(); (void)Close(EC_KEY_CONT); } }
-void DCP::DCP06ViewAgfControllerC::OnActiveDialogClosed(int, int) {}
+void DCP::ViewAgfController::OnSHF5Pressed() { if (m_pDlg) m_pDlg->DeletePoint(); }
+void DCP::ViewAgfController::OnF6Pressed() { if (m_pDlg) { m_pDlg->UpdateData(); (void)Close(EC_KEY_CONT); } }
+void DCP::ViewAgfController::OnActiveDialogClosed(int, int) {}
 
-void DCP::DCP06ViewAgfControllerC::OnActiveControllerClosed(int lCtrlID, int lExitCode)
+void DCP::ViewAgfController::OnActiveControllerClosed(int lCtrlID, int lExitCode)
 {
     if (lCtrlID == VIEWAGF_EDIT_CONTROLLER && lExitCode == EC_KEY_CONT) {
-        DCP::DCP06EditCalcAngleModelC* pModel = (DCP::DCP06EditCalcAngleModelC*)GetController(VIEWAGF_EDIT_CONTROLLER)->GetModel();
-        DCP06CommonC pCommon(m_pDCP06Model);
+        DCP::EditCalculationAngleModel* pModel = (DCP::EditCalculationAngleModel*)GetController(VIEWAGF_EDIT_CONTROLLER)->GetModel();
+        Common pCommon(m_pModel);
         char temp[100];
         BSS::UTI::BSS_UTI_WCharToAscii(pModel->sDistId, temp, 6); pCommon.strbtrim(temp); sprintf(m_pFileFunc->id, "%-s", temp);
         BSS::UTI::BSS_UTI_WCharToAscii(pModel->sRefId, temp, 6);  pCommon.strbtrim(temp); sprintf(m_pFileFunc->ref, "%-s", temp);
@@ -159,25 +159,25 @@ void DCP::DCP06ViewAgfControllerC::OnActiveControllerClosed(int lCtrlID, int lEx
 }
 
 // ================================================================================================
-// --- DCP06ViewCdfDlgC ---
+// --- ViewCdfDialog ---
 // ================================================================================================
-DCP06ViewCdfDlgC::DCP06ViewCdfDlgC(DCP::CdfFileFunc* pFileFunc, DCP06ModelC* pDCP06Model)
-    : poMultiColCtrl(NULL), m_pFileFunc(pFileFunc), m_iSelectedCount(0)
+ViewCdfDialog::ViewCdfDialog(DCP::CdfFileFunc* pFileFunc, Model* pModel)
+    : poMultiColCtrl(nullptr), m_pFileFunc(pFileFunc), m_iSelectedCount(0)
 {
     sActualSelected.LoadTxt(AT_DCP06, P_DCP_ACTUAL_SELECTED_TOK);
     sActualNonSelected.LoadTxt(AT_DCP06, P_DCP_ACTUAL_NONSELECTED_TOK);
     sDesignSelected.LoadTxt(AT_DCP06, P_DCP_DESIGN_SELECTED_TOK);
     sDesignNonSelected.LoadTxt(AT_DCP06, P_DCP_DESIGN_NONSELECTED_TOK);
     m_strMaxPointSelected.LoadTxt(AT_DCP06, L_DCP_MAX_POINTS_SELECTED_TOK);
-    m_pCommon = new DCP06CommonC(pDCP06Model);
+    m_pCommon = new Common(pModel);
 }
 
-DCP06ViewCdfDlgC::~DCP06ViewCdfDlgC()
+ViewCdfDialog::~ViewCdfDialog()
 {
     if (m_pCommon) { delete m_pCommon; m_pCommon = 0; }
 }
 
-void DCP06ViewCdfDlgC::OnInitDialog(void)
+void ViewCdfDialog::OnInitDialog(void)
 {
     GUI::TableDialogC::OnInitDialog();
     poMultiColCtrl = new GUI::ListMultiColCtrlC();
@@ -192,7 +192,7 @@ void DCP06ViewCdfDlgC::OnInitDialog(void)
     AddTable(poMultiColCtrl);
 }
 
-void DCP06ViewCdfDlgC::RefreshControls()
+void ViewCdfDialog::RefreshControls()
 {
     if (poMultiColCtrl) {
         char temp[20];
@@ -209,17 +209,17 @@ void DCP06ViewCdfDlgC::RefreshControls()
     }
 }
 
-void DCP06ViewCdfDlgC::OnDialogActivated() { GUI::TableDialogC::OnDialogActivated(); }
-void DCP::DCP06ViewCdfDlgC::UpdateData() {}
+void ViewCdfDialog::OnDialogActivated() { GUI::TableDialogC::OnDialogActivated(); }
+void DCP::ViewCdfDialog::UpdateData() {}
 
-bool DCP::DCP06ViewCdfDlgC::DeletePoint()
+bool DCP::ViewCdfDialog::DeletePoint()
 {
     short iSelectedId = poMultiColCtrl->GetSelectedId();
     if (m_pFileFunc->delete_point_from_cdf(iSelectedId)) { RefreshControls(); return true; }
     return false;
 }
 
-bool DCP::DCP06ViewCdfDlgC::GetSelectedData(StringC& sDistId, StringC& sRefId, StringC& sNote)
+bool DCP::ViewCdfDialog::GetSelectedData(StringC& sDistId, StringC& sRefId, StringC& sNote)
 {
     short iSelectedId = poMultiColCtrl->GetSelectedId();
     if (iSelectedId == -1) return false;
@@ -230,25 +230,25 @@ bool DCP::DCP06ViewCdfDlgC::GetSelectedData(StringC& sDistId, StringC& sRefId, S
     return true;
 }
 
-bool DCP::DCP06ViewCdfDlgC::SetModel(GUI::ModelC* pModel)
+bool DCP::ViewCdfDialog::SetModel(GUI::ModelC* pModel)
 {
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast<DCP::DCP06ModelC*>(pModel);
-    if (pDCP06Model != NULL && ModelHandlerC::SetModel(pDCP06Model)) { RefreshControls(); return true; }
+    DCP::Model* pModel = dynamic_cast<DCP::Model*>(pModel);
+    if (pModel != nullptr && ModelHandlerC::SetModel(pModel)) { RefreshControls(); return true; }
     USER_APP_VERIFY(false);
     return false;
 }
 
-DCP::DCP06ModelC* DCP::DCP06ViewCdfDlgC::GetDCP06Model() const { return (DCP::DCP06ModelC*)GetModel(); }
+DCP::Model* DCP::ViewCdfDialog::GetModel() const { return (DCP::Model*)GetModel(); }
 
-// --- DCP06ViewCdfControllerC ---
-DCP::DCP06ViewCdfControllerC::DCP06ViewCdfControllerC(DCP::CdfFileFunc* pFileFunc, DCP06ModelC* pDCP06Model)
-    : m_pDlg(NULL), m_pFileFunc(pFileFunc), m_pDCP06Model(pDCP06Model)
+// --- ViewCdfController ---
+DCP::ViewCdfController::ViewCdfController(DCP::CdfFileFunc* pFileFunc, Model* pModel)
+    : m_pDlg(nullptr), m_pFileFunc(pFileFunc), m_pModel(pModel)
 {
     StringC sTitle;
     sTitle.LoadTxt(AT_DCP06, T_DCP_CALC_DIST_VIEW_TOK);
     sTitle += L" ("; sTitle += StringC(m_pFileFunc->getFileName()); sTitle += L")";
     SetTitle(sTitle);
-    m_pDlg = new DCP::DCP06ViewCdfDlgC(m_pFileFunc, m_pDCP06Model);
+    m_pDlg = new DCP::ViewCdfDialog(m_pFileFunc, m_pModel);
     (void)AddDialog(VIEWCDF_DLG, m_pDlg, true);
     FKDef vDef; vDef.poOwner = this;
     vDef.strLable = StringC(AT_DCP06, K_DCP_EDIT_TOK); SetFunctionKey(FK1, vDef);
@@ -257,36 +257,36 @@ DCP::DCP06ViewCdfControllerC::DCP06ViewCdfControllerC(DCP::CdfFileFunc* pFileFun
     FKDef vDef1; vDef1.poOwner = this; vDef1.strLable = L" "; SetFunctionKey(SHFK6, vDef1);
 }
 
-DCP::DCP06ViewCdfControllerC::~DCP06ViewCdfControllerC() {}
+DCP::ViewCdfController::~ViewCdfController() {}
 
-bool DCP::DCP06ViewCdfControllerC::SetModel(GUI::ModelC* pModel)
+bool DCP::ViewCdfController::SetModel(GUI::ModelC* pModel)
 {
     (void)ControllerC::SetModel(pModel);
     return m_pDlg->SetModel(pModel);
 }
 
-void DCP::DCP06ViewCdfControllerC::OnF1Pressed()
+void DCP::ViewCdfController::OnF1Pressed()
 {
-    if (m_pDlg == NULL) { USER_APP_VERIFY(false); return; }
+    if (m_pDlg == nullptr) { USER_APP_VERIFY(false); return; }
     StringC sDistId, sRefId, sNote;
     if (m_pDlg->GetSelectedData(sDistId, sRefId, sNote) == false) return;
-    DCP::DCP06EditCalcDistModelC* pModel = new DCP06EditCalcDistModelC;
+    DCP::EditCalculationDistModel* pModel = new EditCalculationDistModel;
     pModel->sDistId = sDistId; pModel->sRefId = sRefId; pModel->sNote = sNote;
-    if (GetController(VIEWCDF_EDIT_CONTROLLER) == NULL)
-        (void)AddController(VIEWCDF_EDIT_CONTROLLER, new DCP::DCP06EditCalcDistControllerC(m_pDlg->GetDCP06Model()));
+    if (GetController(VIEWCDF_EDIT_CONTROLLER) == nullptr)
+        (void)AddController(VIEWCDF_EDIT_CONTROLLER, new DCP::EditCalculationDistController(m_pDlg->GetModel()));
     (void)GetController(VIEWCDF_EDIT_CONTROLLER)->SetModel(pModel);
     SetActiveController(VIEWCDF_EDIT_CONTROLLER, true);
 }
 
-void DCP::DCP06ViewCdfControllerC::OnSHF5Pressed() { if (m_pDlg) m_pDlg->DeletePoint(); }
-void DCP::DCP06ViewCdfControllerC::OnF6Pressed() { if (m_pDlg) { m_pDlg->UpdateData(); (void)Close(EC_KEY_CONT); } }
-void DCP::DCP06ViewCdfControllerC::OnActiveDialogClosed(int, int) {}
+void DCP::ViewCdfController::OnSHF5Pressed() { if (m_pDlg) m_pDlg->DeletePoint(); }
+void DCP::ViewCdfController::OnF6Pressed() { if (m_pDlg) { m_pDlg->UpdateData(); (void)Close(EC_KEY_CONT); } }
+void DCP::ViewCdfController::OnActiveDialogClosed(int, int) {}
 
-void DCP::DCP06ViewCdfControllerC::OnActiveControllerClosed(int lCtrlID, int lExitCode)
+void DCP::ViewCdfController::OnActiveControllerClosed(int lCtrlID, int lExitCode)
 {
     if (lCtrlID == VIEWCDF_EDIT_CONTROLLER && lExitCode == EC_KEY_CONT) {
-        DCP::DCP06EditCalcDistModelC* pModel = (DCP::DCP06EditCalcDistModelC*)GetController(VIEWCDF_EDIT_CONTROLLER)->GetModel();
-        DCP06CommonC pCommon(m_pDCP06Model);
+        DCP::EditCalculationDistModel* pModel = (DCP::EditCalculationDistModel*)GetController(VIEWCDF_EDIT_CONTROLLER)->GetModel();
+        Common pCommon(m_pModel);
         char temp[100];
         BSS::UTI::BSS_UTI_WCharToAscii(pModel->sDistId, temp, 6); pCommon.strbtrim(temp); sprintf(m_pFileFunc->id, "%-s", temp);
         BSS::UTI::BSS_UTI_WCharToAscii(pModel->sRefId, temp, 6);  pCommon.strbtrim(temp); sprintf(m_pFileFunc->ref, "%-s", temp);

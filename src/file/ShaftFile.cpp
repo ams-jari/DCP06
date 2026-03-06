@@ -63,19 +63,19 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP06ShaftFileDlgC::DCP06ShaftFileDlgC(DCP06ShaftFileModelC* pModel):
+ShaftFileDialog::ShaftFileDialog(ShaftFileModel* pModel):
 	m_pFile(0),  m_pSize(0), m_pDate(0), m_pTime(0),m_pFreeSpace(0),
 	m_pDataModel(pModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
 }
 // Description: Destructor
-DCP06ShaftFileDlgC::~DCP06ShaftFileDlgC()
+ShaftFileDialog::~ShaftFileDialog()
 {
 
 }
 
-void DCP06ShaftFileDlgC::OnInitDialog(void)
+void ShaftFileDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	//SetColonPosLong( GUI::StandardDialogC::CP_20 );
@@ -120,24 +120,24 @@ void DCP06ShaftFileDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_SHAFT_FILE_TOK, 0);
 }
 
-void DCP06ShaftFileDlgC::OnDialogActivated()
+void ShaftFileDialog::OnDialogActivated()
 {
-	if(!GetDCP06Model()->sShaftFile.IsEmpty())
-		m_pDataModel->m_pFileFunc->setFile(GetDCP06Model()->sShaftFile);
+	if(!GetModel()->sShaftFile.IsEmpty())
+		m_pDataModel->m_pFileFunc->setFile(GetModel()->sShaftFile);
 
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP06ShaftFileDlgC::RefreshControls()
+void DCP::ShaftFileDialog::RefreshControls()
 {	
 	if(m_pFile && m_pSize && m_pDate && m_pTime && m_pFreeSpace)
 	{
-		//m_pFileModel->m_pAdfFile->setFile(sSelectedFile/*GetDCP06Model()->ADFFileName*/);
+		//m_pFileModel->m_pAdfFile->setFile(sSelectedFile/*GetModel()->ADFFileName*/);
 
 		if(m_pDataModel->m_pFileFunc->IsOpen())
 		{
-			m_pFile->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getFileName());//GetDCP06Model()->ADFFileName);	
+			m_pFile->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getFileName());//GetModel()->ADFFileName);	
 			m_pSize->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getFileSizeString());
 			m_pDate->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getModDate());
 			m_pTime->GetStringInputCtrl()->SetString(m_pDataModel->m_pFileFunc->getModTime());
@@ -157,27 +157,27 @@ void DCP::DCP06ShaftFileDlgC::RefreshControls()
 	}
 }
 
-void DCP::DCP06ShaftFileDlgC::UpdateData()
+void DCP::ShaftFileDialog::UpdateData()
 {
 	if(m_pDataModel->m_pFileFunc->IsOpen())
 	{	
-        GetDCP06Model()->sShaftFile = m_pDataModel->m_pFileFunc->getFileName();
-		GetDCP06Model()->sShaftFile.RTrim();
+        GetModel()->sShaftFile = m_pDataModel->m_pFileFunc->getFileName();
+		GetModel()->sShaftFile.RTrim();
 	}
 	else
-		GetDCP06Model()->sShaftFile = L"";
+		GetModel()->sShaftFile = L"";
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06ShaftFileDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::ShaftFileDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -187,16 +187,16 @@ bool DCP::DCP06ShaftFileDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06ShaftFileDlgC::GetDCP06Model() const
+DCP::Model* DCP::ShaftFileDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ******************************************************************************
 
-DCP::DCP06ShaftFileControllerC::DCP06ShaftFileControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::ShaftFileController::ShaftFileController(Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -204,10 +204,10 @@ DCP::DCP06ShaftFileControllerC::DCP06ShaftFileControllerC(DCP06ModelC* pDCP06Mod
     SetTitle(StringC( AT_DCP06, T_DCP_SHAFT_FILE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// FileModel
-	m_pDataModel = new DCP::DCP06ShaftFileModelC(m_pDCP06Model); 
+	m_pDataModel = new DCP::ShaftFileModel(m_pModel); 
  
     // Create a dialog
-    m_pDlg = new DCP::DCP06ShaftFileDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::ShaftFileDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( SHAFT_FILE_DLG, m_pDlg, true );
 
     // Set the function key
@@ -245,13 +245,13 @@ DCP::DCP06ShaftFileControllerC::DCP06ShaftFileControllerC(DCP06ModelC* pDCP06Mod
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06ShaftFileControllerC::~DCP06ShaftFileControllerC()
+DCP::ShaftFileController::~ShaftFileController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06ShaftFileControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::ShaftFileController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -262,12 +262,12 @@ bool DCP::DCP06ShaftFileControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -278,20 +278,20 @@ bool DCP::DCP06ShaftFileControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // OPEN
-void DCP::DCP06ShaftFileControllerC::OnF1Pressed()
+void DCP::ShaftFileController::OnF1Pressed()
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
 		
-		DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
+		DCP::SelectFileModel* pModel = new SelectFileModel;
 
-		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(SHAFT_FILE, sTitle, m_pDCP06Model) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(SHAFT_FILE, sTitle, m_pModel) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
@@ -299,39 +299,39 @@ void DCP::DCP06ShaftFileControllerC::OnF1Pressed()
 }
 
 // NEW
-void DCP::DCP06ShaftFileControllerC::OnF2Pressed()
+void DCP::ShaftFileController::OnF2Pressed()
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
 		
-		DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+		DCP::InputTextModel* pModel = new InputTextModel;
 		pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_NEW_FILENAME_TOK);
 		pModel->m_StrTitle = GetTitle();
 		pModel->m_iTextLength = 8;
 		pModel->m_StrText = L" ";
 
-		if ( NULL == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
+		if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
 		{
 			USER_APP_VERIFY( false );
 			return;
 		}
 
-		if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
+		if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC( m_pDCP06Model));
+			(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController( m_pModel));
 		}
 
-		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDCP06FileDlg->GetDCP06Model());
+		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDCP06FileDlg->GetModel());
 		(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(INPUT_TEXT_CONTROLLER, true);
 
 }
 
 // CLOSE
-void DCP::DCP06ShaftFileControllerC::OnF5Pressed()
+void DCP::ShaftFileController::OnF5Pressed()
 {	
 	if(m_pDataModel->m_pFileFunc->IsOpen())
 		m_pDataModel->m_pFileFunc->CloseFile();
@@ -341,9 +341,9 @@ void DCP::DCP06ShaftFileControllerC::OnF5Pressed()
 }
 
 // CONT
-void DCP::DCP06ShaftFileControllerC::OnF6Pressed()
+void DCP::ShaftFileController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -358,7 +358,7 @@ void DCP::DCP06ShaftFileControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 // DEL
-void DCP::DCP06ShaftFileControllerC::OnSHF2Pressed()
+void DCP::ShaftFileController::OnSHF2Pressed()
 {
 	if(!m_pDataModel->m_pFileFunc->IsOpen())
 		return;
@@ -368,7 +368,7 @@ void DCP::DCP06ShaftFileControllerC::OnSHF2Pressed()
 }
 
 // VIEW
-void DCP::DCP06ShaftFileControllerC::OnSHF5Pressed()
+void DCP::ShaftFileController::OnSHF5Pressed()
 {
 	if(!m_pDataModel->m_pFileFunc->IsOpen())
 		return;
@@ -377,27 +377,27 @@ void DCP::DCP06ShaftFileControllerC::OnSHF5Pressed()
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06ShaftFileControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::ShaftFileController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06ShaftFileControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::ShaftFileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		StringC strSelectedFile = pModel->m_strSelectedFile;
 		m_pDataModel->m_pFileFunc->setFile(strSelectedFile);
 	}
 
 		if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 	
 			char fname[CPI::LEN_PATH_MAX];
-			//DCP06MsgBoxC msgbox;
+			//MsgBox msgbox;
 			//msgbox.ShowMessageOk(strNewFile);
 			//UTL::UnicodeToAscii(fname, strNewFile);
 			BSS::UTI::BSS_UTI_WCharToAscii( strNewFile, fname );
@@ -413,22 +413,22 @@ void DCP::DCP06ShaftFileControllerC::OnActiveControllerClosed( int lCtrlID, int 
 }
 
 // ================================================================================================
-// ======================================  DCP06AngleFileModelC====================================
+// ======================================  AngleFileModel====================================
 // ================================================================================================
 
 
 // ===========================================================================================
-// DCP06AngleFileModelC
+// AngleFileModel
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06ShaftFileModelC::DCP06ShaftFileModelC(DCP06ModelC* pDCP06Model)
+DCP::ShaftFileModel::ShaftFileModel(Model* pModel)
 {
-	m_pFileFunc = new ShaftFileFunc(pDCP06Model);
-	pCommon = new DCP06CommonC(pDCP06Model);
+	m_pFileFunc = new ShaftFileFunc(pModel);
+	pCommon = new Common(pModel);
 
 }
-DCP::DCP06ShaftFileModelC::~DCP06ShaftFileModelC()
+DCP::ShaftFileModel::~ShaftFileModel()
 {
 	if(m_pFileFunc)
 	{
@@ -445,7 +445,7 @@ DCP::DCP06ShaftFileModelC::~DCP06ShaftFileModelC()
 
 
 // ================================================================================================
-// ======================================  DCP06AngleFileModelC====================================
+// ======================================  AngleFileModel====================================
 // ================================================================================================
 
 // ================================================================================================
@@ -464,25 +464,25 @@ DCP::DCP06ShaftFileModelC::~DCP06ShaftFileModelC()
 //	// get path
 //	getPath();
 //
-//	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+//	m_pCommon = new Common(m_pModel);
 //}
 
-DCP::ShaftFileFunc::ShaftFileFunc(DCP06ModelC* pDCP06Model): m_pFile(0), m_bExists(false),opened(0),
-				m_pDCP06Model(pDCP06Model)
+DCP::ShaftFileFunc::ShaftFileFunc(Model* pModel): m_pFile(0), m_bExists(false),opened(0),
+				m_pModel(pModel)
 {
 	m_cPath[0] = '\0';
 	m_cPathAndFileName[0] = '\0';
 	m_cFileName[0] = '\0';
 
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 
 	// get path
 	getPath();
 }
 // ****************************************************************************************
-DCP::ShaftFileFunc::ShaftFileFunc(boost::filesystem::path * FileInfo,DCP06ModelC* pDCP06Model):m_pFile(0), m_bExists(false),m_pDCP06Model(pDCP06Model)
+DCP::ShaftFileFunc::ShaftFileFunc(boost::filesystem::path * FileInfo,Model* pModel):m_pFile(0), m_bExists(false),m_pModel(pModel)
 {
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 
 	m_cPath[0] = '\0';
 	m_cPathAndFileName[0] = '\0';
@@ -515,7 +515,7 @@ DCP::ShaftFileFunc::~ShaftFileFunc()
 // ****************************************************************************************
 void DCP::ShaftFileFunc::getPath()
 {
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	//CPI::FileUtilitiesC::MakeDir(m_cPath);
 	boost::filesystem::path filePath= m_cPath;
     boost::system::error_code errCode;
@@ -652,7 +652,7 @@ int Result;
 	if(!m_pCommon->card_status())//(1) != 0)
 		return -1;
 
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	
 	ret = -1;
 
@@ -707,7 +707,7 @@ short DCP::ShaftFileFunc::fopen1(const char* mode)
 	{
 		return true;		
 	}
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(m_cPathAndFileName));
@@ -744,7 +744,7 @@ short DCP::ShaftFileFunc::remove1(char *fname)
 {
 char apu[CPI::LEN_PATH_MAX];
 bool Result;
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 
     sprintf(apu,"%s%-s",m_cPath,common.strbtrim(fname));
 
@@ -767,11 +767,11 @@ bool Result;
 *************************************************************************/
 //	save_calcdist_to_file(&CalcDistFile_,strDist, strRef,strRefType,strTrgt,strTrgtType,bDid,bNote,TRUE);
 
-short DCP::ShaftFileFunc::save_shaft_to_file(StringC Id, DCP06ShaftModelC* pModel)
+short DCP::ShaftFileFunc::save_shaft_to_file(StringC Id, ShaftModel* pModel)
 {
 char temp1[100];
 StringC msg;
-DCP06MsgBoxC msgbox;
+MsgBox msgbox;
 int iInstNo=0;
 short i;
 struct ams_vector m;
@@ -819,24 +819,24 @@ double dist;
 	sprintf(temp1,"Instrument(type/no):%s %d%c%c", temp,iInstNo,13,10); 
 	fputs(temp1,m_pFile);
 	/*
-	sprintf(temp1,"Center point(x,y,z):%9.*f %9.*f %9.*f%c%c", m_pDCP06Model->m_nDecimals,pModel->shaft_circle_cx, 
-													m_pDCP06Model->m_nDecimals,pModel->shaft_circle_cy, 
-													m_pDCP06Model->m_nDecimals,pModel->shaft_circle_cz,13,10); 
+	sprintf(temp1,"Center point(x,y,z):%9.*f %9.*f %9.*f%c%c", m_pModel->m_nDecimals,pModel->shaft_circle_cx, 
+													m_pModel->m_nDecimals,pModel->shaft_circle_cy, 
+													m_pModel->m_nDecimals,pModel->shaft_circle_cz,13,10); 
 	fputs(temp1,m_pFile);
 	*/
 	sprintf(temp1,"Center point:%c%c",13,10);
 	fputs(temp1,m_pFile);
 
-	sprintf(temp1,"  x:   %9.*f%c%c",m_pDCP06Model->m_nDecimals,pModel->shaft_circle_cx,13,10);
+	sprintf(temp1,"  x:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cx,13,10);
 	fputs(temp1,m_pFile);
 
-	sprintf(temp1,"  y:   %9.*f%c%c",m_pDCP06Model->m_nDecimals,pModel->shaft_circle_cy,13,10);
+	sprintf(temp1,"  y:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cy,13,10);
 	fputs(temp1,m_pFile);
 
-	sprintf(temp1,"  z:   %9.*f%c%c",m_pDCP06Model->m_nDecimals,pModel->shaft_circle_cz,13,10);
+	sprintf(temp1,"  z:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cz,13,10);
 	fputs(temp1,m_pFile);
 
-	sprintf(temp1,"Radius:%9.*f%c%c", m_pDCP06Model->m_nDecimals,pModel->shaft_circle_diameter,13,10); 
+	sprintf(temp1,"Radius:%9.*f%c%c", m_pModel->m_nDecimals,pModel->shaft_circle_diameter,13,10); 
 	fputs(temp1,m_pFile);
 
 	sprintf(temp1,"Normal:%c%c",13,10);
@@ -851,13 +851,13 @@ double dist;
 	sprintf(temp1,"  k:   %9.*f%c%c",6,pModel->shaft_circle_vk,13,10);
 	fputs(temp1,m_pFile);
 
-	sprintf(temp1,"RMS:   %9.*f%c%c", m_pDCP06Model->m_nDecimals,pModel->shaft_circle_rms,13,10); 
+	sprintf(temp1,"RMS:   %9.*f%c%c", m_pModel->m_nDecimals,pModel->shaft_circle_rms,13,10); 
 	fputs(temp1,m_pFile);
 	
-	sprintf(temp1,"Angle: %9.*f%c%c", m_pDCP06Model->m_nDecimals,pModel->angleLines,13,10); 
+	sprintf(temp1,"Angle: %9.*f%c%c", m_pModel->m_nDecimals,pModel->angleLines,13,10); 
 	fputs(temp1,m_pFile);
 	
-	sprintf(temp1,"Distance: %9.*f%c%c", m_pDCP06Model->m_nDecimals,pModel->centerOfCircleDist,13,10); 
+	sprintf(temp1,"Distance: %9.*f%c%c", m_pModel->m_nDecimals,pModel->centerOfCircleDist,13,10); 
 	fputs(temp1,m_pFile);
 
 	sprintf(temp1,"Deviations of points%c%c",13,10); 
@@ -873,7 +873,7 @@ double dist;
 		{
 			count++;
 			sprintf(temp1,"%-2d.%-6.6s %+9.*f%c%c", count,pModel->shaft_circle_points[0].points[i].point_id, 
-									m_pDCP06Model->m_nDecimals, pModel->shaft_circle_points[0].points[i].diameter - pModel->shaft_circle_points[0].diameter,
+									m_pModel->m_nDecimals, pModel->shaft_circle_points[0].points[i].diameter - pModel->shaft_circle_points[0].diameter,
 									13,10);
 			fputs(temp1,m_pFile);
 		}
@@ -909,7 +909,7 @@ double dist;
 			dist = calc_point_dist_from_plane(&m, &wplane);
 
 			sprintf(temp1,"%-2d.%-6.6s %+9.*f%c%c", count,pModel->shaft_circle_points[0].points[i].point_id, 
-									m_pDCP06Model->m_nDecimals,dist,
+									m_pModel->m_nDecimals,dist,
 									13,10);
 			fputs(temp1,m_pFile);
 			
@@ -935,7 +935,7 @@ double dist;
 *************************************************************************/
 short DCP::ShaftFileFunc::delete_file(void)
 {
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 
 	short result=-1;
@@ -975,7 +975,7 @@ short DCP::ShaftFileFunc::create_new_file(char* filename)
 char fname[13];
 short ret;
 StringC msg;
-DCP06MsgBoxC msgbox;
+MsgBox msgbox;
 char temp[CPI::LEN_PATH_MAX];
 
 	if(!m_pCommon->check_free_space(30000L))

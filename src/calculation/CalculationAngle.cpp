@@ -52,7 +52,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06CalcAngleDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::CalculationAngleDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -66,19 +66,19 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06CalcAngleDlgC);
 
 
 // ================================================================================================
-// ====================================  DCP06CalcAngleDlgC  ======================================
+// ====================================  CalculationAngleDialog  ======================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06CalcAngleDlgC::DCP06CalcAngleDlgC(DCP06CalcAngleModelC * pCalcAngleModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
+DCP::CalculationAngleDialog::CalculationAngleDialog(CalculationAngleModel * pCalcAngleModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
 			,m_p3DFile(0),m_pAngleFile(0),m_pRefId(0),m_pTargetId(0),m_pAngleId(0),
 			m_pAngle(0),m_pNote(0),m_pDataModel(pCalcAngleModel),m_pRefType(0),m_pTargetType(0),
-			m_pRefIdObserver(OBS_METHOD_TO_PARAM0(DCP06CalcAngleDlgC, OnValueChanged), this),
-			m_pTrgtIdObserver(OBS_METHOD_TO_PARAM0(DCP06CalcAngleDlgC, OnValueChanged), this),
-			m_pAngleIdObserver(OBS_METHOD_TO_PARAM0(DCP06CalcAngleDlgC, OnValueChanged), this),
-			m_pNoteObserver(OBS_METHOD_TO_PARAM0(DCP06CalcAngleDlgC, OnValueChanged), this)
+			m_pRefIdObserver(OBS_METHOD_TO_PARAM0(CalculationAngleDialog, OnValueChanged), this),
+			m_pTrgtIdObserver(OBS_METHOD_TO_PARAM0(CalculationAngleDialog, OnValueChanged), this),
+			m_pAngleIdObserver(OBS_METHOD_TO_PARAM0(CalculationAngleDialog, OnValueChanged), this),
+			m_pNoteObserver(OBS_METHOD_TO_PARAM0(CalculationAngleDialog, OnValueChanged), this)
 
 {
 	//SetTxtApplicationId(AT_DCP06);
@@ -88,14 +88,14 @@ DCP::DCP06CalcAngleDlgC::DCP06CalcAngleDlgC(DCP06CalcAngleModelC * pCalcAngleMod
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06CalcAngleDlgC::~DCP06CalcAngleDlgC()
+DCP::CalculationAngleDialog::~CalculationAngleDialog()
 {
 
 }
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP06CalcAngleDlgC::OnInitDialog(void)
+void DCP::CalculationAngleDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	m_p3DFile = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -205,7 +205,7 @@ void DCP::DCP06CalcAngleDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP::DCP06CalcAngleDlgC::OnDialogActivated()
+void DCP::CalculationAngleDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
@@ -213,7 +213,7 @@ void DCP::DCP06CalcAngleDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP06CalcAngleDlgC::UpdateData()
+void DCP::CalculationAngleDialog::UpdateData()
 {
 
 }
@@ -221,7 +221,7 @@ void DCP::DCP06CalcAngleDlgC::UpdateData()
 // ================================================================================================
 // Description: refresh all controls
 // ================================================================================================
-void DCP::DCP06CalcAngleDlgC::RefreshControls()
+void DCP::CalculationAngleDialog::RefreshControls()
 {
 	if(m_p3DFile &&  m_pAngleFile && m_pRefId && m_pTargetId && m_pAngleId && m_pAngle && 
 		m_pNote && m_pRefType && m_pTargetType)
@@ -296,8 +296,8 @@ void DCP::DCP06CalcAngleDlgC::RefreshControls()
 
 		if(m_pDataModel->iAngleCalculated)
 		{
-			sAngle.Format(L"%10.*f", 6/*GetDCP06Model()->m_nDecimals*/,m_pDataModel->dCalculatedAngle);
-			sprintf(m_pDataModel->cAngle,"%10.*f", 6/*GetDCP06Model()->m_nDecimals*/,m_pDataModel->dCalculatedAngle);
+			sAngle.Format(L"%10.*f", 6/*GetModel()->m_nDecimals*/,m_pDataModel->dCalculatedAngle);
+			sprintf(m_pDataModel->cAngle,"%10.*f", 6/*GetModel()->m_nDecimals*/,m_pDataModel->dCalculatedAngle);
 		}
 		else
 		{
@@ -334,12 +334,12 @@ void DCP::DCP06CalcAngleDlgC::RefreshControls()
 // ================================================================================================
 // Description: OnValueChanged
 // ================================================================================================
-void DCP::DCP06CalcAngleDlgC::OnValueChanged(int unNotifyCode, int ulParam2)
+void DCP::CalculationAngleDialog::OnValueChanged(int unNotifyCode, int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
-		//short iCurrentPno = GetDCP06Model()->iCurrentPoint;
+		//short iCurrentPno = GetModel()->iCurrentPoint;
 		if(ulParam2 == eRefId)
 		{
 			StringC sTemp;
@@ -408,14 +408,14 @@ void DCP::DCP06CalcAngleDlgC::OnValueChanged(int unNotifyCode, int ulParam2)
 // ================================================================================================
 // Description:  SetModel
 // ================================================================================================
-bool DCP::DCP06CalcAngleDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::CalculationAngleDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -425,25 +425,25 @@ bool DCP::DCP06CalcAngleDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // ================================================================================================
-// Description:  GetDCP06Model
+// Description:  GetModel
 // ================================================================================================
-DCP::DCP06ModelC* DCP::DCP06CalcAngleDlgC::GetDCP06Model() const
+DCP::Model* DCP::CalculationAngleDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 
 // ================================================================================================
-// ====================================  DCP06CalcAngleControllerC=================================
+// ====================================  CalculationAngleController=================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06CalcAngleControllerC::DCP06CalcAngleControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ), m_pDCP06Model(pDCP06Model)
+DCP::CalculationAngleController::CalculationAngleController(Model* pModel)
+    : m_pDlg( nullptr ), m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -451,14 +451,14 @@ DCP::DCP06CalcAngleControllerC::DCP06CalcAngleControllerC(DCP06ModelC* pDCP06Mod
     SetTitle(StringC( AT_DCP06, T_DCP_CALC_ANGLE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// create model 
-	m_pDataModel = new DCP06CalcAngleModelC(pDCP06Model);
+	m_pDataModel = new CalculationAngleModel(pModel);
     
 	// Create a dialog
-    m_pDlg = new DCP::DCP06CalcAngleDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::CalculationAngleDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( CALC_ANGLE_DLG, m_pDlg, true );
 
 	// Set the function key
-	m_pDataModel->dspMode = DCP06CalcAngleModelC::eNormal;
+	m_pDataModel->dspMode = CalculationAngleModel::eNormal;
 
     // Set the function key
 	change_function_keys();
@@ -469,7 +469,7 @@ DCP::DCP06CalcAngleControllerC::DCP06CalcAngleControllerC(DCP06ModelC* pDCP06Mod
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06CalcAngleControllerC::~DCP06CalcAngleControllerC()
+DCP::CalculationAngleController::~CalculationAngleController()
 {
 	if(m_pDataModel)
 	{
@@ -480,7 +480,7 @@ DCP::DCP06CalcAngleControllerC::~DCP06CalcAngleControllerC()
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP06CalcAngleControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::CalculationAngleController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -491,12 +491,12 @@ bool DCP::DCP06CalcAngleControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -509,40 +509,40 @@ bool DCP::DCP06CalcAngleControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: F1
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnF1Pressed()
+void DCP::CalculationAngleController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
   
-	if(m_pDataModel->dspMode == DCP06CalcAngleModelC::eNormal)
+	if(m_pDataModel->dspMode == CalculationAngleModel::eNormal)
 	{
 		// SELECT FILE
-		DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
-		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+		DCP::SelectFileModel* pModel = new SelectFileModel;
+		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ONLY_ADF, sTitle,m_pDCP06Model ) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle,m_pModel ) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
 
 
 	}
-	else if (m_pDataModel->dspMode == DCP06CalcAngleModelC::eRef)
+	else if (m_pDataModel->dspMode == CalculationAngleModel::eRef)
 	{
 		// POINT SELECTED
 		/*
-		m_pDataModel->dspMode = DCP06CalcAngleModelC::eNormal;
+		m_pDataModel->dspMode = CalculationAngleModel::eNormal;
 		change_function_keys();
 		m_pDataModel->active_reftype = POINT;
 		m_pDlg->RefreshControls();
 		*/
 
-		m_pDataModel->dspMode = DCP06CalcAngleModelC::eNormal;
+		m_pDataModel->dspMode = CalculationAngleModel::eNormal;
 		change_function_keys();
 		m_pDataModel->active_reftype = POINT;
 
@@ -551,18 +551,18 @@ void DCP::DCP06CalcAngleControllerC::OnF1Pressed()
 	else
 	{
 		m_pDataModel->active_targettype = POINT;
-		m_pDataModel->dspMode = DCP06CalcAngleModelC::eNormal;
+		m_pDataModel->dspMode = CalculationAngleModel::eNormal;
 
 		// POINT SELECTED
-		DCP06SelectOnePointModelC* pModel = new DCP06SelectOnePointModelC;
+		SelectOnePointModel* pModel = new SelectOnePointModel;
 		pModel->m_iCurrentPoint = 1;
 		pModel->m_iDef = ACTUAL;
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
 		memcpy(&pModel->points[0], &m_pDataModel->point_list[0], sizeof(S_SELECT_POINTS)* MAX_POINTS_IN_FILE);
 
-		if(GetController(SELECT_TARGET_POINT_CONTROLLER) == NULL)
+		if(GetController(SELECT_TARGET_POINT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_TARGET_POINT_CONTROLLER, new DCP::DCP06SelectOnePointControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( SELECT_TARGET_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pDlg->GetModel()) );
 		}
 		(void)GetController( SELECT_TARGET_POINT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_TARGET_POINT_CONTROLLER, true);
@@ -580,34 +580,34 @@ void DCP::DCP06CalcAngleControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F2
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnF2Pressed()
+void DCP::CalculationAngleController::OnF2Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
   
-	if(m_pDataModel->dspMode == DCP06CalcAngleModelC::eNormal)
+	if(m_pDataModel->dspMode == CalculationAngleModel::eNormal)
 	{
 		// SELECT ANGLE FILE
-		if(GetController(ANGLE_FILE_CONTROLLER) == NULL)
+		if(GetController(ANGLE_FILE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( ANGLE_FILE_CONTROLLER, new DCP::DCP06AngleFileControllerC(m_pDCP06Model ));
+			(void)AddController( ANGLE_FILE_CONTROLLER, new DCP::AngleFileController(m_pModel ));
 		}
-		(void)GetController( ANGLE_FILE_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+		(void)GetController( ANGLE_FILE_CONTROLLER )->SetModel( m_pDlg->GetModel());
 		SetActiveController(ANGLE_FILE_CONTROLLER, true);
 
 	}
-	else if (m_pDataModel->dspMode == DCP06CalcAngleModelC::eRef)
+	else if (m_pDataModel->dspMode == CalculationAngleModel::eRef)
 	{
 		// REF LINE
 		m_pDataModel->active_reftype = LINE;
-		m_pDataModel->dspMode = DCP06CalcAngleModelC::eNormal;
+		m_pDataModel->dspMode = CalculationAngleModel::eNormal;
 	
 		// SELECT MULTIPOINTS
-		DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
+		DCP::SelectMultiPointsModel* pModel = new SelectMultiPointsModel;
 		memcpy(&pModel->sel_points[0],&m_pDataModel->point_list[0], sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
 	
@@ -629,9 +629,9 @@ void DCP::DCP06CalcAngleControllerC::OnF2Pressed()
 		// set help token
 		pModel->helpToken = H_DCP_SEL_MULTI_A_OR_D_TOK;
 
-		if(GetController(SELECT_MULTIPOINTS_REF_LINE_CONTROLLER) == NULL)
+		if(GetController(SELECT_MULTIPOINTS_REF_LINE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_MULTIPOINTS_REF_LINE_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( SELECT_MULTIPOINTS_REF_LINE_CONTROLLER, new DCP::SelectMultiPointsController(m_pDlg->GetModel()) );
 		}
 
 	(void)GetController( SELECT_MULTIPOINTS_REF_LINE_CONTROLLER )->SetModel(pModel);
@@ -644,10 +644,10 @@ void DCP::DCP06CalcAngleControllerC::OnF2Pressed()
 		// TARGET LINE
 
 		m_pDataModel->active_targettype = LINE;
-		m_pDataModel->dspMode = DCP06CalcAngleModelC::eNormal;
+		m_pDataModel->dspMode = CalculationAngleModel::eNormal;
 
 		// SELECT MULTIPOINTS
-		DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
+		DCP::SelectMultiPointsModel* pModel = new SelectMultiPointsModel;
 		memcpy(&pModel->sel_points[0],&m_pDataModel->point_list[0], sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
 	
@@ -669,9 +669,9 @@ void DCP::DCP06CalcAngleControllerC::OnF2Pressed()
 		// set help token
 		pModel->helpToken = H_DCP_SEL_MULTI_A_OR_D_TOK;
 
-		if(GetController(SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER) == NULL)
+		if(GetController(SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER, new DCP::SelectMultiPointsController(m_pDlg->GetModel()) );
 		}
 
 	(void)GetController( SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER )->SetModel(pModel);
@@ -686,28 +686,28 @@ void DCP::DCP06CalcAngleControllerC::OnF2Pressed()
 // ================================================================================================
 // Description: F3
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnF3Pressed()
+void DCP::CalculationAngleController::OnF3Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
   
-	if(m_pDataModel->dspMode == DCP06CalcAngleModelC::eNormal)
+	if(m_pDataModel->dspMode == CalculationAngleModel::eNormal)
 	{
-		m_pDataModel->dspMode = DCP06CalcAngleModelC::eRef;
+		m_pDataModel->dspMode = CalculationAngleModel::eRef;
 
 	}
-	else if (m_pDataModel->dspMode == DCP06CalcAngleModelC::eRef)
+	else if (m_pDataModel->dspMode == CalculationAngleModel::eRef)
 	{
 		// REF PLANE
 		m_pDataModel->active_reftype = PLANE;
-		m_pDataModel->dspMode = DCP06CalcAngleModelC::eNormal;
+		m_pDataModel->dspMode = CalculationAngleModel::eNormal;
 
 		// SELECT MULTIPOINTS
-		DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
+		DCP::SelectMultiPointsModel* pModel = new SelectMultiPointsModel;
 		memcpy(&pModel->sel_points[0],&m_pDataModel->point_list[0], sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
 	
@@ -729,9 +729,9 @@ void DCP::DCP06CalcAngleControllerC::OnF3Pressed()
 		// set help token
 		pModel->helpToken = H_DCP_SEL_MULTI_A_OR_D_TOK;
 
-		if(GetController(SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER) == NULL)
+		if(GetController(SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER, new DCP::SelectMultiPointsController(m_pDlg->GetModel()) );
 		}
 
 		(void)GetController( SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER )->SetModel(pModel);
@@ -744,10 +744,10 @@ void DCP::DCP06CalcAngleControllerC::OnF3Pressed()
 		// TARGET PLANE
 
 		m_pDataModel->active_targettype = PLANE;
-		m_pDataModel->dspMode = DCP06CalcAngleModelC::eNormal;
+		m_pDataModel->dspMode = CalculationAngleModel::eNormal;
 
 				// SELECT MULTIPOINTS
-		DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
+		DCP::SelectMultiPointsModel* pModel = new SelectMultiPointsModel;
 		memcpy(&pModel->sel_points[0],&m_pDataModel->point_list[0], sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
 	
@@ -769,9 +769,9 @@ void DCP::DCP06CalcAngleControllerC::OnF3Pressed()
 		// set help token
 		pModel->helpToken = H_DCP_SEL_MULTI_A_OR_D_TOK;
 
-		if(GetController(SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER) == NULL)
+		if(GetController(SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER, new DCP::SelectMultiPointsController(m_pDlg->GetModel()) );
 		}
 
 		(void)GetController( SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER )->SetModel(pModel);
@@ -787,15 +787,15 @@ void DCP::DCP06CalcAngleControllerC::OnF3Pressed()
 // ================================================================================================
 // Description: F4
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnF4Pressed()
+void DCP::CalculationAngleController::OnF4Pressed()
 {
-	    if (m_pDlg == NULL)
+	    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
   
-	m_pDataModel->dspMode = DCP06CalcAngleModelC::eTarget;
+	m_pDataModel->dspMode = CalculationAngleModel::eTarget;
 	
 	change_function_keys();
 	m_pDlg->RefreshControls();
@@ -804,9 +804,9 @@ void DCP::DCP06CalcAngleControllerC::OnF4Pressed()
 // ================================================================================================
 // Description: F5
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnF5Pressed()
+void DCP::CalculationAngleController::OnF5Pressed()
 {
-	if(m_pDataModel->dspMode == DCP06CalcAngleModelC::eNormal)
+	if(m_pDataModel->dspMode == CalculationAngleModel::eNormal)
 	{
 		// save results
 		if(m_pDataModel->pAgfFileFunc->IsOpen())
@@ -830,9 +830,9 @@ void DCP::DCP06CalcAngleControllerC::OnF5Pressed()
 // ================================================================================================
 // Description: F5
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnF6Pressed()
+void DCP::CalculationAngleController::OnF6Pressed()
 {
-	 if (m_pDlg == NULL)
+	 if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -849,7 +849,7 @@ void DCP::DCP06CalcAngleControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: SHF2
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnSHF2Pressed()
+void DCP::CalculationAngleController::OnSHF2Pressed()
 {
 	m_pDataModel->clear_buffers();
 	m_pDlg->RefreshControls();
@@ -858,16 +858,16 @@ void DCP::DCP06CalcAngleControllerC::OnSHF2Pressed()
 // ================================================================================================
 // Description: OnSHF5Pressed / VIEW
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnSHF5Pressed()
+void DCP::CalculationAngleController::OnSHF5Pressed()
 {
 	if(!m_pDataModel->pAgfFileFunc->IsOpen())
 		return;
 
-	if(GetController(VIEWAGF_CONTROLLER) == NULL)
+	if(GetController(VIEWAGF_CONTROLLER) == nullptr)
 	{
-		(void)AddController( VIEWAGF_CONTROLLER, new DCP::DCP06ViewAgfControllerC(m_pDataModel->pAgfFileFunc, m_pDlg->GetDCP06Model()) );
+		(void)AddController( VIEWAGF_CONTROLLER, new DCP::ViewAgfController(m_pDataModel->pAgfFileFunc, m_pDlg->GetModel()) );
 	}
-	(void)GetController( VIEWAGF_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+	(void)GetController( VIEWAGF_CONTROLLER )->SetModel(m_pDlg->GetModel());
 	SetActiveController(VIEWAGF_CONTROLLER, true);
 
 }
@@ -875,18 +875,18 @@ void DCP::DCP06CalcAngleControllerC::OnSHF5Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::CalculationAngleController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::CalculationAngleController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		m_pDataModel->sSelected3DFile = pModel->m_strSelectedFile;
 		m_pDataModel->pAdfFileFunc->setFile(m_pDataModel->sSelected3DFile);
 
@@ -896,7 +896,7 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 	
 	if(lCtrlID == ANGLE_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		m_pDataModel->sSelectedAngleFile = m_pDlg->GetDCP06Model()->sCalcAngleFile;	
+		m_pDataModel->sSelectedAngleFile = m_pDlg->GetModel()->sCalcAngleFile;	
 		m_pDataModel->pAgfFileFunc->setFile(m_pDataModel->sSelectedAngleFile);
 	}
 
@@ -904,7 +904,7 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 	// TARGET POINT
 	if(lCtrlID == SELECT_TARGET_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectOnePointModelC* pModel = (DCP::DCP06SelectOnePointModelC*) GetController( SELECT_TARGET_POINT_CONTROLLER )->GetModel();		
+		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*) GetController( SELECT_TARGET_POINT_CONTROLLER )->GetModel();		
 		
 		m_pDataModel->pAdfFileFunc->form_pnt(pModel->iSelectedNo);
 
@@ -952,8 +952,8 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 	// REF LINE
 	if(lCtrlID == SELECT_MULTIPOINTS_REF_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_REF_LINE_CONTROLLER )->GetModel();		
-		DCP06CommonC common(m_pDCP06Model);
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_REF_LINE_CONTROLLER )->GetModel();		
+		Common common(m_pModel);
 		
 		//delete old values
 		memset(&m_pDataModel->rline_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_LINE);
@@ -968,7 +968,7 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			iPno = pModel->nro_table[i][0];
 			if(iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, NULL, bXmea1, bXdes1, NULL, bYmea1, bYdes1, NULL, bZmea1, bZdes1, NULL);
+				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
 				
 				if(pModel->nro_table[i][1] == DESIGN)
 				{
@@ -1005,19 +1005,19 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			m_pDataModel->REF_ACTDES = (des ==1) ? DESIGN : ACTUAL;
 		}
 	
-		if(GetController(CALC_LINE_CONTROLLER) == NULL)
+		if(GetController(CALC_LINE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( CALC_LINE_CONTROLLER, new DCP::DCP06CalcLineControllerC(&m_pDataModel->rline_buff[0],ACTUAL, 1) );
+			(void)AddController( CALC_LINE_CONTROLLER, new DCP::CalcLineController(&m_pDataModel->rline_buff[0],ACTUAL, 1) );
 		}
 
-		(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(CALC_LINE_CONTROLLER, true);
 	}
 	// TARGET LINE
 	if(lCtrlID == SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER )->GetModel();		
-		DCP06CommonC common(m_pDlg->GetDCP06Model());
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER )->GetModel();		
+		Common common(m_pDlg->GetModel());
 		
 		//delete old values
 		memset(&m_pDataModel->trgt_line_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_LINE);
@@ -1032,7 +1032,7 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			iPno = pModel->nro_table[i][0];
 			if(iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, NULL, bXmea1, bXdes1, NULL, bYmea1, bYdes1, NULL, bZmea1, bZdes1, NULL);
+				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
 				
 				if(pModel->nro_table[i][1] == DESIGN)
 				{
@@ -1069,20 +1069,20 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			m_pDataModel->REF_ACTDES = (des ==1) ? DESIGN : ACTUAL;
 		}
 	
-		if(GetController(CALC_LINE_CONTROLLER) == NULL)
+		if(GetController(CALC_LINE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( CALC_LINE_CONTROLLER, new DCP::DCP06CalcLineControllerC(&m_pDataModel->trgt_line_buff[0],ACTUAL, 1) );
+			(void)AddController( CALC_LINE_CONTROLLER, new DCP::CalcLineController(&m_pDataModel->trgt_line_buff[0],ACTUAL, 1) );
 		}
 
-		(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(CALC_LINE_CONTROLLER, true);
 	}
 	
 	// REF PLANE
 	if(lCtrlID == SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER )->GetModel();		
-		DCP06CommonC common(m_pDlg->GetDCP06Model());
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER )->GetModel();		
+		Common common(m_pDlg->GetModel());
 		
 		//delete old values
 		memset(&m_pDataModel->rplane_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
@@ -1097,7 +1097,7 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			iPno = pModel->nro_table[i][0];
 			if(iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, NULL, bXmea1, bXdes1, NULL, bYmea1, bYdes1, NULL, bZmea1, bZdes1, NULL);
+				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
 				
 				if(pModel->nro_table[i][1] == DESIGN)
 				{
@@ -1134,20 +1134,20 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			m_pDataModel->REF_ACTDES = (des ==1) ? DESIGN : ACTUAL;
 		}
 	
-		if(GetController(CALC_PLANE_CONTROLLER) == NULL)
+		if(GetController(CALC_PLANE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( CALC_PLANE_CONTROLLER, new DCP::DCP06CalcPlaneControllerC(&m_pDataModel->rplane_buff[0],ACTUAL, 1) );
+			(void)AddController( CALC_PLANE_CONTROLLER, new DCP::CalcPlaneontrollerC(&m_pDataModel->rplane_buff[0],ACTUAL, 1) );
 		}
 
-		(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(CALC_PLANE_CONTROLLER, true);
 	}
 	
 	// TARGET PLANE
 	if(lCtrlID == SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER )->GetModel();		
-		DCP06CommonC common(m_pDlg->GetDCP06Model());
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER )->GetModel();		
+		Common common(m_pDlg->GetModel());
 		
 		//delete old values
 		memset(&m_pDataModel->rplane_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
@@ -1162,7 +1162,7 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			iPno = pModel->nro_table[i][0];
 			if(iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, NULL, bXmea1, bXdes1, NULL, bYmea1, bYdes1, NULL, bZmea1, bZdes1, NULL);
+				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
 				
 				if(pModel->nro_table[i][1] == DESIGN)
 				{
@@ -1199,12 +1199,12 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			m_pDataModel->REF_ACTDES = (des ==1) ? DESIGN : ACTUAL;
 		}
 	
-		if(GetController(CALC_PLANE_CONTROLLER) == NULL)
+		if(GetController(CALC_PLANE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( CALC_PLANE_CONTROLLER, new DCP::DCP06CalcPlaneControllerC(&m_pDataModel->trgt_plane_buff[0],ACTUAL, 1) );
+			(void)AddController( CALC_PLANE_CONTROLLER, new DCP::CalcPlaneontrollerC(&m_pDataModel->trgt_plane_buff[0],ACTUAL, 1) );
 		}
 
-		(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(CALC_PLANE_CONTROLLER, true);
 	}
 	
@@ -1225,7 +1225,7 @@ void DCP::DCP06CalcAngleControllerC::OnActiveControllerClosed( int lCtrlID, int 
 // ================================================================================================
 // Description: change_function_keys
 // ================================================================================================
-void DCP::DCP06CalcAngleControllerC::change_function_keys()
+void DCP::CalculationAngleController::change_function_keys()
 {
 	// 
 	ResetFunctionKeys();
@@ -1305,25 +1305,25 @@ void DCP::DCP06CalcAngleControllerC::change_function_keys()
 }
 
 // ================================================================================================
-// ====================================  DCP06CalcAngleModelC  ====================================
+// ====================================  CalculationAngleModel  ====================================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06CalcAngleModelC::DCP06CalcAngleModelC(DCP::DCP06ModelC* pDCP06Model):pAdfFileFunc(0),pCommon(0),pMsgBox(0)
+DCP::CalculationAngleModel::CalculationAngleModel(DCP::Model* pModel):pAdfFileFunc(0),pCommon(0),pMsgBox(0)
 {
 	active_reftype=LINE;
 	active_targettype=LINE;	
 	dspMode = eNormal;
 
 	sSelected3DFile = L" ";
-	pAdfFileFunc = new AdfFileFunc(pDCP06Model);
-	pAgfFileFunc = new AgfFileFunc(pDCP06Model);
+	pAdfFileFunc = new AdfFileFunc(pModel);
+	pAgfFileFunc = new AgfFileFunc(pModel);
 	pAdfFileFunc->always_single = 1;
-	pCommon = new DCP06CommonC(pDCP06Model);
-	pMsgBox = new DCP06MsgBoxC;
+	pCommon = new Common(pModel);
+	pMsgBox = new MsgBox;
 
 	sActualSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_SELECTED_TOK);
 	sActualNonSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_NONSELECTED_TOK);
@@ -1336,7 +1336,7 @@ DCP::DCP06CalcAngleModelC::DCP06CalcAngleModelC(DCP::DCP06ModelC* pDCP06Model):p
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-void DCP::DCP06CalcAngleModelC::clear_buffers()
+void DCP::CalculationAngleModel::clear_buffers()
 {
 	memset(&rplane_buff[0],	0,	sizeof(S_PLANE_BUFF));
 	memset(&rline_buff[0],	0,	sizeof(S_LINE_BUFF));
@@ -1360,7 +1360,7 @@ void DCP::DCP06CalcAngleModelC::clear_buffers()
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06CalcAngleModelC::~DCP06CalcAngleModelC()
+DCP::CalculationAngleModel::~CalculationAngleModel()
 {
 		if(pAdfFileFunc)
 		{
@@ -1388,7 +1388,7 @@ DCP::DCP06CalcAngleModelC::~DCP06CalcAngleModelC()
 // ================================================================================================
 // Description: destructor
 // ================================================================================================
-short DCP::DCP06CalcAngleModelC::all_defined()
+short DCP::CalculationAngleModel::all_defined()
 {
 	if(is_active_reference_defined() == 1 && is_active_target_defined() == 1)
 	{
@@ -1406,7 +1406,7 @@ short DCP::DCP06CalcAngleModelC::all_defined()
 // ************************************************************************
 //
 // ************************************************************************
-short DCP::DCP06CalcAngleModelC::is_active_reference_defined()
+short DCP::CalculationAngleModel::is_active_reference_defined()
 {
 short ret=0;
 
@@ -1448,7 +1448,7 @@ short ret=0;
 // ************************************************************************
 //
 // ************************************************************************
-short DCP::DCP06CalcAngleModelC::is_active_target_defined()
+short DCP::CalculationAngleModel::is_active_target_defined()
 {
 short ret=0;
 
@@ -1484,7 +1484,7 @@ short ret=0;
 
 /************************************************************************
 *************************************************************************/
-short DCP::DCP06CalcAngleModelC::calc_angle_line_point()
+short DCP::CalculationAngleModel::calc_angle_line_point()
 {
 struct ams_vector line1,line2;
 double ang;
@@ -1545,7 +1545,7 @@ int pcounts,i;
 
 /************************************************************************
 *************************************************************************/
-short DCP::DCP06CalcAngleModelC::calc_angle_line_line()
+short DCP::CalculationAngleModel::calc_angle_line_line()
 {
 struct ams_vector line1,line2;
 double ang;
@@ -1582,7 +1582,7 @@ double ang;
 
 /************************************************************************
 *************************************************************************/
-short DCP::DCP06CalcAngleModelC::calc_angle_plane_plane()
+short DCP::CalculationAngleModel::calc_angle_plane_plane()
 {
 struct ams_vector line1,line2;
 double ang;
@@ -1620,7 +1620,7 @@ double ang;
 // ************************************************************************
 //
 // ************************************************************************
-short DCP::DCP06CalcAngleModelC::calc_angle()
+short DCP::CalculationAngleModel::calc_angle()
 {
 short ret = 0;
 //double dist;
@@ -1678,7 +1678,7 @@ short ret = 0;
 // *******************************************************
 //
 // *******************************************************
-void DCP::DCP06CalcAngleModelC::save()
+void DCP::CalculationAngleModel::save()
 {
 //char strDist[20];
 char strRefType[20], strTrgtType[20];

@@ -51,7 +51,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06CalculationCircleDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::CalculationCircleDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -65,16 +65,16 @@
 
 
 // ================================================================================================
-// ====================================  DCP06CalculationCircleDlgC  ======================================
+// ====================================  CalculationCircleDialog  ======================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06CalculationCircleDlgC::DCP06CalculationCircleDlgC(DCP06CalculationCircleModelC * pCircleModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
+DCP::CalculationCircleDialog::CalculationCircleDialog(CalculationCircleModel * pCircleModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
 			,m_p3DFile(0),//m_pCircleFile(0),m_pCircleId(0),
 			m_pDiameter(0),m_pRadius(0),m_pRMS(0), m_pCx(0), m_pCy(0), m_pCz(0),m_pDataModel(pCircleModel)
-			//m_pCircleIdObserver(OBS_METHOD_TO_PARAM0(DCP06CalculationCircleDlgC, OnValueChanged), this)
+			//m_pCircleIdObserver(OBS_METHOD_TO_PARAM0(CalculationCircleDialog, OnValueChanged), this)
 
 {
 	//	SetTxtApplicationId(AT_DCP06);
@@ -84,14 +84,14 @@ DCP::DCP06CalculationCircleDlgC::DCP06CalculationCircleDlgC(DCP06CalculationCirc
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06CalculationCircleDlgC::~DCP06CalculationCircleDlgC()
+DCP::CalculationCircleDialog::~CalculationCircleDialog()
 {
 
 }
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP06CalculationCircleDlgC::OnInitDialog(void)
+void DCP::CalculationCircleDialog::OnInitDialog(void)
 {
 	short iColPos =16;
 	GUI::BaseDialogC::OnInitDialog();
@@ -221,7 +221,7 @@ void DCP::DCP06CalculationCircleDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: OnDialogActivated
 // ================================================================================================
-void DCP::DCP06CalculationCircleDlgC::OnDialogActivated()
+void DCP::CalculationCircleDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
@@ -229,7 +229,7 @@ void DCP::DCP06CalculationCircleDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP06CalculationCircleDlgC::UpdateData()
+void DCP::CalculationCircleDialog::UpdateData()
 {
 
 }
@@ -237,7 +237,7 @@ void DCP::DCP06CalculationCircleDlgC::UpdateData()
 // ================================================================================================
 // Description: refresh all controls
 // ================================================================================================
-void DCP::DCP06CalculationCircleDlgC::RefreshControls()
+void DCP::CalculationCircleDialog::RefreshControls()
 {
 	if(m_p3DFile && /* m_pCircleFile && m_pCircleId  && */ m_pDiameter && m_pRadius && m_pRMS && m_pCx && m_pCy && m_pCz)
 	{
@@ -257,22 +257,22 @@ void DCP::DCP06CalculationCircleDlgC::RefreshControls()
 		if(m_pDataModel->pCircleModel->circle_points[0].calc != 0 && m_pDataModel->pCircleModel->circle_points[0].sta != 0)
 		{
 			StringC sTemp;
-			sTemp.Format(L"%10.*f", GetDCP06Model()->m_nDecimals, m_pDataModel->pCircleModel->diameter *2.0);
+			sTemp.Format(L"%10.*f", GetModel()->m_nDecimals, m_pDataModel->pCircleModel->diameter *2.0);
 			m_pDiameter->GetStringInputCtrl()->SetString(sTemp);
 
-			sTemp.Format(L"%10.*f", GetDCP06Model()->m_nDecimals, m_pDataModel->pCircleModel->diameter );
+			sTemp.Format(L"%10.*f", GetModel()->m_nDecimals, m_pDataModel->pCircleModel->diameter );
 			m_pRadius->GetStringInputCtrl()->SetString(sTemp);
 
-			sTemp.Format(L"%10.*f",  GetDCP06Model()->m_nDecimals, m_pDataModel->pCircleModel->rms_diameter);
+			sTemp.Format(L"%10.*f",  GetModel()->m_nDecimals, m_pDataModel->pCircleModel->rms_diameter);
 			m_pRMS->GetStringInputCtrl()->SetString(sTemp);
 
-			sTemp.Format(L"%10.*f", GetDCP06Model()->m_nDecimals, m_pDataModel->pCircleModel->cx);
+			sTemp.Format(L"%10.*f", GetModel()->m_nDecimals, m_pDataModel->pCircleModel->cx);
 			m_pCx->GetStringInputCtrl()->SetString(sTemp);
 
-			sTemp.Format(L"%10.*f", GetDCP06Model()->m_nDecimals, m_pDataModel->pCircleModel->cy);
+			sTemp.Format(L"%10.*f", GetModel()->m_nDecimals, m_pDataModel->pCircleModel->cy);
 			m_pCy->GetStringInputCtrl()->SetString(sTemp);
 
-			sTemp.Format(L"%10.*f", GetDCP06Model()->m_nDecimals, m_pDataModel->pCircleModel->cz);
+			sTemp.Format(L"%10.*f", GetModel()->m_nDecimals, m_pDataModel->pCircleModel->cz);
 			m_pCz->GetStringInputCtrl()->SetString(sTemp);
 
 
@@ -296,12 +296,12 @@ void DCP::DCP06CalculationCircleDlgC::RefreshControls()
 // Description: OnValueChanged
 // ================================================================================================
 /*
-void DCP::DCP06CalculationCircleDlgC::OnValueChanged(int unNotifyCode,  int ulParam2)
+void DCP::CalculationCircleDialog::OnValueChanged(int unNotifyCode,  int ulParam2)
 {
 	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
-		//short iCurrentPno = GetDCP06Model()->iCurrentPoint;
+		//short iCurrentPno = GetModel()->iCurrentPoint;
 		if(ulParam2 == eCircleId)
 		{
 
@@ -313,14 +313,14 @@ void DCP::DCP06CalculationCircleDlgC::OnValueChanged(int unNotifyCode,  int ulPa
 // ================================================================================================
 // Description:  SetModel
 // ================================================================================================
-bool DCP::DCP06CalculationCircleDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::CalculationCircleDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -330,25 +330,25 @@ bool DCP::DCP06CalculationCircleDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // ================================================================================================
-// Description:  GetDCP06Model
+// Description:  GetModel
 // ================================================================================================
-DCP::DCP06ModelC* DCP::DCP06CalculationCircleDlgC::GetDCP06Model() const
+DCP::Model* DCP::CalculationCircleDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 
 // ================================================================================================
-// ====================================  DCP06CalculationCircleControllerC=================================
+// ====================================  CalculationCircleController=================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06CalculationCircleControllerC::DCP06CalculationCircleControllerC(DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::CalculationCircleController::CalculationCircleController(Model *pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -356,15 +356,15 @@ DCP::DCP06CalculationCircleControllerC::DCP06CalculationCircleControllerC(DCP06M
     SetTitle(StringC( AT_DCP06, T_DCP_CALC_CIRCLE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// create model 
-	//m_pDataModel = new DCP06CircleModelC();
-     m_pDataModel = new DCP06CalculationCircleModelC(pDCP06Model);
+	//m_pDataModel = new CircleModel();
+     m_pDataModel = new CalculationCircleModel(pModel);
     // Set it to hello world dialog
 	// Create a dialog
-     m_pDlg = new DCP::DCP06CalculationCircleDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+     m_pDlg = new DCP::CalculationCircleDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( CALC_CIRCLE_DLG, m_pDlg, true );
 
 	// Set the function key
-//	m_pDataModel->dspMode = DCP06CalculationCircleModelC::eNormal;
+//	m_pDataModel->dspMode = CalculationCircleModel::eNormal;
 
     // Set the function key
 	//change_function_keys();
@@ -402,7 +402,7 @@ DCP::DCP06CalculationCircleControllerC::DCP06CalculationCircleControllerC(DCP06M
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06CalculationCircleControllerC::~DCP06CalculationCircleControllerC()
+DCP::CalculationCircleController::~CalculationCircleController()
 {
 	if(m_pDataModel)
 	{
@@ -413,25 +413,25 @@ DCP::DCP06CalculationCircleControllerC::~DCP06CalculationCircleControllerC()
 // ================================================================================================
 // Description: Route model to everybody else
 // ================================================================================================
-bool DCP::DCP06CalculationCircleControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::CalculationCircleController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
-	 DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+	 DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
 	
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -444,19 +444,19 @@ bool DCP::DCP06CalculationCircleControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: F1
 // ================================================================================================
-void DCP::DCP06CalculationCircleControllerC::OnF1Pressed()
+void DCP::CalculationCircleController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 	// SELECT FILE
-	DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
-	if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+	DCP::SelectFileModel* pModel = new SelectFileModel;
+	if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 	{
 		StringC sTitle = GetTitle();	
-		(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ONLY_ADF, sTitle,m_pDCP06Model) );
+		(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle,m_pModel) );
 	}
 	(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 	SetActiveController(SELECT_FILE_CONTROLLER, true);
@@ -470,16 +470,16 @@ void DCP::DCP06CalculationCircleControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F3
 // ================================================================================================
-void DCP::DCP06CalculationCircleControllerC::OnF3Pressed()
+void DCP::CalculationCircleController::OnF3Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
 		// SELECT MULTIPOINTS
-		DCP::DCP06SelectMultiPointsModelC* pModel = new DCP06SelectMultiPointsModelC;
+		DCP::SelectMultiPointsModel* pModel = new SelectMultiPointsModel;
 		memcpy(&pModel->sel_points[0],&m_pDataModel->point_list[0], sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 		pModel->m_iPointsCount = m_pDataModel->iPointCount3dfile;
 	
@@ -501,9 +501,9 @@ void DCP::DCP06CalculationCircleControllerC::OnF3Pressed()
 		// set help token
 		pModel->helpToken = H_DCP_SEL_MULTI_A_OR_D_TOK;
 
-		if(GetController(SELECT_MULTIPOINTS_CONTROLLER) == NULL)
+		if(GetController(SELECT_MULTIPOINTS_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_MULTIPOINTS_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( SELECT_MULTIPOINTS_CONTROLLER, new DCP::SelectMultiPointsController(m_pDlg->GetModel()) );
 		}
 
 		(void)GetController( SELECT_MULTIPOINTS_CONTROLLER )->SetModel(pModel);
@@ -516,9 +516,9 @@ void DCP::DCP06CalculationCircleControllerC::OnF3Pressed()
 // ================================================================================================
 // Description: F6
 // ================================================================================================
-void DCP::DCP06CalculationCircleControllerC::OnF6Pressed()
+void DCP::CalculationCircleController::OnF6Pressed()
 {
-	    if (m_pDlg == NULL)
+	    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -532,7 +532,7 @@ void DCP::DCP06CalculationCircleControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: SHF2
 // ================================================================================================
-void DCP::DCP06CalculationCircleControllerC::OnSHF2Pressed()
+void DCP::CalculationCircleController::OnSHF2Pressed()
 {
 	//	m_pDataModel->clear_buffers();
 	memset(&m_pDataModel->pCircleModel->circle_points[0],0,sizeof(S_CIRCLE_BUFF));
@@ -542,17 +542,17 @@ void DCP::DCP06CalculationCircleControllerC::OnSHF2Pressed()
 // ================================================================================================
 // Description: OnSHF5Pressed / VIEW
 // ================================================================================================
-void DCP::DCP06CalculationCircleControllerC::OnSHF5Pressed()
+void DCP::CalculationCircleController::OnSHF5Pressed()
 {
 	/*
 	if(!m_pDataModel->pCircleFileFunc->IsOpen())
 		return;
 
-	if(GetController(VIEWAGF_CONTROLLER) == NULL)
+	if(GetController(VIEWAGF_CONTROLLER) == nullptr)
 	{
-		(void)AddController( VIEWAGF_CONTROLLER, new DCP::DCP06ViewAgfControllerC(m_pDataModel->pAgfFileFunc) );
+		(void)AddController( VIEWAGF_CONTROLLER, new DCP::ViewAgfController(m_pDataModel->pAgfFileFunc) );
 	}
-	(void)GetController( VIEWAGF_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+	(void)GetController( VIEWAGF_CONTROLLER )->SetModel(m_pDlg->GetModel());
 	SetActiveController(VIEWAGF_CONTROLLER, true);
 	*/
 }
@@ -560,19 +560,19 @@ void DCP::DCP06CalculationCircleControllerC::OnSHF5Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP06CalculationCircleControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::CalculationCircleController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP06CalculationCircleControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::CalculationCircleController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		
-		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		m_pDataModel->sSelected3DFile = pModel->m_strSelectedFile;
 		m_pDataModel->pAdfFileFunc->setFile(m_pDataModel->sSelected3DFile);
 
@@ -584,8 +584,8 @@ void DCP::DCP06CalculationCircleControllerC::OnActiveControllerClosed( int lCtrl
 		// REF PLANE
 	if(lCtrlID == SELECT_MULTIPOINTS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();		
-		DCP06CommonC common(m_pDCP06Model);
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();		
+		Common common(m_pModel);
 		
 		//delete old values
 		memset(&m_pDataModel->pCircleModel->circle_points[0],0,sizeof(S_CIRCLE_BUFF));
@@ -600,7 +600,7 @@ void DCP::DCP06CalculationCircleControllerC::OnActiveControllerClosed( int lCtrl
 			iPno = pModel->nro_table[i][0];
 			if(iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, NULL, bXmea1, bXdes1, NULL, bYmea1, bYdes1, NULL, bZmea1, bZdes1, NULL);
+				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
 				
 				if(pModel->nro_table[i][1] == DESIGN)
 				{
@@ -640,21 +640,21 @@ void DCP::DCP06CalculationCircleControllerC::OnActiveControllerClosed( int lCtrl
 		}
 		if(iCount >= 3)
 		{
-			if(GetController(CALC_CIRCLE_CONTROLLER) == NULL)
+			if(GetController(CALC_CIRCLE_CONTROLLER) == nullptr)
 			{
-				(void)AddController( CALC_CIRCLE_CONTROLLER, new DCP::DCP06CalcCircleControllerC(m_pDataModel->pCircleModel, CALC_CIRCLE_DLG) );
+				(void)AddController( CALC_CIRCLE_CONTROLLER, new DCP::CalcCircleontrollerC(m_pDataModel->pCircleModel, CALC_CIRCLE_DLG) );
 			}
 
 			(void)GetController(CALC_CIRCLE_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK));
 
-			(void)GetController( CALC_CIRCLE_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+			(void)GetController( CALC_CIRCLE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 			SetActiveController(CALC_CIRCLE_CONTROLLER, true);
 		}
 	}
 	/*	
 	if(lCtrlID == ANGLE_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		m_pDataModel->sSelectedAngleFile = m_pDlg->GetDCP06Model()->sCalculationCircleFile;	
+		m_pDataModel->sSelectedAngleFile = m_pDlg->GetModel()->sCalculationCircleFile;	
 		m_pDataModel->pAgfFileFunc->setFile(m_pDataModel->sSelectedAngleFile);
 	}
 	*/
@@ -668,17 +668,17 @@ void DCP::DCP06CalculationCircleControllerC::OnActiveControllerClosed( int lCtrl
 // ===========================================================================================
 // DefinePlaneModel
 // ===========================================================================================
-DCP::DCP06CalculationCircleModelC::DCP06CalculationCircleModelC(DCP06ModelC* pDCP06Model):pCircleModel(0),pAdfFileFunc(0)
+DCP::CalculationCircleModel::CalculationCircleModel(Model* pModel):pCircleModel(0),pAdfFileFunc(0)
 {
 	
-	pCircleModel = new DCP06CircleModelC(pDCP06Model);
-	pAdfFileFunc = new AdfFileFunc(pDCP06Model);
+	pCircleModel = new CircleModel(pModel);
+	pAdfFileFunc = new AdfFileFunc(pModel);
 	pAdfFileFunc->always_single = 1;
 
 	pCircleModel->PLANE_TYPE = CIRCLE_POINTS_PLANE;
 }
 
-DCP::DCP06CalculationCircleModelC::~DCP06CalculationCircleModelC()
+DCP::CalculationCircleModel::~CalculationCircleModel()
 {
 	if(pCircleModel)
 	{

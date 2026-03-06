@@ -65,7 +65,7 @@ using namespace DCP;
 // ================================================================================================
 
 // ******************************************************************************************
-DCP06FileDlgC::DCP06FileDlgC(DCP::DCP06FileModelC* pFileModel):m_pFile(0), m_pNumberOfPoints(0), 
+FileDialog::FileDialog(DCP::FileModel* pFileModel):m_pFile(0), m_pNumberOfPoints(0), 
 m_pSize(0), m_pDate(0), m_pTime(0),m_pFreeSpace(0),m_pDataModel(pFileModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
@@ -75,7 +75,7 @@ m_pSize(0), m_pDate(0), m_pTime(0),m_pFreeSpace(0),m_pDataModel(pFileModel)
 
 // Description: Destructor
 // ******************************************************************************************
-DCP06FileDlgC::~DCP06FileDlgC()
+FileDialog::~FileDialog()
 {
 	if(m_pCommon)
 	{
@@ -84,7 +84,7 @@ DCP06FileDlgC::~DCP06FileDlgC()
 	}
 }
 // ******************************************************************************************
-void DCP06FileDlgC::OnInitDialog(void)
+void FileDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	//SetColonPosLong( GUI::StandardDialogC::CP_13 );
@@ -143,7 +143,7 @@ void DCP06FileDlgC::OnInitDialog(void)
 }
 
 // ******************************************************************************************
-void DCP06FileDlgC::CreateFile(StringC strNewFileName, StringC sPointId)
+void FileDialog::CreateFile(StringC strNewFileName, StringC sPointId)
 {
 	char fname[CPI::LEN_PATH_MAX];
 	char pointid[10];
@@ -159,27 +159,27 @@ void DCP06FileDlgC::CreateFile(StringC strNewFileName, StringC sPointId)
 }
 
 // ******************************************************************************************
-void DCP06FileDlgC::CopyFile(StringC strNewFileName)
+void FileDialog::CopyFile(StringC strNewFileName)
 {
 	int x;
 	x=1;
 }
 
 // ******************************************************************************************
-void DCP06FileDlgC::Swap()
+void FileDialog::Swap()
 {
 		StringC strMsg;
 		strMsg.LoadTxt(AT_DCP06,M_DCP_SWAP_FILE_TOK);
-		strMsg.Format(strMsg,(const wchar_t*)GetDCP06Model()->ADFFileName);
+		strMsg.Format(strMsg,(const wchar_t*)GetModel()->ADFFileName);
 
-		DCP06MsgBoxC MsgBox;
+		MsgBox MsgBox;
 		if(MsgBox.ShowMessageYesNo(strMsg))
 		{
 
 		}
 }
 // ******************************************************************************************
-void DCP06FileDlgC::Close()
+void FileDialog::Close()
 {
 	m_pDataModel->m_pAdfFile->CloseFile();
 	sSelectedFile = L" ";
@@ -187,15 +187,15 @@ void DCP06FileDlgC::Close()
 	RefreshControls();
 }
 // ******************************************************************************************
-void DCP06FileDlgC::Delete()
+void FileDialog::Delete()
 {
 	if(m_pDataModel->m_pAdfFile->IsOpen())
 	{
 		StringC strMsg;
 		strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_FILE_TOK);
-		strMsg.Format(strMsg,(const wchar_t*)GetDCP06Model()->ADFFileName);
+		strMsg.Format(strMsg,(const wchar_t*)GetModel()->ADFFileName);
 
-		DCP06MsgBoxC MsgBox;
+		MsgBox MsgBox;
 		if(MsgBox.ShowMessageYesNo(strMsg))
 		{
 
@@ -203,44 +203,44 @@ void DCP06FileDlgC::Delete()
 	}
 }
 // ******************************************************************************************
-void DCP06FileDlgC::Save()
+void FileDialog::Save()
 {
 
 }
-void DCP06FileDlgC::View()
+void FileDialog::View()
 {
 
 }
-void DCP::DCP06FileDlgC::SelectFile(StringC sFile)
+void DCP::FileDialog::SelectFile(StringC sFile)
 {
 	sSelectedFile = sFile;
 	RefreshControls();
 }
 
 // ******************************************************************************************
-void DCP06FileDlgC::OnDialogActivated()
+void FileDialog::OnDialogActivated()
 {
-	sSelectedFile = GetDCP06Model()->ADFFileName;
-	//DCP06MsgBoxC MsgBox;
+	sSelectedFile = GetModel()->ADFFileName;
+	//MsgBox MsgBox;
 	//MsgBox.ShowMessageOk(sSelectedFile);
 	if(!sSelectedFile.IsEmpty())
-		m_pDataModel->m_pAdfFile->setFile(GetDCP06Model()->ADFFileName);
+		m_pDataModel->m_pAdfFile->setFile(GetModel()->ADFFileName);
 
-	m_pCommon = new DCP06CommonC(GetDCP06Model());
+	m_pCommon = new Common(GetModel());
 	RefreshControls();
 }
 
 
 // Description: refresh all controls
-void DCP::DCP06FileDlgC::RefreshControls()
+void DCP::FileDialog::RefreshControls()
 {	
 	if(m_pFile && m_pNumberOfPoints && m_pSize && m_pDate && m_pTime && m_pFreeSpace)
 	{
-		//m_pDataModel->m_pAdfFile->setFile(sSelectedFile/*GetDCP06Model()->ADFFileName*/);
+		//m_pDataModel->m_pAdfFile->setFile(sSelectedFile/*GetModel()->ADFFileName*/);
 
 		if(m_pDataModel->m_pAdfFile->IsOpen())
 		{
-			m_pFile->GetStringInputCtrl()->SetString(m_pDataModel->m_pAdfFile->getFileName());//GetDCP06Model()->ADFFileName);	
+			m_pFile->GetStringInputCtrl()->SetString(m_pDataModel->m_pAdfFile->getFileName());//GetModel()->ADFFileName);	
 			m_pNumberOfPoints->GetStringInputCtrl()->SetString(m_pDataModel->m_pAdfFile->getPointsCountString());
 			m_pSize->GetStringInputCtrl()->SetString(m_pDataModel->m_pAdfFile->getFileSizeString());
 			m_pDate->GetStringInputCtrl()->SetString(m_pDataModel->m_pAdfFile->getModDate());
@@ -263,25 +263,25 @@ void DCP::DCP06FileDlgC::RefreshControls()
 	}
 } 
 
-void DCP::DCP06FileDlgC::UpdateData()
+void DCP::FileDialog::UpdateData()
 {
 	if(m_pDataModel->m_pAdfFile->IsOpen())
-        GetDCP06Model()->ADFFileName = m_pDataModel->m_pAdfFile->getFileName();
+        GetModel()->ADFFileName = m_pDataModel->m_pAdfFile->getFileName();
 	else
-		GetDCP06Model()->ADFFileName = L"";
-	//GetDCP06Model()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
+		GetModel()->ADFFileName = L"";
+	//GetModel()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06FileDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::FileDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -291,16 +291,16 @@ bool DCP::DCP06FileDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06FileDlgC::GetDCP06Model() const
+DCP::Model* DCP::FileDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ******************************************************************************
 
-DCP::DCP06FileControllerC::DCP06FileControllerC(DCP::DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::FileController::FileController(DCP::Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -308,9 +308,9 @@ DCP::DCP06FileControllerC::DCP06FileControllerC(DCP::DCP06ModelC* pDCP06Model)
     SetTitle(StringC( AT_DCP06, T_DCP_3DFILE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 	
 	// FileModel
-	m_pDataModel = new DCP::DCP06FileModelC(m_pDCP06Model); 
+	m_pDataModel = new DCP::FileModel(m_pModel); 
     // Create a dialog
-    m_pDlg = new DCP::DCP06FileDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::FileDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( _3DFILE_DLG, m_pDlg, true );
 
     // Set the function key
@@ -362,7 +362,7 @@ DCP::DCP06FileControllerC::DCP06FileControllerC(DCP::DCP06ModelC* pDCP06Model)
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06FileControllerC::~DCP06FileControllerC()
+DCP::FileController::~FileController()
 {
 	if(m_pDataModel)
 	{
@@ -372,7 +372,7 @@ DCP::DCP06FileControllerC::~DCP06FileControllerC()
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06FileControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::FileController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -383,12 +383,12 @@ bool DCP::DCP06FileControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -401,14 +401,14 @@ bool DCP::DCP06FileControllerC::SetModel( GUI::ModelC* pModel )
 
 // Import from ADF (legacy file -> DB)
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnSHF1Pressed()
+void DCP::FileController::OnSHF1Pressed()
 {
-	if (m_pDlg == NULL) { USER_APP_VERIFY(false); return; }
-	DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
-	if (GetController(SELECT_FILE_CONTROLLER) == NULL)
+	if (m_pDlg == nullptr) { USER_APP_VERIFY(false); return; }
+	DCP::SelectFileModel* pModel = new SelectFileModel;
+	if (GetController(SELECT_FILE_CONTROLLER) == nullptr)
 	{
 		StringC sTitle = GetTitle();
-		(void)AddController(SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ONLY_ADF, sTitle, m_pDCP06Model));
+		(void)AddController(SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle, m_pModel));
 	}
 	(void)GetController(SELECT_FILE_CONTROLLER)->SetModel(pModel);
 	SetActiveController(SELECT_FILE_CONTROLLER, true);
@@ -416,21 +416,21 @@ void DCP::DCP06FileControllerC::OnSHF1Pressed()
 
 // Export to ADF (DB -> file when user requests)
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnSHF4Pressed()
+void DCP::FileController::OnSHF4Pressed()
 {
-	if (!m_pDataModel->m_pAdfFile->IsOpen() || m_pDCP06Model->m_currentJobId.empty())
+	if (!m_pDataModel->m_pAdfFile->IsOpen() || m_pModel->m_currentJobId.empty())
 		return;
-	DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+	DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 #if !DCP_USE_JSON_DATABASE
 	(void)db;
 	return;
 #else
 	DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 	if (!jdb) return;
-	std::string workPath = jdb->getJobWorkingPath(m_pDCP06Model->m_currentJobId);
+	std::string workPath = jdb->getJobWorkingPath(m_pModel->m_currentJobId);
 	if (workPath.empty()) return;
 	// Refresh DB from working ADF, then export to _export.adf (TODO: file picker)
-	db->createJob(m_pDCP06Model->m_currentJobId);
+	db->createJob(m_pModel->m_currentJobId);
 	db->importFromADF(workPath);
 	std::string exportPath = workPath;
 	size_t dot = exportPath.rfind('.');
@@ -445,20 +445,20 @@ void DCP::DCP06FileControllerC::OnSHF4Pressed()
 
 // OPEN (DB-primary: list jobs from database)
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnF1Pressed()
+void DCP::FileController::OnF1Pressed()
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
 		
-		DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
+		DCP::SelectFileModel* pModel = new SelectFileModel;
 
-		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(FILE_TYPE_JOBS, sTitle, m_pDCP06Model) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(FILE_TYPE_JOBS, sTitle, m_pModel) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
@@ -466,86 +466,86 @@ void DCP::DCP06FileControllerC::OnF1Pressed()
 
 // NEW
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnF2Pressed()
+void DCP::FileController::OnF2Pressed()
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
 		
-		DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+		DCP::InputTextModel* pModel = new InputTextModel;
 		pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_NEW_FILENAME_TOK);
 		pModel->m_StrTitle = GetTitle();
 		pModel->m_iTextLength = 8;
 		pModel->m_StrText = L" ";
 
-		if ( NULL == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
+		if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
 		{
 			USER_APP_VERIFY( false );
 			return;
 		}
 
-		if(GetController(INPUT_TEXT_CONTROLLER) == NULL)
+		if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::DCP06InputTextControllerC(m_pDCP06Model ));
+			(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController(m_pModel ));
 		}
 
-		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(INPUT_TEXT_CONTROLLER, true);
 }
 
 // copy
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnF3Pressed()
+void DCP::FileController::OnF3Pressed()
 {
 	if(!m_pDataModel->m_pAdfFile->IsOpen())
 		return;
 
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
 	{
 		USER_APP_VERIFY( false );
 		return;
 	}
 		
-		DCP::DCP06InputTextModelC* pModel = new DCP06InputTextModelC;
+		DCP::InputTextModel* pModel = new InputTextModel;
 		pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_COPY_FILE_TO_TOK);
 		pModel->m_StrTitle = GetTitle();
 		pModel->m_iTextLength = 8;
 		pModel->m_StrText = L" ";
 
-		if ( NULL == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
+		if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
 		{
 			USER_APP_VERIFY( false );
 			return;
 		}
 
-		if(GetController(COPY_FILE_TO_CONTROLLER) == NULL)
+		if(GetController(COPY_FILE_TO_CONTROLLER) == nullptr)
 		{
-			(void)AddController( COPY_FILE_TO_CONTROLLER, new DCP::DCP06InputTextControllerC( m_pDCP06Model));
+			(void)AddController( COPY_FILE_TO_CONTROLLER, new DCP::InputTextController( m_pModel));
 		}
 
-		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+		//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		(void)GetController( COPY_FILE_TO_CONTROLLER )->SetModel(pModel);
 		SetActiveController(COPY_FILE_TO_CONTROLLER, true);
 }
 
 // CLOSE
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnF5Pressed()
+void DCP::FileController::OnF5Pressed()
 {
 	if(m_pDataModel->m_pAdfFile->IsOpen())
 		m_pDataModel->m_pAdfFile->CloseFile();
-	m_pDCP06Model->m_currentJobId.clear();
-	m_pDCP06Model->ADFFileName = L"";
+	m_pModel->m_currentJobId.clear();
+	m_pModel->ADFFileName = L"";
 
 	m_pDlg->RefreshControls();
 }
 
 // SWAP
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnF4Pressed()
+void DCP::FileController::OnF4Pressed()
 {
 	if(!m_pDataModel->m_pAdfFile->IsOpen())
 		return;
@@ -556,9 +556,9 @@ void DCP::DCP06FileControllerC::OnF4Pressed()
 
 // CONT
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnF6Pressed()
+void DCP::FileController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -574,7 +574,7 @@ void DCP::DCP06FileControllerC::OnF6Pressed()
 }
 // DEL
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnSHF2Pressed()
+void DCP::FileController::OnSHF2Pressed()
 {
 	if(!m_pDataModel->m_pAdfFile->IsOpen())
 		return;
@@ -584,25 +584,25 @@ void DCP::DCP06FileControllerC::OnSHF2Pressed()
 
 // SAVE (DB-primary: working ADF -> DB)
 // *********************************************************************************************
-void DCP::DCP06FileControllerC::OnSHF3Pressed()
+void DCP::FileController::OnSHF3Pressed()
 {
 	if(!m_pDataModel->m_pAdfFile->IsOpen())
 		return;
 	m_pDataModel->m_pAdfFile->save_adf_to_ref_dat();  // DCP05 legacy .dat/.ref
 	// DB-primary: sync working ADF -> database
-	if (!m_pDCP06Model->m_currentJobId.empty())
+	if (!m_pModel->m_currentJobId.empty())
 	{
-		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+		DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 #if DCP_USE_JSON_DATABASE
 		DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 		if (jdb)
 		{
-			std::string workPath = jdb->getJobWorkingPath(m_pDCP06Model->m_currentJobId);
+			std::string workPath = jdb->getJobWorkingPath(m_pModel->m_currentJobId);
 			if (!workPath.empty())
 			{
-				db->createJob(m_pDCP06Model->m_currentJobId);
+				db->createJob(m_pModel->m_currentJobId);
 				db->importFromADF(workPath);
-				db->saveJob(m_pDCP06Model->m_currentJobId);
+				db->saveJob(m_pModel->m_currentJobId);
 			}
 		}
 #endif
@@ -612,34 +612,34 @@ void DCP::DCP06FileControllerC::OnSHF3Pressed()
 
 // VIEW
 // ******************************************************************************************
-void DCP::DCP06FileControllerC::OnSHF5Pressed()
+void DCP::FileController::OnSHF5Pressed()
 {
 	if(!m_pDataModel->m_pAdfFile->IsOpen())
 		return;
 
 	
-	if(GetController(_3DFILEVIEW_CONTROLLER) == NULL)		
+	if(GetController(_3DFILEVIEW_CONTROLLER) == nullptr)		
 	{
-		(void)AddController( _3DFILEVIEW_CONTROLLER, new DCP::DCP063DFileViewControllerC (m_pDataModel));
+		(void)AddController( _3DFILEVIEW_CONTROLLER, new DCP::FileView3DController (m_pDataModel));
 	}
-	(void)GetController( _3DFILEVIEW_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+	(void)GetController( _3DFILEVIEW_CONTROLLER )->SetModel(m_pDlg->GetModel());
 	SetActiveController(_3DFILEVIEW_CONTROLLER, true);
 	
 }
 
 
 // ******************************************************************************************
-void DCP::DCP06FileControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::FileController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectFileControllerC* selCtrl = dynamic_cast<DCP::DCP06SelectFileControllerC*>(GetController(SELECT_FILE_CONTROLLER));
-		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::SelectFileController* selCtrl = dynamic_cast<DCP::SelectFileController*>(GetController(SELECT_FILE_CONTROLLER));
+		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		StringC strSelected = pModel->m_strSelectedFile;
 		strSelected.Trim();
 		if (strSelected.IsEmpty()) { m_pDlg->RefreshControls(); return; }
@@ -651,7 +651,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 			jobIdBuf[0] = '\0';
 			BSS::UTI::BSS_UTI_WCharToAscii(strSelected, jobIdBuf);
 			std::string jobId(jobIdBuf);
-			DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+			DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 #if DCP_USE_JSON_DATABASE
 			DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 			if (jdb && !jobId.empty())
@@ -663,8 +663,8 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 					{
 						if (m_pDataModel->m_pAdfFile->setFileFromFullPath(workPath.c_str()))
 						{
-							m_pDCP06Model->m_currentJobId = jobId;
-							m_pDCP06Model->ADFFileName = StringC(jobId.c_str());
+							m_pModel->m_currentJobId = jobId;
+							m_pModel->ADFFileName = StringC(jobId.c_str());
 						}
 					}
 				}
@@ -677,7 +677,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 			m_pDataModel->m_pAdfFile->setFile(strSelected);
 			if (m_pDataModel->m_pAdfFile->IsOpen())
 			{
-				DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+				DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 				const char* fullPath = m_pDataModel->m_pAdfFile->getFullPath();
 				if (db && fullPath && fullPath[0])
 				{
@@ -704,8 +704,8 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 								m_pDataModel->m_pAdfFile->CloseFile();
 								if (m_pDataModel->m_pAdfFile->setFileFromFullPath(workPath.c_str()))
 								{
-									m_pDCP06Model->m_currentJobId = jobId;
-									m_pDCP06Model->ADFFileName = StringC(jobId.c_str());
+									m_pModel->m_currentJobId = jobId;
+									m_pModel->ADFFileName = StringC(jobId.c_str());
 								}
 							}
 						}
@@ -720,30 +720,30 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 	{
 		if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
+			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 			sFileToCreate = strNewFile;
 			sFileToCreate.Trim();
 			// and ask first point id
 			
-			DCP::DCP06InputTextModelC* pModel1 = new DCP06InputTextModelC;
+			DCP::InputTextModel* pModel1 = new InputTextModel;
 			pModel1->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_POINT_ID_TOK);
 			pModel1->m_StrTitle = GetTitle();
 			pModel1->m_iTextLength = DCP_POINT_ID_LENGTH;//8;
 			pModel1->m_StrText = L"P1";
 
-			if ( NULL == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
+			if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
 			{
 				USER_APP_VERIFY( false );
 				return;
 			}
 
-			if(GetController(INPUT_FIRST_POINTID_CONTROLLER) == NULL)
+			if(GetController(INPUT_FIRST_POINTID_CONTROLLER) == nullptr)
 			{
-				(void)AddController( INPUT_FIRST_POINTID_CONTROLLER, new DCP::DCP06InputTextControllerC( m_pDCP06Model));
+				(void)AddController( INPUT_FIRST_POINTID_CONTROLLER, new DCP::InputTextController( m_pModel));
 			}
 
-			//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+			//(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(m_pDlg->GetModel());
 			(void)GetController( INPUT_FIRST_POINTID_CONTROLLER )->SetModel(pModel1);
 			SetActiveController(INPUT_FIRST_POINTID_CONTROLLER, true);
 			
@@ -754,7 +754,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 		}
 		else if(lCtrlID == COPY_FILE_TO_CONTROLLER)
 		{
-			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( COPY_FILE_TO_CONTROLLER )->GetModel();		
+			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( COPY_FILE_TO_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
 			char fname[CPI::LEN_PATH_MAX];
 			BSS::UTI::BSS_UTI_WCharToAscii(strNewFile, fname);
@@ -763,12 +763,12 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 			if (dot != std::string::npos) targetId = targetId.substr(0, dot);
 			if (targetId.empty()) targetId = "copy";
 
-			DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+			DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 #if DCP_USE_JSON_DATABASE
 			DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
-			if (jdb && !m_pDCP06Model->m_currentJobId.empty())
+			if (jdb && !m_pModel->m_currentJobId.empty())
 			{
-				if (db->copyJob(m_pDCP06Model->m_currentJobId, targetId))
+				if (db->copyJob(m_pModel->m_currentJobId, targetId))
 				{
 					m_pDataModel->m_pAdfFile->CloseFile();
 					if (db->loadJob(targetId))
@@ -778,8 +778,8 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 						{
 							if (m_pDataModel->m_pAdfFile->setFileFromFullPath(workPath.c_str()))
 							{
-								m_pDCP06Model->m_currentJobId = targetId;
-								m_pDCP06Model->ADFFileName = StringC(targetId.c_str());
+								m_pModel->m_currentJobId = targetId;
+								m_pModel->ADFFileName = StringC(targetId.c_str());
 							}
 						}
 					}
@@ -799,7 +799,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 		
 		else if(lCtrlID == INPUT_FIRST_POINTID_CONTROLLER)
 		{
-			DCP::DCP06InputTextModelC* pModel = (DCP::DCP06InputTextModelC*) GetController( INPUT_FIRST_POINTID_CONTROLLER )->GetModel();		
+			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_FIRST_POINTID_CONTROLLER )->GetModel();		
 			
 			StringC sPointId = pModel->m_StrText;
 			char fname[CPI::LEN_PATH_MAX];
@@ -808,7 +808,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 			BSS::UTI::BSS_UTI_WCharToAscii(sPointId, pointid);
 
 			// DB-primary: create job in DB, create working ADF
-			DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+			DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 #if DCP_USE_JSON_DATABASE
 			DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 			if (jdb)
@@ -823,8 +823,8 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 					{
 						if (m_pDataModel->m_pAdfFile->setFileFromFullPath(workPath.c_str()))
 						{
-							m_pDCP06Model->m_currentJobId = jobId;
-							m_pDCP06Model->ADFFileName = StringC(jobId.c_str());
+							m_pModel->m_currentJobId = jobId;
+							m_pModel->ADFFileName = StringC(jobId.c_str());
 							db->saveJob(jobId);
 						}
 					}
@@ -853,14 +853,14 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06FileModelC::DCP06FileModelC(DCP::DCP06ModelC* pDCP06Model):m_pDCP06Model(pDCP06Model)
+DCP::FileModel::FileModel(DCP::Model* pModel):m_pModel(pModel)
 {
 	m_pAdfFile = 
-		new AdfFileFunc(m_pDCP06Model);
+		new AdfFileFunc(m_pModel);
 	m_pAdfFile->always_single = 1;
 
 }
-DCP::DCP06FileModelC::~DCP06FileModelC()
+DCP::FileModel::~FileModel()
 {
 	if(m_pAdfFile)
 	{

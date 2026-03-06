@@ -44,18 +44,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	//class DCP06ToolDlgC;
+	class Model;
+	//class ToolDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CalcLineFitC
+    class CalcLineFit
     {
         public:
 
             // Description: Constructor
-			DCP06CalcLineFitC(DCP06ModelC* pDCP06Model);//S_LINE_BUFF* line, S_POINT_BUFF* points, S_LINE_FITTING_RESULTS* results,  DCP::DCP06ModelC* pDCP06Model);//, DCP::DCP06ModelC* pDCP06Model);
-			~DCP06CalcLineFitC();
+			CalcLineFit(Model* pModel);//S_LINE_BUFF* line, S_POINT_BUFF* points, S_LINE_FITTING_RESULTS* results,  DCP::Model* pModel);//, DCP::Model* pModel);
+			~CalcLineFit();
 			
 			//bool calc();
 			short CalcAllPoints( S_LINE_BUFF* line_buff,
@@ -67,7 +67,7 @@ namespace DCP
 								int selectedHeight,
 								int selectedShift,
 								int selectedRotate,
-								DCP06DomModelC* domModel,
+								Alignment321Model* domModel,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* pointsInLine,
 								int selectedRefLine);
@@ -80,23 +80,23 @@ namespace DCP
 								double rotateAngle,
 								int selectedHeight,
 								int selectedShift,
-								int selectedRotate,DCP06DomModelC* domModel,
+								int selectedRotate,Alignment321Model* domModel,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* pointsInLine,int selectedRefLine);//(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/);
 
-			short CalcLineFitDom(DCP06DomModelC* domModel, S_LINE_BUFF* line_buff, int refLine);
-			void delete_dom_values(DCP06DomModelC* domModel);
+			short CalcLineFitDom(Alignment321Model* domModel, S_LINE_BUFF* line_buff, int refLine);
+			void delete_dom_values(Alignment321Model* domModel);
 	private:
-		DCP06CommonC* common;
-		short set_horizontal_plane(DCP06DomModelC* domModel);
-		short set_hz_plane1(DCP06DomModelC* domModel,short actualdesign);
+		Common* common;
+		short set_horizontal_plane(Alignment321Model* domModel);
+		short set_hz_plane1(Alignment321Model* domModel,short actualdesign);
 		short calc_plane(S_PLANE_BUFF *plane, short actdes);
 		
-		short convert_point_to_ocs(S_POINT_BUFF* points, short index, DCP06DomModelC* domModel, double (*p_out)[4]);
-		short convert_point_to_ocs(double p_in[4], DCP06DomModelC* domModel, double (*p_out)[4]);
-		short convert_point_to_scs(double p_in[4], DCP06DomModelC* domModel, double (*p_out)[4]);
-	//	//DCP::DCP06PomModelC *m_pDCP06PomModel;
-		DCP06ModelC* m_pDCP06Model;
+		short convert_point_to_ocs(S_POINT_BUFF* points, short index, Alignment321Model* domModel, double (*p_out)[4]);
+		short convert_point_to_ocs(double p_in[4], Alignment321Model* domModel, double (*p_out)[4]);
+		short convert_point_to_scs(double p_in[4], Alignment321Model* domModel, double (*p_out)[4]);
+	//	//DCP::BestFitModel *m_pBestFitModel;
+		Model* m_pModel;
     };
 };
 

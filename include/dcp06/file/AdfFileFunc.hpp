@@ -41,8 +41,8 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP06ModelC;
-	//class DCP06ToolDlgC;
+	//class Model;
+	//class ToolDialog;
 
 
     // Description: Tabbed controller for the Hello World application
@@ -51,12 +51,12 @@ namespace DCP
         public:
 
             // Description: Constructor
-            AdfFileFunc(DCP06ModelC* pDCP06Model);
-			AdfFileFunc(ADF_TYPE type,DCP06ModelC* pDCP06Model);
+            AdfFileFunc(Model* pModel);
+			AdfFileFunc(ADF_TYPE type,Model* pModel);
 			//AdfFileFunc(const char* filename, bool bCreate=false);
 			
-			AdfFileFunc(boost::filesystem::path* FileInfo,DCP06ModelC* pDCP06Model);
-			//AdfFileFunc(DCP06ModelC* pDCP06Model);
+			AdfFileFunc(boost::filesystem::path* FileInfo,Model* pModel);
+			//AdfFileFunc(Model* pModel);
 			
 
 			~AdfFileFunc();
@@ -152,7 +152,7 @@ namespace DCP
 			FILE* get_file_pointer();
 
 	private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			int fstpnt,filpos;
 			char trow[0xFF];
 			char linebuff[255];
@@ -195,7 +195,7 @@ namespace DCP
 			short opened;
 			short file_updated;
 			
-			DCP06CommonC* m_pCommon;
+			Common* m_pCommon;
 			ADF_TYPE adf_type;
     };
 };

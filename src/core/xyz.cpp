@@ -48,7 +48,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -62,18 +62,18 @@
 
 // USER DIALOG
 
-DCP::DCP06XYZDlgC::DCP06XYZDlgC(DCP::DCP06ModelC *pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pDCP06Model(pDCP06Model)/*,m_pInfo(0)*/,iInfoInd(0)
+DCP::XYZDialog::XYZDialog(DCP::Model *pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+	m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel)/*,m_pInfo(0)*/,iInfoInd(0)
 {
 	//SetTxtApplicationId(AT_DCP06);
 	strInfoText.LoadTxt(AT_DCP06,P_DCP_INFO_TOK);
-	m_pDCP06Model->active_tool = 0;
+	m_pModel->active_tool = 0;
 
 }
 
 
             // Description: Destructor
-DCP::DCP06XYZDlgC::~DCP06XYZDlgC()
+DCP::XYZDialog::~XYZDialog()
 {
 	//KillTimer();
 
@@ -85,7 +85,7 @@ DCP::DCP06XYZDlgC::~DCP06XYZDlgC()
 	}
 }
 
-void DCP::DCP06XYZDlgC::OnInitDialog(void)
+void DCP::XYZDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 
@@ -141,7 +141,7 @@ void DCP::DCP06XYZDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_X_OR_Y_OR_Z_TOK,0);
 }
 
-//void DCP::DCP06XYZDlgC::OnTimer(void)
+//void DCP::XYZDialog::OnTimer(void)
 //{
 //	StringC sMsg = m_pCommon->get_info_text(iInfoInd);
 //	
@@ -149,21 +149,21 @@ void DCP::DCP06XYZDlgC::OnInitDialog(void)
 //	GUI::DesktopC::Instance()->MessageShow(strInfoText + sMsg,true);
 //}
 
-void DCP::DCP06XYZDlgC::OnDialogActivated()
+void DCP::XYZDialog::OnDialogActivated()
 {
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 	
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 	RefreshControls();
 }
 
-void DCP::DCP06XYZDlgC::UpdateData()
+void DCP::XYZDialog::UpdateData()
 {
 
 }
 
 // Description: refresh all controls
-void DCP::DCP06XYZDlgC::RefreshControls()
+void DCP::XYZDialog::RefreshControls()
 {
 	if(m_pPointId  && m_pX && m_pY && m_pZ)
 	{	
@@ -173,7 +173,7 @@ void DCP::DCP06XYZDlgC::RefreshControls()
 		//X
 		if(GetDataModel()->m_pPointBuff[0].xsta)
 		{
-			sprintf(temp,"%9.*f",m_pDCP06Model->m_nDecimals,GetDataModel()->m_pPointBuff[0].x); 
+			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].x); 
 			m_pX->GetStringInputCtrl()->SetString(temp);
 		}
 		else
@@ -183,7 +183,7 @@ void DCP::DCP06XYZDlgC::RefreshControls()
 		m_pY->GetStringInputCtrl()->SetString(L" ");
 		if(GetDataModel()->m_pPointBuff[0].ysta)
 		{
-			sprintf(temp,"%9.*f",m_pDCP06Model->m_nDecimals,GetDataModel()->m_pPointBuff[0].y); 
+			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].y); 
 			m_pY->GetStringInputCtrl()->SetString(temp);
 		}
 		else
@@ -192,7 +192,7 @@ void DCP::DCP06XYZDlgC::RefreshControls()
 		// Z
 		if(GetDataModel()->m_pPointBuff[0].zsta)
 		{
-			sprintf(temp,"%9.*f",m_pDCP06Model->m_nDecimals,GetDataModel()->m_pPointBuff[0].z); 
+			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].z); 
 			m_pZ->GetStringInputCtrl()->SetString(temp);
 		}
 		else
@@ -201,14 +201,14 @@ void DCP::DCP06XYZDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06XYZDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::XYZDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06PointBuffModelC* pDCP06Model = dynamic_cast< DCP::DCP06PointBuffModelC* >( pModel );
+    DCP::PointBuffModel* pModel = dynamic_cast< DCP::PointBuffModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -218,16 +218,16 @@ bool DCP::DCP06XYZDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06PointBuffModelC* DCP::DCP06XYZDlgC::GetDataModel() const
+DCP::PointBuffModel* DCP::XYZDialog::GetDataModel() const
 {
-    return (DCP::DCP06PointBuffModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::PointBuffModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
-void DCP::DCP06XYZDlgC::delete_point()
+void DCP::XYZDialog::delete_point()
 {
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 	StringC strActivePoint(L"");
 
@@ -247,14 +247,14 @@ void DCP::DCP06XYZDlgC::delete_point()
 }
 
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06XYZControllerC::DCP06XYZControllerC(DCP::DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model),m_pCommon(0), poVideoDlg(0),m_bCamera(false)
+DCP::XYZController::XYZController(DCP::Model *pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel),m_pCommon(0), poVideoDlg(0),m_bCamera(false)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -262,18 +262,18 @@ DCP::DCP06XYZControllerC::DCP06XYZControllerC(DCP::DCP06ModelC *pDCP06Model)
     SetTitle(StringC( AT_DCP06, T_DCP_XORYORZYZ_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06XYZDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::XYZDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( XORYORZ_DLG, m_pDlg, true );
 
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 
-	isATR = pDCP06Model->isATR;
+	isATR = pModel->isATR;
     show_function_keys();
 
 	
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-void DCP::DCP06XYZControllerC::show_function_keys()
+void DCP::XYZController::show_function_keys()
 {
 
 	ResetFunctionKeys();
@@ -359,7 +359,7 @@ void DCP::DCP06XYZControllerC::show_function_keys()
 	GUI::DesktopC::Instance()->UpdateFunctionKeys();
 }
 
-DCP::DCP06XYZControllerC::~DCP06XYZControllerC()
+DCP::XYZController::~XYZController()
 {
 	if(m_pCommon)
 	{
@@ -369,7 +369,7 @@ DCP::DCP06XYZControllerC::~DCP06XYZControllerC()
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06XYZControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::XYZController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -380,12 +380,12 @@ bool DCP::DCP06XYZControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -396,11 +396,11 @@ bool DCP::DCP06XYZControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // ALL
-void DCP::DCP06XYZControllerC::OnF1Pressed()
+void DCP::XYZController::OnF1Pressed()
 {
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -413,7 +413,7 @@ void DCP::DCP06XYZControllerC::OnF1Pressed()
 		show_function_keys();
 	}
 
-	if(m_pDCP06Model->m_nOverWriteInfo)
+	if(m_pModel->m_nOverWriteInfo)
 	{
 		if(m_pDlg->GetDataModel()->m_pPointBuff[0].xsta != 0 ||
 			m_pDlg->GetDataModel()->m_pPointBuff[0].ysta != 0 ||
@@ -437,15 +437,15 @@ void DCP::DCP06XYZControllerC::OnF1Pressed()
 		//DisableFunctionKey(FK5);
 		DisableFunctionKey(FK6);
 
-		DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
+		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 
 		sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 
 
-		if(GetController(MEAS_XYZ_CONTROLLER) == NULL)
+		if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDCP06Model));
+			(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::MeasXYZController(m_pModel));
 		}
 		(void)GetController( MEAS_XYZ_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MEAS_XYZ_CONTROLLER, true);
@@ -453,11 +453,11 @@ void DCP::DCP06XYZControllerC::OnF1Pressed()
 }
 
 // X
-void DCP::DCP06XYZControllerC::OnF2Pressed()
+void DCP::XYZController::OnF2Pressed()
 {
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -470,7 +470,7 @@ void DCP::DCP06XYZControllerC::OnF2Pressed()
 		show_function_keys();
 	}
 
-	if(m_pDCP06Model->m_nOverWriteInfo)
+	if(m_pModel->m_nOverWriteInfo)
 	{
 		if(m_pDlg->GetDataModel()->m_pPointBuff[0].xsta != 0)
 		{
@@ -489,25 +489,25 @@ void DCP::DCP06XYZControllerC::OnF2Pressed()
 	//DisableFunctionKey(FK5);
 	DisableFunctionKey(FK6);
 
-	DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
+	DCP::MeasXYZModel* pModel = new MeasXYZModel;
 	
 	sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 	m_pCommon->strbtrim(pModel->sPointId);
 
-	if(GetController(MEAS_X_CONTROLLER) == NULL)
+	if(GetController(MEAS_X_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_X_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDCP06Model));
+		(void)AddController( MEAS_X_CONTROLLER, new DCP::MeasXYZController(m_pModel));
 	}
 	(void)GetController( MEAS_X_CONTROLLER )->SetModel( pModel);
 	SetActiveController(MEAS_X_CONTROLLER, true);
 
 }
 // Y
-void DCP::DCP06XYZControllerC::OnF3Pressed()
+void DCP::XYZController::OnF3Pressed()
 {
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -521,7 +521,7 @@ void DCP::DCP06XYZControllerC::OnF3Pressed()
 		show_function_keys();
 	}
 
-	if(m_pDCP06Model->m_nOverWriteInfo)
+	if(m_pModel->m_nOverWriteInfo)
 	{
 		if(m_pDlg->GetDataModel()->m_pPointBuff[0].ysta != 0 )
 		{
@@ -540,14 +540,14 @@ void DCP::DCP06XYZControllerC::OnF3Pressed()
 	//DisableFunctionKey(FK5);
 	DisableFunctionKey(FK6);
 
-	DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
+	DCP::MeasXYZModel* pModel = new MeasXYZModel;
 	
 	sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 	m_pCommon->strbtrim(pModel->sPointId);
 
-	if(GetController(MEAS_Y_CONTROLLER) == NULL)
+	if(GetController(MEAS_Y_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_Y_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDCP06Model));
+		(void)AddController( MEAS_Y_CONTROLLER, new DCP::MeasXYZController(m_pModel));
 	}
 	(void)GetController( MEAS_Y_CONTROLLER )->SetModel( pModel);
 	SetActiveController(MEAS_Y_CONTROLLER, true);
@@ -555,11 +555,11 @@ void DCP::DCP06XYZControllerC::OnF3Pressed()
 }
 
 // Z
-void DCP::DCP06XYZControllerC::OnF4Pressed()
+void DCP::XYZController::OnF4Pressed()
 {
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -573,7 +573,7 @@ void DCP::DCP06XYZControllerC::OnF4Pressed()
 		show_function_keys();
 	}
 
-	if(m_pDCP06Model->m_nOverWriteInfo)
+	if(m_pModel->m_nOverWriteInfo)
 	{
 		if(m_pDlg->GetDataModel()->m_pPointBuff[0].zsta != 0 )
 		{
@@ -593,13 +593,13 @@ void DCP::DCP06XYZControllerC::OnF4Pressed()
 	DisableFunctionKey(FK6);
 
 
-	DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
+	DCP::MeasXYZModel* pModel = new MeasXYZModel;
 	sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 	m_pCommon->strbtrim(pModel->sPointId);
 
-	if(GetController(MEAS_Z_CONTROLLER) == NULL)
+	if(GetController(MEAS_Z_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_Z_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDCP06Model));
+		(void)AddController( MEAS_Z_CONTROLLER, new DCP::MeasXYZController(m_pModel));
 	}
 	(void)GetController( MEAS_Z_CONTROLLER )->SetModel( pModel);
 	SetActiveController(MEAS_Z_CONTROLLER, true);
@@ -607,13 +607,13 @@ void DCP::DCP06XYZControllerC::OnF4Pressed()
 }
 
 // Z with camera
-void DCP::DCP06XYZControllerC::OnF5Pressed()
+void DCP::XYZController::OnF5Pressed()
 {
 	if(m_bCamera)
 	{
-		DCP06CommonC common(m_pDCP06Model);
+		Common common(m_pModel);
 
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 		{
 			USER_APP_VERIFY( false );
 			return;
@@ -627,7 +627,7 @@ void DCP::DCP06XYZControllerC::OnF5Pressed()
 			show_function_keys();
 		}
 
-		if(m_pDCP06Model->m_nOverWriteInfo)
+		if(m_pModel->m_nOverWriteInfo)
 		{
 			if(m_pDlg->GetDataModel()->m_pPointBuff[0].zsta != 0 )
 			{
@@ -638,13 +638,13 @@ void DCP::DCP06XYZControllerC::OnF5Pressed()
 			
 			}
 		}
-		DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
+		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 		sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 
-		if(GetController(MEAS_Z_CONTROLLER) == NULL)
+		if(GetController(MEAS_Z_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_Z_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDCP06Model));
+			(void)AddController( MEAS_Z_CONTROLLER, new DCP::MeasXYZController(m_pModel));
 		}
 		(void)GetController( MEAS_Z_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MEAS_Z_CONTROLLER, true);
@@ -652,9 +652,9 @@ void DCP::DCP06XYZControllerC::OnF5Pressed()
 }
 
 // CONT
-void DCP::DCP06XYZControllerC::OnF6Pressed()
+void DCP::XYZController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -680,7 +680,7 @@ void DCP::DCP06XYZControllerC::OnF6Pressed()
 
    
 }
-void DCP::DCP06XYZControllerC::OnSHF1Pressed()
+void DCP::XYZController::OnSHF1Pressed()
 {
 	/* CAPTIVATE
 	if( ABL::VideoDialogC::IsCameraAvailable(CFA::CT_OVC) )
@@ -716,7 +716,7 @@ void DCP::DCP06XYZControllerC::OnSHF1Pressed()
 	show_function_keys();
 }
 // DEL
-void DCP::DCP06XYZControllerC::OnSHF2Pressed()
+void DCP::XYZController::OnSHF2Pressed()
 {
 	
 	m_pDlg->delete_point();
@@ -724,30 +724,30 @@ void DCP::DCP06XYZControllerC::OnSHF2Pressed()
 }
 
 // INIT
-void DCP::DCP06XYZControllerC::OnSHF3Pressed()
+void DCP::XYZController::OnSHF3Pressed()
 {
-	if(GetController(INIT_CONTROLLER) == NULL)
+	if(GetController(INIT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC );
+		(void)AddController( INIT_CONTROLLER, new DCP::InitializationController );
 	}
-	(void)GetController( INIT_CONTROLLER )->SetModel( m_pDCP06Model);
+	(void)GetController( INIT_CONTROLLER )->SetModel( m_pModel);
 	SetActiveController(INIT_CONTROLLER, true);
 }
 
 // TOOL
-void DCP::DCP06XYZControllerC::OnSHF4Pressed()
+void DCP::XYZController::OnSHF4Pressed()
 {
-	if(GetController(TOOL_CONTROLLER) == NULL)
+	if(GetController(TOOL_CONTROLLER) == nullptr)
 	{
-		(void)AddController( TOOL_CONTROLLER, new DCP::DCP06ToolControllerC );
+		(void)AddController( TOOL_CONTROLLER, new DCP::ToolController );
 	}
-	(void)GetController( TOOL_CONTROLLER )->SetModel( m_pDCP06Model);
+	(void)GetController( TOOL_CONTROLLER )->SetModel( m_pModel);
 	SetActiveController(TOOL_CONTROLLER, true);
 }
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06XYZControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::XYZController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == CAMERA_DLG)
 	{
@@ -758,7 +758,7 @@ void DCP::DCP06XYZControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
 }
 
 // Description: React on close of controller
-void DCP::DCP06XYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::XYZController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == MEAS_XYZ_CONTROLLER)
 	{
@@ -771,7 +771,7 @@ void DCP::DCP06XYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 
 		if(lExitCode == EC_KEY_CONT)
 		{	
-			DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
+			DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
 			double x = pModel->m_dX;
 			double y = pModel->m_dY;
 			double z = pModel->m_dZ;
@@ -796,7 +796,7 @@ void DCP::DCP06XYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 
 		if(lExitCode == EC_KEY_CONT)
 		{	
-			DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_X_CONTROLLER )->GetModel();		
+			DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*) GetController( MEAS_X_CONTROLLER )->GetModel();		
 			double x = pModel->m_dX;
 			double y = pModel->m_dY;
 			double z = pModel->m_dZ;
@@ -817,7 +817,7 @@ void DCP::DCP06XYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 
 		if(lExitCode == EC_KEY_CONT)
 		{	
-			DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_Y_CONTROLLER )->GetModel();		
+			DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*) GetController( MEAS_Y_CONTROLLER )->GetModel();		
 			double x = pModel->m_dX;
 			double y = pModel->m_dY;
 			double z = pModel->m_dZ;
@@ -838,7 +838,7 @@ void DCP::DCP06XYZControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 
 		if(lExitCode == EC_KEY_CONT)
 		{	
-			DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_Z_CONTROLLER )->GetModel();		
+			DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*) GetController( MEAS_Z_CONTROLLER )->GetModel();		
 			double x = pModel->m_dX;
 			double y = pModel->m_dY;
 			double z = pModel->m_dZ;

@@ -50,7 +50,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
+// OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -63,8 +63,8 @@
 
 // Unit
 
-DCP::DCP06DefinePlaneDlgC::DCP06DefinePlaneDlgC(DCP::DCP06ModelC* pDCP06Model):m_pPlane(0),
-						m_pDCP06Model(pDCP06Model)
+DCP::DefinePlaneDialog::DefinePlaneDialog(DCP::Model* pModel):m_pPlane(0),
+						m_pModel(pModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
 
@@ -78,12 +78,12 @@ DCP::DCP06DefinePlaneDlgC::DCP06DefinePlaneDlgC(DCP::DCP06ModelC* pDCP06Model):m
 
 
             // Description: Destructor
-DCP::DCP06DefinePlaneDlgC::~DCP06DefinePlaneDlgC()
+DCP::DefinePlaneDialog::~DefinePlaneDialog()
 {
 
 }
 
-void DCP::DCP06DefinePlaneDlgC::OnInitDialog(void)
+void DCP::DefinePlaneDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	//SetColonPosLong( GUI::StandardDialogC::CP_20 );
@@ -134,13 +134,13 @@ void DCP::DCP06DefinePlaneDlgC::OnInitDialog(void)
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 }
 
-void DCP::DCP06DefinePlaneDlgC::OnDialogActivated()
+void DCP::DefinePlaneDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP06DefinePlaneDlgC::RefreshControls()
+void DCP::DefinePlaneDialog::RefreshControls()
 {	
 	if(m_pPlane)
 	{
@@ -176,20 +176,20 @@ void DCP::DCP06DefinePlaneDlgC::RefreshControls()
 	}
 }
 
-void DCP::DCP06DefinePlaneDlgC::UpdateData()
+void DCP::DefinePlaneDialog::UpdateData()
 {
 }
 
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06DefinePlaneDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::DefinePlaneDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06DefinePlaneModelC* pDCP06Model = dynamic_cast< DCP::DCP06DefinePlaneModelC* >( pModel );
+    DCP::DefinePlaneModel* pModel = dynamic_cast< DCP::DefinePlaneModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -199,14 +199,14 @@ bool DCP::DCP06DefinePlaneDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06DefinePlaneModelC* DCP::DCP06DefinePlaneDlgC::GetDataModel() const
+DCP::DefinePlaneModel* DCP::DefinePlaneDialog::GetDataModel() const
 {
-    return (DCP::DCP06DefinePlaneModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::DefinePlaneModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-void DCP::DCP06DefinePlaneDlgC::xy_plane()
+void DCP::DefinePlaneDialog::xy_plane()
 {
 	GetDataModel()->active_plane = XY_PLANE;
 	RefreshControls();
@@ -214,23 +214,23 @@ void DCP::DCP06DefinePlaneDlgC::xy_plane()
 }
 
 // ================================================================================================
-void DCP::DCP06DefinePlaneDlgC::zx_plane()
+void DCP::DefinePlaneDialog::zx_plane()
 {
 	GetDataModel()->active_plane = ZX_PLANE;
 	RefreshControls();
 }
 
 // ================================================================================================
-void DCP::DCP06DefinePlaneDlgC::yz_plane()
+void DCP::DefinePlaneDialog::yz_plane()
 {
 	GetDataModel()->active_plane = YZ_PLANE;
 	RefreshControls();
 }
 
 // ================================================================================================
-void DCP::DCP06DefinePlaneDlgC::delete_plane()
+void DCP::DefinePlaneDialog::delete_plane()
 {
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	StringC strMsg;
 	strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_POINTS_OF_PLANE_TOK);
 	if(MsgBox.ShowMessageYesNo(strMsg))
@@ -245,7 +245,7 @@ void DCP::DCP06DefinePlaneDlgC::delete_plane()
 }
 
 // ================================================================================================
-short DCP::DCP06DefinePlaneDlgC::hz_plane()
+short DCP::DefinePlaneDialog::hz_plane()
 {
 	if(GetDataModel()->hz_plane)
 	{
@@ -261,7 +261,7 @@ short DCP::DCP06DefinePlaneDlgC::hz_plane()
 	return false;
 }
 // ================================================================================================
-bool DCP::DCP06DefinePlaneDlgC::CalculatePlaneAfterMeas()
+bool DCP::DefinePlaneDialog::CalculatePlaneAfterMeas()
 {
 	for(short i=0; i < MAX_POINTS_IN_PLANE; i++)
 	{
@@ -285,7 +285,7 @@ bool DCP::DCP06DefinePlaneDlgC::CalculatePlaneAfterMeas()
 }
 
 // ================================================================================================
-short DCP::DCP06DefinePlaneDlgC::set_hz_plane1(short actualdesign)
+short DCP::DefinePlaneDialog::set_hz_plane1(short actualdesign)
 {
 short dist_count,ret;
 //RC_TYPE tmcResult;
@@ -293,8 +293,8 @@ short dist_count,ret;
 
 	ret = false;
 	
-	DCP06CommonC common(m_pDCP06Model);
-	DCP06MsgBoxC msgbox;
+	Common common(m_pModel);
+	MsgBox msgbox;
 
 	dist_count = common.points_count_in_plane(&GetDataModel()->hz_plane_buff[0]);
 	
@@ -373,10 +373,10 @@ short dist_count,ret;
 			}
 			if(GetDataModel()->display == DOM_USER_DLG)
 			{
-							sprintf(&GetDCP06Model()->hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
-				sprintf(&GetDCP06Model()->hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
-				sprintf(&GetDCP06Model()->hz_plane_buff[0].points[2].point_id,"%-6.6s","rp-p3");
-				GetDCP06Model()->hz_plane = true;
+							sprintf(&GetModel()->hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
+				sprintf(&GetModel()->hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
+				sprintf(&GetModel()->hz_plane_buff[0].points[2].point_id,"%-6.6s","rp-p3");
+				GetModel()->hz_plane = true;
 			}
 			*/
 			ret = true;
@@ -387,7 +387,7 @@ short dist_count,ret;
 				GetDataModel()->hz_plane = false;
 			
 			//else if(display == DLG_DOMUSER)
-			//	GetDCP06Model()->hz_plane = false;
+			//	GetModel()->hz_plane = false;
 		}
 	 }
 	 else
@@ -399,7 +399,7 @@ bbb:
 }
 
 // ================================================================================================
-short DCP::DCP06DefinePlaneDlgC::set_horizontal_plane(/*plane_buff_ *planes, short DISPLAY, short PLANE_TYPE*/)
+short DCP::DefinePlaneDialog::set_horizontal_plane(/*plane_buff_ *planes, short DISPLAY, short PLANE_TYPE*/)
 {
 short points;
 short ret;
@@ -407,7 +407,7 @@ short ret;
 	ret = false;
 	points  = 0;	
 
-	DCP::DCP06CommonC common(m_pDCP06Model);
+	DCP::Common common(m_pModel);
 
 	points = common.points_count_in_plane(&GetDataModel()->hz_plane_buff[0]);
 
@@ -508,19 +508,19 @@ short ret;
 }
 
 // ================================================================================================
-short DCP::DCP06DefinePlaneDlgC::calc_plane(S_PLANE_BUFF *plane, short actdes)
+short DCP::DefinePlaneDialog::calc_plane(S_PLANE_BUFF *plane, short actdes)
 {
-	DCP06CalcPlaneC calcplane;
+	CalcPlane calcplane;
 
 	return calcplane.calc(plane,actdes);
 
 }
 // ================================================================================================
-short DCP::DCP06DefinePlaneDlgC::defined_points_count_in_plane(S_PLANE_BUFF *plane,short *lastpoint)
+short DCP::DefinePlaneDialog::defined_points_count_in_plane(S_PLANE_BUFF *plane,short *lastpoint)
 {
 	short count=0,i,sta;
 
-	if(lastpoint != NULL)
+	if(lastpoint != nullptr)
 		*lastpoint = 0;
 
 	for(i=0; i< MAX_POINTS_IN_PLANE; i++)
@@ -532,14 +532,14 @@ short DCP::DCP06DefinePlaneDlgC::defined_points_count_in_plane(S_PLANE_BUFF *pla
 		
 		if(sta != 0)
 		{
-			if(lastpoint != NULL)
+			if(lastpoint != nullptr)
 				*lastpoint = i+1;
 		}
 	}
 	return count;
 }
 
-void DCP::DCP06DefinePlaneDlgC::MeasPressed()
+void DCP::DefinePlaneDialog::MeasPressed()
 {
 	if(GetDataModel()->hz_plane)
 	{
@@ -549,14 +549,14 @@ void DCP::DCP06DefinePlaneDlgC::MeasPressed()
 
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06DefinePlaneControllerC::DCP06DefinePlaneControllerC(DCP::DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::DefinePlaneController::DefinePlaneController(DCP::Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -564,7 +564,7 @@ DCP::DCP06DefinePlaneControllerC::DCP06DefinePlaneControllerC(DCP::DCP06ModelC* 
     SetTitle(StringC( AT_DCP06, T_DCP_DOM_PLANE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06DefinePlaneDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::DefinePlaneDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( PLANE_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -605,12 +605,12 @@ DCP::DCP06DefinePlaneControllerC::DCP06DefinePlaneControllerC(DCP::DCP06ModelC* 
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06DefinePlaneControllerC::~DCP06DefinePlaneControllerC()
+DCP::DefinePlaneController::~DefinePlaneController()
 {
 
 }
 // Description: Route model to everybody else
-bool DCP::DCP06DefinePlaneControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::DefinePlaneController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
@@ -620,23 +620,23 @@ bool DCP::DCP06DefinePlaneControllerC::SetModel( GUI::ModelC* pModel )
     return m_pDlg->SetModel( pModel );
 }
 
-void DCP::DCP06DefinePlaneControllerC::OnF1Pressed()
+void DCP::DefinePlaneController::OnF1Pressed()
 {	
 	m_pDlg->xy_plane();
 }
 
-void DCP::DCP06DefinePlaneControllerC::OnF2Pressed()
+void DCP::DefinePlaneController::OnF2Pressed()
 {	
 	m_pDlg->zx_plane();
 
 }
 
-void DCP::DCP06DefinePlaneControllerC::OnF3Pressed()
+void DCP::DefinePlaneController::OnF3Pressed()
 {
 	m_pDlg->yz_plane();
 }
 
-void DCP::DCP06DefinePlaneControllerC::OnF4Pressed()
+void DCP::DefinePlaneController::OnF4Pressed()
 {	
 	if(m_pDlg->hz_plane())
 	{
@@ -648,16 +648,16 @@ void DCP::DCP06DefinePlaneControllerC::OnF4Pressed()
 	}
 }
 
-void DCP::DCP06DefinePlaneControllerC::OnF5Pressed()
+void DCP::DefinePlaneController::OnF5Pressed()
 {	
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 	m_pDlg->MeasPressed();
 
-	DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+	DCP::MeasureModel* pModel = new MeasureModel;
 	pModel->m_iMaxPoint = MAX_POINTS_IN_PLANE;
 	pModel->m_iMinPoint = MIN_POINTS_FOR_PLANE;
 	pModel->m_iPointsCount = 3;
@@ -666,9 +666,9 @@ void DCP::DCP06DefinePlaneControllerC::OnF5Pressed()
 	memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
 	memcpy(&pModel->point_table[0],&m_pDlg->GetDataModel()->plane_buff[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
 
-	if(GetController(MEAS_CONTROLLER) == NULL)
+	if(GetController(MEAS_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDCP06Model));
+		(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pModel));
 	}
 	(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK));
 
@@ -677,9 +677,9 @@ void DCP::DCP06DefinePlaneControllerC::OnF5Pressed()
 }
 
 // Description: Handle change of position values
-void DCP::DCP06DefinePlaneControllerC::OnF6Pressed()
+void DCP::DefinePlaneController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -695,22 +695,22 @@ void DCP::DCP06DefinePlaneControllerC::OnF6Pressed()
 	(void)Close(EC_KEY_CONT);
 }
 
-void DCP::DCP06DefinePlaneControllerC::OnSHF2Pressed()
+void DCP::DefinePlaneController::OnSHF2Pressed()
 {	
 	m_pDlg->delete_plane();	
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06DefinePlaneControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::DefinePlaneController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06DefinePlaneControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::DefinePlaneController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == MEAS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();		
+		DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();		
 		
 		// copy values
 		memcpy(&m_pDlg->GetDataModel()->plane_buff[0].points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
@@ -757,12 +757,12 @@ void DCP::DCP06DefinePlaneControllerC::OnActiveControllerClosed( int lCtrlID, in
 		if(m_pDlg->GetDataModel()->display == DOM_DLG)
 		m_pDlg->GetDataModel()->hz_plane = false;
 		
-		if(GetController(CALC_PLANE_CONTROLLER) == NULL)
+		if(GetController(CALC_PLANE_CONTROLLER) == nullptr)
 		{
-			(void)AddController( CALC_PLANE_CONTROLLER, new DCP::DCP06CalcPlaneControllerC(&m_pDlg->GetDataModel()->plane_buff[0],ACTUAL, 0) );
+			(void)AddController( CALC_PLANE_CONTROLLER, new DCP::CalcPlaneontrollerC(&m_pDlg->GetDataModel()->plane_buff[0],ACTUAL, 0) );
 		}
 
-		(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDCP06Model);
+		(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pModel);
 		SetActiveController(CALC_PLANE_CONTROLLER, true);
 	}
 
@@ -776,9 +776,9 @@ void DCP::DCP06DefinePlaneControllerC::OnActiveControllerClosed( int lCtrlID, in
 		/*
 		if(m_pDlg->CalculatePlaneAfterMeas())
 		{
-			if(GetController(RES_PLANE_CONTROLLER) == NULL)
+			if(GetController(RES_PLANE_CONTROLLER) == nullptr)
 			{
-				(void)AddController( RES_PLANE_CONTROLLER, new DCP::DCP06ResPlaneControllerC(m_pDCP06Model) );
+				(void)AddController( RES_PLANE_CONTROLLER, new DCP::ResPlaneController(m_pModel) );
 			}
 
 			(void)GetController(RES_PLANE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK);
@@ -798,7 +798,7 @@ void DCP::DCP06DefinePlaneControllerC::OnActiveControllerClosed( int lCtrlID, in
 // ===========================================================================================
 // DefinePlaneModel
 // ===========================================================================================
-DCP::DCP06DefinePlaneModelC::DCP06DefinePlaneModelC()
+DCP::DefinePlaneModel::DefinePlaneModel()
 {
 	/*
 	active_plane	= pModel->active_plane;
@@ -808,6 +808,6 @@ DCP::DCP06DefinePlaneModelC::DCP06DefinePlaneModelC()
 	memcpy(&hz_plane_buff[0], &pModel->hz_plane_buff[0], sizeof(S_PLANE_BUFF));
 	*/
 }
-DCP::DCP06DefinePlaneModelC::~DCP06DefinePlaneModelC()
+DCP::DefinePlaneModel::~DefinePlaneModel()
 {
 }

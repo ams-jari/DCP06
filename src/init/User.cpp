@@ -41,7 +41,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -55,7 +55,7 @@
 
 // USER DIALOG
 
-DCP::DCP06UserDlgC::DCP06UserDlgC():GUI::ModelHandlerC(),GUI::StandardDialogC(),
+DCP::UserDialog::UserDialog():GUI::ModelHandlerC(),GUI::StandardDialogC(),
 	m_pUser1(0),m_pUser2(0),m_pUser3(0),m_pUser4(0),m_pUser5(0),m_pUser6(0),m_pUser7(0),
 	m_pUser8(0),m_pUser9(0),m_pUser10(0)
 {
@@ -64,12 +64,12 @@ DCP::DCP06UserDlgC::DCP06UserDlgC():GUI::ModelHandlerC(),GUI::StandardDialogC(),
 
 
             // Description: Destructor
-DCP::DCP06UserDlgC::~DCP06UserDlgC()
+DCP::UserDialog::~UserDialog()
 {
 
 }
 
-void DCP::DCP06UserDlgC::OnInitDialog(void)
+void DCP::UserDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -147,69 +147,69 @@ void DCP::DCP06UserDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_USER_TOK,0);
 }
 
-void DCP::DCP06UserDlgC::OnDialogActivated()
+void DCP::UserDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
 
-void DCP::DCP06UserDlgC::UpdateData()
+void DCP::UserDialog::UpdateData()
 {
-	GetDCP06Model()->m_sUser1	= m_pUser1->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser2	= m_pUser2->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser3	= m_pUser3->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser4	= m_pUser4->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser5	= m_pUser5->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser6	= m_pUser6->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser7	= m_pUser7->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser8	= m_pUser8->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser9	= m_pUser9->GetStringInputCtrl()->GetString();
-	GetDCP06Model()->m_sUser10	= m_pUser10->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser1	= m_pUser1->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser2	= m_pUser2->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser3	= m_pUser3->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser4	= m_pUser4->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser5	= m_pUser5->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser6	= m_pUser6->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser7	= m_pUser7->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser8	= m_pUser8->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser9	= m_pUser9->GetStringInputCtrl()->GetString();
+	GetModel()->m_sUser10	= m_pUser10->GetStringInputCtrl()->GetString();
 
 	// And selected user
-	if(m_pUser1->HasFocus()) GetDCP06Model()->m_sUser = m_pUser1->GetStringInputCtrl()->GetString();
-	else if(m_pUser2->HasFocus()) GetDCP06Model()->m_sUser = m_pUser2->GetStringInputCtrl()->GetString();
-	else if(m_pUser3->HasFocus()) GetDCP06Model()->m_sUser = m_pUser3->GetStringInputCtrl()->GetString();
-	else if(m_pUser4->HasFocus()) GetDCP06Model()->m_sUser = m_pUser4->GetStringInputCtrl()->GetString();
-	else if(m_pUser5->HasFocus()) GetDCP06Model()->m_sUser = m_pUser5->GetStringInputCtrl()->GetString();
-	else if(m_pUser6->HasFocus()) GetDCP06Model()->m_sUser = m_pUser6->GetStringInputCtrl()->GetString();
-	else if(m_pUser7->HasFocus()) GetDCP06Model()->m_sUser = m_pUser7->GetStringInputCtrl()->GetString();
-	else if(m_pUser8->HasFocus()) GetDCP06Model()->m_sUser = m_pUser8->GetStringInputCtrl()->GetString();
-	else if(m_pUser9->HasFocus()) GetDCP06Model()->m_sUser = m_pUser9->GetStringInputCtrl()->GetString();
-	else if(m_pUser10->HasFocus()) GetDCP06Model()->m_sUser = m_pUser10->GetStringInputCtrl()->GetString();
-	else GetDCP06Model()->m_sUser = L"";	
+	if(m_pUser1->HasFocus()) GetModel()->m_sUser = m_pUser1->GetStringInputCtrl()->GetString();
+	else if(m_pUser2->HasFocus()) GetModel()->m_sUser = m_pUser2->GetStringInputCtrl()->GetString();
+	else if(m_pUser3->HasFocus()) GetModel()->m_sUser = m_pUser3->GetStringInputCtrl()->GetString();
+	else if(m_pUser4->HasFocus()) GetModel()->m_sUser = m_pUser4->GetStringInputCtrl()->GetString();
+	else if(m_pUser5->HasFocus()) GetModel()->m_sUser = m_pUser5->GetStringInputCtrl()->GetString();
+	else if(m_pUser6->HasFocus()) GetModel()->m_sUser = m_pUser6->GetStringInputCtrl()->GetString();
+	else if(m_pUser7->HasFocus()) GetModel()->m_sUser = m_pUser7->GetStringInputCtrl()->GetString();
+	else if(m_pUser8->HasFocus()) GetModel()->m_sUser = m_pUser8->GetStringInputCtrl()->GetString();
+	else if(m_pUser9->HasFocus()) GetModel()->m_sUser = m_pUser9->GetStringInputCtrl()->GetString();
+	else if(m_pUser10->HasFocus()) GetModel()->m_sUser = m_pUser10->GetStringInputCtrl()->GetString();
+	else GetModel()->m_sUser = L"";	
 
 
 }
 
 // Description: refresh all controls
-void DCP::DCP06UserDlgC::RefreshControls()
+void DCP::UserDialog::RefreshControls()
 {
 	if(m_pUser1 && m_pUser2 && m_pUser3 && m_pUser4 && m_pUser5 && m_pUser6 && m_pUser7 &&
 		m_pUser8 && m_pUser9 && m_pUser10)
 	{
-		StringC sTemp= GetDCP06Model()->m_sUser1;
+		StringC sTemp= GetModel()->m_sUser1;
 		sTemp.RTrim();
 		m_pUser1->GetStringInputCtrl()->SetString( sTemp);
-		m_pUser2->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser2);
-		m_pUser3->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser3);
-		m_pUser4->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser4);
-		m_pUser5->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser5);
-		m_pUser6->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser6);
-		m_pUser7->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser7);
-		m_pUser8->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser8);
-		m_pUser9->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser9);
-		m_pUser10->GetStringInputCtrl()->SetString( GetDCP06Model()->m_sUser10);
+		m_pUser2->GetStringInputCtrl()->SetString( GetModel()->m_sUser2);
+		m_pUser3->GetStringInputCtrl()->SetString( GetModel()->m_sUser3);
+		m_pUser4->GetStringInputCtrl()->SetString( GetModel()->m_sUser4);
+		m_pUser5->GetStringInputCtrl()->SetString( GetModel()->m_sUser5);
+		m_pUser6->GetStringInputCtrl()->SetString( GetModel()->m_sUser6);
+		m_pUser7->GetStringInputCtrl()->SetString( GetModel()->m_sUser7);
+		m_pUser8->GetStringInputCtrl()->SetString( GetModel()->m_sUser8);
+		m_pUser9->GetStringInputCtrl()->SetString( GetModel()->m_sUser9);
+		m_pUser10->GetStringInputCtrl()->SetString( GetModel()->m_sUser10);
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06UserDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::UserDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -219,22 +219,22 @@ bool DCP::DCP06UserDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06UserDlgC::GetDCP06Model() const
+DCP::Model* DCP::UserDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06UserControllerC::DCP06UserControllerC()
-    : m_pDlg( NULL )
+DCP::UserController::UserController()
+    : m_pDlg( nullptr )
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -242,7 +242,7 @@ DCP::DCP06UserControllerC::DCP06UserControllerC()
     SetTitle(StringC( AT_DCP06, T_DCP_USER_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06UserDlgC;  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::UserDialog;  //lint !e1524 new in constructor for class 
     (void)AddDialog( USER_DLG, m_pDlg, true );
 
     // Set the function key
@@ -264,12 +264,12 @@ DCP::DCP06UserControllerC::DCP06UserControllerC()
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06UserControllerC::~DCP06UserControllerC()
+DCP::UserController::~UserController()
 {
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06UserControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::UserController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -281,9 +281,9 @@ bool DCP::DCP06UserControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Handle change of position values
-void DCP::DCP06UserControllerC::OnF1Pressed()
+void DCP::UserController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -301,6 +301,6 @@ void DCP::DCP06UserControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06UserControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::UserController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }

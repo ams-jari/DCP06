@@ -44,18 +44,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06PomSelectPointsDlgC;
-	class DCP06PomSelectPointsModelC;
+	class Model;
+	class BestFitSelectPointsDialog;
+	class BestFitSelectPointsModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06PomSelectPointsControllerC : public GUI::ControllerC
+    class BestFitSelectPointsController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06PomSelectPointsControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06PomSelectPointsControllerC();
+            BestFitSelectPointsController(Model* pModel);
+			~BestFitSelectPointsController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -82,27 +82,27 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06PomSelectPointsControllerC( const DCP06PomSelectPointsControllerC& oDCP05PomSelectPointsController )
+            BestFitSelectPointsController( const BestFitSelectPointsController& oBestFitSelectPointsController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06PomSelectPointsControllerC& operator=( const DCP06PomSelectPointsControllerC& oDCP05PomSelectPointsController )
+            BestFitSelectPointsController& operator=( const BestFitSelectPointsController& oBestFitSelectPointsController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06PomSelectPointsDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            BestFitSelectPointsDialog* m_pDlg;
+			Model* m_pModel;
 			//AdfFileFunc* adf;
 			void save_current_point();
     };
 
 
-	class DCP06PomSelectPointsDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class BestFitSelectPointsDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -115,10 +115,10 @@ namespace DCP
 				eZ
 			};
 
-		   DCP06PomSelectPointsDlgC(DCP06ModelC* pDCP06Model);
+		   BestFitSelectPointsDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06PomSelectPointsDlgC();
+            virtual ~BestFitSelectPointsDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -130,7 +130,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06PomSelectPointsModelC* GetDataModel() const;
+			BestFitSelectPointsModel* GetDataModel() const;
 
 			virtual void PointNext();
 			virtual void PointPrev();
@@ -145,29 +145,29 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pY;
 			GUI::ComboLineCtrlC* m_pZ;
 
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 
-			OBS_DECLARE_EXECUTE(DCP06PomSelectPointsDlgC);
+			OBS_DECLARE_EXECUTE(BestFitSelectPointsDialog);
 	private:
 		OBS::ObserverC m_pPointIdObserver;
 		OBS::ObserverC m_pXObserver;
 		OBS::ObserverC m_pYObserver;
 		OBS::ObserverC m_pZObserver;
 		virtual void OnPointIdChanged( int unNotifyCode, int ulParam2);
-		DCP06CommonC* m_pCommon;
+		Common* m_pCommon;
 	};
 
-	 class DCP06PomSelectPointsModelC : public GUI::ModelC
+	 class BestFitSelectPointsModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06PomSelectPointsModelC();
+            BestFitSelectPointsModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06PomSelectPointsModelC();
+            virtual ~BestFitSelectPointsModel();
 			
 			S_POINT_BUFF points[MAX_SELECT_POINTS];
 			S_POINT_BUFF points1[MAX_SELECT_POINTS];

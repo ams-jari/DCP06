@@ -53,7 +53,7 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP06SelectPointDlgC::DCP06SelectPointDlgC():poMultiColCtrl(NULL)
+SelectPointDialog::SelectPointDialog():poMultiColCtrl(nullptr)
 	
 {
 	//SetTxtApplicationId(AT_DCP06);
@@ -64,12 +64,12 @@ DCP06SelectPointDlgC::DCP06SelectPointDlgC():poMultiColCtrl(NULL)
 }
 
 // Description: Destructor
-DCP06SelectPointDlgC::~DCP06SelectPointDlgC()
+SelectPointDialog::~SelectPointDialog()
 {
 
 }
 
-void DCP06SelectPointDlgC::OnInitDialog(void)
+void SelectPointDialog::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 
@@ -99,11 +99,11 @@ void DCP06SelectPointDlgC::OnInitDialog(void)
 }
 
 
-void DCP06SelectPointDlgC::OnDialogActivated()
+void SelectPointDialog::OnDialogActivated()
 {
 	GUI::TableDialogC::OnDialogActivated();
 
-	DCP::DCP06SelectPointModelC* pModel = GetDataModel();
+	DCP::SelectPointModel* pModel = GetDataModel();
 	
 	StringC sTitle;
 	sTitle.LoadTxt(AT_DCP06,T_DCP_SELECT_POINT_TOK);
@@ -155,7 +155,7 @@ void DCP06SelectPointDlgC::OnDialogActivated()
 
 }
 
-void DCP::DCP06SelectPointDlgC::UpdateData()
+void DCP::SelectPointDialog::UpdateData()
 {
 	
 	short iSelected = poMultiColCtrl->GetSelectedId();
@@ -166,14 +166,14 @@ void DCP::DCP06SelectPointDlgC::UpdateData()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06SelectPointDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectPointDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06SelectPointModelC* pDCP06Model = dynamic_cast< DCP::DCP06SelectPointModelC* >( pModel );
+    DCP::SelectPointModel* pModel = dynamic_cast< DCP::SelectPointModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -183,17 +183,17 @@ bool DCP::DCP06SelectPointDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06SelectPointModelC* DCP::DCP06SelectPointDlgC::GetDataModel() const
+DCP::SelectPointModel* DCP::SelectPointDialog::GetDataModel() const
 {
-    return (DCP::DCP06SelectPointModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::SelectPointModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP06SelectPointControllerC::DCP06SelectPointControllerC()
-    : m_pDlg( NULL )
+DCP::SelectPointController::SelectPointController()
+    : m_pDlg( nullptr )
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -201,7 +201,7 @@ DCP::DCP06SelectPointControllerC::DCP06SelectPointControllerC()
     SetTitle(StringC( AT_DCP06, T_DCP_SELECT_POINT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06SelectPointDlgC;  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::SelectPointDialog;  //lint !e1524 new in constructor for class 
     (void)AddDialog( SELECT_POINT_DLG, m_pDlg, true );
 
     // Set the function key
@@ -223,13 +223,13 @@ DCP::DCP06SelectPointControllerC::DCP06SelectPointControllerC()
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06SelectPointControllerC::~DCP06SelectPointControllerC()
+DCP::SelectPointController::~SelectPointController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06SelectPointControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectPointController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -240,12 +240,12 @@ bool DCP::DCP06SelectPointControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -256,9 +256,9 @@ bool DCP::DCP06SelectPointControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // OPEN
-void DCP::DCP06SelectPointControllerC::OnF1Pressed()
+void DCP::SelectPointController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -275,12 +275,12 @@ void DCP::DCP06SelectPointControllerC::OnF1Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06SelectPointControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::SelectPointController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06SelectPointControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::SelectPointController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -291,13 +291,13 @@ void DCP::DCP06SelectPointControllerC::OnActiveControllerClosed( int lCtrlID, in
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06SelectPointModelC::DCP06SelectPointModelC()
+DCP::SelectPointModel::SelectPointModel()
 {
 	m_iSelectedId = -1;
 	m_strSelectedPoint = L"";
 	memset(&points[0],0, sizeof(S_SELECT_POINT) * MAX_SELECT_POINTS);
 }
-DCP::DCP06SelectPointModelC::~DCP06SelectPointModelC()
+DCP::SelectPointModel::~SelectPointModel()
 {
 	sqrt(4.0);
 }

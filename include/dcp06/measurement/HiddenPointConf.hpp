@@ -43,19 +43,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06HiddenPointConfDlgC;
-	class DCP06HiddenPointBarConfModelC;
+	class Model;
+	class HiddenPointConfDialog;
+	class HiddenPointBarConfModel;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06HiddenPointConfControllerC : public GUI::ControllerC
+    class HiddenPointConfController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06HiddenPointConfControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06HiddenPointConfControllerC();
+            HiddenPointConfController(Model *pModel);
+			~HiddenPointConfController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -71,25 +71,25 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06HiddenPointConfControllerC( const DCP06HiddenPointConfControllerC& oDCP06HiddenPointConfController )
+            HiddenPointConfController( const HiddenPointConfController& oHiddenPointConfController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06HiddenPointConfControllerC& operator=( const DCP06HiddenPointConfControllerC& oDCP06HiddenPointConfController )
+            HiddenPointConfController& operator=( const HiddenPointConfController& oHiddenPointConfController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06HiddenPointConfDlgC* m_pDlg;
-			DCP06ModelC *m_pDCP06Model;
+            HiddenPointConfDialog* m_pDlg;
+			Model *m_pModel;
     };
 
 
-	class DCP06HiddenPointConfDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class HiddenPointConfDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -102,10 +102,10 @@ namespace DCP
 				eDist5
 			};
 
-		   DCP06HiddenPointConfDlgC(DCP06ModelC *pDCP06Model);
+		   HiddenPointConfDialog(Model *pModel);
 
             // Description: Destructor
-            virtual ~DCP06HiddenPointConfDlgC();
+            virtual ~HiddenPointConfDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -118,7 +118,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06HiddenPointBarConfModelC* GetDCP06Model() const;
+            HiddenPointBarConfModel* GetModel() const;
 
 			// Description: add all controls
             
@@ -133,20 +133,20 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pDist4;
 			GUI::ComboLineCtrlC* m_pDist5;
 
-			DCP06ModelC *m_pDCP06Model;
+			Model *m_pModel;
 	};
 
-	class DCP06HiddenPointBarConfModelC : public GUI::ModelC
+	class HiddenPointBarConfModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06HiddenPointBarConfModelC();
+            HiddenPointBarConfModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06HiddenPointBarConfModelC();
+            virtual ~HiddenPointBarConfModel();
 			
 			double hidden_point_bar[MAX_POINTS_IN_HIDDENPOINT_BAR];
     };

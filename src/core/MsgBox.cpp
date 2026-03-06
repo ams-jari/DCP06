@@ -46,7 +46,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -60,17 +60,17 @@
 
 // USER DIALOG
 
-DCP::DCP06MsgBoxC::DCP06MsgBoxC()
+DCP::MsgBox::MsgBox()
 {
 	
 }
 // ****************************************************************************************
-DCP::DCP06MsgBoxC::~DCP06MsgBoxC()
+DCP::MsgBox::~MsgBox()
 {
 	
 }
 // ****************************************************************************************
-bool DCP::DCP06MsgBoxC::ShowMessageYesNo(StringC strMessage, StringC Title)
+bool DCP::MsgBox::ShowMessageYesNo(StringC strMessage, StringC Title)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -87,7 +87,7 @@ bool DCP::DCP06MsgBoxC::ShowMessageYesNo(StringC strMessage, StringC Title)
 }		
 
 // ****************************************************************************************
-bool DCP::DCP06MsgBoxC::ShowMessageOkAbort(StringC strMessage, StringC Title)
+bool DCP::MsgBox::ShowMessageOkAbort(StringC strMessage, StringC Title)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -104,7 +104,7 @@ bool DCP::DCP06MsgBoxC::ShowMessageOkAbort(StringC strMessage, StringC Title)
 }		
 
 // ****************************************************************************************
-void DCP::DCP06MsgBoxC::ShowMessageOk(StringC strMessage, StringC Title)
+void DCP::MsgBox::ShowMessageOk(StringC strMessage, StringC Title)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -115,7 +115,7 @@ void DCP::DCP06MsgBoxC::ShowMessageOk(StringC strMessage, StringC Title)
 }
 
 // ****************************************************************************************
-short DCP::DCP06MsgBoxC::ShowMessageOkAbortRetry(StringC strMessage)
+short DCP::MsgBox::ShowMessageOkAbortRetry(StringC strMessage)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -134,7 +134,7 @@ short DCP::DCP06MsgBoxC::ShowMessageOkAbortRetry(StringC strMessage)
 }
 
 // ****************************************************************************************
-short DCP::DCP06MsgBoxC::DeleteChstMessage(StringC strMessage)
+short DCP::MsgBox::DeleteChstMessage(StringC strMessage)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;
@@ -174,7 +174,7 @@ short DCP::DCP06MsgBoxC::DeleteChstMessage(StringC strMessage)
 			return -1;
 	}
 
-short DCP::DCP06MsgBoxC::DeletePointsMeas(StringC strMessage)
+short DCP::MsgBox::DeletePointsMeas(StringC strMessage)
 {
 	
 		GUI::MessageDialogC* pDlg = new GUI::MessageDialogC;

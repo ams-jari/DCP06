@@ -71,13 +71,13 @@ using namespace DCP;
 
 
 // ================================================================================================
-// ====================================  DCP06ApplicationMenuDlgC =================================
+// ====================================  ApplicationMenuDialog =================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP06ApplicationMenuDlgC::DCP06ApplicationMenuDlgC(DCP06ModelC* pDCP06Model): m_pDCP06Model(pDCP06Model)
+ApplicationMenuDialog::ApplicationMenuDialog(Model* pModel): m_pModel(pModel)
 {
 	//SetTxtApplicationId( AT_DCP06 );
 }
@@ -86,41 +86,41 @@ DCP06ApplicationMenuDlgC::DCP06ApplicationMenuDlgC(DCP06ModelC* pDCP06Model): m_
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP06ApplicationMenuDlgC::~DCP06ApplicationMenuDlgC()
+ApplicationMenuDialog::~ApplicationMenuDialog()
 {
 }
 
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP06ApplicationMenuDlgC::OnInitDialog(void)
+void ApplicationMenuDialog::OnInitDialog(void)
 {
 		
 	SetTitle(StringC(AT_DCP06,T_DCP_APPLICATION_MENU_TOK ));
 	//SetHelpTok(H_DCP_APPLICATION_MENU_TOK,0);
 
 	/*
-	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_LINE_SETTING_TOK), L"", NULL,	LINE_SETTING);
-	AddItem(L"", L"",StringC(AT_DCP06,L_DCP_3DROLLER_TOK),	 L"", NULL,	FRONT_BACK_SINGLE);
-	AddItem(L"", L"",StringC(AT_DCP06,L_DCP_3DSHAFT_ALIGMENT_TOK), L"", NULL,		SHAFT_ALIGMENT);
-	AddItem(L"", L"",StringC(AT_DCP06,L_DCP_SIMPLE_SCANNING_TOK), L"", NULL,		SIMPLE_SCANNING);
+	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_LINE_SETTING_TOK), L"", nullptr,	LINE_SETTING);
+	AddItem(L"", L"",StringC(AT_DCP06,L_DCP_3DROLLER_TOK),	 L"", nullptr,	FRONT_BACK_SINGLE);
+	AddItem(L"", L"",StringC(AT_DCP06,L_DCP_3DSHAFT_ALIGMENT_TOK), L"", nullptr,		SHAFT_ALIGMENT);
+	AddItem(L"", L"",StringC(AT_DCP06,L_DCP_SIMPLE_SCANNING_TOK), L"", nullptr,		SIMPLE_SCANNING);
 	#ifdef TS16
 	#else
-		AddItem(L"", L"",StringC(AT_DCP06,L_DCP_ADV_SCANNING_TOK), L"", NULL,		SCANNING);
+		AddItem(L"", L"",StringC(AT_DCP06,L_DCP_ADV_SCANNING_TOK), L"", nullptr,		SCANNING);
 	#endif
 	*/
 
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Line_setting_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Line_setting_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_LINE_SETTING_TOK), L"", NULL, LINE_SETTING);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"3D_roller_alignment_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"3D_roller_alignment_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_3DROLLER_TOK),	 L"", NULL, FRONT_BACK_SINGLE);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"3D_shaft_alignment_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"3D_shaft_alignment_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_3DSHAFT_ALIGMENT_TOK), L"", NULL, SHAFT_ALIGMENT);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Simple_scanninng_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Simple_scanninng_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_SIMPLE_SCANNING_TOK), L"", NULL, SIMPLE_SCANNING);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Line_setting_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Line_setting_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_LINE_SETTING_TOK), L"", nullptr, LINE_SETTING);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"3D_roller_alignment_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"3D_roller_alignment_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_3DROLLER_TOK),	 L"", nullptr, FRONT_BACK_SINGLE);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"3D_shaft_alignment_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"3D_shaft_alignment_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_3DSHAFT_ALIGMENT_TOK), L"", nullptr, SHAFT_ALIGMENT);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Simple_scanninng_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Simple_scanninng_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_SIMPLE_SCANNING_TOK), L"", nullptr, SIMPLE_SCANNING);
 	#ifdef TS16
 	#else
-		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Point_Cloud_Scanning_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Point_Cloud_Scanning_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_ADV_SCANNING_TOK), L"", NULL, SCANNING);
+		AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Point_Cloud_Scanning_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Point_Cloud_Scanning_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_ADV_SCANNING_TOK), L"", nullptr, SCANNING);
 	#endif
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Best_fit_line_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Best_fit_line_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_LINE_FITTING_TOK), L"", NULL, LINE_FITTING);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Best_fit_line_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Best_fit_line_$SCALEFACTOR$.png"),StringC(AT_DCP06,L_DCP_LINE_FITTING_TOK), L"", nullptr, LINE_FITTING);
 
-	if(m_pDCP06Model->bDemoMode)
+	if(m_pModel->bDemoMode)
 	{	
 		/* CAPTIVATE TBD
 		DisableMenuItem(LINE_SETTING);
@@ -150,7 +150,7 @@ void DCP06ApplicationMenuDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: Called if selection is completed (by ENTER, mouse click or numeric keys)
 // ================================================================================================
-void DCP06ApplicationMenuDlgC::OnSelectionDone(void)
+void ApplicationMenuDialog::OnSelectionDone(void)
 {
 	short unId = GetSelected();
 	
@@ -160,14 +160,14 @@ void DCP06ApplicationMenuDlgC::OnSelectionDone(void)
 // ================================================================================================
 // Description: OnF1Pressed
 // ================================================================================================
-void DCP06ApplicationMenuDlgC::OnF1Pressed(void)
+void ApplicationMenuDialog::OnF1Pressed(void)
 {
 
 	short unId = GetSelected();
 	
-	/*if(m_pDCP06Model->bDemoMode)
+	/*if(m_pModel->bDemoMode)
 	{
-		DCP06MsgBoxC msgBox;
+		MsgBox msgBox;
 		msgBox.ShowMessageOk(StringC(AT_DCP06,M_DCP_NOT_AVAILABLE_IN_DEMO_TOK ));
 		Close(EC_KEY_ESC);
 	}

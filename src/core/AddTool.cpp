@@ -49,7 +49,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -62,15 +62,15 @@
 
 
 // ================================================================================================
-// ====================================  DCP06AddToolDlgC   =======================================
+// ====================================  AddToolDialog   =======================================
 // ================================================================================================
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06AddToolDlgC::DCP06AddToolDlgC(DCP::DCP06ModelC * pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+DCP::AddToolDialog::AddToolDialog(DCP::Model * pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
 					m_pToolId(0), m_pTargetType(0), m_pConstant(0),m_pToolX(0), m_pToolY(0),
-					m_pToolZ(0),m_pDCP06Model(pDCP06Model)
+					m_pToolZ(0),m_pModel(pModel)
 
 
 {
@@ -81,7 +81,7 @@ DCP::DCP06AddToolDlgC::DCP06AddToolDlgC(DCP::DCP06ModelC * pDCP06Model):GUI::Mod
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06AddToolDlgC::~DCP06AddToolDlgC()
+DCP::AddToolDialog::~AddToolDialog()
 {
 
 }
@@ -89,7 +89,7 @@ DCP::DCP06AddToolDlgC::~DCP06AddToolDlgC()
 // ================================================================================================
 // Description: OnInitDialog
 // ================================================================================================
-void DCP::DCP06AddToolDlgC::OnInitDialog(void)
+void DCP::AddToolDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -131,7 +131,7 @@ void DCP::DCP06AddToolDlgC::OnInitDialog(void)
 	m_pToolX = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pToolX->SetId(eToolX);
 	m_pToolX->SetText(StringC(AT_DCP06,P_DCP_TOOL_X_TOK));
-	m_pToolX->GetFloatInputCtrl()->SetDecimalPlaces(m_pDCP06Model->m_nDecimals);
+	m_pToolX->GetFloatInputCtrl()->SetDecimalPlaces(m_pModel->m_nDecimals);
 	m_pToolX->GetFloatInputCtrl()->SetRange(TOOL_VALUE_MIN,TOOL_VALUE_MAX);
 	//m_pXDsg->GetFlexFloatInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pToolX->SetEmptyAllowed(true);
@@ -143,7 +143,7 @@ void DCP::DCP06AddToolDlgC::OnInitDialog(void)
 	m_pToolY = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pToolY->SetId(eToolY);
 	m_pToolY->SetText(StringC(AT_DCP06,P_DCP_TOOL_Y_TOK));
-	m_pToolY->GetFloatInputCtrl()->SetDecimalPlaces(m_pDCP06Model->m_nDecimals);
+	m_pToolY->GetFloatInputCtrl()->SetDecimalPlaces(m_pModel->m_nDecimals);
 	//m_pXDsg->GetFlexFloatInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pToolY->SetEmptyAllowed(true);
 	//m_pToolY->SetAutoColon(false);
@@ -154,7 +154,7 @@ void DCP::DCP06AddToolDlgC::OnInitDialog(void)
 	m_pToolZ = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pToolZ->SetId(eToolZ);
 	m_pToolZ->SetText(StringC(AT_DCP06,P_DCP_TOOL_Z_TOK));
-	m_pToolZ->GetFloatInputCtrl()->SetDecimalPlaces(m_pDCP06Model->m_nDecimals);
+	m_pToolZ->GetFloatInputCtrl()->SetDecimalPlaces(m_pModel->m_nDecimals);
 	//m_pXDsg->GetFlexFloatInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pToolZ->SetEmptyAllowed(true);
 	//m_pToolZ->SetAutoColon(false);
@@ -167,7 +167,7 @@ void DCP::DCP06AddToolDlgC::OnInitDialog(void)
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP06AddToolDlgC::UpdateData()
+void DCP::AddToolDialog::UpdateData()
 {	
 	GetDataModel()->tool.constant = m_pConstant->GetFloatInputCtrl()->GetDouble();
 	GetDataModel()->tool.x = m_pToolX->GetFloatInputCtrl()->GetDouble();
@@ -185,7 +185,7 @@ void DCP::DCP06AddToolDlgC::UpdateData()
 // ================================================================================================
 // Description: UpdateData
 // ================================================================================================
-void DCP::DCP06AddToolDlgC::OnDialogActivated()
+void DCP::AddToolDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
@@ -193,7 +193,7 @@ void DCP::DCP06AddToolDlgC::OnDialogActivated()
 // ================================================================================================
 // Description: refresh all controls
 // ================================================================================================
-void DCP::DCP06AddToolDlgC::RefreshControls()
+void DCP::AddToolDialog::RefreshControls()
 {
 	if( m_pToolId && m_pTargetType && m_pConstant  && m_pToolX && m_pToolY &&  m_pToolZ)
 	{
@@ -215,14 +215,14 @@ void DCP::DCP06AddToolDlgC::RefreshControls()
 // ================================================================================================
 // Description: SetModel
 // ================================================================================================
-bool DCP::DCP06AddToolDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::AddToolDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06AddToolModelC* pDCP06Model = dynamic_cast< DCP::DCP06AddToolModelC* >( pModel );
+    DCP::AddToolModel* pModel = dynamic_cast< DCP::AddToolModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -234,24 +234,24 @@ bool DCP::DCP06AddToolDlgC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: 
 // ================================================================================================
-DCP::DCP06AddToolModelC* DCP::DCP06AddToolDlgC::GetDataModel() const
+DCP::AddToolModel* DCP::AddToolDialog::GetDataModel() const
 {
-    return (DCP::DCP06AddToolModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::AddToolModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP06AddToolControllerC===================================
+// ====================================  AddToolController===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
 // 
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06AddToolControllerC);
+OBS_IMPLEMENT_EXECUTE(DCP::AddToolController);
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06AddToolControllerC::DCP06AddToolControllerC(DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL ), m_pDCP06Model(pDCP06Model),m_pOnApplicationClosedObserver(OBS_METHOD_TO_PARAM0(DCP06AddToolControllerC, OnApplicationClosed), this)
+DCP::AddToolController::AddToolController(Model *pModel)
+    : m_pDlg( nullptr ), m_pModel(pModel),m_pOnApplicationClosedObserver(OBS_METHOD_TO_PARAM0(AddToolController, OnApplicationClosed), this)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -259,7 +259,7 @@ DCP::DCP06AddToolControllerC::DCP06AddToolControllerC(DCP06ModelC *pDCP06Model)
     SetTitle(StringC( AT_DCP06, T_DCP_ADD_TOOL_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06AddToolDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::AddToolDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( ADD_TOOL_DLG, m_pDlg, true );
 
     // Set the function key
@@ -288,7 +288,7 @@ DCP::DCP06AddToolControllerC::DCP06AddToolControllerC(DCP06ModelC *pDCP06Model)
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06AddToolControllerC::~DCP06AddToolControllerC()
+DCP::AddToolController::~AddToolController()
 {
 
 }
@@ -296,7 +296,7 @@ DCP::DCP06AddToolControllerC::~DCP06AddToolControllerC()
 // ================================================================================================
 // Description: SetModel
 // ================================================================================================
-bool DCP::DCP06AddToolControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::AddToolController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -307,12 +307,12 @@ bool DCP::DCP06AddToolControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -325,9 +325,9 @@ bool DCP::DCP06AddToolControllerC::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: F1
 // ================================================================================================
-void DCP::DCP06AddToolControllerC::OnF1Pressed()
+void DCP::AddToolController::OnF1Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -337,7 +337,7 @@ void DCP::DCP06AddToolControllerC::OnF1Pressed()
 	ABL::CommandFactoryI* poCommandFactory = 
 		ABL::CommandFactoryContainerC::Instance()->GetFactory((unsigned int) ulCommandId);
 	
-	if(NULL != poCommandFactory)
+	if(nullptr != poCommandFactory)
 	{
 		if(poCommandFactory->CanExecute())
 			poCommandFactory->Execute();
@@ -348,9 +348,9 @@ void DCP::DCP06AddToolControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F6
 // ================================================================================================
-void DCP::DCP06AddToolControllerC::OnF6Pressed()
+void DCP::AddToolController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -369,14 +369,14 @@ void DCP::DCP06AddToolControllerC::OnF6Pressed()
 // ================================================================================================
 // Description: React on close of tabbed dialog
 // ================================================================================================
-void DCP::DCP06AddToolControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::AddToolController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::DCP06AddToolControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::AddToolController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -385,7 +385,7 @@ void DCP::DCP06AddToolControllerC::OnActiveControllerClosed( int lCtrlID, int lE
 // ================================================================================================
 // Description: OnApplicationClosed
 // ================================================================================================
-void DCP::DCP06AddToolControllerC::OnApplicationClosed(int unNewApp,  int ulAppOwner)
+void DCP::AddToolController::OnApplicationClosed(int unNewApp,  int ulAppOwner)
 {	
 	// update prism constant value
 	//if(unNewApp == 	ABL::CMD_MGMT_REFLECTORS_ID)
@@ -394,14 +394,14 @@ void DCP::DCP06AddToolControllerC::OnApplicationClosed(int unNewApp,  int ulAppO
 
 
 // ================================================================================================
-// ====================================  DCP06AddToolModelC =======================================
+// ====================================  AddToolModel =======================================
 // ================================================================================================
 
 
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::DCP06AddToolModelC::DCP06AddToolModelC()
+DCP::AddToolModel::AddToolModel()
 {
 	
 }
@@ -409,6 +409,6 @@ DCP::DCP06AddToolModelC::DCP06AddToolModelC()
 // ================================================================================================
 // Description: Destructor
 // ================================================================================================
-DCP::DCP06AddToolModelC::~DCP06AddToolModelC()
+DCP::AddToolModel::~AddToolModel()
 {
 }

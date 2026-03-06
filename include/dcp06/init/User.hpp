@@ -42,18 +42,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06UserDlgC;
+	class Model;
+	class UserDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06UserControllerC : public GUI::ControllerC
+    class UserController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06UserControllerC();
-			~DCP06UserControllerC();
+            UserController();
+			~UserController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -69,24 +69,24 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06UserControllerC( const DCP06UserControllerC& oDCP06UserController )
+            UserController( const UserController& oUserController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06UserControllerC& operator=( const DCP06UserControllerC& oDCP06UserController )
+            UserController& operator=( const UserController& oUserController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06UserDlgC* m_pDlg;
+            UserDialog* m_pDlg;
     };
 
 
-	class DCP06UserDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class UserDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -104,10 +104,10 @@ namespace DCP
 				eUser10
 			};
 
-		   DCP06UserDlgC();
+		   UserDialog();
 
             // Description: Destructor
-            virtual ~DCP06UserDlgC();
+            virtual ~UserDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -120,7 +120,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			// Description: add all controls
             

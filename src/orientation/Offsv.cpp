@@ -53,7 +53,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -67,20 +67,20 @@
 
 // USER DIALOG
 
-DCP::DCP06OffsvDlgC::DCP06OffsvDlgC(DCP::DCP06ModelC* pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pFile(0),m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pDCP06Model(pDCP06Model),m_sFile(L"")
+DCP::OffsetVDialog::OffsetVDialog(DCP::Model* pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+	m_pFile(0),m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel),m_sFile(L"")
 {
 	//SetTxtApplicationId(AT_DCP06);
 }
 
 
             // Description: Destructor
-DCP::DCP06OffsvDlgC::~DCP06OffsvDlgC()
+DCP::OffsetVDialog::~OffsetVDialog()
 {
 
 }
 
-void DCP::DCP06OffsvDlgC::OnInitDialog(void)
+void DCP::OffsetVDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -109,7 +109,7 @@ void DCP::DCP06OffsvDlgC::OnInitDialog(void)
 	m_pX = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pX->SetId(eX);
 	m_pX->SetText(StringC(AT_DCP06,P_DCP_X_TOK));
-	m_pX->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pDCP06Model->m_nDecimals);
+	m_pX->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pModel->m_nDecimals);
 	m_pX->SetEmptyAllowed(true);
 	// m_pX->GetFloatInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	AddCtrl(m_pX);
@@ -117,7 +117,7 @@ void DCP::DCP06OffsvDlgC::OnInitDialog(void)
 	m_pY = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pY->SetId(eY);
 	m_pY->SetText(StringC(AT_DCP06,P_DCP_Y_TOK));
-	m_pY->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pDCP06Model->m_nDecimals);
+	m_pY->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pModel->m_nDecimals);
 	m_pY->SetEmptyAllowed(true);
 	// m_pY->GetFloatInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	AddCtrl(m_pY);
@@ -125,7 +125,7 @@ void DCP::DCP06OffsvDlgC::OnInitDialog(void)
 	m_pZ = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pZ->SetId(eZ);
 	m_pZ->SetText(StringC(AT_DCP06,P_DCP_Z_TOK));
-	m_pZ->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pDCP06Model->m_nDecimals);
+	m_pZ->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pModel->m_nDecimals);
 	m_pZ->SetEmptyAllowed(true);
 	// m_pZ->GetFloatInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	AddCtrl(m_pZ);
@@ -133,12 +133,12 @@ void DCP::DCP06OffsvDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_OFFSET_POINT_TOK,0);
 }
 
-void DCP::DCP06OffsvDlgC::OnDialogActivated()
+void DCP::OffsetVDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
 
-void DCP::DCP06OffsvDlgC::UpdateData()
+void DCP::OffsetVDialog::UpdateData()
 {
 		if(!m_pX->GetFloatInputCtrl()->IsEmpty() && !m_pY->GetFloatInputCtrl()->IsEmpty() &&
 		!m_pZ->GetFloatInputCtrl()->IsEmpty())
@@ -152,7 +152,7 @@ void DCP::DCP06OffsvDlgC::UpdateData()
 }
 
 // Description: refresh all controls
-void DCP::DCP06OffsvDlgC::RefreshControls()
+void DCP::OffsetVDialog::RefreshControls()
 {
 	if(m_pX && m_pY && m_pZ && m_pFile && m_pPointId)
 	{
@@ -188,14 +188,14 @@ void DCP::DCP06OffsvDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06OffsvDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::OffsetVDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06OffsVModelC* pDCP06Model = dynamic_cast< DCP::DCP06OffsVModelC* >( pModel );
+    DCP::OffsetVModel* pModel = dynamic_cast< DCP::OffsetVModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -205,19 +205,19 @@ bool DCP::DCP06OffsvDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06OffsVModelC* DCP::DCP06OffsvDlgC::GetDataModel() const
+DCP::OffsetVModel* DCP::OffsetVDialog::GetDataModel() const
 {
-    return (DCP::DCP06OffsVModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::OffsetVModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
-StringC DCP::DCP06OffsvDlgC::getfileName()
+StringC DCP::OffsetVDialog::getfileName()
 {
 	StringC sSelectedFile = m_pFile->GetStringInputCtrl()->GetString();
 	return sSelectedFile;
 }
 
-void DCP::DCP06OffsvDlgC::delete_point()
+void DCP::OffsetVDialog::delete_point()
 {
 	StringC strMsg;
 	strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_POINT_TOK);
@@ -225,7 +225,7 @@ void DCP::DCP06OffsvDlgC::delete_point()
 	StringC strActivePointId(L"");
 
 	strMsg.Format(strMsg, (const wchar_t*)strActivePointId);
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
 		memset(&GetDataModel()->ovalues_buff,0,sizeof(S_POINT_BUFF));
@@ -233,7 +233,7 @@ void DCP::DCP06OffsvDlgC::delete_point()
 	}
 }
 // ================================================================================================
-void DCP::DCP06OffsvDlgC::SelectFile(StringC sFile)
+void DCP::OffsetVDialog::SelectFile(StringC sFile)
 {
 	m_sFile = sFile;
 	RefreshControls();
@@ -241,14 +241,14 @@ void DCP::DCP06OffsvDlgC::SelectFile(StringC sFile)
 }
 
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06OffsvControllerC::DCP06OffsvControllerC(DCP::DCP06ModelC* pDCP06Model, short display)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::OffsetVController::OffsetVController(DCP::Model* pModel, short display)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -261,7 +261,7 @@ DCP::DCP06OffsvControllerC::DCP06OffsvControllerC(DCP::DCP06ModelC* pDCP06Model,
 	
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06OffsvDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::OffsetVDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( OFFSV_DLG, m_pDlg, true );
 
     // Set the function key
@@ -298,12 +298,12 @@ DCP::DCP06OffsvControllerC::DCP06OffsvControllerC(DCP::DCP06ModelC* pDCP06Model,
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06OffsvControllerC::~DCP06OffsvControllerC()
+DCP::OffsetVController::~OffsetVController()
 {
 
 }
 // Description: Route model to everybody else
-bool DCP::DCP06OffsvControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::OffsetVController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -314,12 +314,12 @@ bool DCP::DCP06OffsvControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -330,29 +330,29 @@ bool DCP::DCP06OffsvControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // 3DFile
-void DCP::DCP06OffsvControllerC::OnF1Pressed()
+void DCP::OffsetVController::OnF1Pressed()
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
 
-		DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
+		DCP::SelectFileModel* pModel = new SelectFileModel;
 
-		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ONLY_ADF, sTitle, m_pDCP06Model) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle, m_pModel) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
 }
 
 // PID
-void DCP::DCP06OffsvControllerC::OnF2Pressed()
+void DCP::OffsetVController::OnF2Pressed()
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
@@ -360,7 +360,7 @@ void DCP::DCP06OffsvControllerC::OnF2Pressed()
 
 		// get adf file name
 
-		AdfFileFunc adf(m_pDCP06Model);
+		AdfFileFunc adf(m_pModel);
 		adf.always_single = 1;
 
 		StringC sSelectedFile = m_pDlg->getfileName();
@@ -369,7 +369,7 @@ void DCP::DCP06OffsvControllerC::OnF2Pressed()
 		{
 			
 			// and select point from file
-			DCP::DCP06SelectOnePointModelC* pModel = new DCP::DCP06SelectOnePointModelC();
+			DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
 
 			int iCount = adf.GetPointList(&pModel->points[0],MAX_SELECT_POINTS, DESIGN);
 			if(iCount)
@@ -378,9 +378,9 @@ void DCP::DCP06OffsvControllerC::OnF2Pressed()
 				pModel->sSelectedFile = sSelectedFile;
 				pModel->m_iDef = DESIGN;
 				
-				if(GetController(SELECT_ONE_POINT_CONTROLLER) == NULL)
+				if(GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
 				{
-					(void)AddController( SELECT_ONE_POINT_CONTROLLER, new DCP::DCP06SelectOnePointControllerC(m_pDCP06Model));
+					(void)AddController( SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
 				}
 				(void)GetController( SELECT_ONE_POINT_CONTROLLER )->SetModel(pModel);
 				SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
@@ -390,22 +390,22 @@ void DCP::DCP06OffsvControllerC::OnF2Pressed()
 		// select file
 		else
 		{
-			DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
+			DCP::SelectFileModel* pModel = new SelectFileModel;
 
-			if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+			if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 			{
 				StringC sTitle = GetTitle();	
-				(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ONLY_ADF, sTitle, m_pDCP06Model) );
+				(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle, m_pModel) );
 			}
 			(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 			SetActiveController(SELECT_FILE_CONTROLLER, true);
 		}
 
-/*		DCP::DCP06SelectPointModelC* pModel = new DCP06SelectPointModelC;
+/*		DCP::SelectPointModel* pModel = new SelectPointModel;
 
-		if(GetController(SELECT_POINT_CONTROLLER) == NULL)
+		if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP06SelectPointControllerC );
+			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
 		}
 
 		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
@@ -416,15 +416,15 @@ void DCP::DCP06OffsvControllerC::OnF2Pressed()
 }
 
 // MEASV
-void DCP::DCP06OffsvControllerC::OnF5Pressed()
+void DCP::OffsetVController::OnF5Pressed()
 {
-  if (m_pDlg == NULL)
+  if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	DCP::DCP06OffsVModelC* pModel = new DCP::DCP06OffsVModelC();
+	DCP::OffsetVModel* pModel = new DCP::OffsetVModel();
 	// copy point id
 	sprintf(m_pDlg->GetDataModel()->ref_point_buff.point_id,"%s",m_pDlg->GetDataModel()->ovalues_buff.point_id);
 	
@@ -434,9 +434,9 @@ void DCP::DCP06OffsvControllerC::OnF5Pressed()
 	
 
 
-	if(GetController(MEASV_CONTROLLER) == NULL)
+	if(GetController(MEASV_CONTROLLER) == nullptr)
 	{
-		(void)AddController( MEASV_CONTROLLER, new DCP::DCP06MeasVControllerC(m_pDCP06Model));
+		(void)AddController( MEASV_CONTROLLER, new DCP::MeasVController(m_pModel));
 	}
 	(void)GetController( MEASV_CONTROLLER )->SetModel(pModel);
 	SetActiveController(MEASV_CONTROLLER, true);
@@ -445,9 +445,9 @@ void DCP::DCP06OffsvControllerC::OnF5Pressed()
 
 
 // CONT
-void DCP::DCP06OffsvControllerC::OnF6Pressed()
+void DCP::OffsetVController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -463,24 +463,24 @@ void DCP::DCP06OffsvControllerC::OnF6Pressed()
 }
 
 // DEL
-void DCP::DCP06OffsvControllerC::OnSHF2Pressed()
+void DCP::OffsetVController::OnSHF2Pressed()
 {
 	m_pDlg->delete_point();
 }
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06OffsvControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::OffsetVController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06OffsvControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::OffsetVController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == MEASV_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 
-		DCP::DCP06OffsVModelC* pModel = (DCP::DCP06OffsVModelC*) GetController( MEASV_CONTROLLER )->GetModel();		
+		DCP::OffsetVModel* pModel = (DCP::OffsetVModel*) GetController( MEASV_CONTROLLER )->GetModel();		
 			// copy values into dommodel
 		memcpy(&m_pDlg->GetDataModel()->ovalues_buff, &pModel->ovalues_buff, sizeof(S_POINT_BUFF));
 		memcpy(&m_pDlg->GetDataModel()->ovalues_tool_buff,  &pModel->ovalues_tool_buff, sizeof(S_POINT_BUFF));
@@ -494,19 +494,19 @@ void DCP::DCP06OffsvControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	if(lCtrlID == SELECT_ONE_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 
-		DCP::DCP06SelectOnePointModelC* pModel = (DCP::DCP06SelectOnePointModelC*) GetController( SELECT_ONE_POINT_CONTROLLER )->GetModel();		
+		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*) GetController( SELECT_ONE_POINT_CONTROLLER )->GetModel();		
 		// copy values into dommodel
 		int iSelected = pModel->iSelectedNo;
 		
-		AdfFileFunc adf(m_pDCP06Model);
+		AdfFileFunc adf(m_pModel);
 		adf.always_single = 1;
-		DCP06CommonC common(m_pDCP06Model);
+		Common common(m_pModel);
 		if(adf.setFile(pModel->sSelectedFile))
 		{	
 			char bXmea[15], bYmea[15], bZmea[15];
 			char bXdes[15], bYdes[15], bZdes[15],pid[7];//,fname[13];
 			
-			adf.form_pnt1((int) iSelected, pid, NULL, bXmea, bXdes, NULL, bYmea, bYdes, NULL, bZmea, bZdes, NULL);
+			adf.form_pnt1((int) iSelected, pid, nullptr, bXmea, bXdes, nullptr, bYmea, bYdes, nullptr, bZmea, bZdes, nullptr);
 			//if(pModel->iActual_or_design == DESIGN)
 			if(pModel->points[iSelected-1].bDesignSelected)
 			{
@@ -541,17 +541,17 @@ void DCP::DCP06OffsvControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		StringC strSelectedFile = pModel->m_strSelectedFile;
 		m_pDlg->SelectFile(strSelectedFile);
 		
-		AdfFileFunc adf(m_pDCP06Model);
+		AdfFileFunc adf(m_pModel);
 		adf.always_single = 1;
 		if(adf.setFile(strSelectedFile))
 		{
 			
 			// and select point from file
-			DCP::DCP06SelectOnePointModelC* pModel = new DCP::DCP06SelectOnePointModelC();
+			DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
 
 			int iCount = adf.GetPointList(&pModel->points[0],MAX_SELECT_POINTS, DESIGN);
 			if(iCount)
@@ -560,9 +560,9 @@ void DCP::DCP06OffsvControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 				pModel->sSelectedFile = strSelectedFile;
 				pModel->m_iDef = DESIGN;
 				
-				if(GetController(SELECT_ONE_POINT_CONTROLLER) == NULL)
+				if(GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
 				{
-					(void)AddController( SELECT_ONE_POINT_CONTROLLER, new DCP::DCP06SelectOnePointControllerC(m_pDCP06Model));
+					(void)AddController( SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
 				}
 				(void)GetController( SELECT_ONE_POINT_CONTROLLER )->SetModel(pModel);
 				SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
@@ -576,51 +576,51 @@ void DCP::DCP06OffsvControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 	{	
 		if(lExitCode == HIDDEN_POINT)
 		{
-			if(GetController(HIDDENPOINT_CONTROLLER) == NULL)
+			if(GetController(HIDDENPOINT_CONTROLLER) == nullptr)
 			{
-				(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::DCP06HiddenPointControllerC );
+				(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::HiddenPointController );
 			}
-			(void)GetController( HIDDENPOINT_CONTROLLER )->SetModel( m_pDlg->GetDCP06Model());
+			(void)GetController( HIDDENPOINT_CONTROLLER )->SetModel( m_pDlg->GetModel());
 			SetActiveController(HIDDENPOINT_CONTROLLER, true);
 
 
 		}
 		else if(lExitCode == X_OR_Y_OR_Z)
 		{
-			if(GetController(XYZ_CONTROLLER) == NULL)
+			if(GetController(XYZ_CONTROLLER) == nullptr)
 			{
-				(void)AddController( XYZ_CONTROLLER, new DCP::DCP06XYZControllerC );
+				(void)AddController( XYZ_CONTROLLER, new DCP::XYZController );
 			}
-			(void)GetController( XYZ_CONTROLLER )->SetModel( m_pDCP06OffsvDlg->GetDCP06Model());
+			(void)GetController( XYZ_CONTROLLER )->SetModel( m_pDlg->GetModel());
 			SetActiveController(XYZ_CONTROLLER, true);
 		}
 		else if(lExitCode == CIRCLE)
 		{
-			if(GetController(CIRCLE_CONTROLLER) == NULL)
+			if(GetController(CIRCLE_CONTROLLER) == nullptr)
 			{
-				(void)AddController( CIRCLE_CONTROLLER, new DCP::DCP06CircleControllerC );
+				(void)AddController( CIRCLE_CONTROLLER, new DCP::CircleController );
 			}
-			(void)GetController( CIRCLE_CONTROLLER )->SetModel( m_pDCP06OffsvDlg->GetDCP06Model());
+			(void)GetController( CIRCLE_CONTROLLER )->SetModel( m_pDlg->GetModel());
 			SetActiveController(CIRCLE_CONTROLLER, true);
 
 
 		}
 		else if(lExitCode == SEPARATE_REC)
 		{
-			if(GetController(SEPARATE_RECORDING_CONTROLLER) == NULL)
+			if(GetController(SEPARATE_RECORDING_CONTROLLER) == nullptr)
 			{
-				(void)AddController( SEPARATE_RECORDING_CONTROLLER, new DCP::DCP06SeparateRecControllerC );
+				(void)AddController( SEPARATE_RECORDING_CONTROLLER, new DCP::SeparateRecController );
 			}
-			(void)GetController( SEPARATE_RECORDING_CONTROLLER )->SetModel( m_pDCP06OffsvDlg->GetDCP06Model());
+			(void)GetController( SEPARATE_RECORDING_CONTROLLER )->SetModel( m_pDlg->GetModel());
 			SetActiveController(SEPARATE_RECORDING_CONTROLLER, true);
 		}
 		else if(lExitCode == HOME_POINTS)
 		{
-			if(GetController(HOME_POINTS_CONTROLLER) == NULL)
+			if(GetController(HOME_POINTS_CONTROLLER) == nullptr)
 			{
-				(void)AddController( HOME_POINTS_CONTROLLER, new DCP::DCP06HomePointsControllerC );
+				(void)AddController( HOME_POINTS_CONTROLLER, new DCP::HomePointsController );
 			}
-			(void)GetController( HOME_POINTS_CONTROLLER )->SetModel( m_pDCP06OffsvDlg->GetDCP06Model());
+			(void)GetController( HOME_POINTS_CONTROLLER )->SetModel( m_pDlg->GetModel());
 			SetActiveController(HOME_POINTS_CONTROLLER, true);
 
 		}
@@ -638,11 +638,11 @@ void DCP::DCP06OffsvControllerC::OnActiveControllerClosed( int lCtrlID, int lExi
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06OffsVModelC::DCP06OffsVModelC()
+DCP::OffsetVModel::OffsetVModel()
 {
 	// copy from DCP05Model
 }
 
-DCP::DCP06OffsVModelC::~DCP06OffsVModelC()
+DCP::OffsetVModel::~OffsetVModel()
 {
 }

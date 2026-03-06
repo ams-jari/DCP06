@@ -50,7 +50,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectOnePointDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::SelectOnePointDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -62,8 +62,8 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP::DCP06ResPomDlgC::DCP06ResPomDlgC(DCP::DCP06PomModelC *pModel):poMultiColCtrl(NULL),m_pInfo1(NULL),
-	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06SelectOnePointDlgC, OnChanged), this),
+DCP::ResBestFitDialog::ResBestFitDialog(DCP::BestFitModel *pModel):poMultiColCtrl(nullptr),m_pInfo1(nullptr),
+	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(SelectOnePointDialog, OnChanged), this),
 	m_pDataModel(pModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
@@ -75,7 +75,7 @@ DCP::DCP06ResPomDlgC::DCP06ResPomDlgC(DCP::DCP06PomModelC *pModel):poMultiColCtr
 	
 }
 // Description: Destructor
-DCP::DCP06ResPomDlgC::~DCP06ResPomDlgC()
+DCP::ResBestFitDialog::~ResBestFitDialog()
 {
 	 if(m_pCommon)
 	 {
@@ -84,11 +84,11 @@ DCP::DCP06ResPomDlgC::~DCP06ResPomDlgC()
 	 }
 }
 
-void DCP::DCP06ResPomDlgC::OnInitDialog(void)
+void DCP::ResBestFitDialog::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
-	m_pCommon = new DCP06CommonC(GetDCP06Model());
+	m_pCommon = new Common(GetModel());
 
 	GUI::DesktopC::Instance()->UpdateFunctionKeys();
 
@@ -135,7 +135,7 @@ void DCP::DCP06ResPomDlgC::OnInitDialog(void)
 
 
 
-void DCP::DCP06ResPomDlgC::OnF1Pressed(void)
+void DCP::ResBestFitDialog::OnF1Pressed(void)
 {
 	
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
@@ -150,7 +150,7 @@ void DCP::DCP06ResPomDlgC::OnF1Pressed(void)
 		iMin = 3;
 	else
 	{
-		iMin = (!m_pCommon->get_rotation_status() && GetDCP06Model()->dom_hz_plane) ? 2 : 3;
+		iMin = (!m_pCommon->get_rotation_status() && GetModel()->dom_hz_plane) ? 2 : 3;
 	}
 	
 	
@@ -161,7 +161,7 @@ void DCP::DCP06ResPomDlgC::OnF1Pressed(void)
 		{
 			StringC strText;
 			strText.LoadTxt(AT_DCP06,M_DCP_CANNOT_REJECT_PNT_TOK);
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			
 			msgbox.ShowMessageOk(strText);
 			return;
@@ -194,7 +194,7 @@ void DCP::DCP06ResPomDlgC::OnF1Pressed(void)
 						}					
 
 		
-	DCP06CalcPomC calcpom(m_pDataModel,GetDCP06Model());
+	CalcBestFit calcpom(m_pDataModel,GetModel());
 	if(calcpom.calc_transform())
 	{
 		m_pDataModel->calculated = true;
@@ -203,7 +203,7 @@ void DCP::DCP06ResPomDlgC::OnF1Pressed(void)
 	RefreshControls();		
 }
 
-void DCP::DCP06ResPomDlgC::OnDialogActivated()
+void DCP::ResBestFitDialog::OnDialogActivated()
 {
 	RefreshControls();
 } 
@@ -212,7 +212,7 @@ void DCP::DCP06ResPomDlgC::OnDialogActivated()
 //*********************************************************************************
 //
 //*********************************************************************************
-short DCP::DCP06ResPomDlgC::get_max_res()
+short DCP::ResBestFitDialog::get_max_res()
 {
 short i, count=0, pno=1;
 double max=0.0, dist; //, dist2=0.0;
@@ -245,7 +245,7 @@ double max=0.0, dist; //, dist2=0.0;
 }
 
 // Description: refresh all controls
-void DCP::DCP06ResPomDlgC::RefreshControls()
+void DCP::ResBestFitDialog::RefreshControls()
 {
 	
 	short iMax=0;
@@ -286,13 +286,13 @@ void DCP::DCP06ResPomDlgC::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+.*f", GetDCP06Model()->m_nDecimals, m_pDataModel->point_RES[i].x);
+			sprintf(temp,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].x);
 			sX = temp;
 
-			sprintf(temp,"%+.*f", GetDCP06Model()->m_nDecimals, m_pDataModel->point_RES[i].y);
+			sprintf(temp,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].y);
 			sY = temp;
 
-			sprintf(temp,"%+.*f", GetDCP06Model()->m_nDecimals, m_pDataModel->point_RES[i].z);
+			sprintf(temp,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].z);
 			sZ = temp;
 
 
@@ -322,7 +322,7 @@ void DCP::DCP06ResPomDlgC::RefreshControls()
 	// set title with rms and point count
 	short iCount = m_pCommon->defined_points_count_in_line(&GetDataModel()->line_buff[0],0);
 	StringC sTemp = sTitle;
-	sTemp.Format(sTemp, m_pDCP06Model->m_nDecimals,rms,iCount);
+	sTemp.Format(sTemp, m_pModel->m_nDecimals,rms,iCount);
 	SetTitleStr(sTemp);
 	*/
 	//EndDraw();
@@ -331,7 +331,7 @@ void DCP::DCP06ResPomDlgC::RefreshControls()
 /************************************************************************
 *************************************************************************/
 /*
-double DCP::DCP06ResPomDlgC::get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms)
+double DCP::ResBestFitDialog::get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms)
 {
 
 short i, count=0;
@@ -380,7 +380,7 @@ double max=0.0, dist, dist2=0.0, dist3;
 /************************************************************************
 *************************************************************************/
 /*
-double DCP::DCP06ResPomDlgC::calc_pdist(S_LINE_BUFF *line, short pno)
+double DCP::ResBestFitDialog::calc_pdist(S_LINE_BUFF *line, short pno)
 {
 struct ams_vector m;
 struct line wline;
@@ -404,7 +404,7 @@ double dist;
 			return dist;
 }
 */
-void DCP::DCP06ResPomDlgC::UpdateData()
+void DCP::ResBestFitDialog::UpdateData()
 {
 	/*
 	StringC sSelected;
@@ -416,14 +416,14 @@ void DCP::DCP06ResPomDlgC::UpdateData()
 		
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06ResPomDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::ResBestFitDialog::SetModel( GUI::ModelC* pModel )
 {
 	  // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -434,17 +434,17 @@ bool DCP::DCP06ResPomDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06ResPomDlgC::GetDCP06Model() const
+DCP::Model* DCP::ResBestFitDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP06ResPomControllerC::DCP06ResPomControllerC(DCP::DCP06PomModelC *pModel)
-    : m_pDlg( NULL ),m_pDataModel(pModel)
+DCP::ResBestFitController::ResBestFitController(DCP::BestFitModel *pModel)
+    : m_pDlg( nullptr ),m_pDataModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -456,7 +456,7 @@ DCP::DCP06ResPomControllerC::DCP06ResPomControllerC(DCP::DCP06PomModelC *pModel)
 	SetTitle(sTitle);
 
     // Create a dialog
-     m_pDlg = new DCP::DCP06ResPomDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+     m_pDlg = new DCP::ResBestFitDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( RES_BESTFIT_DLG, m_pDlg, true );
 
     // Set the function key
@@ -492,13 +492,13 @@ DCP::DCP06ResPomControllerC::DCP06ResPomControllerC(DCP::DCP06PomModelC *pModel)
 	*/
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06ResPomControllerC::~DCP06ResPomControllerC()
+DCP::ResBestFitController::~ResBestFitController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06ResPomControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::ResBestFitController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -509,12 +509,12 @@ bool DCP::DCP06ResPomControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -528,9 +528,9 @@ bool DCP::DCP06ResPomControllerC::SetModel( GUI::ModelC* pModel )
 
 
 // CONT
-void DCP::DCP06ResPomControllerC::OnF6Pressed() 
+void DCP::ResBestFitController::OnF6Pressed() 
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -547,12 +547,12 @@ void DCP::DCP06ResPomControllerC::OnF6Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06ResPomControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::ResBestFitController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06ResPomControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::ResBestFitController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );

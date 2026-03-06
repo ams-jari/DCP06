@@ -40,18 +40,18 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP06ModelC;
-	//class DCP06ToolDlgC;
+	//class Model;
+	//class ToolDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06MsgBoxC
+    class MsgBox
     {
         public:
 
             // Description: Constructor
-            DCP06MsgBoxC();
-			~DCP06MsgBoxC();
+            MsgBox();
+			~MsgBox();
 			
 			bool ShowMessageYesNo(StringC strMessage, StringC Title=L"");	
 			void ShowMessageOk(StringC strMessage, StringC Title=L"");	

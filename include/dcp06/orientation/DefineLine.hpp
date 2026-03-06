@@ -44,18 +44,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06DefineLineDlgC;
-	class DCP06DefineLineModelC;
+    class Model;
+	class DefineLineDialog;
+	class DefineLineModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06DefineLineControllerC : public GUI::ControllerC
+    class DefineLineController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06DefineLineControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06DefineLineControllerC();
+            DefineLineController(Model* pModel);
+			~DefineLineController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -76,26 +76,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06DefineLineControllerC( const DCP06DefineLineControllerC& oDCP06DefineLineController )
+            DefineLineController( const DefineLineController& oDefineLineController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06DefineLineControllerC& operator=( const DCP06DefineLineControllerC& oDCP06DefineLineController )
+            DefineLineController& operator=( const DefineLineController& oDefineLineController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06DefineLineDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
+            DefineLineDialog* m_pDlg;
+			Model* m_pModel;
 			
     };
 
 
-    class DCP06DefineLineDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class DefineLineDialog:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -107,10 +107,10 @@ namespace DCP
 				eLineInfo3
 			};
 
-		   DCP06DefineLineDlgC(DCP06ModelC* pDCP06Model);
+		   DefineLineDialog(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06DefineLineDlgC();
+            virtual ~DefineLineDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -124,7 +124,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06DefineLineModelC* GetDataModel() const;
+            DefineLineModel* GetDataModel() const;
 			virtual void RefreshControls();
 
 			virtual void delete_line();
@@ -140,9 +140,9 @@ namespace DCP
 			GUI::TextCtrlC* m_pLineInfo2;
 			GUI::TextCtrlC* m_pLineInfo3;
 
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 
-			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
+			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
 			// Description: add all controls
             
@@ -155,17 +155,17 @@ namespace DCP
 			StringC m_strYLine;
 			StringC m_strZLine;
 	};
-    class DCP06DefineLineModelC : public GUI::ModelC
+    class DefineLineModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06DefineLineModelC();
+            DefineLineModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06DefineLineModelC();
+            virtual ~DefineLineModel();
 
 			short /*DCP_PLANE_TYPE*/ active_plane;
 			short /*DCP_LINE_TYPE*/  active_line; 

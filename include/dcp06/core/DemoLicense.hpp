@@ -44,14 +44,14 @@ namespace DCP
 {
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06DemoLicenseC
+    class DemoLicense
     {
         public:
 
             // Description: Constructor
-            DCP06DemoLicenseC(DCP06ModelC* pDCP06Model);
-			// DCP06CommonC();
-			~DCP06DemoLicenseC();
+            DemoLicense(Model* pModel);
+			// Common();
+			~DemoLicense();
 			  
 			void get_code_demo(int demoNumber, char *sCode);
 			bool is_license_ok(char* keycode, DateTime startDate);
@@ -65,7 +65,7 @@ namespace DCP
 			4. license 121-150
 			5. license 151-180*/
 	private:
-			DCP06ModelC *m_pDCP06Model;
+			Model *m_pModel;
     };
 };
 

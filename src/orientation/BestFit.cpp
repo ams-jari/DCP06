@@ -51,7 +51,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::DCP06UnitDlgC);
+// OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -64,7 +64,7 @@
 
 // Unit
 
-DCP::DCP06PomDlgC::DCP06PomDlgC(DCP::DCP06PomModelC* pPomModel):m_pInfo1(0), m_pFile(0), m_pPoints(0), m_pInfo2(0),
+DCP::BestFitDialog::BestFitDialog(DCP::BestFitModel* pPomModel):m_pInfo1(0), m_pFile(0), m_pPoints(0), m_pInfo2(0),
 			m_pPointMeas(0), m_pCalc(0),m_pDataModel(pPomModel)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
@@ -73,7 +73,7 @@ DCP::DCP06PomDlgC::DCP06PomDlgC(DCP::DCP06PomModelC* pPomModel):m_pInfo1(0), m_p
 
 
             // Description: Destructor
-DCP::DCP06PomDlgC::~DCP06PomDlgC()
+DCP::BestFitDialog::~BestFitDialog()
 {
 	if(m_pCommon)
 	{
@@ -82,9 +82,9 @@ DCP::DCP06PomDlgC::~DCP06PomDlgC()
 	}
 }
 
-void DCP::DCP06PomDlgC::OnInitDialog(void)
+void DCP::BestFitDialog::OnInitDialog(void)
 {
-	m_pCommon = new DCP06CommonC(GetDCP06Model());
+	m_pCommon = new Common(GetModel());
 
 	GUI::BaseDialogC::OnInitDialog();
 	//SetColonPosLong( GUI::StandardDialogC::CP_20 );
@@ -152,29 +152,29 @@ void DCP::DCP06PomDlgC::OnInitDialog(void)
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 }
 
-void DCP::DCP06PomDlgC::OnDialogActivated()
+void DCP::BestFitDialog::OnDialogActivated()
 {
-	m_pDataModel->old_active_coodinate_system = GetDCP06Model()->active_coodinate_system;
-	memcpy(m_pDataModel->matrix,GetDCP06Model()->ocsp_matrix, sizeof(double) * 16);
-	memcpy(m_pDataModel->inv_matrix,GetDCP06Model()->ocsp_inv_matrix, sizeof(double) * 16);
-	m_pDataModel->calculated = (GetDCP06Model()->ocsp_defined  && GetDCP06Model()->active_coodinate_system == OCSP) ? true :false;
+	m_pDataModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
+	memcpy(m_pDataModel->matrix,GetModel()->ocsp_matrix, sizeof(double) * 16);
+	memcpy(m_pDataModel->inv_matrix,GetModel()->ocsp_inv_matrix, sizeof(double) * 16);
+	m_pDataModel->calculated = (GetModel()->ocsp_defined  && GetModel()->active_coodinate_system == OCSP) ? true :false;
 
-	memcpy(&m_pDataModel->point_DCS[0], &GetDCP06Model()->POM_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_OCS[0], &GetDCP06Model()->POM_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_RES[0], &GetDCP06Model()->POM_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_DCS[0], &GetModel()->POM_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_OCS[0], &GetModel()->POM_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_RES[0], &GetModel()->POM_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	
-	m_pDataModel->INTO_CAPTURE = GetDCP06Model()->pom_into_capture;
-	m_pDataModel->INTO_TEMPLATE = GetDCP06Model()->pom_into_template;
-	m_pDataModel->ocs_defined = GetDCP06Model()->ocsp_defined;
+	m_pDataModel->INTO_CAPTURE = GetModel()->pom_into_capture;
+	m_pDataModel->INTO_TEMPLATE = GetModel()->pom_into_template;
+	m_pDataModel->ocs_defined = GetModel()->ocsp_defined;
 	RefreshControls();
 }
 
 // Description: refresh all controls
-void DCP::DCP06PomDlgC::RefreshControls()
+void DCP::BestFitDialog::RefreshControls()
 {	
 	if(m_pFile && m_pPoints && 	m_pPointMeas &&  m_pCalc)
 	{
-		DCP06CommonC common(GetDCP06Model());
+		Common common(GetModel());
 		StringC sStat=L"-";
 		if(common.get_OCS_points_count(&m_pDataModel->point_OCS[0],MAX_BESTFIT_POINTS) >= 3 && m_pDataModel->INTO_TEMPLATE)
 			sStat = L"+";
@@ -192,45 +192,45 @@ void DCP::DCP06PomDlgC::RefreshControls()
 
 		m_pPointMeas->GetStringInputCtrl()->SetString(sStat);
 		sStat = L"-";
-		if(m_pDataModel->calculated == true && m_pDataModel->ocs_defined == true && GetDCP06Model()->active_coodinate_system == OCSP)
+		if(m_pDataModel->calculated == true && m_pDataModel->ocs_defined == true && GetModel()->active_coodinate_system == OCSP)
 			sStat = L"+";
 
 		m_pCalc->GetStringInputCtrl()->SetString(sStat);
 	}
 }
 
-void DCP::DCP06PomDlgC::UpdateData()
+void DCP::BestFitDialog::UpdateData()
 {
 
 	// copy values
 
-	//m_pDataModel->old_active_coodinate_system = GetDCP06Model()->active_coodinate_system;
-	memcpy(GetDCP06Model()->ocsp_matrix,m_pDataModel->matrix, sizeof(double) * 16);
-	memcpy(GetDCP06Model()->ocsp_inv_matrix, m_pDataModel->inv_matrix, sizeof(double) * 16);
+	//m_pDataModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
+	memcpy(GetModel()->ocsp_matrix,m_pDataModel->matrix, sizeof(double) * 16);
+	memcpy(GetModel()->ocsp_inv_matrix, m_pDataModel->inv_matrix, sizeof(double) * 16);
 
-	memcpy(&GetDCP06Model()->POM_point_DCS[0],&m_pDataModel->point_DCS[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy( &GetDCP06Model()->POM_point_OCS[0], &m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&GetDCP06Model()->POM_point_RES[0],&m_pDataModel->point_RES[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&GetModel()->POM_point_DCS[0],&m_pDataModel->point_DCS[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy( &GetModel()->POM_point_OCS[0], &m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&GetModel()->POM_point_RES[0],&m_pDataModel->point_RES[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 
-	GetDCP06Model()->pom_into_capture  = m_pDataModel->INTO_CAPTURE;
-	GetDCP06Model()->pom_into_template = m_pDataModel->INTO_TEMPLATE;
-	GetDCP06Model()->ocsp_defined = m_pDataModel->ocs_defined;
+	GetModel()->pom_into_capture  = m_pDataModel->INTO_CAPTURE;
+	GetModel()->pom_into_template = m_pDataModel->INTO_TEMPLATE;
+	GetModel()->ocsp_defined = m_pDataModel->ocs_defined;
 	if(m_pDataModel->ocs_defined)
-		GetDCP06Model()->active_coodinate_system = OCSP;
+		GetModel()->active_coodinate_system = OCSP;
 	//else
-	//	GetDCP06Model()->active_coodinate_system = DCS;
-	GetDCP06Model()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_BESTFIT);
-	GetDCP06Model()->poConfigController->StoreConfigData();
+	//	GetModel()->active_coodinate_system = DCS;
+	GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_BESTFIT);
+	GetModel()->poConfigController->StoreConfigData();
 
-	GetDCP06Model()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
-	GetDCP06Model()->poConfigController->StoreConfigData();
+	GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
+	GetModel()->poConfigController->StoreConfigData();
 
 	update_bft_adf();
 
-	//GetDCP06Model()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
+	//GetModel()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
 }
 
-void DCP::DCP06PomDlgC::update_bft_adf()
+void DCP::BestFitDialog::update_bft_adf()
 {
 //	char bPid[ 100 ] ;
 	char bXmea[ 100 ] ;
@@ -260,16 +260,16 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 	char btf_filename[100];
 	btf_filename[0] = '\0';
 
-	if(GetDCP06Model()->ADFFileName.GetLength() == 0)
+	if(GetModel()->ADFFileName.GetLength() == 0)
 		return;
 	else
 	{
-		StringC strFileName = GetDCP06Model()->ADFFileName.Mid(0,GetDCP06Model()->ADFFileName.GetLength()-4);
+		StringC strFileName = GetModel()->ADFFileName.Mid(0,GetModel()->ADFFileName.GetLength()-4);
 		//UTL::UnicodeToAscii(btf_filename, strFileName);
 		BSS::UTI::BSS_UTI_WCharToAscii(strFileName, btf_filename);
 	}
 	
-	AdfFileFunc* pAdf = new AdfFileFunc(BFT, GetDCP06Model());
+	AdfFileFunc* pAdf = new AdfFileFunc(BFT, GetModel());
 	pAdf->always_single = 1;
 
 	if(!pAdf->setFile(btf_filename))//"_bft_"))
@@ -290,7 +290,7 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 				m_pCommon->copy_xyz_to_buffer(	&m_pDataModel->point_OCS[i].x, 
 												&m_pDataModel->point_OCS[i].y, 
 												&m_pDataModel->point_OCS[i].z,
-												&bXdes[0],&bYdes[0],&bZdes[0],9, GetDCP06Model()->m_nDecimals);
+												&bXdes[0],&bYdes[0],&bZdes[0],9, GetModel()->m_nDecimals);
 
 				if(m_pDataModel->point_RES[i].sta == 1 || m_pDataModel->point_RES[i].sta == 2)
 				{
@@ -302,14 +302,14 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 
 					m_pCommon->copy_xyz_to_buffer(	&x_conv,&y_conv,&z_conv, 
 													&bXmea[0],&bYmea[0],&bZmea[0],
-													9, GetDCP06Model()->m_nDecimals);
+													9, GetModel()->m_nDecimals);
 					outOfCalc = false;
 					
 				}
 				else
 				{
 					outOfCalc = true;
-					//sprintf(bNote,"%-d", GetDCP06Model()->stationNumber);
+					//sprintf(bNote,"%-d", GetModel()->stationNumber);
 					//bNote[6] = '\0';
 					//m_pCommon->empty_xyz_buffers(&bXmea[0],&bYmea[0],&bZmea[0],9);
 				}
@@ -325,7 +325,7 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 														&m_pDataModel->point_OCS[i].y, 
 														&m_pDataModel->point_OCS[i].z,
 														&pAdf->xdes_front[0],&pAdf->ydes_front[0],&pAdf->zdes_front[0],
-													   9, GetDCP06Model()->m_nDecimals);
+													   9, GetModel()->m_nDecimals);
 
 						if(outOfCalc == false)
 						{	
@@ -333,7 +333,7 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 
 							m_pCommon->copy_xyz_to_buffer(&x_conv,&y_conv,&z_conv,
 													  &pAdf->xmea_front[0],&pAdf->ymea_front[0],&pAdf->zmea_front[0],
-													   9, GetDCP06Model()->m_nDecimals);
+													   9, GetModel()->m_nDecimals);
 						
 							// 17.8.2015 BestFit has not station number -> removed
 							// add current station number to note field
@@ -342,7 +342,7 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 							sprintf(temp,"%-6.6s", pAdf->note_front);
 							m_pCommon->strbtrim(temp);
 
-							sprintf(temp1,"%-d", GetDCP06Model()->stationNumber);
+							sprintf(temp1,"%-d", GetModel()->stationNumber);
 							temp1[6] = '\0';
 							m_pCommon->strbtrim(temp1);
 
@@ -390,16 +390,16 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 					{
 						bNote[0] = '\0';
 						pAdf->add_new_pnt(pAdf->get_file_pointer(), m_pDataModel->point_OCS[i].point_id,
-													 NULL,&bXdes[0],
-													 NULL,&bYdes[0],
-													 NULL,&bZdes[0],&bNote[0]);
+													 nullptr,&bXdes[0],
+													 nullptr,&bYdes[0],
+													 nullptr,&bZdes[0],&bNote[0]);
 
 					}
 					else
 					{
 						bNote[0] = '\0';
 						/*
-						sprintf(bNote,"%-d", GetDCP06Model()->stationNumber);
+						sprintf(bNote,"%-d", GetModel()->stationNumber);
 						bNote[6] = '\0';
 						*/
 						pAdf->add_new_pnt(pAdf->get_file_pointer(), m_pDataModel->point_OCS[i].point_id,
@@ -427,7 +427,7 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 				m_pCommon->copy_xyz_to_buffer(	&m_pDataModel->point_OCS[i].x, 
 												&m_pDataModel->point_OCS[i].y, 
 												&m_pDataModel->point_OCS[i].z,
-												&bXdes[0],&bYdes[0],&bZdes[0],9, GetDCP06Model()->m_nDecimals);
+												&bXdes[0],&bYdes[0],&bZdes[0],9, GetModel()->m_nDecimals);
 				
 				if(m_pDataModel->point_RES[i].sta == 1 || m_pDataModel->point_RES[i].sta == 2)
 				{
@@ -439,7 +439,7 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 
 					m_pCommon->copy_xyz_to_buffer(	&x_conv,&y_conv,&z_conv, 
 													&bXmea[0],&bYmea[0],&bZmea[0],
-													9, GetDCP06Model()->m_nDecimals);
+													9, GetModel()->m_nDecimals);
 				
 					
 				}
@@ -488,14 +488,14 @@ void DCP::DCP06PomDlgC::update_bft_adf()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06PomDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::BestFitDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -505,21 +505,21 @@ bool DCP::DCP06PomDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06ModelC* DCP::DCP06PomDlgC::GetDCP06Model() const
+DCP::Model* DCP::BestFitDialog::GetModel() const
 {
-    return (DCP::DCP06ModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-// ====================================  DCP06ControllerC  ===================================
+// ====================================  Controller  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UnitControllerC
+// UnitController
 // 
-DCP::DCP06PomControllerC::DCP06PomControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::BestFitController::BestFitController(Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -527,11 +527,11 @@ DCP::DCP06PomControllerC::DCP06PomControllerC(DCP06ModelC* pDCP06Model)
     SetTitle(StringC( AT_DCP05, T_DCP_POM_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// create model
-	m_pDataModel = new DCP06PomModelC;
+	m_pDataModel = new BestFitModel;
 	m_pDataModel->pom_chst = 0;
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06PomDlgC(m_pDataModel);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::BestFitDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( POM_DLG, m_pDlg, true );
 	
     // Set the function key
@@ -574,7 +574,7 @@ DCP::DCP06PomControllerC::DCP06PomControllerC(DCP06ModelC* pDCP06Model)
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06PomControllerC::~DCP06PomControllerC()
+DCP::BestFitController::~BestFitController()
 {
 	if(m_pDataModel)
 	{
@@ -583,7 +583,7 @@ DCP::DCP06PomControllerC::~DCP06PomControllerC()
 	}
 }
 // Description: Route model to everybody else
-bool DCP::DCP06PomControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::BestFitController::SetModel( GUI::ModelC* pModel )
 {
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
@@ -593,15 +593,15 @@ bool DCP::DCP06PomControllerC::SetModel( GUI::ModelC* pModel )
     return m_pDlg->SetModel( pModel );
 }
 
-void DCP::DCP06PomControllerC::OnF1Pressed()
+void DCP::BestFitController::OnF1Pressed()
 {
-		if (m_pDlg == NULL)
+		if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
 		// check if points existing
-		DCP06CommonC common(m_pDlg->GetDCP06Model());
+		Common common(m_pDlg->GetModel());
 
 		if(common.get_OCS_points_count(&m_pDataModel->point_OCS[0],MAX_BESTFIT_POINTS) > 0)
 		{
@@ -611,27 +611,27 @@ void DCP::DCP06PomControllerC::OnF1Pressed()
 			}
 		}
 		
-		DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
-		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+		DCP::SelectFileModel* pModel = new SelectFileModel;
+		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ONLY_ADF, sTitle,m_pDCP06Model) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle,m_pModel) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
 }
 
-void DCP::DCP06PomControllerC::OnF2Pressed()
+void DCP::BestFitController::OnF2Pressed()
 {
 	
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	DCP::DCP06PomSelectPointsModelC* pModel = new DCP06PomSelectPointsModelC;
-	DCP06CommonC common(m_pDCP06Model);
+	DCP::BestFitSelectPointsModel* pModel = new BestFitSelectPointsModel;
+	Common common(m_pModel);
 
 	memcpy(&pModel->points[0], &m_pDataModel->point_OCS[0],sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	memcpy(&pModel->points1[0], &m_pDataModel->point_DCS[0],sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
@@ -651,29 +651,29 @@ void DCP::DCP06PomControllerC::OnF2Pressed()
 		sprintf(pModel->points[i].point_id,"BF%d",i+1);
 	}
 
-	if(GetController(BESTFIT_POINT_CONTROLLER) == NULL)
+	if(GetController(BESTFIT_POINT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( BESTFIT_POINT_CONTROLLER, new DCP::DCP06PomSelectPointsControllerC(m_pDlg->GetDCP06Model()));
+		(void)AddController( BESTFIT_POINT_CONTROLLER, new DCP::BestFitSelectPointsController(m_pDlg->GetModel()));
 	}
 	(void)GetController( BESTFIT_POINT_CONTROLLER )->SetModel(pModel);
 	SetActiveController(BESTFIT_POINT_CONTROLLER, true);
 	
 }
-void DCP::DCP06PomControllerC::OnF3Pressed()
+void DCP::BestFitController::OnF3Pressed()
 {	
 	//short i;
 
-    if (m_pDlg == NULL) 
+    if (m_pDlg == nullptr) 
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	DCP06CommonC common(m_pDCP06Model);
-	DCP06MsgBoxC msgbox;
+	Common common(m_pModel);
+	MsgBox msgbox;
 	StringC msg;
 
-	short sum = common.defined_pom_points(&m_pDataModel->point_OCS[0],NULL);
+	short sum = common.defined_pom_points(&m_pDataModel->point_OCS[0],nullptr);
 	if(sum==0)
 	{
 		msg.LoadTxt(AT_DCP05,M_DCP_NO_POINTS_TOK	);
@@ -685,10 +685,10 @@ void DCP::DCP06PomControllerC::OnF3Pressed()
 	{
 		sum = common.get_last_defined_point(&m_pDataModel->point_OCS[0],&m_pDataModel->point_DCS[0],MAX_BESTFIT_POINTS);
 		
-		old_coordinate = m_pDlg->GetDCP06Model()->active_coodinate_system;
-		m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+		old_coordinate = m_pDlg->GetModel()->active_coodinate_system;
+		m_pDlg->GetModel()->active_coodinate_system = DCS;
 				
-		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
+		DCP::MeasureModel* pModel = new MeasureModel;
 		pModel->m_iMaxPoint = sum < 3 ? 3 : sum;
 		pModel->m_iMinPoint = MIN_POINTS_FOR_DISTANCE;
 		pModel->m_iPointsCount = sum;
@@ -699,16 +699,16 @@ void DCP::DCP06PomControllerC::OnF3Pressed()
 	
 
 
-		if(GetController(MEAS_CONTROLLER) == NULL)
+		if(GetController(MEAS_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_CONTROLLER, new DCP::DCP06MeasControllerC(m_pDlg->GetDCP06Model()) );
+			(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 		}
 		(void)GetController( MEAS_CONTROLLER )->SetModel(pModel);
 		SetActiveController(MEAS_CONTROLLER, true);
 	}
 }
 // calc
-void DCP::DCP06PomControllerC::OnF4Pressed()
+void DCP::BestFitController::OnF4Pressed()
 {	
 	/*
 	sprintf(m_pDataModel->point_OCS[0].point_id,"%-s", "P1");
@@ -745,7 +745,7 @@ void DCP::DCP06PomControllerC::OnF4Pressed()
 	m_pDataModel->point_DCS[4].x = 0.0;  m_pDataModel->point_DCS[4].y = 2.2;  m_pDataModel->point_DCS[4].z = 0.0; m_pDataModel->point_DCS[4].sta = 1;
 	*/
 
-	DCP06CalcPomC calcpom(m_pDataModel,m_pDlg->GetDCP06Model());
+	CalcBestFit calcpom(m_pDataModel,m_pDlg->GetModel());
 	if(calcpom.calc_transform())
 	{
 		m_pDataModel->calculated = true;
@@ -764,13 +764,13 @@ void DCP::DCP06PomControllerC::OnF4Pressed()
 		StringC sZline;
 		char formatBuffer[STRING_BUFFER_MEDIUM];
 		
-		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_x);
 		sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(formatBuffer));
 
-		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_y);
 		sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(formatBuffer));
 
-		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_z);
 		sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(formatBuffer));
 		
 
@@ -780,16 +780,16 @@ void DCP::DCP06PomControllerC::OnF4Pressed()
 		sMsg += L"\n";
 		sMsg += sZline;
 		
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		short ret = msgbox.ShowMessageOkAbortRetry(sMsg);
 		if( ret == 1)
 		{
-			if(GetController(RES_BESTFIT_CONTROLLER) == NULL)
+			if(GetController(RES_BESTFIT_CONTROLLER) == nullptr)
 			{
 				StringC sTitle = GetTitle();	
-				(void)AddController( RES_BESTFIT_CONTROLLER, new DCP::DCP06ResPomControllerC(m_pDataModel) );
+				(void)AddController( RES_BESTFIT_CONTROLLER, new DCP::ResBestFitController(m_pDataModel) );
 			}
-			(void)GetController( RES_BESTFIT_CONTROLLER )->SetModel(m_pDlg->GetDCP06Model());
+			(void)GetController( RES_BESTFIT_CONTROLLER )->SetModel(m_pDlg->GetModel());
 			SetActiveController(RES_BESTFIT_CONTROLLER, true);
 		}
 		else if(ret == -1) // ABort
@@ -814,9 +814,9 @@ void DCP::DCP06PomControllerC::OnF4Pressed()
 }
 
 // Description: Handle change of position values
-void DCP::DCP06PomControllerC::OnF6Pressed()
+void DCP::BestFitController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -831,7 +831,7 @@ void DCP::DCP06PomControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 
-void DCP::DCP06PomControllerC::OnSHF2Pressed()
+void DCP::BestFitController::OnSHF2Pressed()
 {	
 	delete_pom();
 	m_pDlg->RefreshControls();
@@ -839,9 +839,9 @@ void DCP::DCP06PomControllerC::OnSHF2Pressed()
 }
 
 // RMS
-void DCP::DCP06PomControllerC::OnSHF3Pressed()
+void DCP::BestFitController::OnSHF3Pressed()
 {	
-	if(m_pDlg->GetDCP06Model()->ocsp_defined && m_pDataModel->calculated)
+	if(m_pDlg->GetModel()->ocsp_defined && m_pDataModel->calculated)
 	{
 		StringC sMsg;
 		
@@ -856,13 +856,13 @@ void DCP::DCP06PomControllerC::OnSHF3Pressed()
 		StringC sZline;
 		char formatBuffer[STRING_BUFFER_MEDIUM];
 		
-		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_x);
 		sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(formatBuffer));
 
-		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_y);
 		sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(formatBuffer));
 
-		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetModel()->m_nDecimals, m_pDataModel->rms_z);
 		sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(formatBuffer));
 		
 
@@ -872,42 +872,42 @@ void DCP::DCP06PomControllerC::OnSHF3Pressed()
 		sMsg += L"\n";
 		sMsg += sZline;
 		
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		msgbox.ShowMessageOk(sMsg);
 	}
 	
 }
 
 // RESIDUALS
-void DCP::DCP06PomControllerC::OnSHF4Pressed()
+void DCP::BestFitController::OnSHF4Pressed()
 {	/*
-    if (m_pDCP05InitDlg == NULL)
+    if (m_pInitDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
     }
 
-	if(GetController(3) == NULL)
+	if(GetController(3) == nullptr)
 	{
-		(void)AddController( 3, new DCP::DCP06UserControllerC );
+		(void)AddController( 3, new DCP::UserController );
 	}
-	(void)GetController( 3 )->SetModel(m_pDCP05InitDlg->GetDCP06Model());
+	(void)GetController( 3 )->SetModel(m_pInitDlg->GetModel());
 	SetActiveController(3, true);
 	*/
 }
 // Description: React on close of tabbed dialog
-void DCP::DCP06PomControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::BestFitController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
  
 // Description: React on close of controller
-void DCP::DCP06PomControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::BestFitController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == BESTFIT_POINT_CONTROLLER) 
 	{
-		DCP::DCP06PomSelectPointsModelC* pModel = (DCP::DCP06PomSelectPointsModelC*) GetController( BESTFIT_POINT_CONTROLLER )->GetModel();
+		DCP::BestFitSelectPointsModel* pModel = (DCP::BestFitSelectPointsModel*) GetController( BESTFIT_POINT_CONTROLLER )->GetModel();
 
-		DCP06CommonC common(m_pDCP06Model);  
+		Common common(m_pModel);  
 		
 		memcpy(&m_pDataModel->point_OCS[0], &pModel->points[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 		memcpy(&m_pDataModel->point_DCS[0], &pModel->points1[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
@@ -921,11 +921,11 @@ void DCP::DCP06PomControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 	}
 	if(lCtrlID == MEAS_CONTROLLER) 
 	{
-		m_pDlg->GetDCP06Model()->active_coodinate_system = old_coordinate;
+		m_pDlg->GetModel()->active_coodinate_system = old_coordinate;
 		
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();	
+			DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();	
 
 			memcpy(&m_pDataModel->point_DCS[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 			memcpy(&m_pDataModel->point_OCS[0], &pModel->point_table2[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
@@ -935,7 +935,7 @@ void DCP::DCP06PomControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
+		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		StringC strSelectedFile = pModel->m_strSelectedFile;
 		//m_pDlg->SelectFile(strSelectedFile);
 
@@ -944,9 +944,9 @@ void DCP::DCP06PomControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 		//UTL::UnicodeToAscii(filename_temp, strSelectedFile);
 
 		// create
-		AdfFileFunc adf(m_pDCP06Model);
+		AdfFileFunc adf(m_pModel);
 		adf.always_single = 1;
-		DCP06CommonC common(m_pDCP06Model);
+		Common common(m_pModel);
 
 		if(adf.setFile(strSelectedFile))
 		{
@@ -958,7 +958,7 @@ void DCP::DCP06PomControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 
 			for(int i = 1; i <= adf.getPointsCount(); i++)
 			{
-				adf.select_pnt1((int) i, pid, NULL, bXmea, bXdes, NULL, bYmea, bYdes, NULL, bZmea, bZdes, NULL);
+				adf.select_pnt1((int) i, pid, nullptr, bXmea, bXdes, nullptr, bYmea, bYdes, nullptr, bZmea, bZdes, nullptr);
 				 
 				sprintf(m_pDataModel->point_OCS[i-1].point_id,"%-6.6s",pid);
 				strcpy(m_pDataModel->point_DCS[i-1].point_id, m_pDataModel->point_OCS[i-1].point_id);
@@ -979,7 +979,7 @@ void DCP::DCP06PomControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 	if(lCtrlID == RES_BESTFIT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		m_pDataModel->calculated = true;
-		m_pDlg->GetDCP06Model()->active_coodinate_system = OCSP;
+		m_pDlg->GetModel()->active_coodinate_system = OCSP;
 		m_pDlg->update_bft_adf();
 	}
 
@@ -988,7 +988,7 @@ void DCP::DCP06PomControllerC::OnActiveControllerClosed( int lCtrlID, int lExitC
 	DestroyController( lCtrlID );
 }
 
-bool DCP::DCP06PomControllerC::delete_pom()
+bool DCP::BestFitController::delete_pom()
 {
 		StringC strPomText;
 		strPomText.LoadTxt(AT_DCP05,L_DCP_POM_TEXT_TOK);
@@ -996,7 +996,7 @@ bool DCP::DCP06PomControllerC::delete_pom()
 		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_ALL_TOK);
 		strMsg.Format(strMsg,(const wchar_t*)strPomText);
 		
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		if(msgbox.ShowMessageYesNo(strMsg))
 		{
 			
@@ -1006,8 +1006,8 @@ bool DCP::DCP06PomControllerC::delete_pom()
 			m_pDataModel->calculated 		= false;
 			m_pDataModel->INTO_TEMPLATE 	= false;
 			m_pDataModel->INTO_CAPTURE	= false;
-			m_pDlg->GetDCP06Model()->ocsp_defined = false;
-			m_pDlg->GetDCP06Model()->active_coodinate_system = DCS;
+			m_pDlg->GetModel()->ocsp_defined = false;
+			m_pDlg->GetModel()->active_coodinate_system = DCS;
 
 			return true;
 		}
@@ -1020,7 +1020,7 @@ bool DCP::DCP06PomControllerC::delete_pom()
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06PomModelC::DCP06PomModelC()
+DCP::BestFitModel::BestFitModel()
 {
 	INTO_TEMPLATE=false;INTO_CAPTURE=false;calculated=false;
 	memset(&point_DCS[0],0, sizeof(S_POINT_BUFF) *MAX_BESTFIT_POINTS);
@@ -1032,6 +1032,6 @@ DCP::DCP06PomModelC::DCP06PomModelC()
 }
 
 
-DCP::DCP06PomModelC::~DCP06PomModelC()
+DCP::BestFitModel::~BestFitModel()
 {
 }

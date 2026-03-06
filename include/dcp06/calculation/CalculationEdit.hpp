@@ -16,98 +16,98 @@
 
 namespace DCP
 {
-    class DCP06ModelC;
-    class DCP06EditCalcAngleDlgC;
-    class DCP06EditCalcAngleModelC;
-    class DCP06EditCalcDistDlgC;
-    class DCP06EditCalcDistModelC;
+    class Model;
+    class EditCalculationAngleDialog;
+    class EditCalculationAngleModel;
+    class EditCalculationDistDialog;
+    class EditCalculationDistModel;
 
     // --- EditCalcAngle ---
-    class DCP06EditCalcAngleControllerC : public GUI::ControllerC
+    class EditCalculationAngleController : public GUI::ControllerC
     {
     public:
-        DCP06EditCalcAngleControllerC(DCP06ModelC* pDCP06Model);
-        ~DCP06EditCalcAngleControllerC();
+        EditCalculationAngleController(Model* pModel);
+        ~EditCalculationAngleController();
         virtual void OnF1Pressed();
         virtual bool SetModel(GUI::ModelC* pModel);
         virtual void OnActiveDialogClosed(int lDlgID, int lExitCode);
         virtual void OnActiveControllerClosed(int lCtrlID, int lExitCode);
     private:
-        DCP06EditCalcAngleControllerC(const DCP06EditCalcAngleControllerC&) { USER_APP_VERIFY(false); }
-        DCP06EditCalcAngleControllerC& operator=(const DCP06EditCalcAngleControllerC&) { USER_APP_VERIFY(false); return *this; }
-        DCP06EditCalcAngleDlgC* m_pDlg;
-        DCP06ModelC* m_pDCP06Model;
-        DCP06CommonC* m_pCommon;
+        EditCalculationAngleController(const EditCalculationAngleController&) { USER_APP_VERIFY(false); }
+        EditCalculationAngleController& operator=(const EditCalculationAngleController&) { USER_APP_VERIFY(false); return *this; }
+        EditCalculationAngleDialog* m_pDlg;
+        Model* m_pModel;
+        Common* m_pCommon;
     };
 
-    class DCP06EditCalcAngleDlgC : public GUI::StandardDialogC, public GUI::ModelHandlerC
+    class EditCalculationAngleDialog : public GUI::StandardDialogC, public GUI::ModelHandlerC
     {
     public:
         enum eCtrlId { eDistId = 1, eRefId, eTrgtId, eNote };
-        DCP06EditCalcAngleDlgC(DCP06ModelC* pDCP06Model);
-        virtual ~DCP06EditCalcAngleDlgC();
+        EditCalculationAngleDialog(Model* pModel);
+        virtual ~EditCalculationAngleDialog();
         virtual void OnInitDialog(void);
         virtual void OnDialogActivated();
         virtual void UpdateData();
         virtual void RefreshControls();
         virtual bool SetModel(GUI::ModelC* pModel);
-        DCP06EditCalcAngleModelC* GetDataModel() const;
+        EditCalculationAngleModel* GetDataModel() const;
     protected:
         GUI::ComboLineCtrlC* m_pDistId;
         GUI::ComboLineCtrlC* m_pRefId;
         GUI::ComboLineCtrlC* m_pTrgtId;
         GUI::ComboLineCtrlC* m_pNote;
-        DCP06ModelC* m_pDCP06Model;
+        Model* m_pModel;
     private:
-        DCP06CommonC* m_pCommon;
+        Common* m_pCommon;
     };
 
-    class DCP06EditCalcAngleModelC : public GUI::ModelC
+    class EditCalculationAngleModel : public GUI::ModelC
     {
     public:
         StringC sDistId, sRefId, sTrgtId, sNote;
     };
 
     // --- EditCalcDist ---
-    class DCP06EditCalcDistControllerC : public GUI::ControllerC
+    class EditCalculationDistController : public GUI::ControllerC
     {
     public:
-        DCP06EditCalcDistControllerC(DCP06ModelC* pDCP06Model);
-        ~DCP06EditCalcDistControllerC();
+        EditCalculationDistController(Model* pModel);
+        ~EditCalculationDistController();
         virtual void OnF1Pressed();
         virtual bool SetModel(GUI::ModelC* pModel);
         virtual void OnActiveDialogClosed(int lDlgID, int lExitCode);
         virtual void OnActiveControllerClosed(int lCtrlID, int lExitCode);
     private:
-        DCP06EditCalcDistControllerC(const DCP06EditCalcDistControllerC&) { USER_APP_VERIFY(false); }
-        DCP06EditCalcDistControllerC& operator=(const DCP06EditCalcDistControllerC&) { USER_APP_VERIFY(false); return *this; }
-        DCP06EditCalcDistDlgC* m_pDlg;
-        DCP06ModelC* m_pDCP06Model;
-        DCP06CommonC* m_pCommon;
+        EditCalculationDistController(const EditCalculationDistController&) { USER_APP_VERIFY(false); }
+        EditCalculationDistController& operator=(const EditCalculationDistController&) { USER_APP_VERIFY(false); return *this; }
+        EditCalculationDistDialog* m_pDlg;
+        Model* m_pModel;
+        Common* m_pCommon;
     };
 
-    class DCP06EditCalcDistDlgC : public GUI::StandardDialogC, public GUI::ModelHandlerC
+    class EditCalculationDistDialog : public GUI::StandardDialogC, public GUI::ModelHandlerC
     {
     public:
         enum eCtrlId { eDistId = 1, eRefId, eNote };
-        DCP06EditCalcDistDlgC(DCP06ModelC* pDCP06Model);
-        virtual ~DCP06EditCalcDistDlgC();
+        EditCalculationDistDialog(Model* pModel);
+        virtual ~EditCalculationDistDialog();
         virtual void OnInitDialog(void);
         virtual void OnDialogActivated();
         virtual void UpdateData();
         virtual void RefreshControls();
         virtual bool SetModel(GUI::ModelC* pModel);
-        DCP06EditCalcDistModelC* GetDataModel() const;
+        EditCalculationDistModel* GetDataModel() const;
     protected:
         GUI::ComboLineCtrlC* m_pDistId;
         GUI::ComboLineCtrlC* m_pRefId;
         GUI::ComboLineCtrlC* m_pNote;
-        DCP06ModelC* m_pDCP06Model;
+        Model* m_pModel;
     private:
-        DCP06CommonC* m_pCommon;
+        Common* m_pCommon;
     };
 
-    class DCP06EditCalcDistModelC : public GUI::ModelC
+    class EditCalculationDistModel : public GUI::ModelC
     {
     public:
         StringC sDistId, sRefId, sNote;

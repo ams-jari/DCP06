@@ -45,18 +45,18 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP063DFileViewDlgC;
+	class Model;
+	class FileView3DDialog;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP063DFileViewControllerC : public GUI::ControllerC
+    class FileView3DController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP063DFileViewControllerC(DCP::DCP06FileModelC* pDataModel);
-			~DCP063DFileViewControllerC();
+            FileView3DController(DCP::FileModel* pDataModel);
+			~FileView3DController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed(); 
@@ -87,26 +87,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP063DFileViewControllerC( const DCP063DFileViewControllerC& oDCP063DMeasController )
+            FileView3DController( const FileView3DController& oFileView3DController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP063DFileViewControllerC& operator=( const DCP063DFileViewControllerC& o3DMeasToolController )
+            FileView3DController& operator=( const FileView3DController& o3DMeasToolController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP063DFileViewDlgC* m_pDlg;
-			//DCP06ModelC *m_pDCP06Model;
-			DCP::DCP06FileModelC* m_pDataModel;
+            FileView3DDialog* m_pDlg;
+			//Model *m_pModel;
+			DCP::FileModel* m_pDataModel;
     };
 
 
-	class DCP063DFileViewDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class FileView3DDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -123,10 +123,10 @@ namespace DCP
 				eZActDev
 			};
 
-		   DCP063DFileViewDlgC(DCP::DCP06FileModelC* pDataModelModel);
+		   FileView3DDialog(DCP::FileModel* pDataModelModel);
 
             // Description: Destructor
-            virtual ~DCP063DFileViewDlgC();
+            virtual ~FileView3DDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -138,7 +138,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP::DCP06ModelC* GetDCP06Model() const;
+			DCP::Model* GetModel() const;
 
 	protected:
   			
@@ -159,9 +159,9 @@ namespace DCP
 			*/
 
 	private:
-			DCP::DCP06CommonC *pCommon;
-			//DCP::DCP06ModelC* m_pDCP06Model;
-			DCP::DCP06FileModelC* m_pDataModel;
+			DCP::Common *pCommon;
+			//DCP::Model* m_pModel;
+			DCP::FileModel* m_pDataModel;
 	};
 };
 

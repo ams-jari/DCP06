@@ -48,18 +48,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06FileDlgC;
-	class DCP06FileModelC;
+    class Model;
+	class FileDialog;
+	class FileModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06FileControllerC : public GUI::ControllerC
+    class FileController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06FileControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06FileControllerC();
+            FileController(Model* pModel);
+			~FileController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -85,27 +85,27 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06FileControllerC( const DCP06FileControllerC& oDCP06FileController )
+            FileController( const FileController& oFileController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06FileControllerC& operator=( const DCP06FileControllerC& oDCP06FileController )
+            FileController& operator=( const FileController& oFileController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06FileDlgC* m_pDlg;
-			DCP06FileModelC* m_pDataModel;
+            FileDialog* m_pDlg;
+			FileModel* m_pDataModel;
 			StringC sFileToCreate;
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
     };
 
 
-    class DCP06FileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+    class FileDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 	 public:
 
@@ -119,10 +119,10 @@ namespace DCP
 				eFreeSpace
 			};
 
-		   DCP06FileDlgC(DCP06FileModelC* pFileModel);
+		   FileDialog(FileModel* pFileModel);
 
             // Description: Destructor
-            virtual ~DCP06FileDlgC();
+            virtual ~FileDialog();
 
 			virtual void OnInitDialog(void);
 			
@@ -135,7 +135,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			virtual void RefreshControls();
 
@@ -158,25 +158,25 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pTime;
 			GUI::ComboLineCtrlC* m_pFreeSpace;
 
-			DCP06FileModelC* m_pDataModel;
+			FileModel* m_pDataModel;
 			StringC sSelectedFile;
 		private:
-			DCP06CommonC* m_pCommon;
-			DCP06ModelC* m_pDCP06Model;
+			Common* m_pCommon;
+			Model* m_pModel;
 
 	};
 
-   class DCP06FileModelC : public GUI::ModelC
+   class FileModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06FileModelC(DCP06ModelC* pDCP06Model);
+            FileModel(Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06FileModelC();
+            virtual ~FileModel();
 			
 			AdfFileFunc* m_pAdfFile;
 			char x_diff[20];
@@ -184,7 +184,7 @@ namespace DCP
 			char z_def[20];
 
 		private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
     };
 
 };

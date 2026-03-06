@@ -60,7 +60,7 @@ double Gon2Rad(double dValue)
 //
 DCP::DCPScanningDialogC::DCPScanningDialogC(DCPScanningModelC* poScanningModel)
 : StandardDialogC()
-, m_poAvailableScan(NULL)
+, m_poAvailableScan(nullptr)
 , m_poScanningModel(poScanningModel)
 {
     m_poAvailableScan = new GUI::ComboLineCtrlC( GUI::ComboLineCtrlC::IC_ComboBox );
@@ -89,8 +89,8 @@ DCP::DCPScanningDialogC::DCPScanningDialogC(DCPScanningModelC* poScanningModel)
 //
 DCP::DCPScanningDialogC::~DCPScanningDialogC()
 {
-    m_poAvailableScan = NULL;
-    m_poScanningModel = NULL;
+    m_poAvailableScan = nullptr;
+    m_poScanningModel = nullptr;
 }
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -139,7 +139,7 @@ void DCP::DCPScanningDialogC::RefreshControls()
 //
 OBS_IMPLEMENT_EXECUTE(DCP::DCPScanningControllerC);
 
-DCP::DCPScanningControllerC::DCPScanningControllerC(DCP::DCP06ModelC* pDCP06Model) 
+DCP::DCPScanningControllerC::DCPScanningControllerC(DCP::Model* pModel) 
 : GUI::GControllerC()
 , MeasurementC()
 , m_poScanningModel(new DCP::DCPScanningModelC())
@@ -148,10 +148,10 @@ DCP::DCPScanningControllerC::DCPScanningControllerC(DCP::DCP06ModelC* pDCP06Mode
 //, m_dHorizScanV(70.0)
 , m_pOnApplicationClosedObserver(OBS_METHOD_TO_PARAM0(DCPScanningControllerC, OnApplicationClosed), this)
 ,m_poDCPScanningDialogC(0)
-,m_pDCP06Model(pDCP06Model)
+,m_pModel(pModel)
 {
 
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 
     // Set Title
     SetTitle(StringC(AT_DCP05, T_DCP_ADV_SCANNING_TOK));
@@ -193,8 +193,8 @@ DCP::DCPScanningControllerC::DCPScanningControllerC(DCP::DCP06ModelC* pDCP06Mode
 //
 DCP::DCPScanningControllerC::~DCPScanningControllerC(void)
 {
-    m_poScanningModel = NULL; //lint !e423
-    m_poSurveyModel = NULL;   //lint !e423
+    m_poScanningModel = nullptr; //lint !e423
+    m_poSurveyModel = nullptr;   //lint !e423
 
 	if(m_pCommon)
 	{
@@ -502,7 +502,7 @@ void DCP::DCPScanningControllerC::OnF3Pressed(void)
 void DCP::DCPScanningControllerC::OnF6Pressed()
 {
 	/*
-     if (m_pDlg == NULL)
+     if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -569,7 +569,7 @@ void DCP::DCPScanningControllerC::OnF5Pressed(void)
 					char m_cPathAndFileName[CPI::LEN_PATH_MAX];
 					char line[512];
 
-					bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, cPath);
+					bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, cPath);
 					FILE* m_pFile=0;
 					
 					//UTL::UnicodeToAscii(cFileName, scanName);
@@ -653,7 +653,7 @@ void DCP::DCPScanningControllerC::OnF5Pressed(void)
 					}
 					else
 					{
-						DCP06MsgBoxC msgbox;
+						MsgBox msgbox;
 						StringC msg;
 						msg.LoadTxt(AT_DCP05,	M_DCP_FILE_OPEN_ERROR_TOK);
 						msg.Format(msg, (const wchar_t*)StringC(m_cPathAndFileName));
@@ -958,7 +958,7 @@ SDI::SmartPtrScanC DCP::DCPScanningControllerC::CreateScanCopy(SDI::SmartPtrScan
 
 void DCP::DCPScanningControllerC::UpdateAvailableScans()
 {
-    if(m_poScanningModel == NULL)
+    if(m_poScanningModel == nullptr)
     {
         USER_APP_ASSERT(false);
         return;

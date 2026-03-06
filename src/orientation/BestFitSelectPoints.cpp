@@ -62,7 +62,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06PomSelectPointsDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::BestFitSelectPointsDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -76,21 +76,21 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06PomSelectPointsDlgC);
 
 // USER DIALOG
 
-DCP::DCP06PomSelectPointsDlgC::DCP06PomSelectPointsDlgC(DCP::DCP06ModelC* pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pPointNo(0),m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pDCP06Model(pDCP06Model),
-	m_pPointIdObserver(OBS_METHOD_TO_PARAM0(DCP06PomSelectPointsDlgC, OnPointIdChanged), this),
-	m_pXObserver(OBS_METHOD_TO_PARAM0(DCP06PomSelectPointsDlgC, OnPointIdChanged), this),
-	m_pYObserver(OBS_METHOD_TO_PARAM0(DCP06PomSelectPointsDlgC, OnPointIdChanged), this),
-	m_pZObserver(OBS_METHOD_TO_PARAM0(DCP06PomSelectPointsDlgC, OnPointIdChanged), this),
+DCP::BestFitSelectPointsDialog::BestFitSelectPointsDialog(DCP::Model* pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+	m_pPointNo(0),m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel),
+	m_pPointIdObserver(OBS_METHOD_TO_PARAM0(BestFitSelectPointsDialog, OnPointIdChanged), this),
+	m_pXObserver(OBS_METHOD_TO_PARAM0(BestFitSelectPointsDialog, OnPointIdChanged), this),
+	m_pYObserver(OBS_METHOD_TO_PARAM0(BestFitSelectPointsDialog, OnPointIdChanged), this),
+	m_pZObserver(OBS_METHOD_TO_PARAM0(BestFitSelectPointsDialog, OnPointIdChanged), this),
 	m_pCommon(0)
 {
 	//SetTxtApplicationId(AT_DCP06);
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 }
 
 
             // Description: Destructor
-DCP::DCP06PomSelectPointsDlgC::~DCP06PomSelectPointsDlgC()
+DCP::BestFitSelectPointsDialog::~BestFitSelectPointsDialog()
 {
 	if(m_pCommon)
 	{
@@ -99,7 +99,7 @@ DCP::DCP06PomSelectPointsDlgC::~DCP06PomSelectPointsDlgC()
 	}
 }
 
-void DCP::DCP06PomSelectPointsDlgC::OnInitDialog(void)
+void DCP::BestFitSelectPointsDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 
@@ -130,7 +130,7 @@ void DCP::DCP06PomSelectPointsDlgC::OnInitDialog(void)
 	m_pX->SetId(eX);
 	m_pX->SetText(StringC(AT_DCP06,P_DCP_X_TOK));
 	//m_pX->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
-	m_pX->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pDCP06Model->m_nDecimals);
+	m_pX->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pModel->m_nDecimals);
 	m_pX->SetEmptyAllowed(true);
 	//m_pX->GetFloatInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	AddCtrl(m_pX);
@@ -139,7 +139,7 @@ void DCP::DCP06PomSelectPointsDlgC::OnInitDialog(void)
 	m_pY->SetId(eY);
 	m_pY->SetText(StringC(AT_DCP06,P_DCP_Y_TOK));
 	//m_pY->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
-	m_pY->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pDCP06Model->m_nDecimals);
+	m_pY->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pModel->m_nDecimals);
 	m_pY->SetEmptyAllowed(true);
 	//m_pY->GetFloatInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	AddCtrl(m_pY);
@@ -148,7 +148,7 @@ void DCP::DCP06PomSelectPointsDlgC::OnInitDialog(void)
 	m_pZ->SetId(eZ);
 	m_pZ->SetText(StringC(AT_DCP06,P_DCP_Z_TOK));
 	//m_pZ->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
-	m_pZ->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pDCP06Model->m_nDecimals);
+	m_pZ->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char) m_pModel->m_nDecimals);
 	m_pZ->SetEmptyAllowed(true);
 	//m_pZ->GetFloatInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	AddCtrl(m_pZ);
@@ -162,17 +162,17 @@ void DCP::DCP06PomSelectPointsDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_POM_POINTS_TOK,0);
 }
 
-void DCP::DCP06PomSelectPointsDlgC::OnDialogActivated()
+void DCP::BestFitSelectPointsDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
 
-void DCP::DCP06PomSelectPointsDlgC::UpdateData()
+void DCP::BestFitSelectPointsDialog::UpdateData()
 {
 
 }
 
-void DCP::DCP06PomSelectPointsDlgC::SetFocusToPoint()
+void DCP::BestFitSelectPointsDialog::SetFocusToPoint()
 {
 	if(!GetDataModel()->disable_point_editing)
 		m_pPointId->SetFocus();
@@ -181,7 +181,7 @@ void DCP::DCP06PomSelectPointsDlgC::SetFocusToPoint()
 }
 
 // Description: refresh all controls
-void DCP::DCP06PomSelectPointsDlgC::RefreshControls()
+void DCP::BestFitSelectPointsDialog::RefreshControls()
 {
 		
 	if(m_pPointNo && m_pPointId && m_pX && m_pY && m_pZ )
@@ -225,7 +225,7 @@ void DCP::DCP06PomSelectPointsDlgC::RefreshControls()
 	}
 }
 
-void DCP::DCP06PomSelectPointsDlgC::OnPointIdChanged( int unNotifyCode,  int ulParam2)
+void DCP::BestFitSelectPointsDialog::OnPointIdChanged( int unNotifyCode,  int ulParam2)
 
  
 {
@@ -233,7 +233,7 @@ void DCP::DCP06PomSelectPointsDlgC::OnPointIdChanged( int unNotifyCode,  int ulP
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
 		short iCurrentPno = GetDataModel()->iCurrentPoint;
-		//DCP06CommonC common;
+		//Common common;
 		if(ulParam2 == ePointId)
 		{
 			StringC sPid;
@@ -289,14 +289,14 @@ void DCP::DCP06PomSelectPointsDlgC::OnPointIdChanged( int unNotifyCode,  int ulP
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06PomSelectPointsDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::BestFitSelectPointsDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06PomSelectPointsModelC* pDCP06Model = dynamic_cast< DCP::DCP06PomSelectPointsModelC* >( pModel );
+    DCP::BestFitSelectPointsModel* pModel = dynamic_cast< DCP::BestFitSelectPointsModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -306,42 +306,42 @@ bool DCP::DCP06PomSelectPointsDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06PomSelectPointsModelC* DCP::DCP06PomSelectPointsDlgC::GetDataModel() const
+DCP::BestFitSelectPointsModel* DCP::BestFitSelectPointsDialog::GetDataModel() const
 {
-    return (DCP::DCP06PomSelectPointsModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::BestFitSelectPointsModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-void DCP::DCP06PomSelectPointsDlgC::PointNext()
+void DCP::BestFitSelectPointsDialog::PointNext()
 {
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	MsgBox.ShowMessageOk(L"Next point");
 }
 
 // ================================================================================================
-void DCP::DCP06PomSelectPointsDlgC::PointPrev()
+void DCP::BestFitSelectPointsDialog::PointPrev()
 {
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	MsgBox.ShowMessageOk(L"Prev point");
 }
 
 // ================================================================================================
-void DCP::DCP06PomSelectPointsDlgC::SelectPoint(short iId)
+void DCP::BestFitSelectPointsDialog::SelectPoint(short iId)
 {
-	DCP06MsgBoxC MsgBox;
+	MsgBox MsgBox;
 	MsgBox.ShowMessageOk(L"Prev point");
 }
 
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06PomSelectPointsControllerC::DCP06PomSelectPointsControllerC(DCP::DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::BestFitSelectPointsController::BestFitSelectPointsController(DCP::Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -349,7 +349,7 @@ DCP::DCP06PomSelectPointsControllerC::DCP06PomSelectPointsControllerC(DCP::DCP06
     SetTitle(StringC( AT_DCP06, T_DCP_POM_POINTS_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// Create a dialog
-    m_pDlg = new DCP::DCP06PomSelectPointsDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::BestFitSelectPointsDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( POM_POINT_DLG, m_pDlg, true );
 
     // Set the function key
@@ -388,11 +388,11 @@ DCP::DCP06PomSelectPointsControllerC::DCP06PomSelectPointsControllerC(DCP::DCP06
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06PomSelectPointsControllerC::~DCP06PomSelectPointsControllerC()
+DCP::BestFitSelectPointsController::~BestFitSelectPointsController()
 {
 }
 // Description: Route model to everybody else
-bool DCP::DCP06PomSelectPointsControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::BestFitSelectPointsController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -403,12 +403,12 @@ bool DCP::DCP06PomSelectPointsControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -419,10 +419,10 @@ bool DCP::DCP06PomSelectPointsControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // PICK
-void DCP::DCP06PomSelectPointsControllerC::OnF1Pressed()
+void DCP::BestFitSelectPointsController::OnF1Pressed()
 {
-	DCP06CommonC common(m_pDCP06Model);
-	DCP06MsgBoxC msgbox;
+	Common common(m_pModel);
+	MsgBox msgbox;
 	short last=0;
 	short pcount = m_pDlg->GetDataModel()->iMaxPoint;
 
@@ -450,18 +450,18 @@ void DCP::DCP06PomSelectPointsControllerC::OnF1Pressed()
 	}
 
 		// SELECT FILE		
-		DCP::DCP06SelectFileModelC* pModel = new DCP06SelectFileModelC;
-		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
+		DCP::SelectFileModel* pModel = new SelectFileModel;
+		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(ADF_BF_STA/*ONLY_ADF*/, sTitle,m_pDCP06Model) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ADF_BF_STA/*ONLY_ADF*/, sTitle,m_pModel) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
 
 }
 // NEXT
-void DCP::DCP06PomSelectPointsControllerC::OnF2Pressed()
+void DCP::BestFitSelectPointsController::OnF2Pressed()
 {
 
 	if(m_pDlg->GetDataModel()->iCurrentPoint < m_pDlg->GetDataModel()->iMaxPoint &&
@@ -478,7 +478,7 @@ void DCP::DCP06PomSelectPointsControllerC::OnF2Pressed()
 }
 
 // PREV
-void DCP::DCP06PomSelectPointsControllerC::OnF3Pressed()
+void DCP::BestFitSelectPointsController::OnF3Pressed()
 {
 	if(m_pDlg->GetDataModel()->iCurrentPoint > 1)
 	m_pDlg->GetDataModel()->iCurrentPoint--;
@@ -489,15 +489,15 @@ void DCP::DCP06PomSelectPointsControllerC::OnF3Pressed()
 }
 
 // PID
-void DCP::DCP06PomSelectPointsControllerC::OnF4Pressed()
+void DCP::BestFitSelectPointsController::OnF4Pressed()
 {
 	
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
 	    {
 		    USER_APP_VERIFY( false );
 			return;
 		}
-		DCP::DCP06SelectPointModelC* pModel = new DCP06SelectPointModelC;
+		DCP::SelectPointModel* pModel = new SelectPointModel;
 		pModel->m_iCounts = m_pDlg->GetDataModel()->m_iPointsCount;
 		pModel->m_iSelectedId = m_pDlg->GetDataModel()->iCurrentPoint;
 		for(int i=0; i < m_pDlg->GetDataModel()->m_iPointsCount; i++)
@@ -511,9 +511,9 @@ void DCP::DCP06PomSelectPointsControllerC::OnF4Pressed()
 				pModel->points[i].point_status[0] = '-';
 		}
 
-		if(GetController(SELECT_POINT_CONTROLLER) == NULL)
+		if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
 		{
-			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::DCP06SelectPointControllerC );
+			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
 		}
 
 		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
@@ -531,12 +531,12 @@ void DCP::DCP06PomSelectPointsControllerC::OnF4Pressed()
 }
 
 // ADD
-void DCP::DCP06PomSelectPointsControllerC::OnF5Pressed()
+void DCP::BestFitSelectPointsController::OnF5Pressed()
 {
 	// CAPTIVATE TO BE CHEKED
 	if(m_pDlg->GetDataModel()->m_iPointsCount < m_pDlg->GetDataModel()->iMaxPoint)
 	{	
-		DCP06CommonC* m_pCommon = new DCP06CommonC(m_pDCP06Model);
+		Common* m_pCommon = new Common(m_pModel);
 
 		// 271011
 		char temp[10];
@@ -565,7 +565,7 @@ void DCP::DCP06PomSelectPointsControllerC::OnF5Pressed()
 	}
 	else
 	{
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		StringC msg;
 		msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_ADD_POINT_TOK);
 		msgbox.ShowMessageOk(msg);
@@ -574,9 +574,9 @@ void DCP::DCP06PomSelectPointsControllerC::OnF5Pressed()
 	m_pDlg->SetFocusToPoint();
 }
 // Description: Handle change of position values
-void DCP::DCP06PomSelectPointsControllerC::OnF6Pressed()
+void DCP::BestFitSelectPointsController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -591,9 +591,9 @@ void DCP::DCP06PomSelectPointsControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 // Description: Handle change of position values
-void DCP::DCP06PomSelectPointsControllerC::OnSHF2Pressed()
+void DCP::BestFitSelectPointsController::OnSHF2Pressed()
 {
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 	short iCur = m_pDlg->GetDataModel()->iCurrentPoint;
 	StringC strActivePoint =m_pDlg->GetDataModel()->points[iCur].point_id;
@@ -631,7 +631,7 @@ void DCP::DCP06PomSelectPointsControllerC::OnSHF2Pressed()
 			points2[i].dsta =points2[i+1].dsta;
 			*/
 		}
-		DCP06CommonC common(m_pDCP06Model);
+		Common common(m_pModel);
 		common.delete_point(&m_pDlg->GetDataModel()->points[m_pDlg->GetDataModel()->iMaxPoint-1]);
 		common.delete_point(&m_pDlg->GetDataModel()->points1[m_pDlg->GetDataModel()->iMaxPoint-1]);		
 		m_pDlg->GetDataModel()->m_iPointsCount--;
@@ -665,22 +665,22 @@ void DCP::DCP06PomSelectPointsControllerC::OnSHF2Pressed()
 	}
 }
 
-void DCP::DCP06PomSelectPointsControllerC::save_current_point()
+void DCP::BestFitSelectPointsController::save_current_point()
 {
 	
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06PomSelectPointsControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::BestFitSelectPointsController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::BestFitSelectPointsController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectPointModelC* pModel = (DCP::DCP06SelectPointModelC*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
+		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
 		//StringC strSelectedPoint = pModel->m_strSelectedPoint;
 		m_pDlg->GetDataModel()->iCurrentPoint = pModel->m_iSelectedId;
 		
@@ -688,10 +688,10 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectFileModelC* pFileModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();
+		DCP::SelectFileModel* pFileModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();
 		StringC strSelectedFile = pFileModel->m_strSelectedFile;
 
-		AdfFileFunc adf(m_pDCP06Model);
+		AdfFileFunc adf(m_pModel);
 		adf.always_single = 1;
 		short def = (m_pDlg->GetDataModel()->iDisplay == POM_DLG) ? DESIGN : ACTUAL;
 
@@ -699,14 +699,14 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 		jobIdBuf[0] = '\0';
 		BSS::UTI::BSS_UTI_WCharToAscii(strSelectedFile, jobIdBuf);
 		std::string selectedJobId(jobIdBuf);
-		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+		DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 		bool useDb = false;
 #if DCP_USE_JSON_DATABASE
 		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
 		useDb = jdb && jdb->isJobLoaded() && !selectedJobId.empty() &&
-		             selectedJobId == m_pDCP06Model->m_currentJobId;
+		             selectedJobId == m_pModel->m_currentJobId;
 #endif
-		DCP::DCP06SelectMultiPointsModelC* pSelectModel = new DCP06SelectMultiPointsModelC;
+		DCP::SelectMultiPointsModel* pSelectModel = new SelectMultiPointsModel;
 		int iCount = 0;
 #if DCP_USE_JSON_DATABASE
 		if (useDb)
@@ -736,33 +736,33 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 			pSelectModel->sInfo = StringC(cTemp);
 			pSelectModel->sTitle = GetTitle();
 
-			if (GetController(SELECT_MULTIPOINTS_CONTROLLER) == NULL)
-				(void)AddController(SELECT_MULTIPOINTS_CONTROLLER, new DCP::DCP06SelectMultiPointsControllerC(m_pDCP06Model));
+			if (GetController(SELECT_MULTIPOINTS_CONTROLLER) == nullptr)
+				(void)AddController(SELECT_MULTIPOINTS_CONTROLLER, new DCP::SelectMultiPointsController(m_pModel));
 			(void)GetController(SELECT_MULTIPOINTS_CONTROLLER)->SetModel(pSelectModel);
 			SetActiveController(SELECT_MULTIPOINTS_CONTROLLER, true);
 		}
 		else if (!useDb)
 		{
-			DCP06MsgBoxC msgbox;
+			MsgBox msgbox;
 			msgbox.ShowMessageOk(L"Set file error!");
 		}
 	}  
 	  
 	if(lCtrlID == SELECT_MULTIPOINTS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DCP06SelectMultiPointsModelC* pModel = (DCP::DCP06SelectMultiPointsModelC*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();
-		DCP06CommonC common(m_pDCP06Model);
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();
+		Common common(m_pModel);
 
 		char jobIdBuf[64];
 		jobIdBuf[0] = '\0';
 		BSS::UTI::BSS_UTI_WCharToAscii(pModel->sSelectedFile, jobIdBuf);
 		std::string selectedJobId(jobIdBuf);
-		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+		DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 		bool useDb = false;
 #if DCP_USE_JSON_DATABASE
 		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
 		useDb = jdb && jdb->isJobLoaded() && !selectedJobId.empty() &&
-		             selectedJobId == m_pDCP06Model->m_currentJobId;
+		             selectedJobId == m_pModel->m_currentJobId;
 #endif
 		short last = common.get_last_defined_point(&m_pDlg->GetDataModel()->points[0], &m_pDlg->GetDataModel()->points1[0],
 			m_pDlg->GetDataModel()->iMaxPoint);
@@ -795,7 +795,7 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 		else
 #endif
 		{
-			AdfFileFunc adf(m_pDCP06Model);
+			AdfFileFunc adf(m_pModel);
 			adf.always_single = 1;
 			if (adf.setFile(pModel->sSelectedFile))
 			{
@@ -806,7 +806,7 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 					if (pModel->nro_table[i][0] != 0)
 					{
 						cc++;
-						adf.form_pnt1((int)pModel->nro_table[i][0], pid, NULL, bXmea, bXdes, NULL, bYmea, bYdes, NULL, bZmea, bZdes, NULL);
+						adf.form_pnt1((int)pModel->nro_table[i][0], pid, nullptr, bXmea, bXdes, nullptr, bYmea, bYdes, nullptr, bZmea, bZdes, nullptr);
 						sprintf(m_pDlg->GetDataModel()->points[cc-1].point_id, "%-6.6s", pid);
 						m_pDlg->GetDataModel()->points[cc-1].x = (pModel->nro_table[i][1] == DESIGN) ? atof(bXdes) : atof(bXmea);
 						m_pDlg->GetDataModel()->points[cc-1].y = (pModel->nro_table[i][1] == DESIGN) ? atof(bYdes) : atof(bYmea);
@@ -826,51 +826,51 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 	{	
 		if(lExitCode == HIDDEN_POINT)
 		{
-			if(GetController(HIDDENPOINT_CONTROLLER) == NULL)
+			if(GetController(HIDDENPOINT_CONTROLLER) == nullptr)
 			{
-				(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::DCP06HiddenPointControllerC );
+				(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::HiddenPointController );
 			}
-			(void)GetController( HIDDENPOINT_CONTROLLER )->SetModel( m_pDCP06MeasDlg->GetDCP06Model());
+			(void)GetController( HIDDENPOINT_CONTROLLER )->SetModel( m_pMeasureDlg->GetModel());
 			SetActiveController(HIDDENPOINT_CONTROLLER, true);
 
 
 		}
 		else if(lExitCode == X_OR_Y_OR_Z)
 		{
-			if(GetController(XYZ_CONTROLLER) == NULL)
+			if(GetController(XYZ_CONTROLLER) == nullptr)
 			{
-				(void)AddController( XYZ_CONTROLLER, new DCP::DCP06XYZControllerC );
+				(void)AddController( XYZ_CONTROLLER, new DCP::XYZController );
 			}
-			(void)GetController( XYZ_CONTROLLER )->SetModel( m_pDCP06MeasDlg->GetDCP06Model());
+			(void)GetController( XYZ_CONTROLLER )->SetModel( m_pMeasureDlg->GetModel());
 			SetActiveController(XYZ_CONTROLLER, true);
 		}
 		else if(lExitCode == CIRCLE)
 		{
-			if(GetController(CIRCLE_CONTROLLER) == NULL)
+			if(GetController(CIRCLE_CONTROLLER) == nullptr)
 			{
-				(void)AddController( CIRCLE_CONTROLLER, new DCP::DCP06CircleControllerC );
+				(void)AddController( CIRCLE_CONTROLLER, new DCP::CircleController );
 			}
-			(void)GetController( CIRCLE_CONTROLLER )->SetModel( m_pDCP06MeasDlg->GetDCP06Model());
+			(void)GetController( CIRCLE_CONTROLLER )->SetModel( m_pMeasureDlg->GetModel());
 			SetActiveController(CIRCLE_CONTROLLER, true);
 
 
 		}
 		else if(lExitCode == SEPARATE_REC)
 		{
-			if(GetController(SEPARATE_RECORDING_CONTROLLER) == NULL)
+			if(GetController(SEPARATE_RECORDING_CONTROLLER) == nullptr)
 			{
-				(void)AddController( SEPARATE_RECORDING_CONTROLLER, new DCP::DCP06SeparateRecControllerC );
+				(void)AddController( SEPARATE_RECORDING_CONTROLLER, new DCP::SeparateRecController );
 			}
-			(void)GetController( SEPARATE_RECORDING_CONTROLLER )->SetModel( m_pDCP06MeasDlg->GetDCP06Model());
+			(void)GetController( SEPARATE_RECORDING_CONTROLLER )->SetModel( m_pMeasureDlg->GetModel());
 			SetActiveController(SEPARATE_RECORDING_CONTROLLER, true);
 		}
 		else if(lExitCode == HOME_POINTS)
 		{
-			if(GetController(HOME_POINTS_CONTROLLER) == NULL)
+			if(GetController(HOME_POINTS_CONTROLLER) == nullptr)
 			{
-				(void)AddController( HOME_POINTS_CONTROLLER, new DCP::DCP06HomePointsControllerC );
+				(void)AddController( HOME_POINTS_CONTROLLER, new DCP::HomePointsController );
 			}
-			(void)GetController( HOME_POINTS_CONTROLLER )->SetModel( m_pDCP06MeasDlg->GetDCP06Model());
+			(void)GetController( HOME_POINTS_CONTROLLER )->SetModel( m_pMeasureDlg->GetModel());
 			SetActiveController(HOME_POINTS_CONTROLLER, true);
 
 		}
@@ -888,7 +888,7 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06PomSelectPointsModelC::DCP06PomSelectPointsModelC()
+DCP::BestFitSelectPointsModel::BestFitSelectPointsModel()
 {
 	memset(&points[0],0, sizeof(S_POINT_BUFF)* MAX_SELECT_POINTS);
 	memset(&points1[0],0, sizeof(S_POINT_BUFF)* MAX_SELECT_POINTS);
@@ -902,7 +902,7 @@ DCP::DCP06PomSelectPointsModelC::DCP06PomSelectPointsModelC()
 }
 
 
-DCP::DCP06PomSelectPointsModelC::~DCP06PomSelectPointsModelC()
+DCP::BestFitSelectPointsModel::~BestFitSelectPointsModel()
 {
 }
 

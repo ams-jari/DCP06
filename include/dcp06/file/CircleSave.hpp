@@ -46,18 +46,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06SaveCircleDlgC;
-	class DCP06SaveCircleModelC;
+    class Model;
+	class SaveCircleDialog;
+	class SaveCircleModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06SaveCircleControllerC : public GUI::ControllerC
+    class SaveCircleController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06SaveCircleControllerC(DCP06CircleModelC* pCircleModel, DCP06ModelC* pDCP06Model);
-			~DCP06SaveCircleControllerC();
+            SaveCircleController(CircleModel* pCircleModel, Model* pModel);
+			~SaveCircleController();
 
             // Description: Handle change of position values
            	virtual void OnF1Pressed(void);
@@ -75,29 +75,29 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06SaveCircleControllerC( const DCP06SaveCircleControllerC& oDCP06SaveCircleController )
+            SaveCircleController( const SaveCircleController& oSaveCircleController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06SaveCircleControllerC& operator=( const DCP06SaveCircleControllerC& oDCP06SaveCircleController )
+            SaveCircleController& operator=( const SaveCircleController& oSaveCircleController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06SaveCircleDlgC* m_pDlg;
-			DCP06CircleModelC* m_pCircleModel;
-			DCP06SaveCircleModelC* m_pDataModel;
+            SaveCircleDialog* m_pDlg;
+			CircleModel* m_pCircleModel;
+			SaveCircleModel* m_pDataModel;
 
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			
     };
 
 
-    class DCP06SaveCircleDlgC:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
+    class SaveCircleDialog:public GUI::StandardDialogC/*, public OBS::CommandC*/, public GUI::ModelHandlerC
 	{
 		 public:
 
@@ -107,10 +107,10 @@ namespace DCP
 				eFile,
 			};
 
-		   DCP06SaveCircleDlgC(DCP06CircleModelC* pCircleModel, DCP06SaveCircleModelC* pSaveCircleModel);
+		   SaveCircleDialog(CircleModel* pCircleModel, SaveCircleModel* pSaveCircleModel);
 
             // Description: Destructor
-            virtual ~DCP06SaveCircleDlgC();
+            virtual ~SaveCircleDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -124,7 +124,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 			virtual void RefreshControls();
 
 			StringC get_id();
@@ -135,10 +135,10 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pId;
 			GUI::ComboLineCtrlC* m_pFile;
 
-			DCP06CircleModelC* m_pCircleModel;
-			DCP06SaveCircleModelC* m_pDataModel;
+			CircleModel* m_pCircleModel;
+			SaveCircleModel* m_pDataModel;
 
-			//OBS_DECLARE_EXECUTE(DCP06DomDlgC);
+			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
 			// Description: add all controls
             
@@ -152,17 +152,17 @@ namespace DCP
 			StringC m_strZLine;
 	};
 	
-	class DCP06SaveCircleModelC : public GUI::ModelC
+	class SaveCircleModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06SaveCircleModelC(DCP06ModelC* pDCP06Model);
+            SaveCircleModel(Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06SaveCircleModelC();
+            virtual ~SaveCircleModel();
 
 			CircleFileFunc* m_pFileFunc;
     };

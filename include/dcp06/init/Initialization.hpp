@@ -46,13 +46,13 @@
 namespace DCP
 {
     // Forward declaration
-    class DCP06ModelC;
+    class Model;
 
-	class DCP06InitDlgC;
+	class InitializationDialog;
 
     
     // Description: Hello World dialog
-	class DCP06InitDlgC : /*public OBS::CommandC,*/ public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class InitializationDialog : /*public OBS::CommandC,*/ public GUI::StandardDialogC, public GUI::ModelHandlerC
     {
         public:
 
@@ -81,7 +81,7 @@ namespace DCP
             };
 
             // Description: Constructor
-            DCP06InitDlgC(bool disableFileStorage = true);
+            InitializationDialog(bool disableFileStorage = true);
 
             // Description: Called when dialog has to initialize, called once in lifetime only
             virtual void OnInitDialog();
@@ -93,7 +93,7 @@ namespace DCP
             virtual void UpdateData();
 
             // Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			virtual void RefreshControls();
 			
@@ -123,7 +123,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pFileStorage;
 
 
-			//OBS_DECLARE_EXECUTE(DCP06InitDlgC);
+			//OBS_DECLARE_EXECUTE(InitializationDialog);
 
 	private:
 			//OBS::ObserverC m_pComboBoxObserver;
@@ -136,13 +136,13 @@ namespace DCP
 
     };
 // Description: Tabbed controller for the Hello World application
-    class DCP06InitControllerC : public GUI::ControllerC , public OBS::CommandC
+    class InitializationController : public GUI::ControllerC , public OBS::CommandC
     {
         public:
 
             // Description: Constructor
-            DCP06InitControllerC(bool disableFileStorage = true);
-			~DCP06InitControllerC();
+            InitializationController(bool disableFileStorage = true);
+			~InitializationController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -162,22 +162,22 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-			//DCP06InitControllerC( const DCP06InitControllerC& oDCP05InitController )
+			//InitializationController( const InitializationController& oInitController )
    //         {
    //             USER_APP_VERIFY( false );
    //         }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06InitControllerC& operator=( const DCP06InitControllerC& oDCP05InitController )
+            InitializationController& operator=( const InitializationController& oInitController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06InitDlgC* m_pDlg;
+            InitializationDialog* m_pDlg;
 
-			OBS_DECLARE_EXECUTE(DCP06InitControllerC);
+			OBS_DECLARE_EXECUTE(InitializationController);
 
 	private:
 			OBS::ObserverC m_pOnApplicationClosedObserver;

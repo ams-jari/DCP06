@@ -43,7 +43,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -57,20 +57,20 @@
 
 // USER DIALOG
 
-DCP::DCP06AutoMatchDlgC::DCP06AutoMatchDlgC(DCP::DCP06ModelC* pDCP06Model):
+DCP::AutoMatchDialog::AutoMatchDialog(DCP::Model* pModel):
 		GUI::ModelHandlerC(),GUI::StandardDialogC(),m_pLine1(0),m_pLine2(0),m_pX(0), m_pY(0), m_pZ(0),
-		m_pDCP06Model(pDCP06Model)
+		m_pModel(pModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
 }
 
 
             // Description: Destructor
-DCP::DCP06AutoMatchDlgC::~DCP06AutoMatchDlgC()
+DCP::AutoMatchDialog::~AutoMatchDialog()
 {
 }
 
-void DCP::DCP06AutoMatchDlgC::OnInitDialog(void)
+void DCP::AutoMatchDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -119,17 +119,17 @@ void DCP::DCP06AutoMatchDlgC::OnInitDialog(void)
 
 
 
-void DCP::DCP06AutoMatchDlgC::OnDialogActivated()
+void DCP::AutoMatchDialog::OnDialogActivated()
 {
 	RefreshControls();
 }
 
-void DCP::DCP06AutoMatchDlgC::UpdateData()
+void DCP::AutoMatchDialog::UpdateData()
 {
 }
 
 // Description: refresh all controls
-void DCP::DCP06AutoMatchDlgC::RefreshControls()
+void DCP::AutoMatchDialog::RefreshControls()
 {
 	if(m_pLine1 && m_pLine2 && m_pX && m_pY && m_pZ)
 	{	
@@ -143,7 +143,7 @@ void DCP::DCP06AutoMatchDlgC::RefreshControls()
 		sY.LoadTxt(AT_DCP06, P_DCP_Y_TOK);
 		sZ.LoadTxt(AT_DCP06, P_DCP_Z_TOK);
 
-		short iDecimals = m_pDCP06Model->m_nDecimals;
+		short iDecimals = m_pModel->m_nDecimals;
 
 		StringC sXline, sYline, sZline;
 
@@ -158,14 +158,14 @@ void DCP::DCP06AutoMatchDlgC::RefreshControls()
 	}
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06AutoMatchDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::AutoMatchDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06AutoMatchModelC* pDCP06AutoMatchModel = dynamic_cast< DCP::DCP06AutoMatchModelC* >( pModel );
+    DCP::AutoMatchModel* pDCP06AutoMatchModel = dynamic_cast< DCP::AutoMatchModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06AutoMatchModel != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06AutoMatchModel ))
+    if ( pDCP06AutoMatchModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDCP06AutoMatchModel ))
     {
 		// kopioidaan tarvittavat arvot
         RefreshControls();
@@ -176,20 +176,20 @@ bool DCP::DCP06AutoMatchDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06AutoMatchModelC* DCP::DCP06AutoMatchDlgC::GetDataModel() const
+DCP::AutoMatchModel* DCP::AutoMatchDialog::GetDataModel() const
 {
-    return (DCP::DCP06AutoMatchModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::AutoMatchModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06AutoMatchControllerC::DCP06AutoMatchControllerC(DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL )
+DCP::AutoMatchController::AutoMatchController(Model* pModel)
+    : m_pDlg( nullptr )
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -197,7 +197,7 @@ DCP::DCP06AutoMatchControllerC::DCP06AutoMatchControllerC(DCP06ModelC* pDCP06Mod
     SetTitle(StringC( AT_DCP06, T_DCP_AUTOMATCH_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06AutoMatchDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::AutoMatchDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( AUTOMATCH_DLG, m_pDlg, true );
 
     // Set the function key
@@ -221,13 +221,13 @@ DCP::DCP06AutoMatchControllerC::DCP06AutoMatchControllerC(DCP06ModelC* pDCP06Mod
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06AutoMatchControllerC::~DCP06AutoMatchControllerC()
+DCP::AutoMatchController::~AutoMatchController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06AutoMatchControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::AutoMatchController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -239,12 +239,12 @@ bool DCP::DCP06AutoMatchControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -255,9 +255,9 @@ bool DCP::DCP06AutoMatchControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // SET
-void DCP::DCP06AutoMatchControllerC::OnF1Pressed()
+void DCP::AutoMatchController::OnF1Pressed()
 {
-   if (m_pDlg == NULL)
+   if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -266,9 +266,9 @@ void DCP::DCP06AutoMatchControllerC::OnF1Pressed()
 }
 
 // CONT
-void DCP::DCP06AutoMatchControllerC::OnF5Pressed()
+void DCP::AutoMatchController::OnF5Pressed()
 {
-   if (m_pDlg == NULL)
+   if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -286,21 +286,21 @@ void DCP::DCP06AutoMatchControllerC::OnF5Pressed()
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06AutoMatchControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::AutoMatchController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06AutoMatchControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::AutoMatchController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
 }
 
 // ===========================================================================================
-// DCP05LineSettingModelC
+// LineSettingModel
 // ===========================================================================================
-DCP::DCP06AutoMatchModelC::DCP06AutoMatchModelC()
+DCP::AutoMatchModel::AutoMatchModel()
 {
 			xmea = 0.0;
 			ymea = 0.0;
@@ -311,6 +311,6 @@ DCP::DCP06AutoMatchModelC::DCP06AutoMatchModelC()
 			pointid = L"";
 	
 }
-DCP::DCP06AutoMatchModelC::~DCP06AutoMatchModelC()
+DCP::AutoMatchModel::~AutoMatchModel()
 {
 }

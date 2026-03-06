@@ -46,19 +46,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06CircleDlgC;
-	class DCP06CircleModelC;
+	class Model;
+	class CircleDialog;
+	class CircleModel;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CircleControllerC : public GUI::ControllerC
+    class CircleController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06CircleControllerC(DCP06ModelC *pDCP06Model, short iDisplay = 0);
-			~DCP06CircleControllerC();
+            CircleController(Model *pModel, short iDisplay = 0);
+			~CircleController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -85,22 +85,22 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06CircleControllerC( const DCP06CircleControllerC& oDCP05CircleController )
+            CircleController( const CircleController& oCircleController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06CircleControllerC& operator=( const DCP06CircleControllerC& oDCP05CircleController )
+            CircleController& operator=( const CircleController& oCircleController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06CircleDlgC* m_pDlg;
-			DCP06ModelC* m_pDCP06Model;
-			DCP06CircleModelC* m_pDataModel;
+            CircleDialog* m_pDlg;
+			Model* m_pModel;
+			CircleModel* m_pDataModel;
 
 			short PLANE_KEYS;
 			void set_function_keys();
@@ -109,7 +109,7 @@ namespace DCP
     };
 
 
-	class DCP06CircleDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
+	class CircleDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -122,10 +122,10 @@ namespace DCP
 				eCirclePoints
 			};
 
-		   DCP06CircleDlgC(DCP06ModelC *pDCP06Model, DCP06CircleModelC* pCircleModel, short iDisplay);
+		   CircleDialog(Model *pModel, CircleModel* pCircleModel, short iDisplay);
 
             // Description: Destructor
-            virtual ~DCP06CircleDlgC();
+            virtual ~CircleDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -137,11 +137,11 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06PointBuffModelC* GetPointBuffModelModel() const;
+			PointBuffModel* GetPointBuffModelModel() const;
 			
 	protected:
   			
-			DCP06ModelC * m_pDCP06Model;
+			Model * m_pModel;
 			
 			GUI::TextCtrlC*  m_pDefinePlaneInfo;
 			GUI::ComboLineCtrlC* m_pPlane;
@@ -149,10 +149,10 @@ namespace DCP
 			GUI::TextCtrlC*  m_pMeasureCirclePoints;
 			GUI::ComboLineCtrlC* m_pCirclePoints;
 
-			OBS_DECLARE_EXECUTE(DCP06CircleDlgC);
+			OBS_DECLARE_EXECUTE(CircleDialog);
 
 	private:
-			DCP06CircleModelC* m_pDataModel;
+			CircleModel* m_pDataModel;
 
 			StringC sXY_plane, sZX_plane, sYZ_plane, sCIRCLEPOINTS_plane, sMeasPlane;
 
@@ -162,21 +162,21 @@ namespace DCP
 			short m_iDisplay;
 	};
 
-	 class DCP06CircleModelC : public GUI::ModelC
+	 class CircleModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
-            DCP06CircleModelC(DCP06ModelC* pDCP06Model);
+            CircleModel(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06CircleModelC();
+            virtual ~CircleModel();
 
 			void delete_circle();
 			short show_circle_points();
-			DCP06ModelC* m_pDCP06Model;
-			DCP06CommonC* pCommon;
-			DCP06MsgBoxC* pMsgBox;
+			Model* m_pModel;
+			Common* pCommon;
+			MsgBox* pMsgBox;
 			StringC sTitle;
 			S_PLANE_BUFF temp_plane_table[1];
 			S_PLANE_BUFF planes[1];

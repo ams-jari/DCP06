@@ -41,10 +41,10 @@
 namespace DCP
 {
     // Forward declaration
-    class DCP06ModelC;
+    class Model;
 
     // Description: Hello World dialog
-	class DCP06DlgC : public OBS::CommandC, public GUI::StandardDialogC, public GUI::ModelHandlerC
+	class BaseDialog : public OBS::CommandC, public GUI::StandardDialogC, public GUI::ModelHandlerC
     {
         public:
 
@@ -57,7 +57,7 @@ namespace DCP
             };
 
             // Description: Constructor
-            DCP06DlgC();
+            BaseDialog();
 
             // Description: Called when dialog has to initialize, called once in lifetime only
             virtual void OnInitDialog();
@@ -69,7 +69,7 @@ namespace DCP
             virtual void UpdateData();
 
             // Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
         protected:
 
@@ -80,7 +80,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pCombo2;
 			GUI::ComboLineCtrlC* m_pComboBox;
 
-			OBS_DECLARE_EXECUTE(DCP06DlgC);
+			OBS_DECLARE_EXECUTE(BaseDialog);
 
 	private:
 			OBS::ObserverC m_pComboBoxObserver;

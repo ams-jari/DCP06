@@ -41,7 +41,7 @@ using namespace DCP;
 // ========================================  Declarations  ========================================
 // ================================================================================================
 
-OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectOnePointDlgC);
+OBS_IMPLEMENT_EXECUTE(DCP::SelectOnePointDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -53,9 +53,9 @@ OBS_IMPLEMENT_EXECUTE(DCP::DCP06SelectOnePointDlgC);
 // ================================================================================================
 
 // Unit
-DCP06SelectOnePointDlgC::DCP06SelectOnePointDlgC(DCP::DCP06ModelC *pDCP06Model):poMultiColCtrl(NULL),
-	m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(DCP06SelectOnePointDlgC, OnChanged), this),
-	m_pDCP06Model(pDCP06Model)
+SelectOnePointDialog::SelectOnePointDialog(DCP::Model *pModel):poMultiColCtrl(nullptr),
+	m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(SelectOnePointDialog, OnChanged), this),
+	m_pModel(pModel)
 {
 	//SetTxtApplicationId(AT_DCP06);
 
@@ -78,12 +78,12 @@ DCP06SelectOnePointDlgC::DCP06SelectOnePointDlgC(DCP::DCP06ModelC *pDCP06Model):
 	*/
 }
 // Description: Destructor
-DCP06SelectOnePointDlgC::~DCP06SelectOnePointDlgC()
+SelectOnePointDialog::~SelectOnePointDialog()
 {
 
 }
 
-void DCP06SelectOnePointDlgC::OnInitDialog(void)
+void SelectOnePointDialog::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 	
@@ -122,7 +122,7 @@ void DCP06SelectOnePointDlgC::OnInitDialog(void)
 	m_pMultiColCtrlObserver.Attach(poMultiColCtrl->GetSubject());
 }
 
-void DCP06SelectOnePointDlgC::OnChanged(int unNotifyCode,int ulParam2)
+void SelectOnePointDialog::OnChanged(int unNotifyCode,int ulParam2)
 {
 	//if(unNotifyCode == GUI::NC_ONCOMBOBOX_SELECTION_CHANGED)
 	if(unNotifyCode == GUI::NC_ONLISTMULTICOL_SELECTION_ACCEPTED)
@@ -135,7 +135,7 @@ void DCP06SelectOnePointDlgC::OnChanged(int unNotifyCode,int ulParam2)
 }
 
 
-void DCP06SelectOnePointDlgC::OnF1Pressed(void)
+void SelectOnePointDialog::OnF1Pressed(void)
 {
 	short iSelectedId = poMultiColCtrl->GetSelectedId();
 	StringC sTemp;
@@ -145,20 +145,20 @@ void DCP06SelectOnePointDlgC::OnF1Pressed(void)
 	StringC sActDes;
 	poMultiColCtrl->GetCellText(CI_ActualDesign,iSelectedId,sActDes);
 	
-	//if(GetDCP06Model()->points[iSelectedId].bPointSelected)
+	//if(GetModel()->points[iSelectedId].bPointSelected)
 	//{
-		GetDCP06Model()->points[iSelectedId].bPointSelected = false;
-		if(GetDCP06Model()->points[iSelectedId].bActualSelected && GetDCP06Model()->points[iSelectedId].bDesignDefined)
+		GetModel()->points[iSelectedId].bPointSelected = false;
+		if(GetModel()->points[iSelectedId].bActualSelected && GetModel()->points[iSelectedId].bDesignDefined)
 		{
-			GetDCP06Model()->points[iSelectedId].bActualSelected = false;
-			GetDCP06Model()->points[iSelectedId].bDesignSelected = true;
+			GetModel()->points[iSelectedId].bActualSelected = false;
+			GetModel()->points[iSelectedId].bDesignSelected = true;
 			//sActDes = L"a/D";
 			sActDes = sActualNonSelected + L"/" + sDesignSelected;
 		}
-		else if(GetDCP06Model()->points[iSelectedId].bDesignSelected && GetDCP06Model()->points[iSelectedId].bActualDefined)
+		else if(GetModel()->points[iSelectedId].bDesignSelected && GetModel()->points[iSelectedId].bActualDefined)
 		{
-			GetDCP06Model()->points[iSelectedId].bActualSelected = true;
-			GetDCP06Model()->points[iSelectedId].bDesignSelected = false;
+			GetModel()->points[iSelectedId].bActualSelected = true;
+			GetModel()->points[iSelectedId].bDesignSelected = false;
 			sActDes = sActualSelected + L"/" + sDesignNonSelected;
 			//sActDes = L"A/d";
 		}
@@ -171,14 +171,14 @@ void DCP06SelectOnePointDlgC::OnF1Pressed(void)
 	else
 	{
 		sTemp = L"*";	
-		GetDCP06Model()->points[iSelectedId].bPointSelected = true;
-		GetDCP06Model()->iSelectedNo = iSelectedId;
+		GetModel()->points[iSelectedId].bPointSelected = true;
+		GetModel()->iSelectedNo = iSelectedId;
 		//poMultiColCtrl->SetCellStr(CI_Selected,iSelectedId,sTemp);
 	}
 	*/
 }
 
-void DCP06SelectOnePointDlgC::OnDialogActivated()
+void SelectOnePointDialog::OnDialogActivated()
 {
 	GUI::TableDialogC::OnDialogActivated();
 	/*
@@ -199,31 +199,31 @@ void DCP06SelectOnePointDlgC::OnDialogActivated()
 	//StringC sActualDesign = L"a/D";
 	StringC sActualDesign = sActualNonSelected + L"/" + sDesignSelected;
 	StringC sPoint;
-	short iDef =  GetDCP06Model()->m_iDef;
+	short iDef =  GetModel()->m_iDef;
 	//BeginDraw();  NO CAPTIVATE
 	char temp[20],temp_no[10];
 	
-	for(short i=0; i < GetDCP06Model()->m_iPointsCount; i++)
+	for(short i=0; i < GetModel()->m_iPointsCount; i++)
 	{
-		sprintf(temp,"%-s",GetDCP06Model()->points[i].point_id);
+		sprintf(temp,"%-s",GetModel()->points[i].point_id);
 		sPoint = temp;
 		/*	
 		 if(iDef == BOTH)
 		 {
-			GetDCP06Model()->points[i].bDesignSelected = (GetDCP06Model()->points[i].bDesignDefined) ? true : false;
-			GetDCP06Model()->points[i].bActualSelected = (GetDCP06Model()->points[i].bActualDefined) ? true : false;
+			GetModel()->points[i].bDesignSelected = (GetModel()->points[i].bDesignDefined) ? true : false;
+			GetModel()->points[i].bActualSelected = (GetModel()->points[i].bActualDefined) ? true : false;
 		 }
-		 else if(GetDCP06Model()->points[i].bActualDefined == 1 && iDef == ACTUAL)
+		 else if(GetModel()->points[i].bActualDefined == 1 && iDef == ACTUAL)
 		 {
-			GetDCP06Model()->points[i].bDesignSelected = false;
-			GetDCP06Model()->points[i].bActualSelected = true;
+			GetModel()->points[i].bDesignSelected = false;
+			GetModel()->points[i].bActualSelected = true;
 					
 			//	sprintf(Temp, "%-6.6s %c/%c ", pid,actual_selected[0] ,(des==1) ? design_nonselected[0] : '-');
 		 }
 		 else
 		 {
-			if(GetDCP06Model()->points[i].bDesignDefined)
-				GetDCP06Model()->points[i].bDesignSelected = true;
+			if(GetModel()->points[i].bDesignDefined)
+				GetModel()->points[i].bDesignSelected = true;
 			//if(!mea)
 			//		pList[iCount-1].bActualSelected = false;
 
@@ -239,25 +239,25 @@ void DCP06SelectOnePointDlgC::OnDialogActivated()
 		sel_points[i].iId = 0;
 		*/
 		/*
-		 if(GetDCP06Model()->points[i].bActualSelected && GetDCP06Model()->points[i].bActualDefined)
+		 if(GetModel()->points[i].bActualSelected && GetModel()->points[i].bActualDefined)
 			sActualDesign  = sActualSelected;
-		 else if(!GetDCP06Model()->points[i].bActualSelected && GetDCP06Model()->points[i].bActualDefined)
+		 else if(!GetModel()->points[i].bActualSelected && GetModel()->points[i].bActualDefined)
 			sActualDesign = sActualNonSelected;
 		 else
 			sActualDesign = L"-";
 
 		sActualDesign += L"/";
 
-		 if(GetDCP06Model()->points[i].bDesignSelected && GetDCP06Model()->points[i].bDesignDefined)
+		 if(GetModel()->points[i].bDesignSelected && GetModel()->points[i].bDesignDefined)
 			sActualDesign  += sDesignSelected;
-		 else if(!GetDCP06Model()->points[i].bDesignSelected && GetDCP06Model()->points[i].bDesignDefined)
+		 else if(!GetModel()->points[i].bDesignSelected && GetModel()->points[i].bDesignDefined)
 			sActualDesign = sDesignNonSelected;
 		 else
 			sActualDesign += L"-";	
 		*/		
-		 if(GetDCP06Model()->points[i].bActualSelected)
+		 if(GetModel()->points[i].bActualSelected)
 			sActualDesign  = sActualSelected;
-		 else if(GetDCP06Model()->points[i].bActualDefined) 
+		 else if(GetModel()->points[i].bActualDefined) 
 		 {
 			  sActualDesign = sActualNonSelected;
 		 }	 
@@ -266,11 +266,11 @@ void DCP06SelectOnePointDlgC::OnDialogActivated()
  
 	 	 sActualDesign += L"/";
 
-		 if(GetDCP06Model()->points[i].bDesignSelected)
+		 if(GetModel()->points[i].bDesignSelected)
 			 sActualDesign  += sDesignSelected;
-		 else if(GetDCP06Model()->points[i].bDesignDefined)
+		 else if(GetModel()->points[i].bDesignDefined)
 		 {
-				if(GetDCP06Model()->points[i].bActualSelected == true)
+				if(GetModel()->points[i].bActualSelected == true)
 					sActualDesign += sDesignNonSelected;
 				else
 					sActualDesign  += sDesignSelected;
@@ -291,25 +291,25 @@ void DCP06SelectOnePointDlgC::OnDialogActivated()
 
 }
 
-void DCP::DCP06SelectOnePointDlgC::UpdateData()
+void DCP::SelectOnePointDialog::UpdateData()
 {
 	StringC sSelected;
 	short iSelected = poMultiColCtrl->GetSelectedId()+1;
 	//poMultiColCtrl->GetCellStr(CI_Selected,iSelected, sSelected);
-	//GetDCP06Model()->ADFFileName = sSelected;
-	GetDCP06Model()->iSelectedNo = iSelected;
+	//GetModel()->ADFFileName = sSelected;
+	GetModel()->iSelectedNo = iSelected;
 
 		
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06SelectOnePointDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectOnePointDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06SelectOnePointModelC* pDCP06Model = dynamic_cast< DCP::DCP06SelectOnePointModelC* >( pModel );
+    DCP::SelectOnePointModel* pModel = dynamic_cast< DCP::SelectOnePointModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -319,9 +319,9 @@ bool DCP::DCP06SelectOnePointDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06SelectOnePointModelC* DCP::DCP06SelectOnePointDlgC::GetDCP06Model() const
+DCP::SelectOnePointModel* DCP::SelectOnePointDialog::GetModel() const
 {
-    return (DCP::DCP06SelectOnePointModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::SelectOnePointModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
@@ -330,8 +330,8 @@ DCP::DCP06SelectOnePointModelC* DCP::DCP06SelectOnePointDlgC::GetDCP06Model() co
 
 // ******************************************************************************
 
-DCP::DCP06SelectOnePointControllerC::DCP06SelectOnePointControllerC(DCP::DCP06ModelC *pDCP06Model)
-    : m_pDCP06SelectOnePointDlg( NULL ),m_pDCP06Model(pDCP06Model)
+DCP::SelectOnePointController::SelectOnePointController(DCP::Model *pModel)
+    : m_pSelectOnePointDlg( nullptr ),m_pModel(pModel)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -339,8 +339,8 @@ DCP::DCP06SelectOnePointControllerC::DCP06SelectOnePointControllerC(DCP::DCP06Mo
     SetTitle(StringC( AT_DCP06, T_DCP_3DFILE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-     m_pDCP06SelectOnePointDlg = new DCP::DCP06SelectOnePointDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
-    (void)AddDialog( SELECT_ONE_POINT_DLG, m_pDCP06SelectOnePointDlg, true );
+     m_pSelectOnePointDlg = new DCP::SelectOnePointDialog(pModel);  //lint !e1524 new in constructor for class 
+    (void)AddDialog( SELECT_ONE_POINT_DLG, m_pSelectOnePointDlg, true );
 
     // Set the function key
 	
@@ -388,12 +388,12 @@ DCP::DCP06SelectOnePointControllerC::DCP06SelectOnePointControllerC(DCP::DCP06Mo
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
-DCP::DCP06SelectOnePointControllerC::~DCP06SelectOnePointControllerC()
+DCP::SelectOnePointController::~SelectOnePointController()
 {
 
 }
 // Description: Route model to everybody else
-bool DCP::DCP06SelectOnePointControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectOnePointController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -401,15 +401,15 @@ bool DCP::DCP06SelectOnePointControllerC::SetModel( GUI::ModelC* pModel )
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
-     return m_pDCP06SelectOnePointDlg->SetModel( pModel );
+     return m_pSelectOnePointDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -420,26 +420,26 @@ bool DCP::DCP06SelectOnePointControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // OPEN
-void DCP::DCP06SelectOnePointControllerC::OnF1Pressed()
+void DCP::SelectOnePointController::OnF1Pressed()
 {
 
 }
 
 // NEW
-void DCP::DCP06SelectOnePointControllerC::OnF2Pressed()
+void DCP::SelectOnePointController::OnF2Pressed()
 {
 }
 
 // CLOSE
-void DCP::DCP06SelectOnePointControllerC::OnF5Pressed()
+void DCP::SelectOnePointController::OnF5Pressed()
 {
 
 }
 
 // CONT
-void DCP::DCP06SelectOnePointControllerC::OnF6Pressed()
+void DCP::SelectOnePointController::OnF6Pressed()
 {
-    if (m_pDCP06SelectOnePointDlg == NULL)
+    if (m_pSelectOnePointDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -447,52 +447,52 @@ void DCP::DCP06SelectOnePointControllerC::OnF6Pressed()
 
     // Update model
     // Set it to hello world dialog
-    m_pDCP06SelectOnePointDlg->UpdateData();
+    m_pSelectOnePointDlg->UpdateData();
 
     // Remove the following statement if you don't want an exit
     // to the main menu
     (void)Close(EC_KEY_CONT);
 }
 // DEL
-void DCP::DCP06SelectOnePointControllerC::OnSHF2Pressed()
+void DCP::SelectOnePointController::OnSHF2Pressed()
 {
 }
 
 // VIEW
-void DCP::DCP06SelectOnePointControllerC::OnSHF5Pressed()
+void DCP::SelectOnePointController::OnSHF5Pressed()
 {
 	/*
-	if(GetController(INIT_CONTROLLER) == NULL)
+	if(GetController(INIT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC );
+		(void)AddController( INIT_CONTROLLER, new DCP::InitializationController );
 	}
-	(void)GetController( INIT_CONTROLLER )->SetModel( m_pDCP06MeasDlg->GetDCP06Model());
+	(void)GetController( INIT_CONTROLLER )->SetModel( m_pMeasureDlg->GetModel());
 	SetActiveController(INIT_CONTROLLER, true);
 	*/
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06SelectOnePointControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::SelectOnePointController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06SelectOnePointControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::SelectOnePointController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
-	m_pDCP06SelectOnePointDlg->RefreshControls();
+	m_pSelectOnePointDlg->RefreshControls();
 	DestroyController( lCtrlID );
 }
 
 
 
 // Instantiate template classes
-DCP::DCP06SelectOnePointModelC::DCP06SelectOnePointModelC()
+DCP::SelectOnePointModel::SelectOnePointModel()
 {
 	//memset(&sel_points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 	//memset(nro_table,0,sizeof(short) * MAX_POINTS_IN_FILE*2);
 }
 
 
-DCP::DCP06SelectOnePointModelC::~DCP06SelectOnePointModelC()
+DCP::SelectOnePointModel::~SelectOnePointModel()
 {
 }

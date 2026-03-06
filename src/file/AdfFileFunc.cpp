@@ -43,7 +43,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -57,30 +57,30 @@
 
 // USER DIALOG
 
-DCP::AdfFileFunc::AdfFileFunc(ADF_TYPE type,DCP06ModelC* pDCP06Model): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pDCP06Model(pDCP06Model)
+DCP::AdfFileFunc::AdfFileFunc(ADF_TYPE type,Model* pModel): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pModel(pModel)
 {
 	// get path
 	adf_type = type;
 	
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 
 	getPath();
 }
 
-//DCP::AdfFileFunc::AdfFileFunc(DCP06ModelC* pDCP06Model): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pDCP06Model(pDCP06Model)
+//DCP::AdfFileFunc::AdfFileFunc(Model* pModel): m_pFile(0), points(0), m_bExists(false),opened(0),file_updated(0),m_pModel(pModel)
 //{
 //	adf_type = ADF;
 //	// get path
 //	getPath();
 //
-//	m_pCommon = new DCP06CommonC(pDCP06Model);
+//	m_pCommon = new Common(pModel);
 //}
 
-DCP::AdfFileFunc::AdfFileFunc(DCP06ModelC* pDCP06Model): m_pFile(0), points(0), m_bExists(false),opened(0),	m_pDCP06Model(pDCP06Model),file_updated(0)
+DCP::AdfFileFunc::AdfFileFunc(Model* pModel): m_pFile(0), points(0), m_bExists(false),opened(0),	m_pModel(pModel),file_updated(0)
 {
 	adf_type = ADF;
 	
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 
 	// get path
 	getPath();
@@ -92,7 +92,7 @@ DCP::AdfFileFunc::AdfFileFunc(const char* filename, bool bCreate):m_pFile(0), po
 	CPI::FileIteratorC FileIterator;
 	CPI::FileInfoC FileInfo;
 
-	m_pCommon = new DCP06CommonC();
+	m_pCommon = new Common();
 
 	m_cPathAndFileName[0] = '\0';
 	m_cPath[0] = '\0';
@@ -118,11 +118,11 @@ DCP::AdfFileFunc::AdfFileFunc(const char* filename, bool bCreate):m_pFile(0), po
 */
 // ****************************************************************************************
 
-DCP::AdfFileFunc::AdfFileFunc(boost::filesystem::path* FileInfo, DCP06ModelC* pDCP06Model):m_pFile(0), points(0), m_bExists(false),m_pDCP06Model(pDCP06Model)
+DCP::AdfFileFunc::AdfFileFunc(boost::filesystem::path* FileInfo, Model* pModel):m_pFile(0), points(0), m_bExists(false),m_pModel(pModel)
 {
 	adf_type = ADF;
 
-	m_pCommon = new DCP06CommonC(pDCP06Model);
+	m_pCommon = new Common(pModel);
 
 	m_cPath[0] = '\0';
 	m_cPathAndFileName[0] = '\0';
@@ -167,7 +167,7 @@ bool DCP::AdfFileFunc::setFile(const char* filename)
 		m_pFile = 0;
 	}
 	
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	
 	char temp[CPI::LEN_PATH_MAX];
@@ -179,7 +179,7 @@ bool DCP::AdfFileFunc::setFile(const char* filename)
 	if(m_pCommon->strblank(temp_name))
 		return false;
 	
-	if(strstr(temp_name,".ref") != NULL || strstr(temp_name,".REF") != NULL)
+	if(strstr(temp_name,".ref") != nullptr || strstr(temp_name,".REF") != nullptr)
 	{
 		// Convert .Ref To .Adf
 		if(!convert_ref_to_adf(temp_name) == true)
@@ -242,13 +242,13 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 	if(m_pCommon->strblank(filename_temp))
 		return false;
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	char temp[CPI::LEN_PATH_MAX];
 		char temp_name[CPI::LEN_PATH_MAX];	
 	
 	sprintf(temp_name,"%s",filename_temp);
-	if(strstr(temp_name,".ref") != NULL || strstr(temp_name,".REF") != NULL)
+	if(strstr(temp_name,".ref") != nullptr || strstr(temp_name,".REF") != nullptr)
 	{
 		// Convert .Ref To .Adf
 		if(!convert_ref_to_adf(temp_name) == true)
@@ -279,7 +279,7 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 
 	//int rr = FileIterator.FindFirst(pSearch, FileInfo);
 	int rr = m_pCommon->find_first_file(pSearch, &FileInfo);
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	// for test
 	/*
 	StringC ss;
@@ -296,7 +296,7 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 		points = ReadPointsCount(m_cPathAndFileName);
 		m_bExists = true;
 		/*
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		msgbox.ShowMessageOk(L"File opened!");
 		*/
 		return true;
@@ -304,7 +304,7 @@ bool DCP::AdfFileFunc::setFile(StringC filename)
 	else
 	{	
 		/*
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		msgbox.ShowMessageOk(StringC(temp));
 		*/
 	}
@@ -358,7 +358,7 @@ bool DCP::AdfFileFunc::setFileFromFullPath(const char* fullPath)
 // ****************************************************************************************
 void DCP::AdfFileFunc::getPath()
 {
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	//TODO EI OLE VIVASSA
 	//CPI::SensorC::GetInstance()->MakeDir(m_cPath);
@@ -560,22 +560,22 @@ char bXdes[10], bYdes[10], bZdes[10];
 
 		strncpy(bNote, trow+73, 6);
 
-		if(pid != NULL) { strncpy(pid,bPid,6);pid[6] = '\0';}
+		if(pid != nullptr) { strncpy(pid,bPid,6);pid[6] = '\0';}
 
-		if(xsta != NULL){ *xsta = bXsta;}
-		if(xact != NULL){ strncpy(xact, bXmea,9);xact[9] = '\0';}
-		if(xdes != NULL){ strncpy(xdes, bXdes,9);xdes[9] = '\0';}
+		if(xsta != nullptr){ *xsta = bXsta;}
+		if(xact != nullptr){ strncpy(xact, bXmea,9);xact[9] = '\0';}
+		if(xdes != nullptr){ strncpy(xdes, bXdes,9);xdes[9] = '\0';}
 
-		if(ysta != NULL){ *ysta = bYsta;}
-		if(yact != NULL){ strncpy(yact, bYmea,9);yact[9] = '\0';}
-		if(ydes != NULL){ strncpy(ydes, bYdes,9);ydes[9] = '\0';}
+		if(ysta != nullptr){ *ysta = bYsta;}
+		if(yact != nullptr){ strncpy(yact, bYmea,9);yact[9] = '\0';}
+		if(ydes != nullptr){ strncpy(ydes, bYdes,9);ydes[9] = '\0';}
 
-		if(zsta != NULL){ *zsta = bZsta;}
+		if(zsta != nullptr){ *zsta = bZsta;}
 
-		if(zact != NULL){ strncpy(zact,bZmea,9);zact[9] = '\0';}
-		if(zdes != NULL){ strncpy(zdes,bZdes,9);zdes[9] = '\0';}
+		if(zact != nullptr){ strncpy(zact,bZmea,9);zact[9] = '\0';}
+		if(zdes != nullptr){ strncpy(zdes,bZdes,9);zdes[9] = '\0';}
 
-		if(note != NULL){ strncpy(note, bNote,6);note[6] = '\0';}
+		if(note != nullptr){ strncpy(note, bNote,6);note[6] = '\0';}
 
 		return 1;
 	}
@@ -594,7 +594,7 @@ int Result;
 	if(!m_pCommon->card_status())//(1) != 0)
 		return -1;
 
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	
 	ret = -1;
 
@@ -749,7 +749,7 @@ short DCP::AdfFileFunc::close_adf_file()
 short DCP::AdfFileFunc::fopen1(const char* mode)
 {
 	
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	//StringC sT;
 	//sT = L"fopen1  ";
 	//sT += StringC(m_cPathAndFileName);
@@ -782,7 +782,7 @@ FILE* DCP::AdfFileFunc::fopen2(FILE *pFile , char* fname, const char* mode)
 	{
 		return pFile;		
 	}
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
 			msg.Format(msg, (const wchar_t*)StringC(temp));
@@ -1171,7 +1171,7 @@ char trow[0xFF],apu[7],apu2[7];
 			fgets(trow,82,m_pFile);trow[81] = '\0';
 			fgets(trow,82,m_pFile);trow[81] = '\0';
 
-			while(fgets(trow,82,m_pFile) != NULL)
+			while(fgets(trow,82,m_pFile) != nullptr)
 			{
 				trow[81] = '\0';
 				pp++;
@@ -1208,7 +1208,7 @@ short DCP::AdfFileFunc::GetPointList(S_SELECT_POINTS* pList, short iMaxPoints, s
 
 	if(m_pFile)
 	{
-		DCP06CommonC common(m_pDCP06Model);
+		Common common(m_pModel);
 		short i;
 		bool mea,des;
 		char pid[7];
@@ -1228,7 +1228,7 @@ short DCP::AdfFileFunc::GetPointList(S_SELECT_POINTS* pList, short iMaxPoints, s
 				break;
 
 			iCount++;
-			select_pnt1((int) i, pid, NULL, xmea, xdes, NULL, ymea, ydes, NULL, zmea, zdes, NULL);
+			select_pnt1((int) i, pid, nullptr, xmea, xdes, nullptr, ymea, ydes, nullptr, zmea, zdes, nullptr);
 
 			mea=des=false;
 
@@ -1312,7 +1312,7 @@ short DCP::AdfFileFunc::GetPointList(S_SELECT_POINT* pList, short iMaxPoints)
     
 	if(m_pFile)
 	{
-		DCP06CommonC common(m_pDCP06Model);
+		Common common(m_pModel);
 		short i;
 		bool mea,des;
 		char pid[7];
@@ -1338,7 +1338,7 @@ short DCP::AdfFileFunc::GetPointList(S_SELECT_POINT* pList, short iMaxPoints)
 				break;
 
 			iCount++;
-			select_pnt1((int) i, pid, NULL, xmea, xdes, NULL, ymea, ydes, NULL, zmea, zdes, NULL);
+			select_pnt1((int) i, pid, nullptr, xmea, xdes, nullptr, ymea, ydes, nullptr, zmea, zdes, nullptr);
 
 			mea=des=false;
 
@@ -1368,7 +1368,7 @@ short DCP::AdfFileFunc::create_adf_file(char *fname, char* pointid,bool showOKMe
 {
 unsigned int new_file_size;
 char filename[FILENAME_BUFF_LEN];
-DCP06MsgBoxC msgbox;		
+MsgBox msgbox;		
 		
 
 	if(!m_pCommon->card_status())//card_status(1) != 0)
@@ -1489,7 +1489,7 @@ DCP06MsgBoxC msgbox;
 short DCP::AdfFileFunc::create_adf_file_at_path(const char* fullPath, char* pointid, bool showOKMessage)
 {
 	if (!fullPath || !pointid) return -1;
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	CloseFile();
 	boost::filesystem::path fp(fullPath);
 	boost::system::error_code ec;
@@ -1568,7 +1568,7 @@ int attr = 0;
 	//char filename_temp[20];
 	//UTL::UnicodeToAscii(filename_temp, fname);
 	
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pCommon->m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
 	char temp[CPI::LEN_PATH_MAX];
 	temp[0] = '\0';
@@ -1590,7 +1590,7 @@ short  DCP::AdfFileFunc::remove1(char *fname)
 {
 char apu[CPI::LEN_PATH_MAX];
 bool Result;
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 
     sprintf(apu,"%s%-s",m_cPath,common.strbtrim(fname));
 
@@ -1616,7 +1616,7 @@ short DCP::AdfFileFunc::copy_adf_file(char *to_fname)
 int filpos;
 char temp1[20],temp2[20];
 
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		if(!m_pCommon->card_status()) ///*1*/) != 0)
 			return false;
 		
@@ -1747,7 +1747,7 @@ short DCP::AdfFileFunc::swap_meas_design()
 	int pntnum;
 	char x_sta, y_sta, z_sta, x_act[10], y_act[10], z_act[10];
 	char x_des[10], y_des[10],z_des[10], Pid[7], Note[7];
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 
 	//
@@ -1960,7 +1960,7 @@ S_HEADER_INFO header_info;
 ************************************************************************/
 short DCP::AdfFileFunc::delete_adf_file(bool showMsg)
 {
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 
 	short result=-1;
@@ -2010,7 +2010,7 @@ short i,temp,Err1, write_ref, write_dat;
 int length;
 int Result;
 
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		StringC msg;
 
 		Err1 = 0;
@@ -2027,7 +2027,7 @@ int Result;
 		sprintf(temp1,"%-s",m_cFileName);
 		ptr = strchr(temp1,'.');
 		
-		if(ptr != NULL)
+		if(ptr != nullptr)
 		{
 			*ptr = '\0';
 			sprintf(dat_name,"%-s.dat",temp1);
@@ -2183,7 +2183,7 @@ char bPid[30], bNote[40];
 char bXdes[25], bYdes[25], bZdes[25];
 //int pos;
 
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 
 	sprintf(ref_name,"%-s",filename);
@@ -2194,7 +2194,7 @@ char bXdes[25], bYdes[25], bZdes[25];
 
 	ptr = strchr(temp,'.');
 
-	if(ptr != NULL)
+	if(ptr != nullptr)
 	{
 		*ptr= '\0';
 		sprintf(adf_name,"%-s.adf", temp);
@@ -2245,7 +2245,7 @@ char bXdes[25], bYdes[25], bZdes[25];
 
 			if(Result == 1)
 			{
-				ret = add_new_pnt(f_adf, bPid, NULL, bXdes, NULL, bYdes,NULL,bZdes,bNote); 
+				ret = add_new_pnt(f_adf, bPid, nullptr, bXdes, nullptr, bYdes,nullptr,bZdes,bNote); 
 				if(ret == false) // ERROR
 				{
 					break;
@@ -2356,33 +2356,33 @@ int Result;
 			ysta = ' ';
 			zsta = ' ';
 
-			if(xact != NULL)
+			if(xact != nullptr)
 			{
 				sprintf(bXact,"%9.9s", m_pCommon->strbtrim(xact));	
 				xsta = 'X';
 			}
-			if(yact != NULL)
+			if(yact != nullptr)
 			{
 				sprintf(bYact,"%9.9s", m_pCommon->strbtrim(yact));	
 				ysta = 'Y';
 			}
 
-			if(zact != NULL)
+			if(zact != nullptr)
 			{
 				sprintf(bZact,"%9.9s", m_pCommon->strbtrim(zact));	
 				zsta = 'Z';
 			}
 
-			if(xdes != NULL)
+			if(xdes != nullptr)
 			{
 				sprintf(bXdes,"%9.9s", m_pCommon->strbtrim(xdes));	
 			}
-			if(ydes != NULL)
+			if(ydes != nullptr)
 			{
 				sprintf(bYdes,"%9.9s", m_pCommon->strbtrim(ydes));	
 			}
 
-			if(zdes != NULL)
+			if(zdes != nullptr)
 			{
 				sprintf(bZdes,"%9.9s", m_pCommon->strbtrim(zdes));	
 			}
@@ -2729,7 +2729,7 @@ char temp[CPI::LEN_PATH_MAX];
 //unsigned short w;
 //int filpos;
 //int Result;
-		DCP06MsgBoxC msgbox;
+		MsgBox msgbox;
 		StringC msg;
 		if(points <=1)
 		{
@@ -2954,7 +2954,7 @@ char apu[7];
 //int new_filpos;
 //int Result;
 	
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 
 	if(!m_pCommon->card_status())
 		return false;
@@ -3007,7 +3007,7 @@ char apu[7];
 	// siirr� t�m� sinne mist� kutsutaan addpoint -funktiota
 	//if(get_AUTO_INCREMENT() == TRUE) 
 	/*
-	if(m_pDCP06Model->m_nAutoIncrement)
+	if(m_pModel->m_nAutoIncrement)
 	{
 		ret2 = true;
 	}
@@ -3287,7 +3287,7 @@ struct ams_vector cur_xyz,xyz;
 double dist, min;
 double xdsg,ydsg,zdsg;
 	
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 
 	min = -999999.0;
 	pno = -1;
@@ -3298,7 +3298,7 @@ double xdsg,ydsg,zdsg;
 	for(i=1;i<=points;i++)
 	{
 				
-		form_pnt1((int) i, pid, NULL,NULL,xdes,NULL, NULL, ydes, NULL, NULL, zdes, NULL);
+		form_pnt1((int) i, pid, nullptr,nullptr,xdes,nullptr, nullptr, ydes, nullptr, nullptr, zdes, nullptr);
 		
 		if(!m_pCommon->strblank(xdes) && !m_pCommon->strblank(ydes) && !m_pCommon->strblank(zdes))
 		{

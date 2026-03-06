@@ -48,19 +48,19 @@
 namespace DCP
 {
     // Forward declaration
-	class DCP06ModelC;
-	class DCP06CalculationCircleDlgC;
-	class DCP06CalculationCircleModelC;
+	class Model;
+	class CalculationCircleDialog;
+	class CalculationCircleModel;
 
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06CalculationCircleControllerC : public GUI::ControllerC
+    class CalculationCircleController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06CalculationCircleControllerC(DCP06ModelC *pDCP06Model);
-			~DCP06CalculationCircleControllerC();
+            CalculationCircleController(Model *pModel);
+			~CalculationCircleController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -88,26 +88,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06CalculationCircleControllerC( const DCP06CalculationCircleControllerC& oDCP06CalculationCircleController )
+            CalculationCircleController( const CalculationCircleController& oCalculationCircleController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06CalculationCircleControllerC& operator=( const DCP06CalculationCircleControllerC& oDCP06CalculationCircleController )
+            CalculationCircleController& operator=( const CalculationCircleController& oCalculationCircleController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06CalculationCircleDlgC* m_pDlg;
-			DCP06CalculationCircleModelC * m_pDataModel;
-			DCP06ModelC* m_pDCP06Model;
+            CalculationCircleDialog* m_pDlg;
+			CalculationCircleModel * m_pDataModel;
+			Model* m_pModel;
     };
 
 
-	class DCP06CalculationCircleDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC //, public OBS::CommandC
+	class CalculationCircleDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC //, public OBS::CommandC
 	{
 		 public:
 
@@ -124,10 +124,10 @@ namespace DCP
 				eCz
 			};
 
-		   DCP06CalculationCircleDlgC(DCP06CalculationCircleModelC * pCircleModel);
+		   CalculationCircleDialog(CalculationCircleModel * pCircleModel);
 
             // Description: Destructor
-            virtual ~DCP06CalculationCircleDlgC();
+            virtual ~CalculationCircleDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -139,7 +139,7 @@ namespace DCP
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
-			DCP06ModelC* GetDCP06Model() const;
+			Model* GetModel() const;
 
 	protected:
 			GUI::ComboLineCtrlC* m_p3DFile;
@@ -152,25 +152,25 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pCy;
 			GUI::ComboLineCtrlC* m_pCz;
 
-			//OBS_DECLARE_EXECUTE(DCP06CalculationCircleDlgC);
+			//OBS_DECLARE_EXECUTE(CalculationCircleDialog);
 
 		private:
-			DCP06CalculationCircleModelC *m_pDataModel;
+			CalculationCircleModel *m_pDataModel;
 			//OBS::ObserverC m_pCircleIdObserver;
 			//virtual void OnValueChanged(int unNotifyCode, int ulParam2);
 	};
 
-	 class DCP06CalculationCircleModelC : public GUI::ModelC
+	 class CalculationCircleModel : public GUI::ModelC
      {
         public:
 
             // Description: Constructor
-            DCP06CalculationCircleModelC(DCP06ModelC* pDCP06Model);
+            CalculationCircleModel(Model* pModel);
 
             // Description: Destructor
-            virtual ~DCP06CalculationCircleModelC();
+            virtual ~CalculationCircleModel();
 
-			DCP06CircleModelC *pCircleModel;
+			CircleModel *pCircleModel;
 			StringC sSelected3DFile;
 			StringC sSelectedCircleFile;
 			AdfFileFunc* pAdfFileFunc;

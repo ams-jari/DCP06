@@ -56,7 +56,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::DCP06InitDlgC);
+//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -70,8 +70,8 @@
 
 // USER DIALOG
 
-DCP::DCP06HiddenPointDlgC::DCP06HiddenPointDlgC(DCP::DCP06ModelC *pDCP06Model):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pPointNo(0),m_pPointDist(0),m_pX(0),m_pY(0),m_pZ(0),m_pDCP06Model(pDCP06Model),m_iCurrentPoint(1),
+DCP::HiddenPointDialog::HiddenPointDialog(DCP::Model *pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
+	m_pPointNo(0),m_pPointDist(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel),m_iCurrentPoint(1),
 	/*m_pInfo(0),*/iInfoInd(0)
 {
 	//SetTxtApplicationId(AT_DCP06);
@@ -80,12 +80,12 @@ DCP::DCP06HiddenPointDlgC::DCP06HiddenPointDlgC(DCP::DCP06ModelC *pDCP06Model):G
 
 	memset(&measured_points[0],0,sizeof(S_POINT_BUFF)*MAX_POINTS_IN_HIDDENPOINT_BAR);
 
-	m_pDCP06Model->active_tool = 0;
+	m_pModel->active_tool = 0;
 }
 
 
             // Description: Destructor
-DCP::DCP06HiddenPointDlgC::~DCP06HiddenPointDlgC()
+DCP::HiddenPointDialog::~HiddenPointDialog()
 {
 	//m_pTimer.KillTimer();
 
@@ -96,7 +96,7 @@ DCP::DCP06HiddenPointDlgC::~DCP06HiddenPointDlgC()
 	 }
 }
 
-void DCP::DCP06HiddenPointDlgC::OnInitDialog(void)
+void DCP::HiddenPointDialog::OnInitDialog(void)
 {
 	GUI::BaseDialogC::OnInitDialog();
 	
@@ -113,7 +113,7 @@ void DCP::DCP06HiddenPointDlgC::OnInitDialog(void)
 	m_pPointDist->SetText(StringC(AT_DCP06,P_DCP_POINT_DIST_TOK));
 	m_pPointDist->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pPointDist->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
-	m_pPointDist->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char)m_pDCP06Model->m_nDecimals);
+	m_pPointDist->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char)m_pModel->m_nDecimals);
 	m_pPointDist->SetEmptyAllowed(true);
 	AddCtrl(m_pPointDist);
 
@@ -124,7 +124,7 @@ void DCP::DCP06HiddenPointDlgC::OnInitDialog(void)
 	m_pX->SetText(StringC(AT_DCP06,P_DCP_X_TOK));
 	m_pX->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pX->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
-	m_pX->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char)m_pDCP06Model->m_nDecimals);
+	m_pX->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char)m_pModel->m_nDecimals);
 	m_pX->SetEmptyAllowed(true);
 	AddCtrl(m_pX);
 
@@ -132,7 +132,7 @@ void DCP::DCP06HiddenPointDlgC::OnInitDialog(void)
 	m_pY->SetId(eY);
 	m_pY->SetText(StringC(AT_DCP06,P_DCP_Y_TOK));
 	m_pY->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
-	m_pY->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char)m_pDCP06Model->m_nDecimals);
+	m_pY->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char)m_pModel->m_nDecimals);
 	m_pY->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pY->SetEmptyAllowed(true);
 	AddCtrl(m_pY);
@@ -140,7 +140,7 @@ void DCP::DCP06HiddenPointDlgC::OnInitDialog(void)
 	m_pZ = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pZ->SetId(eZ);
 	m_pZ->SetText(StringC(AT_DCP06,P_DCP_Z_TOK));
-	m_pZ->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char)m_pDCP06Model->m_nDecimals);
+	m_pZ->GetFloatInputCtrl()->SetDecimalPlaces((unsigned char)m_pModel->m_nDecimals);
 	m_pZ->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pZ->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pZ->SetEmptyAllowed(true);
@@ -158,29 +158,29 @@ void DCP::DCP06HiddenPointDlgC::OnInitDialog(void)
 	//SetHelpTok(H_DCP_HIDDENPOINT_TOK,0);
 }
 
-//void DCP::DCP06HiddenPointDlgC::OnTimer(void)
+//void DCP::HiddenPointDialog::OnTimer(void)
 //{
 //	StringC sMsg = m_pCommon->get_info_text(iInfoInd);
 //	
 //	//m_pInfo->SetText(strInfoText + sMsg);
 //	GUI::DesktopC::Instance()->MessageShow(strInfoText + sMsg,true);
 //}
-void DCP::DCP06HiddenPointDlgC::OnDialogActivated()
+void DCP::HiddenPointDialog::OnDialogActivated()
 {
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 	
 	RefreshControls();
 }
 
-void DCP::DCP06HiddenPointDlgC::UpdateData()
+void DCP::HiddenPointDialog::UpdateData()
 {
 
-	//GetDCP06Model()->m_sUser1	= m_pUser1->GetStringInputCtrl()->GetString();
+	//GetModel()->m_sUser1	= m_pUser1->GetStringInputCtrl()->GetString();
 }
 
 // Description: refresh all controls
-void DCP::DCP06HiddenPointDlgC::RefreshControls()
+void DCP::HiddenPointDialog::RefreshControls()
 {
 	if(m_pPointNo && m_pPointDist && m_pX && m_pY && m_pZ)
 	{
@@ -189,8 +189,8 @@ void DCP::DCP06HiddenPointDlgC::RefreshControls()
 		sTemp.Format(L"%d/%d",m_iCurrentPoint, MAX_POINTS_IN_HIDDENPOINT_BAR);
 		m_pPointNo->GetStringInputCtrl()->SetString(sTemp);
 
-		if(m_pDCP06Model->hidden_point_bar[m_iCurrentPoint-1] != 0.0)
-			m_pPointDist->GetFloatInputCtrl()->SetDouble(m_pDCP06Model->hidden_point_bar[m_iCurrentPoint-1]);
+		if(m_pModel->hidden_point_bar[m_iCurrentPoint-1] != 0.0)
+			m_pPointDist->GetFloatInputCtrl()->SetDouble(m_pModel->hidden_point_bar[m_iCurrentPoint-1]);
 		else
 			m_pPointDist->GetFloatInputCtrl()->SetEmpty();
 
@@ -211,14 +211,14 @@ void DCP::DCP06HiddenPointDlgC::RefreshControls()
 }
 
 // Description: only accept hello world Model objects
-bool DCP::DCP06HiddenPointDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::HiddenPointDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06PointBuffModelC* pDCP06Model = dynamic_cast< DCP::DCP06PointBuffModelC* >( pModel );
+    DCP::PointBuffModel* pModel = dynamic_cast< DCP::PointBuffModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -228,14 +228,14 @@ bool DCP::DCP06HiddenPointDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06PointBuffModelC* DCP::DCP06HiddenPointDlgC::GetDataModel() const
+DCP::PointBuffModel* DCP::HiddenPointDialog::GetDataModel() const
 {
-    return (DCP::DCP06PointBuffModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::PointBuffModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 // ================================================================================================
-void DCP::DCP06HiddenPointDlgC::PointNext()
+void DCP::HiddenPointDialog::PointNext()
 {
 	if(m_iCurrentPoint == 1)
 		m_iCurrentPoint = MAX_POINTS_IN_HIDDENPOINT_BAR;
@@ -246,7 +246,7 @@ void DCP::DCP06HiddenPointDlgC::PointNext()
 	RefreshControls();
 }
 // ================================================================================================
-void DCP::DCP06HiddenPointDlgC::PointPrev()
+void DCP::HiddenPointDialog::PointPrev()
 {
 	if(m_iCurrentPoint > 1)
 		m_iCurrentPoint--;
@@ -254,9 +254,9 @@ void DCP::DCP06HiddenPointDlgC::PointPrev()
 }
 
 // ================================================================================================
-void DCP::DCP06HiddenPointDlgC::PointDelete()
+void DCP::HiddenPointDialog::PointDelete()
 {
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 	StringC msg;
 	StringC strActivePoint(L"");
 
@@ -269,9 +269,9 @@ void DCP::DCP06HiddenPointDlgC::PointDelete()
 	}
 }
 // ================================================================================================
-void DCP::DCP06HiddenPointDlgC::update_meas_values(double x, double y, double z, short /*/*DCP_POINT_STATUS*/ status)
+void DCP::HiddenPointDialog::update_meas_values(double x, double y, double z, short /*/*DCP_POINT_STATUS*/ status)
 {
-	DCP06CommonC common(m_pDCP06Model);
+	Common common(m_pModel);
 	if(common.check_distance(x,y,z,measured_points,MAX_POINTS_IN_HIDDENPOINT_BAR, m_iCurrentPoint))
 	{
 		measured_points[m_iCurrentPoint-1].x = x;
@@ -282,14 +282,14 @@ void DCP::DCP06HiddenPointDlgC::update_meas_values(double x, double y, double z,
 	}
 }
 // ================================================================================================
-short DCP::DCP06HiddenPointDlgC::calc_hidden_point(void)
+short DCP::HiddenPointDialog::calc_hidden_point(void)
 {
 short points_defined;
 short i,count;
 double directionX, directionY, directionZ;
 double sumX, sumY, sumZ, distanceOffset;
 
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 
 	/* how many points are defined */
 	points_defined = 0;
@@ -342,7 +342,7 @@ double sumX, sumY, sumZ, distanceOffset;
 			if(measured_points[i].sta != 0)
 			{
 
-				distanceOffset = 	m_pDCP06Model->hidden_point_bar[i];
+				distanceOffset = 	m_pModel->hidden_point_bar[i];
 				sumX = sumX +  (measured_points[i].x - (distanceOffset* directionX));
 				sumY = sumY +  (measured_points[i].y - (distanceOffset* directionY));
 				sumZ = sumZ +  (measured_points[i].z - (distanceOffset* directionZ));
@@ -383,7 +383,7 @@ double sumX, sumY, sumZ, distanceOffset;
 				{
 					if(measured_points[i].sta != 0)
 					{
-						distanceOffset = m_pDCP06Model->hidden_point_bar[i];
+						distanceOffset = m_pModel->hidden_point_bar[i];
 						sumX = sumX +  measured_points[i].x - (distanceOffset * directionX);
 						sumY = sumY +  measured_points[i].y - (distanceOffset * directionY);
 						sumZ = sumZ +  measured_points[i].z - (distanceOffset * directionZ);
@@ -402,13 +402,13 @@ double sumX, sumY, sumZ, distanceOffset;
 	sZ.LoadTxt(AT_DCP06,P_DCP_Z_TOK);
 	
 	char tempX[15];
-	sprintf(tempX,"%9.*f", m_pDCP06Model->m_nDecimals,hiddenpoint[0].x); 
+	sprintf(tempX,"%9.*f", m_pModel->m_nDecimals,hiddenpoint[0].x); 
 
 	char tempY[15];
-	sprintf(tempY,"%9.*f", m_pDCP06Model->m_nDecimals,hiddenpoint[0].y); 
+	sprintf(tempY,"%9.*f", m_pModel->m_nDecimals,hiddenpoint[0].y); 
 
 	char tempZ[15];
-	sprintf(tempZ,"%9.*f", m_pDCP06Model->m_nDecimals,hiddenpoint[0].z); 
+	sprintf(tempZ,"%9.*f", m_pModel->m_nDecimals,hiddenpoint[0].z); 
 
 	msgTitle.LoadTxt(AT_DCP06,L_DCP_HIDDEN_POINT_TOK);
 	msgTitle += L"\n";
@@ -437,21 +437,21 @@ double sumX, sumY, sumZ, distanceOffset;
 	}
 }
 
-short  DCP::DCP06HiddenPointDlgC::get_current_point()
+short  DCP::HiddenPointDialog::get_current_point()
 {
 	return m_iCurrentPoint;
 }
 
 
 // ================================================================================================
-// ====================================  DCP06UserControllerC  ===================================
+// ====================================  UserController  ===================================
 // ================================================================================================
 
 //-------------------------------------------------------------------------------------------------
-// DCP06UserControllerC
+// UserController
 // 
-DCP::DCP06HiddenPointControllerC::DCP06HiddenPointControllerC(DCP::DCP06ModelC *pDCP06Model)
-    : m_pDlg( NULL ), m_pDCP06Model(pDCP06Model),m_pCommon(0),poVideoDlg(0),m_bCamera(false)
+DCP::HiddenPointController::HiddenPointController(DCP::Model *pModel)
+    : m_pDlg( nullptr ), m_pModel(pModel),m_pCommon(0),poVideoDlg(0),m_bCamera(false)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -459,17 +459,17 @@ DCP::DCP06HiddenPointControllerC::DCP06HiddenPointControllerC(DCP::DCP06ModelC *
     SetTitle(StringC( AT_DCP06, T_DCP_HIDDENPOINT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06HiddenPointDlgC(pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::HiddenPointDialog(pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( HIDDENPOINT_DLG, m_pDlg, true );
 
 
-	m_pCommon = new DCP06CommonC(m_pDCP06Model);
+	m_pCommon = new Common(m_pModel);
 
-	isATR = pDCP06Model->isATR;
+	isATR = pModel->isATR;
     show_function_keys();
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-void DCP::DCP06HiddenPointControllerC::show_function_keys()
+void DCP::HiddenPointController::show_function_keys()
 {
 	// Set the function key
 	
@@ -549,7 +549,7 @@ void DCP::DCP06HiddenPointControllerC::show_function_keys()
 	GUI::DesktopC::Instance()->UpdateFunctionKeys();
 }
 
-DCP::DCP06HiddenPointControllerC::~DCP06HiddenPointControllerC()
+DCP::HiddenPointController::~HiddenPointController()
 {
 	if(m_pCommon)
 	{
@@ -559,7 +559,7 @@ DCP::DCP06HiddenPointControllerC::~DCP06HiddenPointControllerC()
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06HiddenPointControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::HiddenPointController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -570,12 +570,12 @@ bool DCP::DCP06HiddenPointControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -586,9 +586,9 @@ bool DCP::DCP06HiddenPointControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // ALL
-void DCP::DCP06HiddenPointControllerC::OnF1Pressed()
+void DCP::HiddenPointController::OnF1Pressed()
 {
-	if (m_pDlg == NULL)
+	if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -611,14 +611,14 @@ void DCP::DCP06HiddenPointControllerC::OnF1Pressed()
 		DisableFunctionKey(FK5);
 		DisableFunctionKey(FK6);
 
-		DCP::DCP06MeasXYZModelC* pModel = new DCP06MeasXYZModelC;
+		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 
 		sprintf(pModel->sPointId,"HP%d",m_pDlg->get_current_point());
 		m_pCommon->strbtrim(pModel->sPointId);
 		
-		if(GetController(MEAS_XYZ_CONTROLLER) == NULL)
+		if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::DCP06MeasXYZControllerC(m_pDCP06Model));
+			(void)AddController( MEAS_XYZ_CONTROLLER, new DCP::MeasXYZController(m_pModel));
 		}
 		(void)GetController( MEAS_XYZ_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MEAS_XYZ_CONTROLLER, true);
@@ -628,7 +628,7 @@ void DCP::DCP06HiddenPointControllerC::OnF1Pressed()
 // ================================================================================================
 // Description: F2
 // ================================================================================================
-void DCP::DCP06HiddenPointControllerC::OnF2Pressed()
+void DCP::HiddenPointController::OnF2Pressed()
 {
 	//// DIST
 	if(m_pCommon->check_edm_mode())
@@ -640,38 +640,38 @@ void DCP::DCP06HiddenPointControllerC::OnF2Pressed()
 		DisableFunctionKey(FK5);
 		DisableFunctionKey(FK6);
 
-		DCP::DCP06MeasDistModelC* pModel = new DCP06MeasDistModelC;
+		DCP::MeasDistModel* pModel = new MeasDistModel;
 
-		if(GetController(MEAS_DIST_CONTROLLER) == NULL)
+		if(GetController(MEAS_DIST_CONTROLLER) == nullptr)
 		{
-			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::DCP06MeasDistControllerC(m_pDCP06Model));
+			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::MeasDistController(m_pModel));
 		}
 		(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MEAS_DIST_CONTROLLER, true);
 	}
 } 
 // NEXT
-void DCP::DCP06HiddenPointControllerC::OnF3Pressed()
+void DCP::HiddenPointController::OnF3Pressed()
 {
 	m_pDlg->PointNext();
 }
 
 // PREV
-void DCP::DCP06HiddenPointControllerC::OnF4Pressed()
+void DCP::HiddenPointController::OnF4Pressed()
 {
 	m_pDlg->PointPrev();
 }
 
 // Description: Handle change of position values
-void DCP::DCP06HiddenPointControllerC::OnF5Pressed()
+void DCP::HiddenPointController::OnF5Pressed()
 {
 	if(m_pDlg->calc_hidden_point())
 		Close(EC_KEY_CONT);
 }
 // Description: Handle change of position values
-void DCP::DCP06HiddenPointControllerC::OnF6Pressed()
+void DCP::HiddenPointController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -699,7 +699,7 @@ void DCP::DCP06HiddenPointControllerC::OnF6Pressed()
     // Set it to hello world dialog
    
 }
-void DCP::DCP06HiddenPointControllerC::OnSHF1Pressed()
+void DCP::HiddenPointController::OnSHF1Pressed()
 {
 	/* CAPTIVATE
 	if( ABL::VideoDialogC::IsCameraAvailable(CFA::CT_OVC) )
@@ -734,42 +734,42 @@ void DCP::DCP06HiddenPointControllerC::OnSHF1Pressed()
 		show_function_keys();
 }
 // Delete
-void DCP::DCP06HiddenPointControllerC::OnSHF2Pressed()
+void DCP::HiddenPointController::OnSHF2Pressed()
 {
 	m_pDlg->PointDelete();
 }
 
 // Config
-void DCP::DCP06HiddenPointControllerC::OnSHF3Pressed()
+void DCP::HiddenPointController::OnSHF3Pressed()
 {
 	// create model
-	DCP::DCP06HiddenPointBarConfModelC* pModel = new DCP06HiddenPointBarConfModelC;
+	DCP::HiddenPointBarConfModel* pModel = new HiddenPointBarConfModel;
 	
 	// set current values
-	memcpy(pModel->hidden_point_bar,m_pDCP06Model->hidden_point_bar, sizeof(double) *MAX_POINTS_IN_HIDDENPOINT_BAR);
+	memcpy(pModel->hidden_point_bar,m_pModel->hidden_point_bar, sizeof(double) *MAX_POINTS_IN_HIDDENPOINT_BAR);
 
-	if(GetController(HIDDENPOINT_CONF_CONTROLLER) == NULL)
+	if(GetController(HIDDENPOINT_CONF_CONTROLLER) == nullptr)
 	{
-		(void)AddController( HIDDENPOINT_CONF_CONTROLLER, new DCP::DCP06HiddenPointConfControllerC(m_pDCP06Model));
+		(void)AddController( HIDDENPOINT_CONF_CONTROLLER, new DCP::HiddenPointConfController(m_pModel));
 	}
 	(void)GetController( HIDDENPOINT_CONF_CONTROLLER )->SetModel(pModel);
 	SetActiveController(HIDDENPOINT_CONF_CONTROLLER, true);
 
 }
 
-void DCP::DCP06HiddenPointControllerC::OnSHF4Pressed()
+void DCP::HiddenPointController::OnSHF4Pressed()
 {
-	if(GetController(INIT_CONTROLLER) == NULL)
+	if(GetController(INIT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC );
+		(void)AddController( INIT_CONTROLLER, new DCP::InitializationController );
 	}
-	(void)GetController( INIT_CONTROLLER )->SetModel( m_pDCP06Model);
+	(void)GetController( INIT_CONTROLLER )->SetModel( m_pModel);
 	SetActiveController(INIT_CONTROLLER, true);
 }
 
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06HiddenPointControllerC::OnActiveDialogClosed( int lDlgID, int lExitCode )
+void DCP::HiddenPointController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 {
 	if(lDlgID == CAMERA_DLG)
 	{
@@ -781,7 +781,7 @@ void DCP::DCP06HiddenPointControllerC::OnActiveDialogClosed( int lDlgID, int lEx
 
 
 // Description: React on close of controller
-void DCP::DCP06HiddenPointControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::HiddenPointController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	if(lCtrlID == MEAS_DIST_CONTROLLER)
 	{
@@ -794,7 +794,7 @@ void DCP::DCP06HiddenPointControllerC::OnActiveControllerClosed( int lCtrlID, in
 
 		if(lExitCode == EC_KEY_CONT)
 		{
-			DCP::DCP06MeasDistModelC* pModel = (DCP::DCP06MeasDistModelC*) GetController( MEAS_DIST_CONTROLLER )->GetModel();
+			DCP::MeasDistModel* pModel = (DCP::MeasDistModel*) GetController( MEAS_DIST_CONTROLLER )->GetModel();
 			int x;
 			x=1;
 		}
@@ -814,7 +814,7 @@ void DCP::DCP06HiddenPointControllerC::OnActiveControllerClosed( int lCtrlID, in
 		if(lExitCode == EC_KEY_CONT)
 		{
 			// get values
-			DCP::DCP06MeasXYZModelC* pModel = (DCP::DCP06MeasXYZModelC*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
+			DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*) GetController( MEAS_XYZ_CONTROLLER )->GetModel();		
 			double x = pModel->m_dX;
 			double y = pModel->m_dY;
 			double z = pModel->m_dZ;
@@ -826,8 +826,8 @@ void DCP::DCP06HiddenPointControllerC::OnActiveControllerClosed( int lCtrlID, in
 	if(lCtrlID == HIDDENPOINT_CONF_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		// get values
-		DCP::DCP06HiddenPointBarConfModelC* pModel = (DCP::DCP06HiddenPointBarConfModelC*) GetController( HIDDENPOINT_CONF_CONTROLLER )->GetModel();		
-		memcpy(m_pDCP06Model->hidden_point_bar, pModel->hidden_point_bar, sizeof(double) *HIDDENPOINT_CONF_CONTROLLER);
+		DCP::HiddenPointBarConfModel* pModel = (DCP::HiddenPointBarConfModel*) GetController( HIDDENPOINT_CONF_CONTROLLER )->GetModel();		
+		memcpy(m_pModel->hidden_point_bar, pModel->hidden_point_bar, sizeof(double) *HIDDENPOINT_CONF_CONTROLLER);
 	}
 
 
@@ -836,12 +836,12 @@ void DCP::DCP06HiddenPointControllerC::OnActiveControllerClosed( int lCtrlID, in
 }
 
 
-DCP::DCP06HiddenPointDlgBaseC::DCP06HiddenPointDlgBaseC(int iCtrlId,DCP::DCP06ModelC* pDCP06Model ,DCP::DCP06PointBuffModelC* pDCPPointBuffModel)
+DCP::HiddenPointDialogBase::HiddenPointDialogBase(int iCtrlId,DCP::Model* pModel ,DCP::PointBuffModel* pDCPPointBuffModel)
 {
-	if(GetController(iCtrlId) == NULL)
+	if(GetController(iCtrlId) == nullptr)
 	{
-		(void)AddController( iCtrlId, new DCP::DCP06HiddenPointControllerC(pDCP06Model));
+		(void)AddController( iCtrlId, new DCP::HiddenPointController(pModel));
 	}
-	(void)GetController( iCtrlId )->SetModel(pDCPPointBuffModel/* m_pDCP06MeasDlg->GetDCP06Model()*/);
+	(void)GetController( iCtrlId )->SetModel(pDCPPointBuffModel/* m_pMeasureDlg->GetModel()*/);
 	SetActiveController(iCtrlId, true);
 }

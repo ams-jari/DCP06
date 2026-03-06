@@ -46,20 +46,20 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06DistFileDlgC;
-	class DCP06DistFileModelC;
+    class Model;
+	class DistFileDialog;
+	class DistFileModel;
 
 	class CdfFileFunc;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06DistFileControllerC : public GUI::ControllerC
+    class DistFileController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06DistFileControllerC(DCP06ModelC* pDCP06Model);
-			~DCP06DistFileControllerC();
+            DistFileController(Model* pModel);
+			~DistFileController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -80,26 +80,26 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06DistFileControllerC( const DCP06DistFileControllerC& oDCP06DistFileController )
+            DistFileController( const DistFileController& oDistFileController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06DistFileControllerC& operator=( const DCP06DistFileControllerC& oDCP06DistFileController )
+            DistFileController& operator=( const DistFileController& oDistFileController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06DistFileDlgC* m_pDlg;
-			DCP06DistFileModelC* m_pDataModel;
-			DCP06ModelC* m_pDCP06Model;
+            DistFileDialog* m_pDlg;
+			DistFileModel* m_pDataModel;
+			Model* m_pModel;
     };
 
 
-    class DCP06DistFileDlgC:public GUI::StandardDialogC, public GUI::ModelHandlerC
+    class DistFileDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
 	{
 	 public:
 
@@ -113,10 +113,10 @@ namespace DCP
 				eFreeSpace
 			};
 
-		   DCP06DistFileDlgC(DCP06DistFileModelC* pModel);
+		   DistFileDialog(DistFileModel* pModel);
 
             // Description: Destructor
-            virtual ~DCP06DistFileDlgC();
+            virtual ~DistFileDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -131,7 +131,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06ModelC* GetDCP06Model() const;
+            Model* GetModel() const;
 
 			virtual void RefreshControls();
 
@@ -145,21 +145,21 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pTime;
 			GUI::ComboLineCtrlC* m_pFreeSpace;
 
-			DCP06DistFileModelC* m_pDataModel;
+			DistFileModel* m_pDataModel;
 	};
 
-	class DCP06DistFileModelC : public GUI::ModelC
+	class DistFileModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06DistFileModelC(DCP06ModelC* pDCP06Model);
+            DistFileModel(Model* pModel);
 
             // Description: Destructor
             //
-            virtual ~DCP06DistFileModelC();
-			DCP06CommonC* pCommon;
+            virtual ~DistFileModel();
+			Common* pCommon;
 			CdfFileFunc* m_pFileFunc;
 			char x_diff[20];
 			char y_diff[20];
@@ -175,8 +175,8 @@ namespace DCP
             // Description: Constructor
             //CdfFileFunc();
 			//AdfFileFunc(const char* filename, bool bCreate=false);
-			CdfFileFunc(boost::filesystem::path* FileInfo,DCP06ModelC* pDCP06Model);//CPI::FileInfoC* FileInfo);
-			CdfFileFunc(DCP06ModelC* pDCP06Model);
+			CdfFileFunc(boost::filesystem::path* FileInfo,Model* pModel);//CPI::FileInfoC* FileInfo);
+			CdfFileFunc(Model* pModel);
 
 			~CdfFileFunc();
 
@@ -225,7 +225,7 @@ namespace DCP
 			char note[15];
 
 	private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			char m_cPath[CPI::LEN_PATH_MAX];
 			short opened;
 			bool m_bExists;
@@ -252,7 +252,7 @@ namespace DCP
 			FILE* fopen2(FILE *pFile , char* fname, const char* mode);
 			short  remove1(char *fname);
 			char trow[0xFF];
-			DCP06CommonC* m_pCommon;
+			Common* m_pCommon;
 	
     };
 };

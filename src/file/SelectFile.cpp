@@ -68,18 +68,18 @@ using namespace DCP;
 // ================================================================================================
 
 // Unit
-DCP06SelectFileDlgC::DCP06SelectFileDlgC(short iFileType,DCP06ModelC* pDCP06Model):m_iFileType(iFileType), poMultiColCtrl(NULL),m_pDCP06Model(pDCP06Model)
+SelectFileDialog::SelectFileDialog(short iFileType,Model* pModel):m_iFileType(iFileType), poMultiColCtrl(nullptr),m_pModel(pModel)
 	{
 	//SetTxtApplicationId(AT_DCP06);
 	m_iFileType = iFileType;
 }
 // Description: Destructor
-DCP06SelectFileDlgC::~DCP06SelectFileDlgC()
+SelectFileDialog::~SelectFileDialog()
 {
 
 }
 
-void DCP06SelectFileDlgC::OnInitDialog(void)
+void SelectFileDialog::OnInitDialog(void)
 {
 	GUI::TableDialogC::OnInitDialog();
 
@@ -121,14 +121,14 @@ void DCP06SelectFileDlgC::OnInitDialog(void)
 	
 }
 
-void DCP06SelectFileDlgC::OnF1Pressed(void)
+void SelectFileDialog::OnF1Pressed(void)
 {
 
 }
 
-void DCP06SelectFileDlgC::OnDialogActivated()
+void SelectFileDialog::OnDialogActivated()
 {
-	DCP06MsgBoxC msgbox;
+	MsgBox msgbox;
 
 	GUI::TableDialogC::OnDialogActivated();
 	/*
@@ -154,13 +154,13 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 
 	//BeginDraw();
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, strPath);
+	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, strPath);
 	
 	StringC sLine;
 	char cTemp[80];
 	if(m_iFileType == FILE_TYPE_JOBS)
 	{
-		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+		DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 #if DCP_USE_JSON_DATABASE
 		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
 		if (jdb)
@@ -214,7 +214,7 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 
 		BSS::UTI::BSS_UTI_WCharToAscii(FileInfo.c_str(), tempFileName);
 
-		//DCP06MsgBoxC msgbox;
+		//MsgBox msgbox;
 		//StringC msg;
 		//char tt1[200];
 		//sprintf(tt1,"%s %d",tempFileName,itrDir->status().type());
@@ -226,9 +226,9 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 	//{
 		if(m_iFileType == CALCDIST_FILE)
 		{
-			if(strstr(tempFileName, ".cdf") != NULL || strstr(tempFileName, ".CDF") != NULL)
+			if(strstr(tempFileName, ".cdf") != nullptr || strstr(tempFileName, ".CDF") != nullptr)
 			{
-				CdfFileFunc CdfFile(&FileInfo, m_pDCP06Model);
+				CdfFileFunc CdfFile(&FileInfo, m_pModel);
 				
 				USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
 				sprintf(cTemp,"%-3d %-12.12s %-3.3s %-s",unCount+1,CdfFile.getFileName(),CdfFile.getPointsCountString(), CdfFile.getModDate());
@@ -239,9 +239,9 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 		}
 		else if(m_iFileType == CALCANGLE_FILE)
 		{
-			if(strstr(tempFileName, ".agf") != NULL || strstr(tempFileName, ".AGF") != NULL)
+			if(strstr(tempFileName, ".agf") != nullptr || strstr(tempFileName, ".AGF") != nullptr)
 			{
-				AgfFileFunc AgfFile(&FileInfo,m_pDCP06Model );
+				AgfFileFunc AgfFile(&FileInfo,m_pModel );
 				USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
 				sprintf(cTemp,"%-3d %-12.12s %-3.3s %-s",unCount+1,AgfFile.getFileName(),AgfFile.getPointsCountString(), AgfFile.getModDate());
 				sLine = cTemp;
@@ -251,9 +251,9 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 		}
 		else if(m_iFileType == CIRCLE_FILE)
 		{
-			if(strstr(tempFileName, ".crl") != NULL || strstr(tempFileName, ".CRK") != NULL)
+			if(strstr(tempFileName, ".crl") != nullptr || strstr(tempFileName, ".CRK") != nullptr)
 			{
-				CircleFileFunc CircleFile(&FileInfo, m_pDCP06Model);
+				CircleFileFunc CircleFile(&FileInfo, m_pModel);
 				
 				USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
 				sprintf(cTemp,"%-3d %-12.12s %-3.3s %-s",unCount+1, CircleFile.getFileName(),"  ", CircleFile.getModDate());
@@ -265,9 +265,9 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 		}
 		else if(m_iFileType == SHAFT_FILE)
 		{
-			if(strstr(tempFileName, ".sft") != NULL || strstr(tempFileName, ".SFT") != NULL)
+			if(strstr(tempFileName, ".sft") != nullptr || strstr(tempFileName, ".SFT") != nullptr)
 			{
-				ShaftFileFunc ShaftFile(&FileInfo, m_pDCP06Model);
+				ShaftFileFunc ShaftFile(&FileInfo, m_pModel);
 				
 				USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
 				sprintf(cTemp,"%-3d %-12.12s %-3.3s %-s",unCount+1, ShaftFile.getFileName(),"  ", ShaftFile.getModDate());
@@ -280,14 +280,14 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 
 		else 
 		{
-			if(strstr(tempFileName, ".adf") != NULL || strstr(tempFileName, ".ADF") != NULL )
+			if(strstr(tempFileName, ".adf") != nullptr || strstr(tempFileName, ".ADF") != nullptr )
 			{
 
-				//DCP06MsgBoxC msgbox;
+				//MsgBox msgbox;
 				//StringC msg;
 				//msgbox.ShowMessageOk(StringC(tempFileName));
 				
-				AdfFileFunc AdfFile(&FileInfo, m_pDCP06Model);
+				AdfFileFunc AdfFile(&FileInfo, m_pModel);
 				AdfFile.always_single = 1;
 				
 				USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
@@ -366,7 +366,7 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 
 	if(m_iFileType == ALL_FILES)
 	{
-		CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, strPath);
+		CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, strPath);
 		strcat(strPath,"*.ref");	
 		
 		boost::filesystem::path oDirPath = strPath;
@@ -382,9 +382,9 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 		//{
 			if( boost::filesystem::regular_file == itrDir->status().type()) 
 			{
-				if(strstr(tempFileName, ".ref") != NULL || strstr(tempFileName, ".REF") != NULL)
+				if(strstr(tempFileName, ".ref") != nullptr || strstr(tempFileName, ".REF") != nullptr)
 				{
-					AdfFileFunc AdfFile(&FileInfo, m_pDCP06Model);
+					AdfFileFunc AdfFile(&FileInfo, m_pModel);
 					AdfFile.always_single = 1;
 				
 					USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
@@ -424,7 +424,7 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 	if(m_iFileType == ADF_BF_STA)
 	{
 		// bestfit files
-		CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, strPath);
+		CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, strPath);
 		strcat(strPath,"*.bft");	
 		
 		boost::filesystem::path oDirPath = strPath;
@@ -442,9 +442,9 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 		//{
 				if( boost::filesystem::regular_file == itrDir->status().type()) 
 				{
-					if(strstr(tempFileName, ".ref") != NULL || strstr(tempFileName, ".REF") != NULL)
+					if(strstr(tempFileName, ".ref") != nullptr || strstr(tempFileName, ".REF") != nullptr)
 					{
-						AdfFileFunc AdfFile(&FileInfo, m_pDCP06Model);
+						AdfFileFunc AdfFile(&FileInfo, m_pModel);
 						AdfFile.always_single = 1;
 					
 						USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
@@ -472,7 +472,7 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 		}
 
 		// move station files
-		CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, strPath);
+		CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, strPath);
 		strcat(strPath,"*.sta");	
 		
 		oDirPath = strPath;
@@ -488,9 +488,9 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 		{
 		//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)
 		//{
-			if(strstr(tempFileName, ".sta") != NULL || strstr(tempFileName, ".STA") != NULL)
+			if(strstr(tempFileName, ".sta") != nullptr || strstr(tempFileName, ".STA") != nullptr)
 			{
-				AdfFileFunc AdfFile(&FileInfo, m_pDCP06Model);
+				AdfFileFunc AdfFile(&FileInfo, m_pModel);
 				AdfFile.always_single = 1;
 			
 				USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
@@ -519,7 +519,7 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 	//EndDraw();
 }
 
-void DCP::DCP06SelectFileDlgC::UpdateData()
+void DCP::SelectFileDialog::UpdateData()
 {
 	StringC sSelected;
 	short iSelected = poMultiColCtrl->GetSelectedId();
@@ -529,14 +529,14 @@ void DCP::DCP06SelectFileDlgC::UpdateData()
 	GetDataModel()->m_strSelectedFile = sTemp;
 }
 // Description: only accept hello world Model objects
-bool DCP::DCP06SelectFileDlgC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectFileDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::DCP06SelectFileModelC* pDCP06Model = dynamic_cast< DCP::DCP06SelectFileModelC* >( pModel );
+    DCP::SelectFileModel* pModel = dynamic_cast< DCP::SelectFileModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     {
         RefreshControls();
         return true;
@@ -546,17 +546,17 @@ bool DCP::DCP06SelectFileDlgC::SetModel( GUI::ModelC* pModel )
 }
 
 // Description: Hello World model
-DCP::DCP06SelectFileModelC* DCP::DCP06SelectFileDlgC::GetDataModel() const
+DCP::SelectFileModel* DCP::SelectFileDialog::GetDataModel() const
 {
-    return (DCP::DCP06SelectFileModelC*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::SelectFileModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
 
 // ******************************************************************************
 
-DCP::DCP06SelectFileControllerC::DCP06SelectFileControllerC(short iFileType, StringC sTitle,DCP06ModelC* pDCP06Model)
-    : m_pDlg( NULL ),m_pDCP06Model(pDCP06Model), m_iFileType(iFileType)
+DCP::SelectFileController::SelectFileController(short iFileType, StringC sTitle,Model* pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel), m_iFileType(iFileType)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -565,7 +565,7 @@ DCP::DCP06SelectFileControllerC::DCP06SelectFileControllerC(short iFileType, Str
 	SetTitle(sTitle);
 
     // Create a dialog
-    m_pDlg = new DCP::DCP06SelectFileDlgC(iFileType,pDCP06Model);  //lint !e1524 new in constructor for class 
+    m_pDlg = new DCP::SelectFileDialog(iFileType,pModel);  //lint !e1524 new in constructor for class 
     (void)AddDialog( ANGLE_FILE_DLG, m_pDlg, true );
 
     // Set the function key
@@ -612,13 +612,13 @@ DCP::DCP06SelectFileControllerC::DCP06SelectFileControllerC(short iFileType, Str
 	*/
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
-DCP::DCP06SelectFileControllerC::~DCP06SelectFileControllerC()
+DCP::SelectFileController::~SelectFileController()
 {
 
 }
 
 // Description: Route model to everybody else
-bool DCP::DCP06SelectFileControllerC::SetModel( GUI::ModelC* pModel )
+bool DCP::SelectFileController::SetModel( GUI::ModelC* pModel )
 {
 	
     // Set it to base class
@@ -629,12 +629,12 @@ bool DCP::DCP06SelectFileControllerC::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::DCP06ModelC* pDCP06Model = dynamic_cast< DCP::DCP06ModelC* >( pModel );
+   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
-	//if ( pDCP06Model != NULL && /*GUI::*/ModelHandlerC::SetModel( pDCP06Model ))
+	//if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
     //(
     //    RefreshControls();
     //    return true;
@@ -645,26 +645,26 @@ bool DCP::DCP06SelectFileControllerC::SetModel( GUI::ModelC* pModel )
 }
 
 // OPEN
-void DCP::DCP06SelectFileControllerC::OnF1Pressed()
+void DCP::SelectFileController::OnF1Pressed()
 {
 
 }
 
 // NEW
-void DCP::DCP06SelectFileControllerC::OnF2Pressed()
+void DCP::SelectFileController::OnF2Pressed()
 {
 }
 
 // CLOSE
-void DCP::DCP06SelectFileControllerC::OnF5Pressed()
+void DCP::SelectFileController::OnF5Pressed()
 {
 
 }
 
 // CONT
-void DCP::DCP06SelectFileControllerC::OnF6Pressed()
+void DCP::SelectFileController::OnF6Pressed()
 {
-    if (m_pDlg == NULL)
+    if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
         return;
@@ -679,30 +679,30 @@ void DCP::DCP06SelectFileControllerC::OnF6Pressed()
     (void)Close(EC_KEY_CONT);
 }
 // DEL
-void DCP::DCP06SelectFileControllerC::OnSHF2Pressed()
+void DCP::SelectFileController::OnSHF2Pressed()
 {
 }
 
 // VIEW
-void DCP::DCP06SelectFileControllerC::OnSHF5Pressed()
+void DCP::SelectFileController::OnSHF5Pressed()
 {
 	/*
-	if(GetController(INIT_CONTROLLER) == NULL)
+	if(GetController(INIT_CONTROLLER) == nullptr)
 	{
-		(void)AddController( INIT_CONTROLLER, new DCP::DCP06InitControllerC );
+		(void)AddController( INIT_CONTROLLER, new DCP::InitializationController );
 	}
-	(void)GetController( INIT_CONTROLLER )->SetModel( m_pDCP06MeasDlg->GetDataModel());
+	(void)GetController( INIT_CONTROLLER )->SetModel( m_pMeasureDlg->GetDataModel());
 	SetActiveController(INIT_CONTROLLER, true);
 	*/
 }
 
 // Description: React on close of tabbed dialog
-void DCP::DCP06SelectFileControllerC::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+void DCP::SelectFileController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
 {
 }
 
 // Description: React on close of controller
-void DCP::DCP06SelectFileControllerC::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::SelectFileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );
@@ -715,11 +715,11 @@ void DCP::DCP06SelectFileControllerC::OnActiveControllerClosed( int lCtrlID, int
 // ===========================================================================================
 
 // Instantiate template classes
-DCP::DCP06SelectFileModelC::DCP06SelectFileModelC()
+DCP::SelectFileModel::SelectFileModel()
 {
 	m_strSelectedFile = L"";
 }
-DCP::DCP06SelectFileModelC::~DCP06SelectFileModelC()
+DCP::SelectFileModel::~SelectFileModel()
 {
 }
 

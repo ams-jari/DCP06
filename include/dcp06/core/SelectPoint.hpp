@@ -47,18 +47,18 @@ namespace DCP
 {
 
     // Forward declaration
-    class DCP06ModelC;
-	class DCP06SelectPointDlgC;
-	class DCP06SelectPointModelC;
+    class Model;
+	class SelectPointDialog;
+	class SelectPointModel;
 
     // Description: Tabbed controller for the Hello World application
-    class DCP06SelectPointControllerC : public GUI::ControllerC
+    class SelectPointController : public GUI::ControllerC
     {
         public:
 
             // Description: Constructor
-            DCP06SelectPointControllerC();
-			~DCP06SelectPointControllerC();
+            SelectPointController();
+			~SelectPointController();
 
             // Description: Handle change of position values
             virtual void OnF1Pressed();
@@ -80,24 +80,24 @@ namespace DCP
 
             // Description: Copy constructor
             // Remarks    : not implemented
-            DCP06SelectPointControllerC( const DCP06SelectPointControllerC& oDCP06SelectPointController )
+            SelectPointController( const SelectPointController& oSelectPointController )
             {
                 USER_APP_VERIFY( false );
             }
 
             // Description: Assignment operator
             // Remarks    : not implemented
-            DCP06SelectPointControllerC& operator=( const DCP06SelectPointControllerC& oDCP06SelectPointController )
+            SelectPointController& operator=( const SelectPointController& oSelectPointController )
             {
                 USER_APP_VERIFY( false );
                 return *this;
             }
 
-            DCP06SelectPointDlgC* m_pDlg;
+            SelectPointDialog* m_pDlg;
     };
 
 
-    class DCP06SelectPointDlgC:public GUI::TableDialogC, public GUI::ModelHandlerC
+    class SelectPointDialog:public GUI::TableDialogC, public GUI::ModelHandlerC
 	{
 	 public:
 
@@ -117,10 +117,10 @@ namespace DCP
 				CI_ActualDesign
 			};
 
-		   DCP06SelectPointDlgC();
+		   SelectPointDialog();
 
             // Description: Destructor
-            virtual ~DCP06SelectPointDlgC();
+            virtual ~SelectPointDialog();
 
 			virtual void OnInitDialog(void);
 
@@ -133,7 +133,7 @@ namespace DCP
             virtual bool SetModel( GUI::ModelC* pModel );
 
 			// Description: Hello World model
-            DCP06SelectPointModelC* GetDataModel() const;
+            SelectPointModel* GetDataModel() const;
 
 		protected:
 			
@@ -146,17 +146,17 @@ namespace DCP
 	};
 
 	//              
-    class DCP06SelectPointModelC : public GUI::ModelC
+    class SelectPointModel : public GUI::ModelC
     {
         public:
 
             // Description: Constructor
             //
-            DCP06SelectPointModelC();
+            SelectPointModel();
 
             // Description: Destructor
             //
-            virtual ~DCP06SelectPointModelC();
+            virtual ~SelectPointModel();
 			
 			S_SELECT_POINT points[MAX_SELECT_POINTS];
 			short m_iCounts;

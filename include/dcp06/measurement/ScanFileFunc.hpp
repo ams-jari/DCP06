@@ -41,8 +41,8 @@
 namespace DCP
 {
     // Forward declaration
-	//class DCP06ModelC;
-	//class DCP06ToolDlgC;
+	//class Model;
+	//class ToolDialog;
 
 
     // Description: Tabbed controller for the Hello World application
@@ -51,7 +51,7 @@ namespace DCP
         public:
 
             // Description: Constructor
-            ScanFileFunc(DCP06ModelC* pDCP06Model);
+            ScanFileFunc(Model* pModel);
 
 			~ScanFileFunc();
 			char* getFileName();
@@ -88,7 +88,7 @@ namespace DCP
 			FILE* get_file_pointer();
 
 	private:
-			DCP06ModelC* m_pDCP06Model;
+			Model* m_pModel;
 			long fstpnt,filpos;
 			char trow[0xFF];
 			char linebuff[255];
@@ -131,7 +131,7 @@ namespace DCP
 			short opened;
 			short file_updated;
 			
-			DCP06CommonC* m_pCommon;
+			Common* m_pCommon;
     };
 };
 
