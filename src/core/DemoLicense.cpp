@@ -27,10 +27,10 @@
 #include "stdafx.h"
 #include <ABL_AppSystemInfo.hpp>
 #include "dcp06/core/CS35.hpp"
-#include <dcp06/core/DCP_Defs.hpp>
+#include <dcp06/core/Defs.hpp>
 
 #include <dcp06/core/DemoLicense.hpp>
-#include <dcp06/core/DCP_MsgBox.hpp>
+#include <dcp06/core/MsgBox.hpp>
 
 #include <GUI_MessageDialog.hpp>
 

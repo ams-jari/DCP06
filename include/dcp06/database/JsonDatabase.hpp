@@ -2,7 +2,7 @@
 
 #include <dcp06/database/IDatabase.hpp>
 #include <dcp06/database/DatabaseTypes.hpp>
-#include <dcp06/core/DCP_Defs.hpp>
+#include <dcp06/core/Defs.hpp>
 #include <json/json.h>
 #include <string>
 #include <memory>

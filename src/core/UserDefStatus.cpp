@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
-#include <dcp06/core/DCP_Defs.hpp>
-#include <dcp06/core/DCP_Model.hpp>
+#include <dcp06/core/Defs.hpp>
+#include <dcp06/core/Model.hpp>
 #include <dcp06/core/UserDefStatus.hpp>
 
 	DCP::DCP06UserDefStatusDlgC::DCP06UserDefStatusDlgC(DCP06ModelC* pDCP06Model, bool defined_):

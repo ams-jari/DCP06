@@ -26,9 +26,9 @@
 // $NoKeywords: $
 
 #include "stdafx.h"
-#include <dcp06/core/DCP_Model.hpp>
-#include <dcp06/core/DCP_SelectOnePoint.hpp>
-#include <dcp06/core/DCP_Defs.hpp>
+#include <dcp06/core/Model.hpp>
+#include <dcp06/core/SelectOnePoint.hpp>
+#include <dcp06/core/Defs.hpp>
 #include <GMAT_UnitConverter.hpp>
 #include <UTL_StringFunctions.hpp>
 // Detect memory leaks

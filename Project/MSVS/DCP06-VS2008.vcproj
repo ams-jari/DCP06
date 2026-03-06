@@ -253,103 +253,91 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_3dfbs.cpp"
+				RelativePath="..\..\src\measurement\3dfbs.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_3dFileView.cpp"
+				RelativePath="..\..\src\measurement\3dFileView.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_3dmeas.cpp"
+				RelativePath="..\..\src\measurement\3dmeas.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_AddTool.cpp"
+				RelativePath="..\..\src\core\AddTool.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_AdfFileFunc.cpp"
+				RelativePath="..\..\src\file\AdfFileFunc.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_AdvScan.cpp"
+				RelativePath="..\..\src\measurement\AdvScan.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_Aim.cpp"
+				RelativePath="..\..\src\core\Aim.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_AngleFile.cpp"
+				RelativePath="..\..\src\file\AngleFile.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application\DCP_Application.cpp"
+				RelativePath="..\..\src\application\Application.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application\DCP_ApplicationMenu.cpp"
+				RelativePath="..\..\src\application\ApplicationMenu.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_AutoMatch.cpp"
+				RelativePath="..\..\src\core\AutoMatch.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcAngle.cpp"
+				RelativePath="..\..\src\calculation\CalculationAngle.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcChst.cpp"
+				RelativePath="..\..\src\calculation\CalculationChst.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_calccircle.cpp"
+				RelativePath="..\..\src\calculation\CalculationCircleCore.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcCircleController.cpp"
+				RelativePath="..\..\src\calculation\CalculationDist.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcDist.cpp"
+				RelativePath="..\..\src\calculation\CalculationDist2Points.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcDist2Points.cpp"
+				RelativePath="..\..\src\calculation\Calculation321.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_Calc321.cpp"
+				RelativePath="..\..\src\calculation\CalculationLine.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_calcline.cpp"
+				RelativePath="..\..\src\calculation\CalculationLineFit.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcLineController.cpp"
+				RelativePath="..\..\src\calculation\CalculationMenu.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcLineFit.cpp"
+				RelativePath="..\..\src\calculation\CalculationPlane.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalcMenu.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\calculation\DCP_calcplane.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\calculation\DCP_CalcPlaneController.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\calculation\DCP_CalcBestFit.cpp"
+				RelativePath="..\..\src\calculation\CalculationBestFit.cpp"
 				>
 			</File>
 			<File
@@ -373,63 +361,63 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\Src\core\geometry\LineFitting.cpp"
+				RelativePath="..\..\Src\core\geometry\GeometryLineFitting.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_CalculationCircle.cpp"
+				RelativePath="..\..\src\calculation\CalculationCircle.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_ChangeFace.cpp"
+				RelativePath="..\..\src\core\ChangeFace.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_Circle.cpp"
+				RelativePath="..\..\src\measurement\Circle.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_CircleFile.cpp"
+				RelativePath="..\..\src\file\CircleFile.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_CircleSave.cpp"
+				RelativePath="..\..\src\file\CircleSave.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_Common.cpp"
+				RelativePath="..\..\src\core\Common.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DCP06Chst.cpp"
+				RelativePath="..\..\src\orientation\Chst.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DCP06Alignment321.cpp"
+				RelativePath="..\..\src\orientation\Alignment321.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DCP06Alignment321UserDef.cpp"
+				RelativePath="..\..\src\orientation\Alignment321UserDef.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_DCP06GUI.cpp"
+				RelativePath="..\..\src\core\GUI.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\init\DCP_DCP06Init.cpp"
+				RelativePath="..\..\src\init\Initialization.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_DCP06Meas.cpp"
+				RelativePath="..\..\src\core\Measure.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DCP06BestFit.cpp"
+				RelativePath="..\..\src\orientation\BestFit.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\init\DCP_DCP06Unit.cpp"
+				RelativePath="..\..\src\init\Unit.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Stellar_EC7_3P (ARMv4I)"
@@ -441,207 +429,199 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\src\init\DCP_DCP06User.cpp"
+				RelativePath="..\..\src\init\User.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DefineLine.cpp"
+				RelativePath="..\..\src\orientation\DefineLine.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DefineLineUserDef.cpp"
+				RelativePath="..\..\src\orientation\DefineLineUserDef.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DefinePlane.cpp"
+				RelativePath="..\..\src\orientation\DefinePlane.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_DefinePlaneUserDef.cpp"
+				RelativePath="..\..\src\orientation\DefinePlaneUserDef.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_DistFile.cpp"
+				RelativePath="..\..\src\file\DistFile.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_EditCalcAngle.cpp"
+				RelativePath="..\..\src\calculation\CalculationEdit.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_EditCalcDist.cpp"
+				RelativePath="..\..\src\file\File.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_File.cpp"
+				RelativePath="..\..\src\measurement\HiddenPoint.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_HiddenPoint.cpp"
+				RelativePath="..\..\src\measurement\HiddenPointConf.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_HiddenPointConf.cpp"
+				RelativePath="..\..\src\measurement\HomePoints.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_HomePoints.cpp"
+				RelativePath="..\..\src\core\InputText.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_InputText.cpp"
+				RelativePath="..\..\src\core\InputTextModel.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_InputTextModel.cpp"
+				RelativePath="..\..\src\application\LineFitMeas.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application\DCP_LineFitMeas.cpp"
+				RelativePath="..\..\src\application\LineFitting.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application\DCP_LineFitting.cpp"
+				RelativePath="..\..\src\application\LineSetting.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application\DCP_LineSetting.cpp"
+				RelativePath="..\..\src\application\LineSettingConf.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application\DCP_LineSettingConf.cpp"
+				RelativePath="..\..\src\measurement\MeasDist.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_MeasDist.cpp"
+				RelativePath="..\..\src\orientation\MeasV.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_MeasV.cpp"
+				RelativePath="..\..\src\measurement\MeasXYZ.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_MeasXYZ.cpp"
+				RelativePath="..\..\src\measurement\MidPointController.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_MidPointController.cpp"
+				RelativePath="..\..\src\core\Model.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_Model.cpp"
+				RelativePath="..\..\src\core\MsgBox.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_MsgBox.cpp"
+				RelativePath="..\..\src\orientation\Offsv.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_Offsv.cpp"
+				RelativePath="..\..\src\measurement\PlaneScanning.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_PlaneScanning.cpp"
+				RelativePath="..\..\src\core\PointBuffModel.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_PointBuffModel.cpp"
+				RelativePath="..\..\src\orientation\BestFitSelectPoints.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_BestFitSelectPoints.cpp"
+				RelativePath="..\..\src\calculation\ResCircle.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_ResCircle.cpp"
+				RelativePath="..\..\src\orientation\ResLine.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_ResLine.cpp"
+				RelativePath="..\..\src\orientation\ResPlane.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_ResPlane.cpp"
+				RelativePath="..\..\src\orientation\ResBestFit.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_ResBestFit.cpp"
+				RelativePath="..\..\src\core\ResShaft.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_ResShaft.cpp"
+				RelativePath="..\..\src\orientation\RotateLine.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_RotateLine.cpp"
+				RelativePath="..\..\src\orientation\RotatePlane.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\orientation\DCP_RotatePlane.cpp"
+				RelativePath="..\..\src\measurement\ScanFileFunc.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_ScanFileFunc.cpp"
+				RelativePath="..\..\src\measurement\ScanMeasXYZ.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_ScanMeasXYZ.cpp"
+				RelativePath="..\..\src\file\SelectFile.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_SelectFile.cpp"
+				RelativePath="..\..\src\core\SelectMultiPoints.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_SelectMultiPoints.cpp"
+				RelativePath="..\..\src\core\SelectPoint.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_SelectPoint.cpp"
+				RelativePath="..\..\src\core\SelectTool.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_SelectTool.cpp"
+				RelativePath="..\..\src\measurement\SeparateRec.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_SeparateRec.cpp"
+				RelativePath="..\..\src\application\Shaft.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application\DCP_Shaft.cpp"
+				RelativePath="..\..\src\file\ShaftFile.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_ShaftFile.cpp"
+				RelativePath="..\..\src\application\ShaftLine.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\application\DCP_ShaftLine.cpp"
+				RelativePath="..\..\src\file\ShaftSave.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\file\DCP_ShaftSave.cpp"
+				RelativePath="..\..\src\core\SpecialMenu.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_SpecialMenu.cpp"
+				RelativePath="..\..\src\core\Tool.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\core\DCP_Tool.cpp"
+				RelativePath="..\..\src\calculation\CalculationView.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\calculation\DCP_ViewAgf.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\calculation\DCP_ViewCdf.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\core\DCP_xyz.cpp"
+				RelativePath="..\..\src\core\xyz.cpp"
 				>
 			</File>
 			<File
@@ -702,347 +682,331 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_3dfbs.hpp"
+				RelativePath="..\..\include\dcp06\measurement\3dfbs.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_3dmeas.hpp"
+				RelativePath="..\..\include\dcp06\measurement\3dmeas.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\file\DCP_AdfFileFunc.hpp"
+				RelativePath="..\..\include\dcp06\measurement\3dFileView.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_AdvScan.hpp"
+				RelativePath="..\..\include\dcp06\file\AdfFileFunc.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcAngle.hpp"
+				RelativePath="..\..\include\dcp06\measurement\AdvScan.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcChst.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationAngle.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcCircle.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationChst.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcCircleController.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationCircleCore.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcDist.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationDist.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcDist2Points.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationDist2Points.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_Calc321.hpp"
+				RelativePath="..\..\include\dcp06\calculation\Calculation321.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcLine.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationLine.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcLineController.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationLineFit.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcLineFit.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationMenu.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcMenu.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationPlane.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcPlane.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationBestFit.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcPlaneController.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationCircle.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalcBestFit.hpp"
+				RelativePath="..\..\include\dcp06\core\ChangeFace.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_CalculationCircle.hpp"
+				RelativePath="..\..\include\dcp06\measurement\Circle.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_ChangeFace.hpp"
+				RelativePath="..\..\include\dcp06\file\CircleFile.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_Circle.hpp"
+				RelativePath="..\..\include\dcp06\file\CircleSave.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\file\DCP_CircleFile.hpp"
+				RelativePath="..\..\include\dcp06\core\Common.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\file\DCP_CircleSave.hpp"
+				RelativePath="..\..\include\dcp06\orientation\Chst.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_Common.hpp"
+				RelativePath="..\..\include\dcp06\orientation\Alignment321.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DCP06Chst.hpp"
+				RelativePath="..\..\include\dcp06\orientation\Alignment321UserDef.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DCP06Alignment321.hpp"
+				RelativePath="..\..\include\dcp06\core\GUI.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DCP06Alignment321UserDef.hpp"
+				RelativePath="..\..\include\dcp06\init\Initialization.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_DCP06GUI.hpp"
+				RelativePath="..\..\include\dcp06\core\Measure.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\init\DCP_DCP06Init.hpp"
+				RelativePath="..\..\include\dcp06\orientation\BestFit.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_DCP06Meas.hpp"
+				RelativePath="..\..\include\dcp06\init\Unit.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DCP06BestFit.hpp"
+				RelativePath="..\..\include\dcp06\init\User.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\init\DCP_DCP06Unit.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DefineLine.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\init\DCP_DCP06User.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DefineLineUserDef.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DefineLine.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DefinePlane.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DefineLineUserDef.hpp"
+				RelativePath="..\..\include\dcp06\orientation\DefinePlaneUserDef.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DefinePlane.hpp"
+				RelativePath="..\..\include\dcp06\core\Defs.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_DefinePlaneUserDef.hpp"
+				RelativePath="..\..\include\dcp06\file\DistFile.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_Defs.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationEdit.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\file\DCP_DistFile.hpp"
+				RelativePath="..\..\include\dcp06\file\File.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_EditCalcAngle.hpp"
+				RelativePath="..\..\include\dcp06\measurement\HiddenPoint.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_EditCalcDist.hpp"
+				RelativePath="..\..\include\dcp06\measurement\HiddenPointConf.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\file\DCP_File.hpp"
+				RelativePath="..\..\include\dcp06\measurement\HomePoints.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_HiddenPoint.hpp"
+				RelativePath="..\..\include\dcp06\core\InputText.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_HiddenPointConf.hpp"
+				RelativePath="..\..\include\dcp06\core\InputTextModel.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_HomePoints.hpp"
+				RelativePath="..\..\include\dcp06\application\LineFitMeas.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_InputText.hpp"
+				RelativePath="..\..\include\dcp06\application\LineFitting.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_InputTextModel.hpp"
+				RelativePath="..\..\include\dcp06\application\LineSetting.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\application\DCP_LineFitMeas.hpp"
+				RelativePath="..\..\include\dcp06\application\LineSettingConf.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\application\DCP_LineFitting.hpp"
+				RelativePath="..\..\include\dcp06\measurement\MeasDist.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\application\DCP_LineSetting.hpp"
+				RelativePath="..\..\include\dcp06\orientation\MeasV.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\application\DCP_LineSettingConf.hpp"
+				RelativePath="..\..\include\dcp06\measurement\MeasXYZ.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_MeasDist.hpp"
+				RelativePath="..\..\include\dcp06\measurement\MidPointController.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_MeasV.hpp"
+				RelativePath="..\..\include\dcp06\core\Model.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_MeasXYZ.hpp"
+				RelativePath="..\..\include\dcp06\core\MsgBox.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_MidPointController.hpp"
+				RelativePath="..\..\include\dcp06\orientation\Offsv.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_Model.hpp"
+				RelativePath="..\..\include\dcp06\measurement\PlaneScanning.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_MsgBox.hpp"
+				RelativePath="..\..\include\dcp06\core\PointBuffModel.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_Offsv.hpp"
+				RelativePath="..\..\include\dcp06\orientation\BestFitSelectPoints.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_PlaneScanning.hpp"
+				RelativePath="..\..\include\dcp06\calculation\ResCircle.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_PointBuffModel.hpp"
+				RelativePath="..\..\include\dcp06\orientation\ResLine.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_BestFitSelectPoints.hpp"
+				RelativePath="..\..\include\dcp06\orientation\ResPlane.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_ResCircle.hpp"
+				RelativePath="..\..\include\dcp06\orientation\ResBestFit.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_ResLine.hpp"
+				RelativePath="..\..\include\dcp06\core\ResShaft.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_ResPlane.hpp"
+				RelativePath="..\..\include\dcp06\orientation\RotateLine.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_ResBestFit.hpp"
+				RelativePath="..\..\include\dcp06\orientation\RotatePlane.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_ResShaft.hpp"
+				RelativePath="..\..\include\dcp06\measurement\ScanFileFunc.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_RotateLine.hpp"
+				RelativePath="..\..\include\dcp06\measurement\ScanMeasXYZ.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\orientation\DCP_RotatePlane.hpp"
+				RelativePath="..\..\include\dcp06\file\SelectFile.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_ScanFileFunc.hpp"
+				RelativePath="..\..\include\dcp06\core\SelectMultiPoints.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_ScanMeasXYZ.hpp"
+				RelativePath="..\..\include\dcp06\core\SelectOnePoint.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\file\DCP_SelectFile.hpp"
+				RelativePath="..\..\include\dcp06\core\SelectPoint.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_SelectMultiPoints.hpp"
+				RelativePath="..\..\include\dcp06\core\SelectTool.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_SelectOnePoint.hpp"
+				RelativePath="..\..\include\dcp06\measurement\SeparateRec.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_SelectPoint.hpp"
+				RelativePath="..\..\include\dcp06\application\Shaft.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_SelectTool.hpp"
+				RelativePath="..\..\include\dcp06\file\ShaftFile.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\measurement\DCP_SeparateRec.hpp"
+				RelativePath="..\..\include\dcp06\application\ShaftLine.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\application\DCP_Shaft.hpp"
+				RelativePath="..\..\include\dcp06\file\ShaftSave.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\file\DCP_ShaftFile.hpp"
+				RelativePath="..\..\include\dcp06\core\SpecialMenu.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\application\DCP_ShaftLine.hpp"
+				RelativePath="..\..\include\dcp06\core\Tool.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\file\DCP_ShaftSave.hpp"
+				RelativePath="..\..\include\dcp06\core\Types.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_SpecialMenu.hpp"
+				RelativePath="..\..\include\dcp06\calculation\CalculationView.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\dcp06\core\DCP_Tool.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\dcp06\core\DCP_Types.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_ViewAgf.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\dcp06\calculation\DCP_ViewCdf.hpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\dcp06\core\DCP_xyz.hpp"
+				RelativePath="..\..\include\dcp06\core\xyz.hpp"
 				>
 			</File>
 			<File

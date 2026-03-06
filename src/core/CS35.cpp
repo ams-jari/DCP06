@@ -1,8 +1,8 @@
 
 #include "stdafx.h"
 #include <dcp06/core/CS35.hpp>
-#include "dcp06/core/DCP_Defs.hpp"
-#include <dcp06/core/DCP_MsgBox.hpp>
+#include "dcp06/core/Defs.hpp"
+#include <dcp06/core/MsgBox.hpp>
 
 // Detect memory leaks
 #ifdef _DEBUG

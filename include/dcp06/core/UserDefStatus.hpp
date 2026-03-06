@@ -5,8 +5,8 @@
 // ===========================================  Includes   ========================================
 // ================================================================================================
 
-#include <dcp06/core/DCP_Types.hpp>
-#include <dcp06/core/DCP_Model.hpp>
+#include <dcp06/core/Types.hpp>
+#include <dcp06/core/Model.hpp>
 #include <UTL_Macro.hpp>
 #include <GUI_Application.hpp>
 #include <GUI_GraphMenuDialog.hpp>

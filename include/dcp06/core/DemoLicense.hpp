@@ -32,8 +32,8 @@
 // ================================================================================================
 
 
-#include <dcp06/core/DCP_Types.hpp>
-#include <dcp06/core/DCP_Model.hpp>
+#include <dcp06/core/Types.hpp>
+#include <dcp06/core/Model.hpp>
 //#include <GUI_AppBase.hpp>
 
 
