@@ -35,6 +35,7 @@
 #include <dcp06/core/DCP_Types.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/database/IDatabase.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 
 #include <GUI_AppBase.hpp>
 #include <memory>
@@ -340,7 +341,7 @@ namespace DCP
 
 		private:
 			void initialize_matrix4x4(double pMatrix[4][4]);
-			std::unique_ptr<Database::JsonDatabase> m_pDatabase;
+			DCP_UNIQUE_PTR<Database::IDatabase> m_pDatabase;
 
 
     };

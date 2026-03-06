@@ -4,6 +4,8 @@
 namespace DCP9 {
 namespace Geometry {
 
+Line::~Line() {}
+
 Line::Line() {
     // Default constructor - members are default-initialized
 }
@@ -71,11 +73,17 @@ std::vector<double> Line::direction() const {
     double dz = m_endPoint.z() - m_startPoint.z();
     
     double length = std::sqrt(dx*dx + dy*dy + dz*dz);
+    std::vector<double> result(3);
     if (length < 1e-10) {
-        return {0.0, 0.0, 0.0};
+        result[0] = 0.0;
+        result[1] = 0.0;
+        result[2] = 0.0;
+    } else {
+        result[0] = dx/length;
+        result[1] = dy/length;
+        result[2] = dz/length;
     }
-    
-    return {dx/length, dy/length, dz/length};
+    return result;
 }
 
 Point Line::projectPoint(const Point& point) const {
@@ -100,8 +108,8 @@ std::vector<Point> Line::projectPoints(const std::vector<Point>& points) const {
     std::vector<Point> projected;
     projected.reserve(points.size());
     
-    for (const auto& point : points) {
-        projected.push_back(projectPoint(point));
+    for (size_t i = 0; i < points.size(); ++i) {
+        projected.push_back(projectPoint(points[i]));
     }
     
     return projected;

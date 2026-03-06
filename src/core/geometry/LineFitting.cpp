@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <numeric>
 #include <limits>
+#include <sstream>
 
 namespace DCP9 {
 namespace Core {
@@ -22,10 +23,10 @@ LineFitResult bestFitLine(const std::vector<DCP9::Geometry::Point>& points) {
 
     // Calculate centroid
     double sumX = 0.0, sumY = 0.0, sumZ = 0.0;
-    for (const auto& point : points) {
-        sumX += point.x();
-        sumY += point.y();
-        sumZ += point.z();
+    for (size_t i = 0; i < points.size(); ++i) {
+        sumX += points[i].x();
+        sumY += points[i].y();
+        sumZ += points[i].z();
     }
     
     const size_t n = points.size();
@@ -64,7 +65,10 @@ LineFitResult bestFitLine(const std::vector<DCP9::Geometry::Point>& points) {
     DCP9::Geometry::Point linePoint(centroidX, centroidY, centroidZ);
     
     // Store direction vector
-    std::vector<double> directionVec = {direction(0), direction(1), direction(2)};
+    std::vector<double> directionVec(3);
+    directionVec[0] = direction(0);
+    directionVec[1] = direction(1);
+    directionVec[2] = direction(2);
 
     // Calculate RMS and residuals
     std::vector<double> residuals = calculateLineResiduals(points, linePoint, directionVec);
@@ -84,11 +88,10 @@ LineFitResult bestFitLineValidated(
     size_t minPoints) {
     
     if (points.size() < minPoints) {
-        throw std::invalid_argument(
-            "Insufficient points for line fitting. Required: " + 
-            std::to_string(minPoints) + ", provided: " + 
-            std::to_string(points.size())
-        );
+        std::ostringstream oss;
+        oss << "Insufficient points for line fitting. Required: " << minPoints
+            << ", provided: " << points.size();
+        throw std::invalid_argument(oss.str());
     }
 
     // Check if all points are coincident
@@ -159,8 +162,8 @@ double calculateLineRMS(
     }
 
     double sumSquared = 0.0;
-    for (const auto& point : points) {
-        double distance = distancePointToLine(point, linePoint, lineDirection);
+    for (size_t i = 0; i < points.size(); ++i) {
+        double distance = distancePointToLine(points[i], linePoint, lineDirection);
         sumSquared += distance * distance;
     }
 
@@ -175,8 +178,8 @@ std::vector<double> calculateLineResiduals(
     std::vector<double> residuals;
     residuals.reserve(points.size());
 
-    for (const auto& point : points) {
-        double distance = distancePointToLine(point, linePoint, lineDirection);
+    for (size_t i = 0; i < points.size(); ++i) {
+        double distance = distancePointToLine(points[i], linePoint, lineDirection);
         residuals.push_back(distance);
     }
 

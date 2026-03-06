@@ -328,7 +328,6 @@ short DCP::DCP06CalcPomC::calc_transform(/*point_buff_ *point_OCS,		// Object po
 short i, points_defined=0, count, DOM_ROTATION,ret;
 double mea[MAX_BESTFIT_POINTS*3],nom[MAX_BESTFIT_POINTS*3];
 double x[4], xu[4];
-double k[3], par[6],Zdd[6][6], M[3][3];
 double tempx,tempy,tempz;
 short sta_OCS,sta_DCS;
 	
@@ -459,12 +458,12 @@ short sta_OCS,sta_DCS;
 					sourcePts.push_back(DCP9::Geometry::Point(mea[idx*3+0], mea[idx*3+1], mea[idx*3+2]));
 					targetPts.push_back(DCP9::Geometry::Point(nom[idx*3+0], nom[idx*3+1], nom[idx*3+2]));
 				}
-				auto transformResult = DCP9::Core::Geometry::solveRigidTransform(sourcePts, targetPts, true);
+				DCP9::Core::Geometry::RigidTransformResult transformResult = DCP9::Core::Geometry::solveRigidTransform(sourcePts, targetPts, true);
 				ret = transformResult.isValid ? 1 : -1;
 				if(ret == 1)
 				{
-					const auto& R = transformResult.rotation;
-					const auto& t = transformResult.translation;
+					const Eigen::Matrix3d& R = transformResult.rotation;
+					const Eigen::Vector3d& t = transformResult.translation;
 					m_pDCP06PomModel->matrix[0][0]=R(0,0); m_pDCP06PomModel->matrix[0][1]=R(0,1); m_pDCP06PomModel->matrix[0][2]=R(0,2); m_pDCP06PomModel->matrix[0][3]=t(0);
 					m_pDCP06PomModel->matrix[1][0]=R(1,0); m_pDCP06PomModel->matrix[1][1]=R(1,1); m_pDCP06PomModel->matrix[1][2]=R(1,2); m_pDCP06PomModel->matrix[1][3]=t(1);
 					m_pDCP06PomModel->matrix[2][0]=R(2,0); m_pDCP06PomModel->matrix[2][1]=R(2,1); m_pDCP06PomModel->matrix[2][2]=R(2,2); m_pDCP06PomModel->matrix[2][3]=t(2);

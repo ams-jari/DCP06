@@ -11,7 +11,7 @@ class Circle {
 public:
     Circle();
     Circle(const Point& center, double radius, const std::vector<double>& normal);
-    ~Circle() = default;
+    ~Circle();
 
     // Getters
     const Point& center() const { return m_center; }
@@ -34,7 +34,7 @@ public:
 
 private:
     Point m_center;
-    double m_radius{0.0};
+    double m_radius;
     std::vector<double> m_normal;  // Normal vector of the plane containing the circle
     std::string m_id;
 };

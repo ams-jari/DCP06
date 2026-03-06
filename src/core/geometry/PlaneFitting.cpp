@@ -7,6 +7,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include <numeric>
+#include <sstream>
 
 namespace DCP9 {
 namespace Core {
@@ -21,10 +22,10 @@ PlaneFitResult bestFitPlane(const std::vector<DCP9::Geometry::Point>& points) {
 
     // Calculate centroid
     double sumX = 0.0, sumY = 0.0, sumZ = 0.0;
-    for (const auto& point : points) {
-        sumX += point.x();
-        sumY += point.y();
-        sumZ += point.z();
+    for (std::size_t i = 0; i < points.size(); ++i) {
+        sumX += points[i].x();
+        sumY += points[i].y();
+        sumZ += points[i].z();
     }
     
     const size_t n = points.size();
@@ -81,13 +82,17 @@ PlaneFitResult bestFitPlane(const std::vector<DCP9::Geometry::Point>& points) {
                  currentNormal[2] * normal(2);
     
     // If normals are opposite, flip the plane's normal
+    std::vector<double> normalVec(3);
     if (dot < 0) {
-        std::vector<double> flippedNormal = {-normal(0), -normal(1), -normal(2)};
-        plane.setNormal(flippedNormal);
+        normalVec[0] = -normal(0);
+        normalVec[1] = -normal(1);
+        normalVec[2] = -normal(2);
     } else {
-        std::vector<double> normalVec = {normal(0), normal(1), normal(2)};
-        plane.setNormal(normalVec);
+        normalVec[0] = normal(0);
+        normalVec[1] = normal(1);
+        normalVec[2] = normal(2);
     }
+    plane.setNormal(normalVec);
 
     // Calculate RMS and residuals
     std::vector<double> residuals = calculatePlaneResiduals(points, plane);
@@ -107,11 +112,10 @@ PlaneFitResult bestFitPlaneValidated(
     size_t minPoints) {
     
     if (points.size() < minPoints) {
-        throw std::invalid_argument(
-            "Insufficient points for plane fitting. Required: " + 
-            std::to_string(minPoints) + ", provided: " + 
-            std::to_string(points.size())
-        );
+        std::ostringstream oss;
+        oss << "Insufficient points for plane fitting. Required: " << minPoints
+            << ", provided: " << points.size();
+        throw std::invalid_argument(oss.str());
     }
 
     // Check for collinearity (all points on a line)
@@ -150,8 +154,8 @@ double calculatePlaneRMS(const std::vector<DCP9::Geometry::Point>& points, const
     }
 
     double sumSquared = 0.0;
-    for (const auto& point : points) {
-        double distance = plane.distanceToPoint(point);
+    for (std::size_t i = 0; i < points.size(); ++i) {
+        double distance = plane.distanceToPoint(points[i]);
         sumSquared += distance * distance;
     }
 
@@ -165,8 +169,8 @@ std::vector<double> calculatePlaneResiduals(
     std::vector<double> residuals;
     residuals.reserve(points.size());
 
-    for (const auto& point : points) {
-        double distance = plane.distanceToPoint(point);
+    for (std::size_t i = 0; i < points.size(); ++i) {
+        double distance = plane.distanceToPoint(points[i]);
         residuals.push_back(distance);
     }
 

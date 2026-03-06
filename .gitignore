@@ -24,3 +24,8 @@ Win32/
 # OS
 Thumbs.db
 .DS_Store
+
+# VS2008 / build artifacts
+*.ncb
+eigen-3.2.10.zip
+vcpkg_installed/

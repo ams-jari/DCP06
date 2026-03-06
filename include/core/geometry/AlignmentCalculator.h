@@ -15,12 +15,12 @@ namespace Core {
 namespace Geometry {
 
 /**
- * @brief Alignment type enumeration
+ * @brief Alignment type enumeration (C++03 compatible)
  */
-enum class AlignmentType {
-    Unknown,    // Cannot determine alignment type
-    BestFit,   // Best Fit Alignment using points only
-    Alignment321  // 321 Alignment using plane + line + reference point
+enum AlignmentType {
+    AlignmentType_Unknown,      // Cannot determine alignment type
+    AlignmentType_BestFit,      // Best Fit Alignment using points only
+    AlignmentType_321           // 321 Alignment using plane + line + reference point
 };
 
 /**
@@ -30,21 +30,21 @@ struct AlignmentResult {
     Eigen::Matrix3d rotation;           // 3x3 rotation matrix
     Eigen::Vector3d translation;       // 3x1 translation vector
     Eigen::Matrix4d transformMatrix;    // 4x4 homogeneous transformation matrix
-    AlignmentType type{AlignmentType::Unknown};  // Type of alignment performed
-    double rms{0.0};                    // Root mean square error
+    AlignmentType type;                 // Type of alignment performed
+    double rms;                         // Root mean square error
     std::vector<double> residuals;     // Residuals for each point
-    std::map<std::string, std::vector<double>> pointResiduals;  // Residuals by point ID
+    std::map<std::string, std::vector<double> > pointResiduals;  // Residuals by point ID
     std::vector<std::string> objectIds; // IDs of objects used in alignment
-    bool isValid{false};                // Whether the alignment was successful
-    
-    AlignmentResult() = default;
+    bool isValid;                      // Whether the alignment was successful
+
+    AlignmentResult() : type(AlignmentType_Unknown), rms(0.0), isValid(false) {}
 };
 
 /**
  * @brief Validated alignment data structure
  */
 struct AlignmentData {
-    AlignmentType type{AlignmentType::Unknown};
+    AlignmentType type;
     std::vector<std::string> ids;
     std::vector<DCP9::Geometry::Point> designPoints;
     std::vector<DCP9::Geometry::Point> actualPoints;
@@ -52,7 +52,9 @@ struct AlignmentData {
     std::vector<DCP9::Geometry::Plane> actualPlanes;
     std::vector<DCP9::Geometry::Line> designLines;
     std::vector<DCP9::Geometry::Line> actualLines;
-    bool isValid{false};
+    bool isValid;
+
+    AlignmentData() : type(AlignmentType_Unknown), isValid(false) {}
 };
 
 /**
@@ -87,12 +89,12 @@ public:
     static AlignmentResult solveAlignment(
         const std::vector<DCP9::Geometry::Point>& designPoints,
         const std::vector<DCP9::Geometry::Point>& actualPoints,
-        const std::vector<DCP9::Geometry::Plane>& designPlanes = {},
-        const std::vector<DCP9::Geometry::Plane>& actualPlanes = {},
-        const std::vector<DCP9::Geometry::Line>& designLines = {},
-        const std::vector<DCP9::Geometry::Line>& actualLines = {},
-        const std::vector<std::string>& objectIds = {},
-        AlignmentType alignmentType = AlignmentType::Unknown,
+        const std::vector<DCP9::Geometry::Plane>& designPlanes = std::vector<DCP9::Geometry::Plane>(),
+        const std::vector<DCP9::Geometry::Plane>& actualPlanes = std::vector<DCP9::Geometry::Plane>(),
+        const std::vector<DCP9::Geometry::Line>& designLines = std::vector<DCP9::Geometry::Line>(),
+        const std::vector<DCP9::Geometry::Line>& actualLines = std::vector<DCP9::Geometry::Line>(),
+        const std::vector<std::string>& objectIds = std::vector<std::string>(),
+        AlignmentType alignmentType = AlignmentType_Unknown,
         bool sortPoints = true
     );
     
@@ -127,11 +129,11 @@ public:
     static AlignmentData validateAlignmentData(
         const std::vector<DCP9::Geometry::Point>& designPoints,
         const std::vector<DCP9::Geometry::Point>& actualPoints,
-        const std::vector<DCP9::Geometry::Plane>& designPlanes = {},
-        const std::vector<DCP9::Geometry::Plane>& actualPlanes = {},
-        const std::vector<DCP9::Geometry::Line>& designLines = {},
-        const std::vector<DCP9::Geometry::Line>& actualLines = {},
-        const std::vector<std::string>& objectIds = {}
+        const std::vector<DCP9::Geometry::Plane>& designPlanes = std::vector<DCP9::Geometry::Plane>(),
+        const std::vector<DCP9::Geometry::Plane>& actualPlanes = std::vector<DCP9::Geometry::Plane>(),
+        const std::vector<DCP9::Geometry::Line>& designLines = std::vector<DCP9::Geometry::Line>(),
+        const std::vector<DCP9::Geometry::Line>& actualLines = std::vector<DCP9::Geometry::Line>(),
+        const std::vector<std::string>& objectIds = std::vector<std::string>()
     );
     
     /**
@@ -148,7 +150,7 @@ public:
     static AlignmentResult solveBestFitAlignment(
         const std::vector<DCP9::Geometry::Point>& designPoints,
         const std::vector<DCP9::Geometry::Point>& actualPoints,
-        const std::vector<std::string>& objectIds = {},
+        const std::vector<std::string>& objectIds = std::vector<std::string>(),
         bool sortPoints = true
     );
     
@@ -193,7 +195,7 @@ public:
         const std::vector<DCP9::Geometry::Point>& actualPoints,
         const Eigen::Matrix3d& rotation,
         const Eigen::Vector3d& translation,
-        const std::vector<std::string>& objectIds = {}
+        const std::vector<std::string>& objectIds = std::vector<std::string>()
     );
     
     /**

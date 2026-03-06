@@ -11,7 +11,7 @@ class Plane {
 public:
     Plane();
     Plane(const Point& p1, const Point& p2, const Point& p3);
-    ~Plane() = default;
+    ~Plane();
 
     // Getters
     const Point& point() const { return m_point; }
@@ -38,7 +38,7 @@ public:
 private:
     Point m_point;
     std::vector<double> m_normal;
-    double m_d{0.0}; // Plane equation: ax + by + cz + d = 0
+    double m_d; // Plane equation: ax + by + cz + d = 0
     std::string m_id;
 
     void updatePlaneEquation();

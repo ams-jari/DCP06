@@ -14,11 +14,11 @@ namespace Geometry {
  */
 struct PlaneFitResult {
     DCP9::Geometry::Plane plane;    // Fitted plane
-    double rms{0.0};                // Root mean square error
+    double rms;                     // Root mean square error
     std::vector<double> residuals;   // Residuals for each point
-    bool isValid{false};            // Whether the fit was successful
+    bool isValid;                   // Whether the fit was successful
     
-    PlaneFitResult() = default;
+    PlaneFitResult() : rms(0.0), isValid(false) {}
 };
 
 /**

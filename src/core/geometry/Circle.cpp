@@ -4,9 +4,14 @@
 namespace DCP9 {
 namespace Geometry {
 
-Circle::Circle() {
-    m_normal = {0.0, 0.0, 1.0}; // Default normal is along z-axis
+Circle::Circle() : m_radius(0.0) {
+    m_normal.resize(3);
+    m_normal[0] = 0.0;
+    m_normal[1] = 0.0;
+    m_normal[2] = 1.0;  // Default normal is along z-axis
 }
+
+Circle::~Circle() {}
 
 Circle::Circle(const Point& center, double radius, const std::vector<double>& normal)
     : m_center(center)
@@ -28,7 +33,7 @@ void Circle::setNormal(const std::vector<double>& normal) {
     if (normal.size() != 3) {
         return;
     }
-    
+    m_normal.resize(3);
     // Normalize the normal vector
     double length = std::sqrt(normal[0]*normal[0] + normal[1]*normal[1] + normal[2]*normal[2]);
     if (length > 1e-10) {

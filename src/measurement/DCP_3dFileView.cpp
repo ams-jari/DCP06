@@ -29,7 +29,12 @@
 #include <dcp06/measurement/DCP_3DFileView.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/file/DCP_File.hpp>
+#ifndef DCP_USE_JSON_DATABASE
+#define DCP_USE_JSON_DATABASE 1
+#endif
+#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
+#endif
 #include <dcp06/core/DCP_SelectPoint.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
 #include <dcp06/core/DCP_InputText.hpp>
@@ -435,14 +440,18 @@ void DCP::DCP063DFileViewControllerC::OnF1Pressed()
 {
 		DCP::DCP06SelectPointModelC* pModel = new DCP06SelectPointModelC;
 
-		auto* db = m_pDlg->GetDCP06Model()->GetDatabase();
-		auto* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : nullptr;
-		bool useDb = jdb && jdb->isJobLoaded() && !m_pDlg->GetDCP06Model()->m_currentJobId.empty();
-
+		DCP::Database::IDatabase* db = m_pDlg->GetDCP06Model()->GetDatabase();
+		bool useDb = false;
+#if DCP_USE_JSON_DATABASE
+		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
+		useDb = jdb && jdb->isJobLoaded() && !m_pDlg->GetDCP06Model()->m_currentJobId.empty();
+#endif
 		int iCount = 0;
+#if DCP_USE_JSON_DATABASE
 		if (useDb)
 			iCount = jdb->getPointListAsSelectPoint(&pModel->points[0], MAX_SELECT_POINTS);
 		else
+#endif
 			iCount = m_pDataModel->m_pAdfFile->GetPointList(&pModel->points[0], MAX_SELECT_POINTS);
 		pModel->m_iCounts = iCount;
 		pModel->m_iSelectedId = useDb ? 1 : m_pDataModel->m_pAdfFile->active_point_front;

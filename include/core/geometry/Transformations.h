@@ -16,13 +16,13 @@ struct RigidTransformResult {
     Eigen::Matrix3d rotation;           // 3x3 rotation matrix
     Eigen::Vector3d translation;       // 3x1 translation vector
     Eigen::Matrix4d transformMatrix;   // 4x4 homogeneous transformation matrix
-    double rms{0.0};                   // Root mean square error
+    double rms;                       // Root mean square error
     std::vector<double> residuals;     // Residuals for each point
     std::vector<size_t> sourceIndices; // Indices of source points used
     std::vector<size_t> targetIndices; // Indices of target points used
-    bool isValid{false};               // Whether the transformation was successful
+    bool isValid;                     // Whether the transformation was successful
     
-    RigidTransformResult() = default;
+    RigidTransformResult() : rms(0.0), isValid(false) {}
 };
 
 /**

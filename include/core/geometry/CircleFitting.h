@@ -15,11 +15,11 @@ namespace Geometry {
  */
 struct CircleFitResult {
     DCP9::Geometry::Circle circle;    // Fitted circle
-    double rms{0.0};                  // Root mean square error
+    double rms;                       // Root mean square error
     std::vector<double> residuals;    // Residuals for each point
-    bool isValid{false};              // Whether the fit was successful
+    bool isValid;                     // Whether the fit was successful
     
-    CircleFitResult() = default;
+    CircleFitResult() : rms(0.0), isValid(false) {}
 };
 
 /**

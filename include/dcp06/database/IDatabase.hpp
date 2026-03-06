@@ -3,14 +3,13 @@
 #include <dcp06/database/DatabaseTypes.hpp>
 #include <string>
 #include <vector>
-#include <memory>
 
 namespace DCP {
 namespace Database {
 
 class IDatabase {
 public:
-    virtual ~IDatabase() = default;
+    virtual ~IDatabase() {}
 
     // Job operations
     virtual bool createJob(const std::string& jobId) = 0;
@@ -25,7 +24,7 @@ public:
     virtual bool updatePoint(const std::string& pointId, const PointData& data) = 0;
     virtual bool deletePoint(const std::string& pointId) = 0;
     virtual bool getPoint(const std::string& pointId, PointData& data) const = 0;
-    virtual std::vector<std::shared_ptr<PointData>> getAllPoints() const = 0;
+    virtual std::vector<DCP_SHARED_PTR<PointData> > getAllPoints() const = 0;
 
     // Midpoint operations (Phase 1: stub)
     virtual bool addMidpoint(const std::string& midpointId, const MidpointData& data) = 0;
@@ -79,9 +78,10 @@ public:
     virtual bool getBestFitAlignment(const std::string& bestFitAlignmentId, BestFitAlignmentData& data) = 0;
 
     // Paths (for DB-primary workflow)
+    virtual void setDataDirectory(const std::string&) {}
     virtual std::string getDataDirectory() const { return ""; }
     virtual std::string getJobWorkingPath(const std::string& jobId) const { return ""; }
-    virtual std::vector<std::string> listJobIds() const { return {}; }
+    virtual std::vector<std::string> listJobIds() const { return std::vector<std::string>(); }
 
     // Import/export
     virtual bool importFromADF(const std::string& filename) = 0;

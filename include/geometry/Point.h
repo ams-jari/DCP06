@@ -10,7 +10,7 @@ class Point {
 public:
     Point();
     Point(double x, double y, double z);
-    ~Point() = default;
+    ~Point();
 
     // Getters
     double x() const { return m_x; }
@@ -35,12 +35,12 @@ public:
     bool isValid() const;
 
 private:
-    double m_x{0.0};
-    double m_y{0.0};
-    double m_z{0.0};
+    double m_x;
+    double m_y;
+    double m_z;
     std::string m_id;
-    double m_precision{0.0};
-    double m_deviation{0.0};
+    double m_precision;
+    double m_deviation;
     std::string m_status;
 };
 

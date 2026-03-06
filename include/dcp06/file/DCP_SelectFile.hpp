@@ -91,9 +91,11 @@ namespace DCP
                 USER_APP_VERIFY( false );
                 return *this;
             }
-			DCP06ModelC* m_pDCP06Model;
+            DCP06ModelC* m_pDCP06Model;
             DCP06SelectFileDlgC* m_pDlg;
 			short m_iFileType;
+		public:
+			short GetFileType() const { return m_iFileType; }
     };
 
 

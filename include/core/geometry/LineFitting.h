@@ -14,11 +14,11 @@ namespace Geometry {
 struct LineFitResult {
     DCP9::Geometry::Point point;      ///< A point on the fitted line (typically the centroid)
     std::vector<double> direction;    ///< Direction vector of the line (unit vector)
-    double rms{0.0};                   ///< Root mean square error of the fit
-    std::vector<double> residuals;     ///< Residual distances of points to the line
-    bool isValid{false};               ///< Whether the fitting was successful
+    double rms;                       ///< Root mean square error of the fit
+    std::vector<double> residuals;    ///< Residual distances of points to the line
+    bool isValid;                     ///< Whether the fitting was successful
     
-    LineFitResult() = default;
+    LineFitResult() : rms(0.0), isValid(false) {}
 };
 
 /**

@@ -4,12 +4,17 @@
 namespace DCP9 {
 namespace Geometry {
 
-Plane::Plane() {
-    m_normal = {0.0, 0.0, 1.0}; // Default normal is along z-axis
+Plane::~Plane() {}
+
+Plane::Plane() : m_d(0.0) {
+    m_normal.resize(3);
+    m_normal[0] = 0.0;
+    m_normal[1] = 0.0;
+    m_normal[2] = 1.0;  // Default normal is along z-axis
     updatePlaneEquation();
 }
 
-Plane::Plane(const Point& p1, const Point& p2, const Point& p3) {
+Plane::Plane(const Point& p1, const Point& p2, const Point& p3) : m_d(0.0) {
     m_point = p1;
     
     // Calculate normal vector using cross product
@@ -27,7 +32,10 @@ Plane::Plane(const Point& p1, const Point& p2, const Point& p3) {
     
     // Normalize the normal vector
     double length = std::sqrt(nx*nx + ny*ny + nz*nz);
-    m_normal = {nx/length, ny/length, nz/length};
+    m_normal.resize(3);
+    m_normal[0] = nx/length;
+    m_normal[1] = ny/length;
+    m_normal[2] = nz/length;
     
     updatePlaneEquation();
 }
@@ -39,7 +47,10 @@ void Plane::setNormal(const std::vector<double>& normal) {
     
     // Normalize the normal vector
     double length = std::sqrt(normal[0]*normal[0] + normal[1]*normal[1] + normal[2]*normal[2]);
-    m_normal = {normal[0]/length, normal[1]/length, normal[2]/length};
+    m_normal.resize(3);
+    m_normal[0] = normal[0]/length;
+    m_normal[1] = normal[1]/length;
+    m_normal[2] = normal[2]/length;
     
     updatePlaneEquation();
 }
@@ -76,8 +87,8 @@ std::vector<Point> Plane::projectPoints(const std::vector<Point>& points) const 
     std::vector<Point> projected;
     projected.reserve(points.size());
     
-    for (const auto& point : points) {
-        projected.push_back(projectPoint(point));
+    for (std::size_t i = 0; i < points.size(); ++i) {
+        projected.push_back(projectPoint(points[i]));
     }
     
     return projected;

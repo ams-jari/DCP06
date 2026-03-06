@@ -88,6 +88,7 @@ double dist;
 double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 
 	DCP06MsgBoxC msgbox;
+	(void)d; (void)d_des;
 
 	plane[0].calc = 0;
 	plane[0].sta = PLANE_NOT_DEFINED;
@@ -282,7 +283,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			std::vector<DCP9::Geometry::Point> pts;
 			for(int idx=0; idx<points_defined; idx++)
 				pts.push_back(DCP9::Geometry::Point(p_mat[idx*3+0], p_mat[idx*3+1], p_mat[idx*3+2]));
-			auto planeResult = DCP9::Core::Geometry::bestFitPlane(pts);
+			DCP9::Core::Geometry::PlaneFitResult planeResult = DCP9::Core::Geometry::bestFitPlane(pts);
 			ff = planeResult.isValid ? 1 : -1;
 			if(ff == -1)
 			{
@@ -387,7 +388,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			std::vector<DCP9::Geometry::Point> ptsDes;
 			for(int idx=0; idx<points_defined; idx++)
 				ptsDes.push_back(DCP9::Geometry::Point(p_mat[idx*3+0], p_mat[idx*3+1], p_mat[idx*3+2]));
-			auto planeResultDes = DCP9::Core::Geometry::bestFitPlane(ptsDes);
+			DCP9::Core::Geometry::PlaneFitResult planeResultDes = DCP9::Core::Geometry::bestFitPlane(ptsDes);
 			ff = planeResultDes.isValid ? 1 : -1;
 			if(ff == -1)
 			{

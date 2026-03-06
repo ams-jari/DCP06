@@ -47,8 +47,8 @@
 				Optimization="0"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="true"
-				AdditionalIncludeDirectories="..\..\include;..\..\include\dcp06\math;..\..\src\core;..\..\Text;&quot;$(System1500_ROOT)\Projects\&quot;;&quot;$(System1500_ROOT)\Projects\3rdParty&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Base\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Manage\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_System\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Scanning\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Tps\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Common\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Database\Ext_Hdr\apisupport&quot;;&quot;$(System1500_ROOT)\Projects\GeoMath\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GuiPlus\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\SLBasics\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\HALTools\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ScanData\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\SensorData\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\TpsFacade\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Utilities\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\CameraControl\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GSV\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Converter\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GSV_Base\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Geometry\Source\API_Hdr&quot;"
-				PreprocessorDefinitions="HW_X86;OS_WINPC;PLAT_WINPC_X86;WIN32;NDEBUG;_WINDOWS;_USRDLL;PILING_EXPORTS;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="..\..\include;..\..\include\dcp06\math;..\..\src\core;..\..\Text;..\..\3rdparty\jsoncpp_0107;..\..\3rdparty\msvc2008_compat;..\..\3rdparty\eigen-3.2.10;&quot;$(System1500_ROOT)\Projects\&quot;;&quot;$(System1500_ROOT)\Projects\3rdParty&quot;;..\..\..\vcpkg\installed\x86-windows\include;&quot;$(System1500_ROOT)\Projects\ABL_Base\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Manage\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_System\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Scanning\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Tps\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Common\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Database\Ext_Hdr\apisupport&quot;;&quot;$(System1500_ROOT)\Projects\GeoMath\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GuiPlus\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\SLBasics\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\HALTools\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ScanData\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\SensorData\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\TpsFacade\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Utilities\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\CameraControl\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GSV\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Converter\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GSV_Base\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Geometry\Source\API_Hdr&quot;"
+				PreprocessorDefinitions="HW_X86;OS_WINPC;PLAT_WINPC_X86;WIN32;NDEBUG;_WINDOWS;_USRDLL;PILING_EXPORTS;_CRT_SECURE_NO_WARNINGS;DCP_USE_JSON_DATABASE=1"
 				StringPooling="true"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="2"
@@ -58,6 +58,7 @@
 				UsePrecompiledHeader="0"
 				ProgramDataBaseFileName="$(IntDir)/vc80.pdb"
 				WarningLevel="3"
+				DisableSpecificWarnings="4355"
 				Detect64BitPortabilityProblems="false"
 				DebugInformationFormat="3"
 			/>
@@ -75,7 +76,7 @@
 				AdditionalDependencies="ABL_Base.lib ABL_Tps.lib GUIPlus.lib HALTools.lib ScanData.lib SensorData.lib Utilities.lib GSV.lib ABL_Manage.lib ABL_Scanning.lib ABL_System.lib TpsFacade.lib Common.lib GeoMath.lib"
 				OutputFile="$(OutDir)\$(ProjectName).dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(SYSTEM1500_ROOT)\Binary\$(PlatformName)\libs&quot;"
+				AdditionalLibraryDirectories="..\..\..\vcpkg\installed\x86-windows\lib;&quot;$(SYSTEM1500_ROOT)\Binary\$(PlatformName)\libs&quot;"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile="$(TargetDir)/$(TargetName).pdb"
 				GenerateMapFile="false"
@@ -144,8 +145,8 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				WholeProgramOptimization="false"
-				AdditionalIncludeDirectories="..\..\include;..\..\include\dcp06\math;..\..\src\core;..\..\Text;&quot;$(System1500_ROOT)\Projects\3rdParty\WinCEAdapter&quot;;&quot;$(System1500_ROOT)\Projects\3rdParty&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Base\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Manage\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_System\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Scanning\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\SLBasics\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Tps\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Common\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Database\Ext_Hdr\apisupport&quot;;&quot;$(System1500_ROOT)\Projects\GuiPlus\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\HALTools\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ScanData\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\SensorData\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\TpsFacade\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Utilities\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GeoMath\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\CameraControl\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GSV\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Converter\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GSV_Base\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Geometry\Source\API_Hdr&quot;"
-				PreprocessorDefinitions="HW_ARM;OS_WINCE;PLAT_WINCE_ARM;NDEBUG;UNDER_CE;WIN32;_WIN32_WCE=$(CEVER);$(ARCHFAM);$(_ARCHFAM_);UNICODE;_UNICODE;_USRDLL;DCP06_EXPORTS"
+				AdditionalIncludeDirectories="..\..\include;..\..\include\dcp06\math;..\..\src\core;..\..\Text;..\..\..\vcpkg\installed\x86-windows\include;&quot;$(System1500_ROOT)\Projects\3rdParty\WinCEAdapter&quot;;&quot;$(System1500_ROOT)\Projects\3rdParty&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Base\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Manage\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_System\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Scanning\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\SLBasics\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ABL_Tps\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Common\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Database\Ext_Hdr\apisupport&quot;;&quot;$(System1500_ROOT)\Projects\GuiPlus\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\HALTools\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\ScanData\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\SensorData\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\TpsFacade\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Utilities\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GeoMath\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\CameraControl\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GSV\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Converter\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\GSV_Base\Source\API_Hdr&quot;;&quot;$(System1500_ROOT)\Projects\Geometry\Source\API_Hdr&quot;"
+				PreprocessorDefinitions="HW_ARM;OS_WINCE;PLAT_WINCE_ARM;NDEBUG;UNDER_CE;WIN32;_WIN32_WCE=$(CEVER);$(ARCHFAM);$(_ARCHFAM_);UNICODE;_UNICODE;_USRDLL;DCP06_EXPORTS;DCP_USE_JSON_DATABASE=0"
 				ExceptionHandling="1"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -284,7 +285,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\measurement\DCP_AutoMatch.cpp"
+				RelativePath="..\..\src\core\DCP_AutoMatch.cpp"
 				>
 			</File>
 			<File
@@ -341,6 +342,30 @@
 			</File>
 			<File
 				RelativePath="..\..\src\calculation\DCP_CalcBestFit.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Src\core\geometry\Transformations.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Src\core\geometry\Point.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Src\core\geometry\Plane.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Src\core\geometry\Line.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Src\core\geometry\PlaneFitting.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\Src\core\geometry\LineFitting.cpp"
 				>
 			</File>
 			<File
@@ -740,8 +765,28 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\3rdparty\jsoncpp_0107\jsoncpp.cpp"
+				>
+				<FileConfiguration
+					Name="Release|Stellar_EC7_3P (ARMv4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ExcludedFromBuild="true"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\..\src\database\JsonDatabase.cpp"
 				>
+				<FileConfiguration
+					Name="Release|Stellar_EC7_3P (ARMv4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						ExcludedFromBuild="true"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\..\src\math\VECLNTH.cpp"

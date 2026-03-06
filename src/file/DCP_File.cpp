@@ -28,7 +28,12 @@
 #include <dcp06/core/DCP_Model.hpp>
 #include <dcp06/file/DCP_File.hpp>
 #include <dcp06/file/DCP_SelectFile.hpp>
+#ifndef DCP_USE_JSON_DATABASE
+#define DCP_USE_JSON_DATABASE 1
+#endif
+#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
+#endif
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/core/DCP_InputText.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
@@ -415,8 +420,12 @@ void DCP::DCP06FileControllerC::OnSHF4Pressed()
 {
 	if (!m_pDataModel->m_pAdfFile->IsOpen() || m_pDCP06Model->m_currentJobId.empty())
 		return;
-	auto* db = m_pDCP06Model->GetDatabase();
-	auto* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : nullptr;
+	DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+#if !DCP_USE_JSON_DATABASE
+	(void)db;
+	return;
+#else
+	DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 	if (!jdb) return;
 	std::string workPath = jdb->getJobWorkingPath(m_pDCP06Model->m_currentJobId);
 	if (workPath.empty()) return;
@@ -431,6 +440,7 @@ void DCP::DCP06FileControllerC::OnSHF4Pressed()
 		exportPath += "_export.adf";
 	db->exportToADF(exportPath);
 	m_pDlg->RefreshControls();
+#endif
 }
 
 // OPEN (DB-primary: list jobs from database)
@@ -582,8 +592,9 @@ void DCP::DCP06FileControllerC::OnSHF3Pressed()
 	// DB-primary: sync working ADF -> database
 	if (!m_pDCP06Model->m_currentJobId.empty())
 	{
-		auto* db = m_pDCP06Model->GetDatabase();
-		auto* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : nullptr;
+		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+#if DCP_USE_JSON_DATABASE
+		DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 		if (jdb)
 		{
 			std::string workPath = jdb->getJobWorkingPath(m_pDCP06Model->m_currentJobId);
@@ -594,6 +605,7 @@ void DCP::DCP06FileControllerC::OnSHF3Pressed()
 				db->saveJob(m_pDCP06Model->m_currentJobId);
 			}
 		}
+#endif
 	}
 	m_pDlg->RefreshControls();
 }
@@ -626,21 +638,22 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 {
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		auto* selCtrl = dynamic_cast<DCP::DCP06SelectFileControllerC*>(GetController(SELECT_FILE_CONTROLLER));
+		DCP::DCP06SelectFileControllerC* selCtrl = dynamic_cast<DCP::DCP06SelectFileControllerC*>(GetController(SELECT_FILE_CONTROLLER));
 		DCP::DCP06SelectFileModelC* pModel = (DCP::DCP06SelectFileModelC*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
 		StringC strSelected = pModel->m_strSelectedFile;
 		strSelected.Trim();
 		if (strSelected.IsEmpty()) { m_pDlg->RefreshControls(); return; }
 
 		// DB-primary: Open job from database
-		if (selCtrl && selCtrl->m_iFileType == DCP06_JOBS)
+		if (selCtrl && selCtrl->GetFileType() == DCP06_JOBS)
 		{
 			char jobIdBuf[64];
 			jobIdBuf[0] = '\0';
 			BSS::UTI::BSS_UTI_WCharToAscii(strSelected, jobIdBuf);
 			std::string jobId(jobIdBuf);
-			auto* db = m_pDCP06Model->GetDatabase();
-			auto* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : nullptr;
+			DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+#if DCP_USE_JSON_DATABASE
+			DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 			if (jdb && !jobId.empty())
 			{
 				if (db->loadJob(jobId))
@@ -656,6 +669,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 					}
 				}
 			}
+#endif
 		}
 		else
 		{
@@ -663,7 +677,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 			m_pDataModel->m_pAdfFile->setFile(strSelected);
 			if (m_pDataModel->m_pAdfFile->IsOpen())
 			{
-				auto* db = m_pDCP06Model->GetDatabase();
+				DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
 				const char* fullPath = m_pDataModel->m_pAdfFile->getFullPath();
 				if (db && fullPath && fullPath[0])
 				{
@@ -680,7 +694,8 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 						db->createJob(jobId);
 						db->importFromADF(path);
 						db->saveJob(jobId);
-						auto* jdb = dynamic_cast<DCP::Database::JsonDatabase*>(db);
+#if DCP_USE_JSON_DATABASE
+						DCP::Database::JsonDatabase* jdb = dynamic_cast<DCP::Database::JsonDatabase*>(db);
 						if (jdb && db->loadJob(jobId))
 						{
 							std::string workPath = jdb->getJobWorkingPath(jobId);
@@ -694,6 +709,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 								}
 							}
 						}
+#endif
 					}
 				}
 			}
@@ -747,8 +763,9 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 			if (dot != std::string::npos) targetId = targetId.substr(0, dot);
 			if (targetId.empty()) targetId = "copy";
 
-			auto* db = m_pDCP06Model->GetDatabase();
-			auto* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : nullptr;
+			DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+#if DCP_USE_JSON_DATABASE
+			DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 			if (jdb && !m_pDCP06Model->m_currentJobId.empty())
 			{
 				if (db->copyJob(m_pDCP06Model->m_currentJobId, targetId))
@@ -769,6 +786,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 				}
 			}
 			else
+#endif
 			{
 				strcat(fname, ".adf");
 				if (m_pDataModel->m_pAdfFile->copy_adf_file(fname))
@@ -790,8 +808,9 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 			BSS::UTI::BSS_UTI_WCharToAscii(sPointId, pointid);
 
 			// DB-primary: create job in DB, create working ADF
-			auto* db = m_pDCP06Model->GetDatabase();
-			auto* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : nullptr;
+			DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+#if DCP_USE_JSON_DATABASE
+			DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
 			if (jdb)
 			{
 				std::string jobId(fname);
@@ -812,6 +831,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 				}
 			}
 			else
+#endif
 			{
 				m_pDataModel->m_pAdfFile->create_adf_file(fname, pointid);
 				m_pDataModel->m_pAdfFile->setFile(sFileToCreate);

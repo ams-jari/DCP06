@@ -11,7 +11,7 @@ class Line {
 public:
     Line();
     Line(const Point& p1, const Point& p2);
-    ~Line() = default;
+    ~Line();
 
     // Getters
     const Point& startPoint() const { return m_startPoint; }

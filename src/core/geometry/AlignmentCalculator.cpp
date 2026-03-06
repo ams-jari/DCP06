@@ -9,6 +9,7 @@
 #include <cmath>
 #include <algorithm>
 #include <numeric>
+#include <sstream>
 
 namespace DCP9 {
 namespace Core {
@@ -21,35 +22,35 @@ AlignmentType AlignmentCalculator::determineAlignmentType(
 {
     // If we have more than 2 points and no planes/lines, use BestFit
     if (numPoints > 2 && numPlanes == 0 && numLines == 0) {
-        return AlignmentType::BestFit;
+        return AlignmentType_BestFit;
     }
     
     // If we have 1 plane, 1 line, and 1 point, use 3-2-1 alignment
     if (numPlanes == 1 && numLines == 1 && numPoints == 1) {
-        return AlignmentType::Alignment321;
+        return AlignmentType_321;
     }
     
     // If we have 1 plane and 2 points, we can create a line from the points
     if (numPlanes == 1 && numPoints == 2) {
-        return AlignmentType::Alignment321;
+        return AlignmentType_321;
     }
     
     // If we have multiple planes and 1 point, select best plane and line
     if (numPlanes > 1 && numPoints == 1) {
-        return AlignmentType::Alignment321;
+        return AlignmentType_321;
     }
     
     // If we have 1 plane and 1 point, use default Z-axis and create line
     if (numPlanes == 1 && numPoints == 1) {
-        return AlignmentType::Alignment321;
+        return AlignmentType_321;
     }
     
     // If we have 2 points and no planes, use default Z-axis plane and create line
     if (numPlanes == 0 && numPoints == 2) {
-        return AlignmentType::Alignment321;
+        return AlignmentType_321;
     }
     
-    return AlignmentType::Unknown;
+    return AlignmentType_Unknown;
 }
 
 AlignmentData AlignmentCalculator::validateAlignmentData(
@@ -70,7 +71,7 @@ AlignmentData AlignmentCalculator::validateAlignmentData(
         designLines.size()
     );
     
-    if (data.type == AlignmentType::Unknown) {
+    if (data.type == AlignmentType_Unknown) {
         data.isValid = false;
         return data;
     }
@@ -86,21 +87,25 @@ AlignmentData AlignmentCalculator::validateAlignmentData(
     // Handle object IDs
     if (objectIds.empty()) {
         // Generate default IDs
+        std::ostringstream oss;
         for (size_t i = 0; i < designPoints.size(); ++i) {
-            data.ids.push_back("Point_" + std::to_string(i));
+            oss.str(""); oss << "Point_" << i;
+            data.ids.push_back(oss.str());
         }
         for (size_t i = 0; i < designPlanes.size(); ++i) {
-            data.ids.push_back("Plane_" + std::to_string(i));
+            oss.str(""); oss << "Plane_" << i;
+            data.ids.push_back(oss.str());
         }
         for (size_t i = 0; i < designLines.size(); ++i) {
-            data.ids.push_back("Line_" + std::to_string(i));
+            oss.str(""); oss << "Line_" << i;
+            data.ids.push_back(oss.str());
         }
     } else {
         data.ids = objectIds;
     }
     
     // Handle special cases for 3-2-1 alignment
-    if (data.type == AlignmentType::Alignment321) {
+    if (data.type == AlignmentType_321) {
         // If we have 1 plane and 2 points, create line from points
         if (designPlanes.size() == 1 && designPoints.size() == 2) {
             // Create line from the two points
@@ -185,12 +190,12 @@ AlignmentData AlignmentCalculator::validateAlignmentData(
     }
     
     // Validate that we have matching counts
-    if (data.type == AlignmentType::BestFit) {
+    if (data.type == AlignmentType_BestFit) {
         if (data.designPoints.size() != data.actualPoints.size() || data.designPoints.size() < 3) {
             data.isValid = false;
             return data;
         }
-    } else if (data.type == AlignmentType::Alignment321) {
+    } else if (data.type == AlignmentType_321) {
         if (data.designPlanes.size() != 1 || data.actualPlanes.size() != 1 ||
             data.designLines.size() != 1 || data.actualLines.size() != 1 ||
             data.designPoints.size() != 1 || data.actualPoints.size() != 1) {
@@ -210,7 +215,7 @@ AlignmentResult AlignmentCalculator::solveBestFitAlignment(
     bool sortPoints)
 {
     AlignmentResult result;
-    result.type = AlignmentType::BestFit;
+    result.type = AlignmentType_BestFit;
     
     if (designPoints.size() != actualPoints.size() || designPoints.size() < 3) {
         result.isValid = false;
@@ -267,7 +272,7 @@ AlignmentResult AlignmentCalculator::solve321Alignment(
     const DCP9::Geometry::Point& actualPoint)
 {
     AlignmentResult result;
-    result.type = AlignmentType::Alignment321;
+    result.type = AlignmentType_321;
     
     // Step 1: Rotate plane normal from actual to design direction
     const auto& designNormal = designPlane.normal();
@@ -379,19 +384,19 @@ AlignmentResult AlignmentCalculator::solveAlignment(
     }
     
     // Determine alignment type if not specified
-    if (alignmentType == AlignmentType::Unknown) {
+    if (alignmentType == AlignmentType_Unknown) {
         alignmentType = data.type;
     }
     
     // Perform alignment based on type
-    if (alignmentType == AlignmentType::BestFit) {
+    if (alignmentType == AlignmentType_BestFit) {
         result = solveBestFitAlignment(
             data.designPoints,
             data.actualPoints,
             data.ids,
             sortPoints
         );
-    } else if (alignmentType == AlignmentType::Alignment321) {
+    } else if (alignmentType == AlignmentType_321) {
         if (data.designPlanes.size() == 1 && data.actualPlanes.size() == 1 &&
             data.designLines.size() == 1 && data.actualLines.size() == 1 &&
             data.designPoints.size() == 1 && data.actualPoints.size() == 1) {

@@ -29,7 +29,12 @@
 #include <dcp06/file/DCP_SelectFile.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/file/DCP_AdfFileFunc.hpp>
+#ifndef DCP_USE_JSON_DATABASE
+#define DCP_USE_JSON_DATABASE 1
+#endif
+#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
+#endif
 #include <dcp06/file/DCP_DistFile.hpp>
 #include <dcp06/file/DCP_AngleFile.hpp>
 #include <dcp06/file/DCP_CircleFile.hpp>
@@ -151,10 +156,13 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, strPath);
 	
+	StringC sLine;
+	char cTemp[80];
 	if(m_iFileType == DCP06_JOBS)
 	{
-		auto* db = m_pDCP06Model->GetDatabase();
-		auto* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : nullptr;
+		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+#if DCP_USE_JSON_DATABASE
+		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
 		if (jdb)
 		{
 			std::vector<std::string> ids = jdb->listJobIds();
@@ -166,6 +174,7 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 				USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_File, (short)i, sLine));
 			}
 		}
+#endif
 		return;
 	}
 	if(m_iFileType == ONLY_ADF)
@@ -183,8 +192,6 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 	else if(m_iFileType == ADF_BF_STA)
 		strcat(strPath,"*.adf");
 
-	StringC sLine;
-	char cTemp[80];
 	char tempFileName[256];
 	
 	boost::filesystem::path oDirPath = pSearch;

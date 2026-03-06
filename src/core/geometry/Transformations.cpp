@@ -16,10 +16,10 @@ DCP9::Geometry::Point calculateCentroid(const std::vector<DCP9::Geometry::Point>
     }
     
     double sumX = 0.0, sumY = 0.0, sumZ = 0.0;
-    for (const auto& point : points) {
-        sumX += point.x();
-        sumY += point.y();
-        sumZ += point.z();
+    for (size_t i = 0; i < points.size(); ++i) {
+        sumX += points[i].x();
+        sumY += points[i].y();
+        sumZ += points[i].z();
     }
     
     const size_t n = points.size();
@@ -33,7 +33,8 @@ std::vector<DCP9::Geometry::Point> centerPoints(
     std::vector<DCP9::Geometry::Point> centered;
     centered.reserve(points.size());
     
-    for (const auto& point : points) {
+    for (size_t i = 0; i < points.size(); ++i) {
+        const DCP9::Geometry::Point& point = points[i];
         centered.push_back(DCP9::Geometry::Point(
             point.x() - center.x(),
             point.y() - center.y(),
@@ -53,27 +54,25 @@ std::pair<std::vector<size_t>, std::vector<size_t>> findCorrespondingPoints(
     std::vector<std::pair<double, size_t>> targetDistances;
     
     for (size_t i = 0; i < sourcePoints.size(); ++i) {
-        const auto& p = sourcePoints[i];
+        const DCP9::Geometry::Point& p = sourcePoints[i];
         double dist = std::sqrt(p.x() * p.x() + p.y() * p.y() + p.z() * p.z());
-        sourceDistances.push_back({dist, i});
+        sourceDistances.push_back(std::make_pair(dist, i));
     }
     
     for (size_t i = 0; i < targetPoints.size(); ++i) {
-        const auto& p = targetPoints[i];
+        const DCP9::Geometry::Point& p = targetPoints[i];
         double dist = std::sqrt(p.x() * p.x() + p.y() * p.y() + p.z() * p.z());
-        targetDistances.push_back({dist, i});
+        targetDistances.push_back(std::make_pair(dist, i));
     }
     
     // Sort by distance
-    std::sort(sourceDistances.begin(), sourceDistances.end(),
-        [](const std::pair<double, size_t>& a, const std::pair<double, size_t>& b) {
+    struct PairLess {
+        bool operator()(const std::pair<double, size_t>& a, const std::pair<double, size_t>& b) const {
             return a.first < b.first;
-        });
-    
-    std::sort(targetDistances.begin(), targetDistances.end(),
-        [](const std::pair<double, size_t>& a, const std::pair<double, size_t>& b) {
-            return a.first < b.first;
-        });
+        }
+    };
+    std::sort(sourceDistances.begin(), sourceDistances.end(), PairLess());
+    std::sort(targetDistances.begin(), targetDistances.end(), PairLess());
     
     // Extract indices
     std::vector<size_t> sourceIndices;
@@ -85,7 +84,7 @@ std::pair<std::vector<size_t>, std::vector<size_t>> findCorrespondingPoints(
         targetIndices.push_back(targetDistances[i].second);
     }
     
-    return {sourceIndices, targetIndices};
+    return std::make_pair(sourceIndices, targetIndices);
 }
 
 RigidTransformResult solveRigidTransform(
@@ -117,7 +116,7 @@ RigidTransformResult solveRigidTransform(
     // Step 3: Find point correspondences if needed
     std::vector<size_t> indicesA, indicesB;
     if (sortPoints) {
-        auto correspondence = findCorrespondingPoints(centeredA, centeredB);
+        std::pair<std::vector<size_t>, std::vector<size_t> > correspondence = findCorrespondingPoints(centeredA, centeredB);
         indicesA = correspondence.first;
         indicesB = correspondence.second;
     } else {
@@ -136,8 +135,8 @@ RigidTransformResult solveRigidTransform(
     Eigen::MatrixXd B(n, 3);
     
     for (size_t i = 0; i < n; ++i) {
-        const auto& pa = centeredA[indicesA[i]];
-        const auto& pb = centeredB[indicesB[i]];
+        const DCP9::Geometry::Point& pa = centeredA[indicesA[i]];
+        const DCP9::Geometry::Point& pb = centeredB[indicesB[i]];
         
         A(i, 0) = pa.x();
         A(i, 1) = pa.y();
@@ -210,7 +209,8 @@ std::vector<DCP9::Geometry::Point> transformPoints(
         t = -R * translation;
     }
     
-    for (const auto& point : points) {
+    for (size_t i = 0; i < points.size(); ++i) {
+        const DCP9::Geometry::Point& point = points[i];
         Eigen::Vector3d p(point.x(), point.y(), point.z());
         Eigen::Vector3d pTransformed = R * p + t;
         transformed.push_back(DCP9::Geometry::Point(
@@ -250,7 +250,8 @@ std::vector<DCP9::Geometry::Point> transformPoints(
     std::vector<DCP9::Geometry::Point> transformed;
     transformed.reserve(points.size());
     
-    for (const auto& point : points) {
+    for (size_t i = 0; i < points.size(); ++i) {
+        const DCP9::Geometry::Point& point = points[i];
         Eigen::Vector4d p(point.x(), point.y(), point.z(), 1.0);
         Eigen::Vector4d pTransformed = transformMatrix * p;
         transformed.push_back(DCP9::Geometry::Point(
@@ -312,7 +313,7 @@ std::pair<Eigen::Vector3d, double> axisAndAngle(
 {
     // Check for zero vectors
     if (oldDir.norm() < 1e-10 || newDir.norm() < 1e-10) {
-        return {Eigen::Vector3d::Zero(), 0.0};
+        return std::make_pair(Eigen::Vector3d::Zero(), 0.0);
     }
     
     // Normalize vectors
@@ -341,7 +342,7 @@ std::pair<Eigen::Vector3d, double> axisAndAngle(
         axis.normalize();
     }
     
-    return {axis, angle};
+    return std::make_pair(axis, angle);
 }
 
 std::vector<DCP9::Geometry::Point> rotateAboutAxis(
@@ -380,7 +381,8 @@ double calculateTransformRMS(
         sourcePoints, targetPoints, rotation, translation);
     
     double sumSquares = 0.0;
-    for (double residual : residuals) {
+    for (size_t i = 0; i < residuals.size(); ++i) {
+        double residual = residuals[i];
         sumSquares += residual * residual;
     }
     

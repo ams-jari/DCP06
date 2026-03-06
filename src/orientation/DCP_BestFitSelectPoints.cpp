@@ -40,7 +40,12 @@
 
 #include <dcp06/file/DCP_SelectFile.hpp>
 #include <dcp06/file/DCP_AdfFileFunc.hpp>
+#ifndef DCP_USE_JSON_DATABASE
+#define DCP_USE_JSON_DATABASE 1
+#endif
+#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
+#endif
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/core/DCP_SelectMultiPoints.hpp>
 #include <GUI_Types.hpp>
@@ -694,18 +699,23 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 		jobIdBuf[0] = '\0';
 		BSS::UTI::BSS_UTI_WCharToAscii(strSelectedFile, jobIdBuf);
 		std::string selectedJobId(jobIdBuf);
-		auto* db = m_pDCP06Model->GetDatabase();
-		auto* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : nullptr;
-		bool useDb = jdb && jdb->isJobLoaded() && !selectedJobId.empty() &&
+		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+		bool useDb = false;
+#if DCP_USE_JSON_DATABASE
+		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
+		useDb = jdb && jdb->isJobLoaded() && !selectedJobId.empty() &&
 		             selectedJobId == m_pDCP06Model->m_currentJobId;
-
+#endif
 		DCP::DCP06SelectMultiPointsModelC* pSelectModel = new DCP06SelectMultiPointsModelC;
 		int iCount = 0;
+#if DCP_USE_JSON_DATABASE
 		if (useDb)
 		{
 			iCount = jdb->getPointListAsSelectPoints(&pSelectModel->sel_points[0], MAX_SELECT_POINTS, def);
 		}
-		else if (adf.setFile(strSelectedFile))
+		else
+#endif
+		if (adf.setFile(strSelectedFile))
 		{
 			iCount = adf.GetPointList(&pSelectModel->sel_points[0], MAX_SELECT_POINTS, def);
 		}
@@ -721,8 +731,8 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 
 			StringC sTemp;
 			sTemp.LoadTxt(AT_DCP06, T_DCP_SELECT_POINTS_TOK);
-			wchar_t cTemp[80];
-			swprintf(cTemp, L"%s (%d-%d) %s", (const wchar_t*)StringC(sTemp), pSelectModel->m_iMinPoint, pSelectModel->m_iMaxPoint, (const wchar_t*)StringC(pSelectModel->sSelectedFile));
+			wchar_t cTemp[256];
+			swprintf_s(cTemp, 256, L"%s (%d-%d) %s", (const wchar_t*)StringC(sTemp), pSelectModel->m_iMinPoint, pSelectModel->m_iMaxPoint, (const wchar_t*)StringC(pSelectModel->sSelectedFile));
 			pSelectModel->sInfo = StringC(cTemp);
 			pSelectModel->sTitle = GetTitle();
 
@@ -747,15 +757,18 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 		jobIdBuf[0] = '\0';
 		BSS::UTI::BSS_UTI_WCharToAscii(pModel->sSelectedFile, jobIdBuf);
 		std::string selectedJobId(jobIdBuf);
-		auto* db = m_pDCP06Model->GetDatabase();
-		auto* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : nullptr;
-		bool useDb = jdb && jdb->isJobLoaded() && !selectedJobId.empty() &&
+		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
+		bool useDb = false;
+#if DCP_USE_JSON_DATABASE
+		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
+		useDb = jdb && jdb->isJobLoaded() && !selectedJobId.empty() &&
 		             selectedJobId == m_pDCP06Model->m_currentJobId;
-
+#endif
 		short last = common.get_last_defined_point(&m_pDlg->GetDataModel()->points[0], &m_pDlg->GetDataModel()->points1[0],
 			m_pDlg->GetDataModel()->iMaxPoint);
 		short cc = last;
 
+#if DCP_USE_JSON_DATABASE
 		if (useDb)
 		{
 			for (short i = 0; i < pModel->m_iMaxPoint; i++)
@@ -765,7 +778,7 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 					char bXmea[15], bYmea[15], bZmea[15], bXdes[15], bYdes[15], bZdes[15], pid[7];
 					cc++;
 					if (jdb->getPointByIndex((int)pModel->nro_table[i][0], (pModel->nro_table[i][1] != DESIGN),
-						pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, nullptr))
+						pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, (char*)0))
 					{
 						sprintf(m_pDlg->GetDataModel()->points[cc-1].point_id, "%-6.6s", pid);
 						m_pDlg->GetDataModel()->points[cc-1].x = (pModel->nro_table[i][1] == DESIGN) ? atof(bXdes) : atof(bXmea);
@@ -780,6 +793,7 @@ void DCP::DCP06PomSelectPointsControllerC::OnActiveControllerClosed( int lCtrlID
 			m_pDlg->GetDataModel()->m_iPointsCount = cc;
 		}
 		else
+#endif
 		{
 			AdfFileFunc adf(m_pDCP06Model);
 			adf.always_single = 1;

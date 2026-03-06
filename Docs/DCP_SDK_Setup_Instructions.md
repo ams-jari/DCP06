@@ -220,7 +220,45 @@ Samples/Common/HelloWorldBase/
 
 *Note: Project files use both `$(SYSTEM1500_ROOT)` and `$(System1500_ROOT)`. Windows env vars are case-insensitive; both resolve to the same value.*
 
-## 12. Common Issues
+## 12. Visual Studio 2008 Setup Troubleshooting
+
+If the VS 2008 setup **closes soon after** clicking "Install Visual Studio 2008", or shows *"Pyydetty toiminto edellyttää korotusta"* (requires elevation), try:
+
+### A. Run as Administrator
+
+1. Browse to `C:\Users\dell\Desktop\AMS\Development\VS2008`
+2. **Right‑click** `setup.exe` → **Run as administrator**
+3. Click "Install Visual Studio 2008" again.
+
+### B. Bypass missing WCU (workaround)
+
+Your VS 2008 media is missing the `wcu` folder (Windows Component Update – prerequisites). The main launcher looks for `wcu\setup.exe` and exits when it fails.
+
+**1. Ensure prerequisites are installed**
+
+- **.NET Framework 3.5**: Windows Settings → Apps → Optional features → Add a feature → check **.NET Framework 3.5**
+- Or: Control Panel → Programs → Turn Windows features on or off → .NET Framework 3.5
+
+**2. Run the Client setup directly (skip Baseline)**
+
+1. Open an **elevated** Command Prompt (Run as administrator).
+2. Run:
+   ```
+   cd /d C:\Users\dell\Desktop\AMS\Development\VS2008
+   setup\setup.exe
+   ```
+3. This runs the VS 2008 Client installer and skips the missing WCU phase.
+4. If it still exits quickly or errors, the media may be incomplete and you may need full VS 2008 or SP1 media.
+
+### C. Incomplete media
+
+The full VS 2008 DVD/ISO should include a `wcu` folder at the root with subfolders such as `dotNetFramework`, `msi31`, etc. If your copy has only `setup`, `cab1`–`cab50`, and root files, the WCU phase cannot run.
+
+- **Options:** Obtain a complete VS 2008 ISO, use VS 2008 SP1 layout, or use the workaround in B if .NET 3.5 and other prerequisites are already installed.
+
+---
+
+## 13. Common Issues
 
 | Issue | Check |
 |-------|-------|
@@ -230,7 +268,7 @@ Samples/Common/HelloWorldBase/
 | Link errors (missing .lib) | `Binary\Win32\libs` present? Stellar_SWDC_EC7_SDK.msi run? |
 | App not in simulator menu | Post-build ran? DCP06.sys correct? Simulator restarted? |
 
-## 13. Documentation in SDK
+## 14. Documentation in SDK
 
 - `Documentation\Captivate-GeoC++GettingStarted.txt` – SDK overview, install steps
 - `Documentation\Captivate-GeoC++PluginSDK_API_DOC.zip` – API reference
@@ -240,7 +278,7 @@ Samples/Common/HelloWorldBase/
 
 ---
 
-## 14. 64-bit (CS35) – Secondary
+## 15. 64-bit (CS35) – Secondary
 
 - Per Pasi: CS35 simulator is not available or needs additional licensing.
 - If it becomes available: set `SYSTEM1500_ROOT_x64`, use **DCP06-CS.sln** / **DCP06-CS.vcxproj**, build Release|x64.

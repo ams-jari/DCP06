@@ -4,7 +4,9 @@
 namespace DCP9 {
 namespace Geometry {
 
-Point::Point() = default;
+Point::Point() : m_x(0.0), m_y(0.0), m_z(0.0), m_precision(0.0), m_deviation(0.0) {}
+
+Point::~Point() {}
 
 Point::Point(double x, double y, double z)
     : m_x(x)

@@ -30,7 +30,14 @@
 #include <dcp06/core/DCP_Model.hpp>
 #include <dcp06/core/DCP_Defs.hpp>
 #include <dcp06/core/DCP_MsgBox.hpp>
+#ifndef DCP_USE_JSON_DATABASE
+#define DCP_USE_JSON_DATABASE 1
+#endif
+#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
+#else
+#include <dcp06/database/StubDatabase.hpp>
+#endif
 
 #include <stdio.h>
 #include <UTL_StringFunctions.hpp>
@@ -218,7 +225,11 @@ DCP::DCP06ModelC::DCP06ModelC():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteIn
 			SerialNumber = L" ";
 
 			// Database (DCP9: 321, BestFit, Cylinder, ChangeStation)
-			m_pDatabase = std::make_unique<Database::JsonDatabase>();
+#if DCP_USE_JSON_DATABASE
+			m_pDatabase = DCP_UNIQUE_PTR<Database::JsonDatabase>(new Database::JsonDatabase());
+#else
+			m_pDatabase = DCP_UNIQUE_PTR<Database::IDatabase>(new Database::StubDatabase());
+#endif
 			char dbPath[CPI::LEN_PATH_MAX];
 			if (CPI::SensorC::GetInstance()->GetPath(FILE_STORAGE1, CPI::ftUserAscii, dbPath))
 			{
@@ -240,7 +251,7 @@ DCP::Database::IDatabase* DCP::DCP06ModelC::GetDatabase() const
 
 void DCP::DCP06ModelC::SetDatabaseDataDirectory(const char* path)
 {
-	if (m_pDatabase)
+	if (m_pDatabase.get())
 		m_pDatabase->setDataDirectory(path ? path : "");
 }
 

@@ -100,5 +100,6 @@ void vec_product(double u[4], double v[4], double (*w)[4]);
 double vector_product(struct ams_vector *a,struct ams_vector *b,struct ams_vector *c);
 
 short center_of_circle(double x1,double y1,double x2,double y2,double x3,double y3,double *radius,double *cx,double *cy);
+short FitLine(double *p_mat, short points, double *a, double *b, double *c);
 
 #endif
