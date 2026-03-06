@@ -101,5 +101,6 @@ double vector_product(struct ams_vector *a,struct ams_vector *b,struct ams_vecto
 
 short center_of_circle(double x1,double y1,double x2,double y2,double x3,double y3,double *radius,double *cx,double *cy);
 short FitLine(double *p_mat, short points, double *a, double *b, double *c);
+short FitPlane(double *m_mat, short points, double *a, double *b, double *c);
 
 #endif

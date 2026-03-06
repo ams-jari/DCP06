@@ -221,19 +221,27 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm"
 			>
 			<File
-				RelativePath="..\..\src\math\CANGLE.cpp"
+				RelativePath="..\..\src\math\MathMatrix.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\math\CART.cpp"
+				RelativePath="..\..\src\math\MathVector.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\math\ccircle.cpp"
+				RelativePath="..\..\src\math\MathTransform.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\math\COORD6TR.cpp"
+				RelativePath="..\..\src\math\MathConversion.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\math\MathFitting.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\math\MathCoord.cpp"
 				>
 			</File>
 			<File
@@ -637,111 +645,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\math\DEGTORAD.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\core\DemoLicense.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\src\math\DIRVEC.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\DOTPROD.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\EQOFLI.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\EQOFPL.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\FITLINE.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\FITPLANE.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\HROTAX.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\HROTAY.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\HROTAZ.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\HTRANSM.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\MATCOP_N.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\MATINV_N.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\MATMUL_N.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\MATSUM_N.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\MATTRA_N.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\Minv4x4.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\MMUL4X4.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\PDISL.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\PDISPL.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\PDIST.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\PTRANS.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\RADTODEG.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\RESETMAT.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\src\core\SelectOnePoint.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\SPHCART.cpp"
 				>
 			</File>
 			<File
@@ -754,10 +662,6 @@
 			</File>
 			<File
 				RelativePath="..\..\src\core\stdafx.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\UNIVEC.cpp"
 				>
 			</File>
 			<File
@@ -787,22 +691,6 @@
 						ExcludedFromBuild="true"
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\..\src\math\VECLNTH.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\VECMAT.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\VECPRO.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\src\math\VECPROD.cpp"
-				>
 			</File>
 		</Filter>
 		<Filter
