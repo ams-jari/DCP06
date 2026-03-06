@@ -15,6 +15,6 @@ This folder contains the planning and reference documentation for the DCP06 proj
 ## Quick Reference
 
 - **Repository:** https://github.com/ams-jari/DCP06
-- **Base:** DCP05 (Captivate plugin, total station)
+- **Base:** DCP05 (Captivate plugin, total station). Maintained by AMS.
 - **Feature sources:** DCP9 (database, job management, alignments), PMP9 (minor reference)
 - **Key migration:** ASCII file system (DCP05) → Database (DCP06, like DCP9)

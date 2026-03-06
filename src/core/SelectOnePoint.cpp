@@ -1,7 +1,7 @@
 // YKSI PISTE ACTUAL TAI DESIGN
 // ================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
@@ -11,7 +11,7 @@
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -301,15 +301,15 @@ void DCP::SelectOnePointDialog::UpdateData()
 
 		
 }
-// Description: only accept hello world Model objects
+// Description: only accept DCP06 Model objects
 bool DCP::SelectOnePointDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::SelectOnePointModel* pModel = dynamic_cast< DCP::SelectOnePointModel* >( pModel );
+    DCP::SelectOnePointModel* pDcpModel = dynamic_cast< DCP::SelectOnePointModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
+    if ( pDcpModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDcpModel ))
     {
         RefreshControls();
         return true;
@@ -318,10 +318,10 @@ bool DCP::SelectOnePointDialog::SetModel( GUI::ModelC* pModel )
     return false;
 }
 
-// Description: Hello World model
+// Description: DCP06 model
 DCP::SelectOnePointModel* DCP::SelectOnePointDialog::GetModel() const
 {
-    return (DCP::SelectOnePointModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::SelectOnePointModel*) ModelHandlerC::GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
@@ -404,8 +404,6 @@ bool DCP::SelectOnePointController::SetModel( GUI::ModelC* pModel )
      return m_pSelectOnePointDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
-
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     

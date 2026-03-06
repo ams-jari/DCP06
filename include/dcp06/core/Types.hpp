@@ -1,6 +1,6 @@
 // ====================================================================================================================
 //
-// Project  : Pluto/Venus
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: Hello World project for loadable applications
 //

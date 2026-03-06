@@ -1,6 +1,6 @@
 // ================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 // 
 // Component: 
 //
@@ -10,7 +10,7 @@
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -288,15 +288,15 @@ void DCP::BestFitSelectPointsDialog::OnPointIdChanged( int unNotifyCode,  int ul
 	}
 }
 
-// Description: only accept hello world Model objects
+// Description: only accept DCP06 Model objects
 bool DCP::BestFitSelectPointsDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::BestFitSelectPointsModel* pModel = dynamic_cast< DCP::BestFitSelectPointsModel* >( pModel );
+    DCP::BestFitSelectPointsModel* pDcpModel = dynamic_cast< DCP::BestFitSelectPointsModel* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
+    if ( pDcpModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDcpModel ))
     {
         RefreshControls();
         return true;
@@ -305,7 +305,7 @@ bool DCP::BestFitSelectPointsDialog::SetModel( GUI::ModelC* pModel )
     return false;
 }
 
-// Description: Hello World model
+// Description: DCP06 model
 DCP::BestFitSelectPointsModel* DCP::BestFitSelectPointsDialog::GetDataModel() const
 {
     return (DCP::BestFitSelectPointsModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
@@ -403,8 +403,6 @@ bool DCP::BestFitSelectPointsController::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
-
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     

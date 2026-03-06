@@ -1,16 +1,16 @@
 // ================================================================================================
 // 
-// Project  : Pluto/Venus
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: Job Management
 //
-// $Workfile: DCP_Application.cpp $
+// $Workfile: Application.cpp $
 //
-// Summary  : 
+// Summary  : DCP06 application entry point, job management, license handling
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -133,8 +133,7 @@ DCP::Application::Application():m_pModel(0),poConfigController(0)
 {
 	m_pCode[0] = '\0';
 
-    // The appropriate application ID has to be set because 'C_DCP_HEW_TOK'
-    // is a token from the text database 'DCP05.men'
+    // Application ID for text database tokens (DCP06.men)
     SetTxtApplicationId( AT_DCP06 ); //lint !e1506 Call to virtual function within a contructor or destructor
     // TODO EI OLE VIVA
 	//SetCaptionTok( C_DCP_APPLICATION_NAME_TOK );
@@ -660,11 +659,11 @@ void MenuDialog::OnSelectionDone(void)
 bool DCP::MenuDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
+    DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
+    if ( pDcpModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDcpModel ))
     {
         RefreshControls();
         return true;
@@ -678,7 +677,7 @@ bool DCP::MenuDialog::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 DCP::Model* DCP::MenuDialog::GetModel() const
 {
-    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) ModelHandlerC::GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
@@ -770,9 +769,9 @@ bool DCP::Controller::SetModel( GUI::ModelC* pModel )
 	// check if demo mode -> show REGISTRATION BUTTON
 	//Model* dcp05Model = dynamic_cast< DCP::Model* >(pModel());
 	
-	DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
+	DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >( pModel );
 
-	if(pModel->startDate != 0.0) // = Demo mode
+	if(pDcpModel->startDate != 0.0) // = Demo mode
 	{
 		FKDef vDef;
 		vDef.poOwner = this;
@@ -781,7 +780,7 @@ bool DCP::Controller::SetModel( GUI::ModelC* pModel )
 	}
 
     // Set it to hello world dialog
-    return m_pMenuDlg->SetModel( pModel );
+    return m_pMenuDlg->SetModel( pDcpModel );
 }
 
 
@@ -832,16 +831,16 @@ void DCP::Controller::OnActiveDialogClosed( int lDlgID, int lExitCode )
 		if(lExitCode == EC_KEY_CONT)
 		{
 
-			DCP::Model* pModel = dynamic_cast< DCP::Model* >(GetModel());
+			DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >(GetModel());
 
-			if(strcmp(pModel->sEnteredKeyCode, m_pCode) == 0 && m_pCode[0] != '\0')
+			if(strcmp(pDcpModel->sEnteredKeyCode, m_pCode) == 0 && m_pCode[0] != '\0')
 			{	
-				sprintf(pModel->sKeyCode,"%s", pModel->sEnteredKeyCode);
-				pModel->startDate = 0.0; // reset demo start date
-				memset(pModel->sKeyCodeDemo1, '\0', 10);
+				sprintf(pDcpModel->sKeyCode,"%s", pDcpModel->sEnteredKeyCode);
+				pDcpModel->startDate = 0.0; // reset demo start date
+				memset(pDcpModel->sKeyCodeDemo1, '\0', 10);
 				
-				pModel->SetConfigKey(CNF_KEY_DEMO_LICENSES);
-				pModel->poConfigController->StoreConfigData();
+				pDcpModel->SetConfigKey(CNF_KEY_DEMO_LICENSES);
+				pDcpModel->poConfigController->StoreConfigData();
 				
 				//poConfigController->GetModel()->bDemoMode = false;
 			}
@@ -1111,10 +1110,10 @@ void DCP::Controller::OnActiveDialogClosed( int lDlgID, int lExitCode )
 			MsgBox msgBox;
 			short ret=1;
 			
-			DCP::Model* pModel = dynamic_cast< DCP::Model* >( Controller::GetModel() );
+			DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >( Controller::GetModel() );
 
 			// check if dom/line and horizontal plane is defined	
-			if(pModel->dom_line_buff[0].sta == 0)
+			if(pDcpModel->dom_line_buff[0].sta == 0)
 			{
 				StringC sMsg;
 				sMsg.LoadTxt(AT_DCP06,M_DCP_DEFINE_LINE_LSET_TOK);
@@ -1122,7 +1121,7 @@ void DCP::Controller::OnActiveDialogClosed( int lDlgID, int lExitCode )
 				ret = 0;
 			}
 			
-			if(ret==1 && !pModel->dom_hz_plane)
+			if(ret==1 && !pDcpModel->dom_hz_plane)
 			{
 				StringC sMsg;
 				sMsg.LoadTxt(AT_DCP06,M_DCP_HZ_PLANE_NOT_DEFINED_TOK);

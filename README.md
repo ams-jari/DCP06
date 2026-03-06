@@ -2,7 +2,7 @@
 
 **Onboard 3D measurement software for Leica total stations** (Leica Captivate plugin).
 
-Based on DCP05, with planned database-driven architecture and DCP9-inspired features.
+Maintained by AMS. Based on DCP05, with planned database-driven architecture and DCP9-inspired features.
 
 ## Repository
 
@@ -23,11 +23,11 @@ DCP06/
 │   └── application/        # Application, shaft, line setting
 ├── src/                     # C++ source (same domain subdirs)
 │   ├── core/               # stdafx, CS35, common
-│   ├── init/               # DCP05 init, user, unit
+│   ├── init/               # Initialization, user, unit
 │   ├── orientation/        # 321 Alignment, Best Fit, CHST, define plane/line
 │   ├── measurement/       # 3D meas, circle, scan
 │   ├── calculation/       # Calc dist/angle, view
-│   ├── application/       # DCP06, shaft, line setting
+│   ├── application/       # Application entry, shaft, line setting
 │   └── math/              # Math library (unchanged)
 ├── tests/unit/             # Unit tests (placeholder)
 ├── scripts/                # Build and restructure scripts

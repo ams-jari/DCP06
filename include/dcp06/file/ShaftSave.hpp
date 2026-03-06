@@ -1,7 +1,7 @@
 
 // ====================================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
@@ -11,7 +11,7 @@
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright by Leica Geosystems AG, Heerbrugg 2002
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 

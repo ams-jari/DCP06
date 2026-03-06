@@ -62,7 +62,7 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (321/DOM, Best Fit/POM, 
 | 1.2 | Choose storage backend: SQLite on instrument storage, or Captivate storage API | TBD |
 | 1.3 | Implement `IDatabase` (or equivalent) interface | DCP9 |
 | 1.4 | Implement first DB backend (e.g. SQLite) for points, jobs | New |
-| 1.5 | Migrate `DCP05ModelC` to use database instead of ADF files for active session | DCP05 |
+| 1.5 | Migrate `Model` to use database instead of ADF files for active session | DCP05 |
 | 1.6 | Implement ADF **import** (read DCP05 files into DB) | DCP05 |
 | 1.7 | Implement ADF **export** (write DB to ADF for compatibility) | DCP05, DCP9 |
 
@@ -112,7 +112,7 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (321/DOM, Best Fit/POM, 
 | Task | Description |
 |------|-------------|
 | 4.1 | Refactor controllers: introduce Bridge-like separation (UI ↔ DB ↔ Leica API) |
-| 4.2 | Split `DCP05ModelC` into domain sub-models (Init, 321 Alignment, Best Fit, Meas, etc.) |
+| 4.2 | Split `Model` into domain sub-models (Init, 321 Alignment, Best Fit, Meas, etc.) |
 | 4.3 | Math library: evaluate keep vs. Eigen; add unit tests for fitting/transforms |
 | 4.4 | Add unit tests: DB CRUD, ADF import/export, coordinate transforms |
 | 4.5 | Regression testing: compare results with DCP05 on simulator |
@@ -171,7 +171,7 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (321/DOM, Best Fit/POM, 
 │       ├──► Database Layer (IDatabase implementation)                 │
 │       │         └── SQLite / Captivate Storage                        │
 │       │                                                              │
-│       ├──► Model (DCP06ModelC, domain sub-models)                    │
+│       ├──► Model (domain sub-models)                                 │
 │       │         └── Config, Orientation, Points, Matrices             │
 │       │                                                              │
 │       └──► Leica API (TPI, CPI, TBL, ABL)                            │
@@ -239,6 +239,7 @@ PMP9 (FreeCAD workbench, Python) shares domain concepts (321/DOM, Best Fit/POM, 
 | **DCP06_Architecture.md** | (Phase 4+) Detailed architecture |
 | **DCP06_Database_Schema.md** | (Phase 1+) Final database schema |
 | **DCP06_Migration_Guide.md** | (Phase 6) User migration from DCP05 |
+| **ToDo.md** | Next items, backlog, and follow-up tasks |
 
 ---
 

@@ -1,6 +1,6 @@
 // ================================================================================================
 // 
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
@@ -10,7 +10,7 @@
 // 
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -806,24 +806,24 @@ bool DCP::ChangeStationDialog::delete_chst()
 		return ret;
 }
 
-// Description: only accept hello world Model objects
+// Description: only accept DCP06 Model objects
 bool DCP::ChangeStationDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
+    DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
+    if ( pDcpModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDcpModel ))
     {
-		m_pDataModel->old_active_coodinate_system = pModel->active_coodinate_system;
-		memcpy(m_pDataModel->matrix, pModel->ocsc_matrix, sizeof(double) * 16);
-		memcpy(m_pDataModel->inv_matrix,pModel->ocsc_inv_matrix, sizeof(double) * 16);
+		m_pDataModel->old_active_coodinate_system = pDcpModel->active_coodinate_system;
+		memcpy(m_pDataModel->matrix, pDcpModel->ocsc_matrix, sizeof(double) * 16);
+		memcpy(m_pDataModel->inv_matrix,pDcpModel->ocsc_inv_matrix, sizeof(double) * 16);
 
-		memcpy(&m_pDataModel->point_DCS[0], &pModel->CHST_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-		memcpy(&m_pDataModel->point_OCS[0], &pModel->CHST_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-		memcpy(&m_pDataModel->point_RES[0], &pModel->CHST_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-		LAST_SEL =  pModel->chst_last_sel;
+		memcpy(&m_pDataModel->point_DCS[0], &pDcpModel->CHST_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+		memcpy(&m_pDataModel->point_OCS[0], &pDcpModel->CHST_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+		memcpy(&m_pDataModel->point_RES[0], &pDcpModel->CHST_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+		LAST_SEL =  pDcpModel->chst_last_sel;
 
         RefreshControls();
         return true;
@@ -832,10 +832,10 @@ bool DCP::ChangeStationDialog::SetModel( GUI::ModelC* pModel )
     return false;
 }
 
-// Description: Hello World model
+// Description: DCP06 model
 DCP::Model* DCP::ChangeStationDialog::GetModel() const
 {
-    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) ModelHandlerC::GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 

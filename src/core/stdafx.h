@@ -7,6 +7,21 @@
 
 #pragma once
 
+// C++03 / pre-C++11: nullptr (Defs.hpp has fallback; stdafx ensures it for all TU)
+#if defined(_MSC_VER) && _MSC_VER < 1600
+#ifndef nullptr
+#define nullptr NULL
+#endif
+#endif
+
+// MSVC 2008 lacks snprintf (added in MSVC 2015)
+#if defined(_MSC_VER) && _MSC_VER < 1900
+#include <stdio.h>
+#ifndef snprintf
+#define snprintf _snprintf
+#endif
+#endif
+
 #ifdef _WIN32_WCE
 	//dynamic_cast' used on polymorphic type
 #pragma warning(disable: 4541)

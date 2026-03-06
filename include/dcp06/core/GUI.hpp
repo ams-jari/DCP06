@@ -1,16 +1,16 @@
 // ====================================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
-// $Workfile: HEW_DCP05GUI.hpp $
+// $Workfile: GUI.hpp $
 //
-// Summary  : 
+// Summary  : DCP06 base dialog and GUI components
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright by Leica Geosystems AG, Heerbrugg 2002
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -36,14 +36,14 @@
 #include <GUI_StandardDialog.hpp>
 #include <GUI_AppBase.hpp>
 
-// Description: The Hello World application
+// Description: DCP06 base dialog and GUI components
 //
 namespace DCP
 {
     // Forward declaration
     class Model;
 
-    // Description: Hello World dialog
+    // Description: DCP06 base dialog with combo controls
 	class BaseDialog : public OBS::CommandC, public GUI::StandardDialogC, public GUI::ModelHandlerC
     {
         public:
@@ -62,13 +62,13 @@ namespace DCP
             // Description: Called when dialog has to initialize, called once in lifetime only
             virtual void OnInitDialog();
 
-            // Description: only accept Hello World Model objects
+            // Description: Accept only DCP06 Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
 
-            // Description: update the Hello World model with the new values
+            // Description: Update the model with current control values
             virtual void UpdateData();
 
-            // Description: Hello World model
+            // Description: Return the DCP06 Model instance
             Model* GetModel() const;
 
         protected:

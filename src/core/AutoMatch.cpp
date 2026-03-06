@@ -1,6 +1,6 @@
 // ================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
@@ -10,7 +10,7 @@
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -157,7 +157,7 @@ void DCP::AutoMatchDialog::RefreshControls()
 		m_pZ->SetText(sZline);
 	}
 }
-// Description: only accept hello world Model objects
+// Description: only accept DCP06 Model objects
 bool DCP::AutoMatchDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
@@ -175,7 +175,7 @@ bool DCP::AutoMatchDialog::SetModel( GUI::ModelC* pModel )
     return false;
 }
 
-// Description: Hello World model
+// Description: DCP06 model
 DCP::AutoMatchModel* DCP::AutoMatchDialog::GetDataModel() const
 {
     return (DCP::AutoMatchModel*) GetModel(); //lint !e1774 Could use dynamic_cast to 
@@ -239,8 +239,6 @@ bool DCP::AutoMatchController::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
-
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     

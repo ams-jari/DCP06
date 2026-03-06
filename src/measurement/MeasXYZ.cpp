@@ -1,6 +1,6 @@
 // ================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
@@ -10,7 +10,7 @@
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -120,8 +120,6 @@ bool DCP::DoMeasXYZController::SetModel( GUI::ModelC* pModel )
      return false;//m_pMeasureDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
-
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
@@ -429,8 +427,6 @@ bool DCP::MeasXYZController::SetModel( GUI::ModelC* pModel )
 	return true;
 	
   // Verify type
-   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
-
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
@@ -982,7 +978,7 @@ DCP::Log::~Log()
 
 
 
-DCP::AmsLog::AmsLog(MeasXYZModel* pModel, Model* pModel):m_pFile(0), m_pModel(pModel)
+DCP::AmsLog::AmsLog(MeasXYZModel* pMeasModel, Model* pModel):m_pFile(0), m_pModel(pModel)
 {
 	char m_cPath[CPI::LEN_PATH_MAX];
 	char logFilenameBuffer[STRING_BUFFER_PATH];
@@ -1132,25 +1128,25 @@ DCP::AmsLog::AmsLog(MeasXYZModel* pModel, Model* pModel):m_pFile(0), m_pModel(pM
 		fseek(m_pFile,0,SEEK_END);
 		//sprintf(temp,"11%04d+%08.8s 12....+%08.8d 13....%08.8s 19....+%02d%02d%02d%02d 21.%c%c%c%09.9s 22.%c%c%c%09.9s 31..0%10.10s 58..16%9.9s 59..16%9.9s 72....+%08.8s 81..0%10.10s 82..0%10.10s 83..0%10.10s %c%c", iNo,
 		sprintf(logLineBuffer,"11%04d+%08.8s 12....+%08.8d 13....+%08.8s 19....+%02d%02d%02d%02d 21.%c%c%c%09.9s 22.%c%c%c%09.9s 31..0%10.10s 58..16%9.9s 59..16%9.9s 72....+%08.8s 81..0%10.10s 82..0%10.10s 83..0%10.10s %c%c", iNo,
-																											pModel->sPointId,	//11
+																											pMeasModel->sPointId,	//11
 																								  			iInstNo,			//12	
 																											cInstrumentType,	//13	
 																											month,day,hour,min, //19
 																											bComp ? '3' : '0',	//21
 																											bHzCorr ? '2' : '3',//21
 																											'3' , // alwayd 360 dec ?? //21
-																											remove_dot(pModel->m_dH * DPR, temp_hz), //21
+																											remove_dot(pMeasModel->m_dH * DPR, temp_hz), //21
 																											bComp ? '3' : '0',	//22
 																											bHzCorr ? '2' : '3', //22
 																											'3' , // alwayd 360 dec ?? //22
-																											remove_dot(pModel->m_dV *DPR, temp_v), //22
-																											get_distance(pModel->m_dD, temp_dist, m_pModel), //31
+																											remove_dot(pMeasModel->m_dV *DPR, temp_v), //22
+																											get_distance(pMeasModel->m_dD, temp_dist, m_pModel), //31
 																											temp_prism,//(short) (fRef * 10000.0), // 1/10mm	//58
 																											temp_ppm,//(short) (fPPM * 1000.0),	//59
-																											pModel->tool_name, // 72 TOOL name
-																											get_xyz_distance(pModel->y_scs, temp_x, m_pModel),	// 82=x
-																											get_xyz_distance(pModel->x_scs, temp_y, m_pModel),	// 81=y
-																											get_xyz_distance(pModel->z_scs, temp_z, m_pModel),	// 83=z
+																											pMeasModel->tool_name, // 72 TOOL name
+																											get_xyz_distance(pMeasModel->y_scs, temp_x, m_pModel),	// 82=x
+																											get_xyz_distance(pMeasModel->x_scs, temp_y, m_pModel),	// 81=y
+																											get_xyz_distance(pMeasModel->z_scs, temp_z, m_pModel),	// 83=z
 
 
 

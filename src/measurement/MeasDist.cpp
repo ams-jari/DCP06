@@ -1,6 +1,6 @@
 // ================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
@@ -10,7 +10,7 @@
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -109,8 +109,6 @@ bool DCP::DoMeasDistController::SetModel( GUI::ModelC* pModel )
      return false;//m_pMeasureDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
-
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     
@@ -265,8 +263,6 @@ bool DCP::MeasDistController::SetModel( GUI::ModelC* pModel )
      return false;//m_pMeasureDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
-
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     

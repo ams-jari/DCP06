@@ -92,13 +92,13 @@ bool DCP::ViewAgfDialog::GetSelectedData(StringC& sDistId, StringC& sRefId, Stri
 
 bool DCP::ViewAgfDialog::SetModel(GUI::ModelC* pModel)
 {
-    DCP::Model* pModel = dynamic_cast<DCP::Model*>(pModel);
-    if (pModel != nullptr && ModelHandlerC::SetModel(pModel)) { RefreshControls(); return true; }
+    DCP::Model* pDcpModel = dynamic_cast<DCP::Model*>(pModel);
+    if (pDcpModel != nullptr && ModelHandlerC::SetModel(pDcpModel)) { RefreshControls(); return true; }
     USER_APP_VERIFY(false);
     return false;
 }
 
-DCP::Model* DCP::ViewAgfDialog::GetModel() const { return (DCP::Model*)GetModel(); }
+DCP::Model* DCP::ViewAgfDialog::GetModel() const { return (DCP::Model*)ModelHandlerC::GetModel(); }
 
 // --- ViewAgfController ---
 DCP::ViewAgfController::ViewAgfController(DCP::AgfFileFunc* pFileFunc, Model* pModel)
@@ -232,13 +232,13 @@ bool DCP::ViewCdfDialog::GetSelectedData(StringC& sDistId, StringC& sRefId, Stri
 
 bool DCP::ViewCdfDialog::SetModel(GUI::ModelC* pModel)
 {
-    DCP::Model* pModel = dynamic_cast<DCP::Model*>(pModel);
-    if (pModel != nullptr && ModelHandlerC::SetModel(pModel)) { RefreshControls(); return true; }
+    DCP::Model* pDcpModel = dynamic_cast<DCP::Model*>(pModel);
+    if (pDcpModel != nullptr && ModelHandlerC::SetModel(pDcpModel)) { RefreshControls(); return true; }
     USER_APP_VERIFY(false);
     return false;
 }
 
-DCP::Model* DCP::ViewCdfDialog::GetModel() const { return (DCP::Model*)GetModel(); }
+DCP::Model* DCP::ViewCdfDialog::GetModel() const { return (DCP::Model*)ModelHandlerC::GetModel(); }
 
 // --- ViewCdfController ---
 DCP::ViewCdfController::ViewCdfController(DCP::CdfFileFunc* pFileFunc, Model* pModel)

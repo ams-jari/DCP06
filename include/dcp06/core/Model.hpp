@@ -1,16 +1,12 @@
 // ====================================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement for Leica total stations (Leica Captivate plugin)
 //
 // Component: Base control of the GUI (graphical user interface)
 //
-// $Workfile: HEW_Model.hpp $
+// Summary  : DCP06 configuration model - manages GUI control properties common for all controls
 //
-// Summary  : The base control manages GUI control properties which are common for all controls 
-//
-// ------------------------------------------------------------------------------------------------
-//
-// Copyright by Leica Geosystems AG, Heerbrugg 2002
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -41,7 +37,7 @@
 #include <memory>
 #include <string>
 
-// Description: The Hello World application
+// Description: DCP06 application model and configuration
 //
 namespace DCP
 {
@@ -49,9 +45,8 @@ namespace DCP
 
 	namespace Database { class JsonDatabase; }
 
-    // Description: Hello World application class
-    //              
-    class Model : public  ABL::AppConfigModelC//public GUI::ModelC
+    // Description: DCP06 application model class (configuration, coordinate systems, tools)
+    class Model : public  ABL::AppConfigModelC
     {
         public:
 
@@ -352,16 +347,16 @@ namespace DCP
     {
         public:
 
-            // Description: Constructor
+            // Description: Create config controller and bind to Model
             // Input      : pParent - Pointer to parent controller
-            //              poModel - Configuration model
+            //              poModel - Configuration model (optional, created if nullptr)
             ConfigController(GUI::ControllerC* pParent, Model* poModel = nullptr);
 
             // Description: Destructor
             virtual ~ConfigController(void);
 
-            // Description: Get the configuration model
-            // Return     : configuration model
+            // Description: Return the DCP06 configuration model
+            // Return     : Pointer to Model instance
             Model*    GetModel(void) const;
 
         protected:

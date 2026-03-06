@@ -11,7 +11,7 @@
 | Criterion | DCP06 (Current) | Modern 2024 Standard | Gap |
 |-----------|------------------|------------------------|-----|
 | **Folder structure** | Flat `Hdr/` + `Src/` + only `Src/math/` | Feature-based `include/`, `src/` with domain subdirs | **High** |
-| **Architecture** | God object (`DCP05ModelC` ~1400+ lines) | Domain models, single responsibility | **High** |
+| **Architecture** | God object (`Model` ~1400+ lines) | Domain models, single responsibility | **High** |
 | **Build system** | vcxproj only, env vars, no CMake | CMake + optional vcpkg/Conan | **Medium** |
 | **Include layout** | Flat headers, no namespace hierarchy | `include/project/module/` | **Medium** |
 | **Persistence** | Direct `CPI::CFG::ArchiveC` + ASCII files | Abstract `IDatabase` + backends | **High** (planned) |
@@ -48,7 +48,7 @@ Current (DCP05/06):              DCP9 (modern reference):
 
 ### 2.2 Architecture: God Object
 
-`DCP05ModelC` / `DCP_Model.hpp` holds almost everything:
+`Model` / `Model.hpp` holds almost everything:
 
 | Responsibility | Lines (approx) | Should be |
 |----------------|----------------|-----------|

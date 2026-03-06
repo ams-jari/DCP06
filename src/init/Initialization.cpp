@@ -1,6 +1,6 @@
 // ================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
@@ -10,7 +10,7 @@
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -294,15 +294,15 @@ void DCP::InitializationDialog::OnInitDialog()
 	// m_pComboBoxObserver.Attach(m_pComboBox->GetSubject());
 }
 
-// Description: only accept hello world Model objects
+// Description: only accept DCP06 Model objects
 bool DCP::InitializationDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
+    DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
+    if ( pDcpModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDcpModel ))
     {
         RefreshControls();
         return true;
@@ -423,10 +423,10 @@ void DCP::InitializationDialog::UpdateData()
 
 }
 
-// Description: Hello World model
+// Description: DCP06 model
 DCP::Model* DCP::InitializationDialog::GetModel() const
 {
-    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) ModelHandlerC::GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 

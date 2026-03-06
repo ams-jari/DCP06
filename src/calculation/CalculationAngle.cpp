@@ -1,6 +1,6 @@
 // ================================================================================================
 //
-// Project  : Pluto/Venus Onboard Applications SW
+// Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
 // Component: 
 //
@@ -10,7 +10,7 @@
 //
 // ------------------------------------------------------------------------------------------------
 //
-// Copyright 2002 by Leica Geosystems AG, Heerbrugg
+// Copyright (c) AMS. Based on Leica Captivate plugin framework.
 //
 // ================================================================================================
 
@@ -411,11 +411,11 @@ void DCP::CalculationAngleDialog::OnValueChanged(int unNotifyCode, int ulParam2)
 bool DCP::CalculationAngleDialog::SetModel( GUI::ModelC* pModel )
 {
     // Verify type
-    DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
+    DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >( pModel );
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
-    if ( pModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pModel ))
+    if ( pDcpModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDcpModel ))
     {
         RefreshControls();
         return true;
@@ -429,7 +429,7 @@ bool DCP::CalculationAngleDialog::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 DCP::Model* DCP::CalculationAngleDialog::GetModel() const
 {
-    return (DCP::Model*) GetModel(); //lint !e1774 Could use dynamic_cast to 
+    return (DCP::Model*) ModelHandlerC::GetModel(); //lint !e1774 Could use dynamic_cast to 
                                                 //downcast polymorphic type
 }
 
@@ -491,8 +491,6 @@ bool DCP::CalculationAngleController::SetModel( GUI::ModelC* pModel )
      return m_pDlg->SetModel( pModel );
 	
   // Verify type
-   // DCP::Model* pModel = dynamic_cast< DCP::Model* >( pModel );
-
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     

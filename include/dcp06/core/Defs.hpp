@@ -3,6 +3,13 @@
 #ifndef DCP_DIALOGS_HPP      
 #define DCP_DIALOGS_HPP
 
+// C++03 / pre-C++11 compatibility: nullptr was introduced in C++11 (VS2010)
+#if defined(_MSC_VER) && _MSC_VER < 1600
+#ifndef nullptr
+#define nullptr NULL
+#endif
+#endif
+
 // ================================================================================================
 // ==========================================  Includes   =========================================
 // ================================================================================================
