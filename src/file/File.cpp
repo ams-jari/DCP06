@@ -458,7 +458,7 @@ void DCP::DCP06FileControllerC::OnF1Pressed()
 		if(GetController(SELECT_FILE_CONTROLLER) == NULL)
 		{
 			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(DCP06_JOBS, sTitle, m_pDCP06Model) );
+			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::DCP06SelectFileControllerC(FILE_TYPE_JOBS, sTitle, m_pDCP06Model) );
 		}
 		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_FILE_CONTROLLER, true);
@@ -645,7 +645,7 @@ void DCP::DCP06FileControllerC::OnActiveControllerClosed( int lCtrlID, int lExit
 		if (strSelected.IsEmpty()) { m_pDlg->RefreshControls(); return; }
 
 		// DB-primary: Open job from database
-		if (selCtrl && selCtrl->GetFileType() == DCP06_JOBS)
+		if (selCtrl && selCtrl->GetFileType() == FILE_TYPE_JOBS)
 		{
 			char jobIdBuf[64];
 			jobIdBuf[0] = '\0';

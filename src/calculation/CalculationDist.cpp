@@ -335,12 +335,10 @@ void DCP::DCP06CalcDistDlgC::OnValueChanged( int unNotifyCode, int ulParam2)
 			{
 				sTemp = m_pRefId->GetStringInputCtrl()->GetString();
 				// convert to ascii
-				char temp[20];
-				//UTL::UnicodeToAscii(temp, sTemp);
-				BSS::UTI::BSS_UTI_WCharToAscii(sTemp, temp);
-
-				m_pDataModel->pCommon->strbtrim(temp);
-				sprintf(m_pDataModel->cRefId,"%-6.6s",temp);
+				char asciiBuffer[STRING_BUFFER_SMALL];
+				BSS::UTI::BSS_UTI_WCharToAscii(sTemp, asciiBuffer);
+				m_pDataModel->pCommon->strbtrim(asciiBuffer);
+				sprintf(m_pDataModel->cRefId,"%-6.6s",asciiBuffer);
 				
 			}
 		}
@@ -353,11 +351,10 @@ void DCP::DCP06CalcDistDlgC::OnValueChanged( int unNotifyCode, int ulParam2)
 			{
 				sTemp = m_pTargetId->GetStringInputCtrl()->GetString();
 				// convert to ascii
-				char temp[20];
-				//UTL::UnicodeToAscii(temp, sTemp);
-				BSS::UTI::BSS_UTI_WCharToAscii( sTemp, temp );
-				m_pDataModel->pCommon->strbtrim(temp);
-				sprintf(m_pDataModel->cTrgtId,"%-6.6s",temp);
+				char asciiBuffer[STRING_BUFFER_SMALL];
+				BSS::UTI::BSS_UTI_WCharToAscii(sTemp, asciiBuffer);
+				m_pDataModel->pCommon->strbtrim(asciiBuffer);
+				sprintf(m_pDataModel->cTrgtId,"%-6.6s",asciiBuffer);
 				
 			}
 		}
@@ -370,11 +367,10 @@ void DCP::DCP06CalcDistDlgC::OnValueChanged( int unNotifyCode, int ulParam2)
 			{
 				sTemp = m_pNote->GetStringInputCtrl()->GetString();
 				// convert to ascii
-				char temp[20];
-				//UTL::UnicodeToAscii(temp, sTemp);
-				BSS::UTI::BSS_UTI_WCharToAscii( sTemp, temp );
-				m_pDataModel->pCommon->strbtrim(temp);
-				sprintf(m_pDataModel->cNote,"%-6.6s",temp);
+				char asciiBuffer[STRING_BUFFER_SMALL];
+				BSS::UTI::BSS_UTI_WCharToAscii(sTemp, asciiBuffer);
+				m_pDataModel->pCommon->strbtrim(asciiBuffer);
+				sprintf(m_pDataModel->cNote,"%-6.6s",asciiBuffer);
 			}
 		}
 		else if(ulParam2 == eDistId)
@@ -386,11 +382,10 @@ void DCP::DCP06CalcDistDlgC::OnValueChanged( int unNotifyCode, int ulParam2)
 			{
 				sTemp = m_pDistId->GetStringInputCtrl()->GetString();
 				// convert to ascii
-				char temp[20];
-				//UTL::UnicodeToAscii(temp, sTemp);
-				BSS::UTI::BSS_UTI_WCharToAscii( sTemp, temp );
-				m_pDataModel->pCommon->strbtrim(temp);
-				sprintf(m_pDataModel->cDid,"%-6.6s",temp);
+				char asciiBuffer[STRING_BUFFER_SMALL];
+				BSS::UTI::BSS_UTI_WCharToAscii(sTemp, asciiBuffer);
+				m_pDataModel->pCommon->strbtrim(asciiBuffer);
+				sprintf(m_pDataModel->cDid,"%-6.6s",asciiBuffer);
 			}
 		}
 		RefreshControls();
@@ -584,7 +579,7 @@ void DCP::DCP06CalcDistControllerC::OnF2Pressed()
 	
 		pModel->m_iDef = ACTUAL;
 		pModel->sSelectedFile = m_pDataModel->sSelected3DFile;
-		pModel->m_iMinPoint = 3;
+		pModel->m_iMinPoint = MIN_POINTS_FOR_DISTANCE;
 		pModel->m_iMaxPoint = MAX_POINTS_IN_LINE;
 	
 		// set info text....
@@ -637,7 +632,7 @@ void DCP::DCP06CalcDistControllerC::OnF3Pressed()
 	
 		pModel->m_iDef = ACTUAL;
 		pModel->sSelectedFile = m_pDataModel->sSelected3DFile;
-		pModel->m_iMinPoint = 3;
+		pModel->m_iMinPoint = MIN_POINTS_FOR_DISTANCE;
 		pModel->m_iMaxPoint = MAX_POINTS_IN_PLANE;
 		pModel->m_iDef = ACTUAL;
 	

@@ -613,7 +613,7 @@ void DCP::DCP06CircleControllerC::OnF4Pressed()
 		pModel->m_iPointsCount = m_pDataModel->pCommon->points_count_in_plane(&m_pDataModel->planes[0]);
 		if(pModel->m_iPointsCount < 3) pModel->m_iPointsCount = 3;
 		pModel->m_iMaxPoint = MAX_POINTS_IN_PLANE;
-		pModel->m_iMinPoint = 3;
+		pModel->m_iMinPoint = MIN_POINTS_FOR_CIRCLE;
 	
 		memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
 		memcpy(&pModel->point_table[0],&m_pDataModel->planes[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
@@ -658,7 +658,7 @@ void DCP::DCP06CircleControllerC::OnF5Pressed()
 		pModel->m_iPointsCount = m_pDataModel->pCommon->get_max_defined_point_circle(&m_pDataModel->circle_points[0]);
 		if(pModel->m_iPointsCount < 3) pModel->m_iPointsCount = 3;
 		pModel->m_iMaxPoint = MAX_POINTS_IN_CIRCLE;
-		pModel->m_iMinPoint = 3;
+		pModel->m_iMinPoint = MIN_POINTS_FOR_CIRCLE;
 	
 		memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
 		memcpy(&pModel->point_table[0],&m_pDataModel->circle_points[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);

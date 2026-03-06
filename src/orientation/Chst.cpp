@@ -505,9 +505,9 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 	double y_conv = 0.0;
 	double z_conv = 0.0;
 	
-	char temp[30];
-	char temp1[30];
-	char temp2[30];
+	char noteBuffer[STRING_BUFFER_MEDIUM];
+	char stationBuffer[STRING_BUFFER_MEDIUM];
+	char combinedNoteBuffer[STRING_BUFFER_MEDIUM];
 
 	bool outOfCalc = false; 
 	
@@ -597,34 +597,34 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 						
 							// add current station number to note field
 							// copy current note...
-							sprintf(temp,"%-6.6s", pAdf->note_front);
-							m_pCommon->strbtrim(temp);
+							sprintf(noteBuffer,"%-6.6s", pAdf->note_front);
+							m_pCommon->strbtrim(noteBuffer);
 
-							sprintf(temp1,"%-d", GetDCP06Model()->stationNumber);
-							temp1[6] = '\0';
-							m_pCommon->strbtrim(temp1);
+							sprintf(stationBuffer,"%-d", GetDCP06Model()->stationNumber);
+							stationBuffer[6] = '\0';
+							m_pCommon->strbtrim(stationBuffer);
 
 							// try to found current station number from the note field
-							if(!strstr(temp,temp1))
+							if(!strstr(noteBuffer,stationBuffer))
 							{
 							
-								sprintf(temp2,"%-s%-s%c",temp,temp1,'\0');
-								m_pCommon->strbtrim(temp2);
+								sprintf(combinedNoteBuffer,"%-s%-s%c",noteBuffer,stationBuffer,'\0');
+								m_pCommon->strbtrim(combinedNoteBuffer);
 
-								int len1 = (int) strlen(temp2);
+								int len1 = (int) strlen(combinedNoteBuffer);
 								if(len1 > 6)
 								{
 									int ii = 0;
 									for(int x = (len1-6); x <= len1; x++)
 									{
-										pAdf->note_front[ii] = temp2[x];
+										pAdf->note_front[ii] = combinedNoteBuffer[x];
 										ii++;
 									}
 									pAdf->note_front[6] = '\0';
 								}
 								else
 								{
-									sprintf(pAdf->note_front,"%-s",temp2);		
+									sprintf(pAdf->note_front,"%-s",combinedNoteBuffer);		
 									pAdf->note_front[6] = '\0';
 								}
 							}
@@ -636,8 +636,8 @@ void DCP::DCP06ChangeStationDlgC::update_ms_adf()
 							/*
 							if(GetDCP06Model()->stationNumber == 1)
 							{
-								sprintf(temp1,"%-d", GetDCP06Model()->stationNumber);
-								sprintf(pAdf->note_front,"%-s",temp1);		
+								sprintf(stationBuffer,"%-d", GetDCP06Model()->stationNumber);
+								sprintf(pAdf->note_front,"%-s",stationBuffer);		
 								pAdf->note_front[6] = '\0';
 							}
 							*/
@@ -1621,16 +1621,16 @@ void DCP::DCP06ChangeStationControllerC::OnActiveControllerClosed( int lCtrlID, 
 				StringC sXline;
 				StringC sYline;
 				StringC sZline;
-				char temp[50];
+				char formatBuffer[STRING_BUFFER_MEDIUM];
 		
-				sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
-				sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(temp));
+				sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
+				sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(formatBuffer));
 
-				sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
-				sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(temp));
+				sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
+				sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(formatBuffer));
 
-				sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
-				sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(temp));
+				sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
+				sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(formatBuffer));
 				
 
 				sMsg = sXline;

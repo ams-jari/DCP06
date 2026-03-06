@@ -384,13 +384,13 @@ void DCP::DCP06PlaneScanControllerC::OnF1Pressed()
 
 		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
 
-		pModel->m_iMaxPoint = 3;
-		pModel->m_iMinPoint = 3;
-		//pModel->m_iPointsCount = 3;
+		pModel->m_iMaxPoint = BOUNDARY_PLANE_POINTS;
+		pModel->m_iMinPoint = BOUNDARY_PLANE_POINTS;
+		//pModel->m_iPointsCount = BOUNDARY_PLANE_POINTS;
 		pModel->m_iCurrentPoint = 1;
 
-		memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * 3);
-		memcpy(&pModel->point_table[0],&m_pDataModel->boundary_plane[0].points[0], sizeof(S_POINT_BUFF) * 3);
+		memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * BOUNDARY_PLANE_POINTS);
+		memcpy(&pModel->point_table[0],&m_pDataModel->boundary_plane[0].points[0], sizeof(S_POINT_BUFF) * BOUNDARY_PLANE_POINTS);
 
 		
 		if(GetController(MEAS_CONTROLLER) == NULL)
@@ -494,7 +494,7 @@ void DCP::DCP06PlaneScanControllerC::OnSHF2Pressed()
 		m_pDataModel->iResolutionWidth = 100;
 		m_pDataModel->sFileName = L"";
 		m_pDataModel->sPointId = L"SC";
-		memset(&m_pDataModel->boundary_plane[0].points[0],0,sizeof(S_POINT_BUFF)* 3);
+		memset(&m_pDataModel->boundary_plane[0].points[0],0,sizeof(S_POINT_BUFF)* BOUNDARY_PLANE_POINTS);
 
 		memset(&m_pDataModel->des_points[0], 0, sizeof(S_SCAN_POINT_BUFF) * MAX_SCAN_POINTS);
 		m_pDataModel->current_point = 0;
@@ -545,7 +545,7 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 		DCP::DCP06MeasModelC* pModel = (DCP::DCP06MeasModelC*) GetController( MEAS_CONTROLLER )->GetModel();		
 		
 		// copy values
-		memcpy(&m_pDataModel->boundary_plane[0].points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * 3);
+		memcpy(&m_pDataModel->boundary_plane[0].points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * BOUNDARY_PLANE_POINTS);
 
 
 	}
@@ -632,10 +632,9 @@ void DCP::DCP06PlaneScanControllerC::OnActiveControllerClosed( int lCtrlID, int 
 			if(m_pDataModel->current_point  < (int) m_pDataModel->points_count)
 			{
 				m_pDataModel->current_point++;
-				char temp[100];
-				//sprintf(temp, "%d / %d", m_pDataModel->m_pAdfFile->active_point_front, m_pDataModel->m_pAdfFile->getPointsCount());
-				sprintf(temp, "%d / %d", m_pDataModel->current_point, m_pDataModel->points_count);
-				GUI::DesktopC::Instance()->MessageShow(StringC(temp));//,4,false);
+				char formatBuffer[STRING_BUFFER_MEDIUM];
+				sprintf(formatBuffer, "%d / %d", m_pDataModel->current_point, m_pDataModel->points_count);
+				GUI::DesktopC::Instance()->MessageShow(StringC(formatBuffer));//,4,false);
 				//GUI::DesktopC::Instance()->MessageShow(StringC(m_pDataModel->m_pAdfFile->pointid_front),4,false);
 
 				double x = 0.0;
@@ -732,13 +731,13 @@ DCP::DCP06PlaneScanModelC::DCP06PlaneScanModelC(DCP06ModelC* pDCP06Model)
 	boundary_plane[0].points[0].z = 0.0;
 	boundary_plane[0].points[0].sta = 1;
 
-	boundary_plane[0].points[1].x = 500.0;
+	boundary_plane[0].points[1].x = DEFAULT_BOUNDARY_SIZE;
 	boundary_plane[0].points[1].y = 0.0;
 	boundary_plane[0].points[1].z = 0.0;
 	boundary_plane[0].points[1].sta = 1;
 
-	boundary_plane[0].points[2].x = 500.0;
-	boundary_plane[0].points[2].y = 500.0;
+	boundary_plane[0].points[2].x = DEFAULT_BOUNDARY_SIZE;
+	boundary_plane[0].points[2].y = DEFAULT_BOUNDARY_SIZE;
 	boundary_plane[0].points[2].z = 0.0;
 	boundary_plane[0].points[2].sta = 1;
 	*/
@@ -761,8 +760,8 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 	bool ret = false;
 	struct ams_vector plane_p1,plane_p2,plane_p3;
 	struct ams_vector corner_p1, corner_p2, corner_p3, corner_p4;
-	char first_pointid[20];
-	char temp[15];
+	char first_pointid[STRING_BUFFER_SMALL];
+	char pointIdBuffer[STRING_BUFFER_SMALL];
 	struct line lineP2P3, lineP1P2, lineP4P3;
 	StringC strMsg;
 	bool too_many_points = false;
@@ -853,7 +852,7 @@ bool DCP::DCP06PlaneScanModelC::generate_points(DCP::DCP06ModelC *pDCP06Model)
 			//UTL::UnicodeToAscii(first_pointid, sPointId);
 			BSS::UTI::BSS_UTI_WCharToAscii( sPointId, first_pointid );
 	
-			sprintf(temp,"%-s%d",first_pointid,1);
+			sprintf(pointIdBuffer,"%-s%d",first_pointid,1);
 			
 			if(m_pScanFile->create_adf_file(fname, false)==0)
 			{
@@ -954,7 +953,7 @@ bool DCP::DCP06PlaneScanModelC::add_line_points(ScanFileFunc* m_pScanFile, struc
 							short i, short pointCountWidth, double distWidth, double resolutionWidth, char* first_pointid,
 							DCP::DCP06ModelC *pDCP06Model)
 {
-	char temp[20];
+	char pointIdBuffer[STRING_BUFFER_SMALL];
 	bool ret = true;
 
 	for (int j = 0; j <= pointCountWidth; j++)
@@ -981,9 +980,9 @@ bool DCP::DCP06PlaneScanModelC::add_line_points(ScanFileFunc* m_pScanFile, struc
 		*/
 		if(points_count  < MAX_SCAN_POINTS)
 		{
-			sprintf(temp,"%-s%d",first_pointid, points_count + 1);
+			sprintf(pointIdBuffer,"%-s%d",first_pointid, points_count + 1);
 
-			sprintf(des_points[points_count].point_id, "%-s", temp);
+			sprintf(des_points[points_count].point_id, "%-s", pointIdBuffer);
 			des_points[points_count].x = line1->px + (j * resolutionWidth) * line1->ux;
 			des_points[points_count].y = line1->py + (j * resolutionWidth) * line1->uy;
 			des_points[points_count].z = line1->pz + (j * resolutionWidth) * line1->uz;
@@ -1022,9 +1021,9 @@ bool DCP::DCP06PlaneScanModelC::add_line_points(ScanFileFunc* m_pScanFile, struc
 					*/
 					if(points_count < MAX_SCAN_POINTS)
 					{
-						sprintf(temp,"%-s%d",first_pointid, points_count + 1);
+						sprintf(pointIdBuffer,"%-s%d",first_pointid, points_count + 1);
 
-						sprintf(des_points[points_count].point_id,"%-s", temp);
+						sprintf(des_points[points_count].point_id,"%-s", pointIdBuffer);
 						des_points[points_count].x = line1->px + (j * resolutionWidth + (te)) * line1->ux ;
 						des_points[points_count].y = line1->py + (j * resolutionWidth + (te)) * line1->uy ;
 						des_points[points_count].z =  line1->pz + (j * resolutionWidth + (te)) * line1->uz ;

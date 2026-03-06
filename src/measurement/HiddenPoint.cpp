@@ -286,8 +286,8 @@ short DCP::DCP06HiddenPointDlgC::calc_hidden_point(void)
 {
 short points_defined;
 short i,count;
-double para, parb, parc;
-double xtemp, ytemp, ztemp,tmp;
+double directionX, directionY, directionZ;
+double sumX, sumY, sumZ, distanceOffset;
 
 	DCP06MsgBoxC msgbox;
 
@@ -329,31 +329,28 @@ double xtemp, ytemp, ztemp,tmp;
 		}
 		DCP9::Geometry::Line line(p1, p2);
 		std::vector<double> dir = line.direction();
-		para = dir[0]; parb = dir[1]; parc = dir[2];
-
-		//sprintf(Temp,"A=%.5f B=%.5f C=%.5f",para,parb,parc);
-		//show_info(Temp);
+		directionX = dir[0]; directionY = dir[1]; directionZ = dir[2];
 
 		/**********************************
 			calculate hidden point
 		**********************************/
 
-		xtemp = ytemp = ztemp = 0.0;
+		sumX = sumY = sumZ = 0.0;
 
 		for(i=0; i < MAX_POINTS_IN_HIDDENPOINT_BAR; i++)
 		{
 			if(measured_points[i].sta != 0)
 			{
 
-				tmp = 	m_pDCP06Model->hidden_point_bar[i];
-				xtemp = xtemp +  (measured_points[i].x - (tmp* para));
-				ytemp = ytemp +  (measured_points[i].y - (tmp* parb));
-				ztemp = ztemp +  (measured_points[i].z - (tmp* parc));
+				distanceOffset = 	m_pDCP06Model->hidden_point_bar[i];
+				sumX = sumX +  (measured_points[i].x - (distanceOffset* directionX));
+				sumY = sumY +  (measured_points[i].y - (distanceOffset* directionY));
+				sumZ = sumZ +  (measured_points[i].z - (distanceOffset* directionZ));
 			}
 		}
-		hiddenpoint[0].x = xtemp / points_defined;
-		hiddenpoint[0].y = ytemp / points_defined;
-		hiddenpoint[0].z = ztemp / points_defined;
+		hiddenpoint[0].x = sumX / points_defined;
+		hiddenpoint[0].y = sumY / points_defined;
+		hiddenpoint[0].z = sumZ / points_defined;
 		hiddenpoint[0].sta = POINT_MEASURED;
 	}
 	else
@@ -372,32 +369,29 @@ double xtemp, ytemp, ztemp,tmp;
 				hiddenpoint[0].sta = POINT_NOT_DEFINED;
 				return false;
 			}
-			para = result.direction[0];
-			parb = result.direction[1];
-			parc = result.direction[2];
+			directionX = result.direction[0];
+			directionY = result.direction[1];
+			directionZ = result.direction[2];
 			{
-				//sprintf(Temp,"A=%.5f B=%.5f C=%.5f",para,parb,parc);
-				//show_info(Temp);
-
 				/**********************************
 				calculate hidden point
 				**********************************/
 
-				xtemp = ytemp = ztemp = 0.0;
+				sumX = sumY = sumZ = 0.0;
 
 				for(i=0; i < MAX_POINTS_IN_HIDDENPOINT_BAR; i++)
 				{
 					if(measured_points[i].sta != 0)
 					{
-						tmp = m_pDCP06Model->hidden_point_bar[i];
-						xtemp = xtemp +  measured_points[i].x - (tmp * para);
-						ytemp = ytemp +  measured_points[i].y - (tmp * parb);
-						ztemp = ztemp +  measured_points[i].z - (tmp * parc);
+						distanceOffset = m_pDCP06Model->hidden_point_bar[i];
+						sumX = sumX +  measured_points[i].x - (distanceOffset * directionX);
+						sumY = sumY +  measured_points[i].y - (distanceOffset * directionY);
+						sumZ = sumZ +  measured_points[i].z - (distanceOffset * directionZ);
 					}
 				}
-				hiddenpoint[0].x = xtemp / points_defined;
-				hiddenpoint[0].y = ytemp / points_defined;
-				hiddenpoint[0].z = ztemp / points_defined;
+				hiddenpoint[0].x = sumX / points_defined;
+				hiddenpoint[0].y = sumY / points_defined;
+				hiddenpoint[0].z = sumZ / points_defined;
 				hiddenpoint[0].sta = POINT_MEASURED;
 			}
 	}

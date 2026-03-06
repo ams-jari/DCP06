@@ -690,7 +690,7 @@ void DCP::DCP06PomControllerC::OnF3Pressed()
 				
 		DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
 		pModel->m_iMaxPoint = sum < 3 ? 3 : sum;
-		pModel->m_iMinPoint = 3;
+		pModel->m_iMinPoint = MIN_POINTS_FOR_DISTANCE;
 		pModel->m_iPointsCount = sum;
 		pModel->disable_point_editing = true;
 		
@@ -762,16 +762,16 @@ void DCP::DCP06PomControllerC::OnF4Pressed()
 		StringC sXline;
 		StringC sYline;
 		StringC sZline;
-		char temp[50];
+		char formatBuffer[STRING_BUFFER_MEDIUM];
 		
-		sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
-		sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(temp));
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
+		sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(formatBuffer));
 
-		sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
-		sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(temp));
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
+		sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(formatBuffer));
 
-		sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
-		sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(temp));
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
+		sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(formatBuffer));
 		
 
 		sMsg = sXline;
@@ -854,16 +854,16 @@ void DCP::DCP06PomControllerC::OnSHF3Pressed()
 		StringC sXline;
 		StringC sYline;
 		StringC sZline;
-		char temp[50];
+		char formatBuffer[STRING_BUFFER_MEDIUM];
 		
-		sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
-		sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(temp));
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_x);
+		sXline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sX, (const wchar_t*) StringC(formatBuffer));
 
-		sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
-		sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(temp));
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_y);
+		sYline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sY, (const wchar_t*) StringC(formatBuffer));
 
-		sprintf(temp,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
-		sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(temp));
+		sprintf(formatBuffer,"%9.*f",m_pDlg->GetDCP06Model()->m_nDecimals, m_pDataModel->rms_z);
+		sZline.Format(L"%s %s:%s",(const wchar_t*)sRMS,  (const wchar_t*)sZ, (const wchar_t*) StringC(formatBuffer));
 		
 
 		sMsg = sXline;

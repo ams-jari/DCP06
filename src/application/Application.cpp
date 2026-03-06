@@ -324,14 +324,14 @@ void DCP::DCP06ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 
 	if(lDlgID == INFO_DLG)
 	{
-		char temp[21];
-		temp[0] = '\0';
+		char keyCodeBuffer[21];
+		keyCodeBuffer[0] = '\0';
 
 		DestroyDialog(lDlgID);
 		
 		poConfigController->GetModel()->bDemoMode = true;
 		
-		get_code(temp);
+		get_code(keyCodeBuffer);
 
 
 		if(poConfigController->GetModel()->startDate > 0.0)
@@ -353,7 +353,7 @@ void DCP::DCP06ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 		DCP06DemoLicenseC demo(poConfigController->GetModel());
 
 		// FULL MODE
-		if(strcmp(poConfigController->GetModel()->sKeyCode,temp) == 0 && temp[0] != '\0')
+		if(strcmp(poConfigController->GetModel()->sKeyCode,keyCodeBuffer) == 0 && keyCodeBuffer[0] != '\0')
 		{
 				poConfigController->GetModel()->bDemoMode = false;
 		}
@@ -399,13 +399,13 @@ void DCP::DCP06ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 
 		DateTime oDateTime = GUI::GetActualTime();
 
-		char temp[21];
-		temp[0] = '\0';
+		char keyCodeBuffer[21];
+		keyCodeBuffer[0] = '\0';
 		
-		get_code(temp);
+		get_code(keyCodeBuffer);
 		
 		// FULL MODE
-		if(strcmp(poConfigController->GetModel()->sEnteredKeyCode, temp) == 0 && temp[0] != '\0')
+		if(strcmp(poConfigController->GetModel()->sEnteredKeyCode, keyCodeBuffer) == 0 && keyCodeBuffer[0] != '\0')
 		{	
 			sprintf(poConfigController->GetModel()->sKeyCode,"%s", poConfigController->GetModel()->sEnteredKeyCode);
 			poConfigController->GetModel()->startDate = 0.0; // reset demo start date
@@ -424,10 +424,10 @@ void DCP::DCP06ApplicationC::OnActiveDialogClosed(int lDlgID, int lExitCode)
 			// first run, check demo mode 1
 			if(poConfigController->GetModel()->startDate == 0.0) // keycode not entered correctly -> show license dialog
 			{
-				demo.get_code_demo(1, temp);
+				demo.get_code_demo(1, keyCodeBuffer);
 
 				// if correct code save it
-				if(strcmp(poConfigController->GetModel()->sEnteredKeyCode, temp) == 0 && temp[0] != '\0')
+				if(strcmp(poConfigController->GetModel()->sEnteredKeyCode, keyCodeBuffer) == 0 && keyCodeBuffer[0] != '\0')
 				{
 					// save keycode and startDate
 					sprintf(poConfigController->GetModel()->sKeyCodeDemo1,"%s", poConfigController->GetModel()->sEnteredKeyCode);
@@ -496,9 +496,9 @@ StringC DCP::DCP06ApplicationC::get_code(char *sCode)
 {
 int nro=1L;
 char *p, *p1,*p2;
-char temp[20];
+char serialBuffer[STRING_BUFFER_SMALL];
 int i,len;
-short temp2[20];
+short hashValues[STRING_BUFFER_SMALL];
 
 unsigned int code = 0L;
 StringC ret = L"";
@@ -511,38 +511,34 @@ StringC ret = L"";
 	const char* cInstrumentNumber = oInstrumentInfo.GetInstrumentSerialNum();
 	snro = atol(cInstrumentNumber);
 
-	 sprintf(temp,"%-lu",snro);
+	 sprintf(serialBuffer,"%-lu",snro);
 	
 #elif defined(CS20)
 	DCP06MsgBoxC msgBox;
 
 	StringC ss1 = L"";
 	RcT ret1= CPI::SensorC::GetInstance()->GetSerialNumber(ss1);
-	sprintf(temp,"%d",ret1);
+	sprintf(serialBuffer,"%d",ret1);
 
-	char ttt[20];
-	BSS::UTI::BSS_UTI_WCharToAscii(ss1, ttt);
-	//snro = atol(ttt);
+	char asciiBuffer[STRING_BUFFER_SMALL];
+	BSS::UTI::BSS_UTI_WCharToAscii(ss1, asciiBuffer);
  
-	sprintf(temp,"%-s",ttt);
+	sprintf(serialBuffer,"%-s",asciiBuffer);
 
 	//msgBox.ShowMessageOk(StringC(ssName), StringC(temp));
 
 #elif defined(CS35)
 	DCP06CS35C cs35;
-	cs35.get_serialnumber(temp);
+	cs35.get_serialnumber(serialBuffer);
 #endif
-	//snro = 235063;
-   	 //sprintf(temp,"%-lu",snro);
-
-	 len = (int) strlen(temp);
-	 temp[len] = '\0';
+	 len = (int) strlen(serialBuffer);
+	 serialBuffer[len] = '\0';
  
-	 ret = StringC(temp);
+	 ret = StringC(serialBuffer);
 
      code = 0L;
 
-	 p = temp;
+	 p = serialBuffer;
 	 p1 = PROG_ID;
 	 p2 = SEC_KEY;
      nro= 1L;
@@ -553,12 +549,12 @@ StringC ret = L"";
     for(i=0;i<len;i++)
     {
         if(*p != *p1)
-        temp2[i] =(short)( ((*p*i*4) ^ (*p1) + (*p+i) ^ (*p2-1) + *p1 * *p2)); //*1.7);
+        hashValues[i] =(short)( ((*p*i*4) ^ (*p1) + (*p+i) ^ (*p2-1) + *p1 * *p2)); //*1.7);
 		p++;
 		p1++;
 		p2++;
 
-		nro = nro*temp2[i]+i;
+		nro = nro*hashValues[i]+i;
 
 		if(*p1 == '\0') p1 = PROG_ID;
 		if(*p2 == '\0') p2 = SEC_KEY;
@@ -1558,10 +1554,9 @@ void DCP::DCP06LisenceDlgC::OnF1Pressed()
 	{
 		StringC sNo = m_pText->GetStringInputCtrl()->GetString();
 
-		char temp[21];
-		//UTL::UnicodeToAscii(temp,20, sNo);
-		BSS::UTI::BSS_UTI_WCharToAscii(sNo, temp,20);
-		sprintf(m_pDCP06Model->sEnteredKeyCode,"%s", temp); // was sKeyCode...
+		char asciiBuffer[21];
+		BSS::UTI::BSS_UTI_WCharToAscii(sNo, asciiBuffer,20);
+		sprintf(m_pDCP06Model->sEnteredKeyCode,"%s", asciiBuffer); // was sKeyCode...
 
 		//m_pDCP06Model->lKeyCode = (unsigned int) atol((const char*) temp);
 		Close(1);

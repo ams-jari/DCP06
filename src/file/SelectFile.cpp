@@ -158,7 +158,7 @@ void DCP06SelectFileDlgC::OnDialogActivated()
 	
 	StringC sLine;
 	char cTemp[80];
-	if(m_iFileType == DCP06_JOBS)
+	if(m_iFileType == FILE_TYPE_JOBS)
 	{
 		DCP::Database::IDatabase* db = m_pDCP06Model->GetDatabase();
 #if DCP_USE_JSON_DATABASE
@@ -524,7 +524,7 @@ void DCP::DCP06SelectFileDlgC::UpdateData()
 	StringC sSelected;
 	short iSelected = poMultiColCtrl->GetSelectedId();
 	poMultiColCtrl->GetCellText(CI_File,iSelected, sSelected);
-	StringC sTemp = (m_iFileType == DCP06_JOBS) ? sSelected.Mid(4, 24) : sSelected.Mid(4, 12);
+	StringC sTemp = (m_iFileType == FILE_TYPE_JOBS) ? sSelected.Mid(4, 24) : sSelected.Mid(4, 12);
 	sTemp.Trim();
 	GetDataModel()->m_strSelectedFile = sTemp;
 }

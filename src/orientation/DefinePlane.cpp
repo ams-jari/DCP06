@@ -659,7 +659,7 @@ void DCP::DCP06DefinePlaneControllerC::OnF5Pressed()
 
 	DCP::DCP06MeasModelC* pModel = new DCP06MeasModelC;
 	pModel->m_iMaxPoint = MAX_POINTS_IN_PLANE;
-	pModel->m_iMinPoint = 3;
+	pModel->m_iMinPoint = MIN_POINTS_FOR_PLANE;
 	pModel->m_iPointsCount = 3;
 	pModel->m_iCurrentPoint = 1;
 

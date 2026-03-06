@@ -1158,12 +1158,12 @@ char sPath[CPI::LEN_PATH_MAX];
 
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, sPath);
 	
-	char temp[CPI::LEN_PATH_MAX];
-	temp[0] = '\0';
+	char filePathBuffer[CPI::LEN_PATH_MAX];
+	filePathBuffer[0] = '\0';
 
-	strcat(temp, sPath);
-	strcat(temp, fname);
-	char* pSearch = &temp[0];
+	strcat(filePathBuffer, sPath);
+	strcat(filePathBuffer, fname);
+	char* pSearch = &filePathBuffer[0];
 
 	//DCP06CommonC common(m_pDCP06Model);
 
@@ -1179,12 +1179,12 @@ char sPath[CPI::LEN_PATH_MAX];
 			}
 			else
 			{
-				boost::filesystem::path f = temp;
+				boost::filesystem::path f = filePathBuffer;
 				int result = boost::filesystem::remove(f);
 				if(!result)
 				{
 					StringC msg ;
-					msg.Format(L"Cannot delete file %s",temp);
+					msg.Format(L"Cannot delete file %s",filePathBuffer);
 					GUI::DesktopC::Instance()->MessageShow(msg);
 					return 0;
 				}
@@ -1192,54 +1192,54 @@ char sPath[CPI::LEN_PATH_MAX];
 			}
 	}
 
-	FILE  *m_pFile = fopen(temp, "wb+");
+	FILE  *m_pFile = fopen(filePathBuffer, "wb+");
 	if(m_pFile)
 	{
 
-		char temp[512];
-		char temp1[100];
-		char temp2[100];
+		char lineBuffer[STRING_BUFFER_LARGE];
+		char userBuffer[STRING_BUFFER_MEDIUM];
+		char valueBuffer[STRING_BUFFER_MEDIUM];
 
 		int iInstNo=0;
 
-		sprintf(temp,"Line Fitting results%c%c",13,10); 
-		fputs(temp,m_pFile);
+		sprintf(lineBuffer,"Line Fitting results%c%c",13,10); 
+		fputs(lineBuffer,m_pFile);
 
 		int iYear, iMonth, iDay, iHour, iMin, iSec;
 		common->GetDate(&iDay, &iMonth, &iYear);
 		common->GetTime(&iHour, &iMin, &iSec);
 
-		sprintf(temp,"Date/Time:%02d.%02d.%04d %02d:%02d:%02d%c%c", iDay, iMonth, iYear, iHour, iMin, iSec,13,10); 
-		fputs(temp,m_pFile);
+		sprintf(lineBuffer,"Date/Time:%02d.%02d.%04d %02d:%02d:%02d%c%c", iDay, iMonth, iYear, iHour, iMin, iSec,13,10); 
+		fputs(lineBuffer,m_pFile);
 
-		common->GetUserName(temp1);
-		sprintf(temp,"User:%s%c%c", temp1,13,10); 
-		fputs(temp,m_pFile);
+		common->GetUserName(userBuffer);
+		sprintf(lineBuffer,"User:%s%c%c", userBuffer,13,10); 
+		fputs(lineBuffer,m_pFile);
 
-		common->GetInstrumentName(temp1);
+		common->GetInstrumentName(userBuffer);
 		common->GetInstrumentNo(&iInstNo);
-		sprintf(temp,"Instrument(type/no):%s %d%c%c", temp1,iInstNo,13,10); 
-		fputs(temp,m_pFile);
+		sprintf(lineBuffer,"Instrument(type/no):%s %d%c%c", userBuffer,iInstNo,13,10); 
+		fputs(lineBuffer,m_pFile);
 
-		sprintf(temp,"Line direction vector:%c%c",13,10);
-		fputs(temp,m_pFile);
-		sprintf(temp,"X:%.9f Y:%.9f Z:%.9f%c%c", m_pLineFitModel->line_ocs[0].ux,m_pLineFitModel->line_ocs[0].uy,m_pLineFitModel->line_ocs[0].uz,13,10);
-		fputs(temp,m_pFile);
+		sprintf(lineBuffer,"Line direction vector:%c%c",13,10);
+		fputs(lineBuffer,m_pFile);
+		sprintf(lineBuffer,"X:%.9f Y:%.9f Z:%.9f%c%c", m_pLineFitModel->line_ocs[0].ux,m_pLineFitModel->line_ocs[0].uy,m_pLineFitModel->line_ocs[0].uz,13,10);
+		fputs(lineBuffer,m_pFile);
 		
-		sprintf(temp,"Line points:%c%c",13,10);
-		fputs(temp,m_pFile);	
+		sprintf(lineBuffer,"Line points:%c%c",13,10);
+		fputs(lineBuffer,m_pFile);	
 		
 		for(int i=0; i < MAX_POINTS_IN_LINE; i++)
 		{
 			if(m_pLineFitModel->line_buff[0].points[i].sta != 0)
 			{
-				sprintf(temp,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f%c%c", i+1, m_pLineFitModel->line_ocs[0].points[i].point_id, 
+				sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f%c%c", i+1, m_pLineFitModel->line_ocs[0].points[i].point_id, 
 							m_pDCP06Model->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].x,
 							m_pDCP06Model->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].y,
 							m_pDCP06Model->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].z,
 
 							13,10);
-				fputs(temp,m_pFile);
+				fputs(lineBuffer,m_pFile);
 	
 			}
 		}
@@ -1247,7 +1247,7 @@ char sPath[CPI::LEN_PATH_MAX];
 		// used height
 
 		StringC sHeight = L"";
-		sprintf(temp2, "%s", "-");
+		sprintf(valueBuffer, "%s", "-");
 
 		if(m_pLineFitModel->selectedHeight == FIRST_POINT)
 		{
@@ -1264,23 +1264,23 @@ char sPath[CPI::LEN_PATH_MAX];
 		else
 		{
 			sHeight = StringC(AT_DCP05,V_DCP_MANUALLY_ENTERED_TOK);
-			sprintf(temp2,"%*.f", m_pDCP06Model->m_nDecimals, m_pLineFitModel->manualHeight);
+			sprintf(valueBuffer,"%*.f", m_pDCP06Model->m_nDecimals, m_pLineFitModel->manualHeight);
 		}
-		common->convert_to_ascii(sHeight, temp1,sHeight.Length()); 
+		common->convert_to_ascii(sHeight, userBuffer,sHeight.Length()); 
 		
 		if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
-			sprintf(temp,"Used height: %s  Height: %s%c%c", temp1, temp2, 13, 10);
+			sprintf(lineBuffer,"Used height: %s  Height: %s%c%c", userBuffer, valueBuffer, 13, 10);
 		else
-			sprintf(temp,"Used depth: %s  Height: %s%c%c", temp1, temp2, 13, 10);
-		fputs(temp,m_pFile);
+			sprintf(lineBuffer,"Used depth: %s  Height: %s%c%c", userBuffer, valueBuffer, 13, 10);
+		fputs(lineBuffer,m_pFile);
 
 		// shift line
 		StringC sShift = L"";
-		sprintf(temp2,"%s","-");
+		sprintf(valueBuffer,"%s","-");
 
 		if(m_pLineFitModel->selectedShift != SHIFT_NO)
 		{
-			sprintf(temp2,"%.*f",m_pDCP06Model->m_nDecimals, m_pLineFitModel->shiftValue);
+			sprintf(valueBuffer,"%.*f",m_pDCP06Model->m_nDecimals, m_pLineFitModel->shiftValue);
 		}
 
 		if(m_pLineFitModel->selectedShift == SHIFT_NO)
@@ -1309,9 +1309,9 @@ char sPath[CPI::LEN_PATH_MAX];
 			else
 				sShift = StringC(AT_DCP05,V_DCP_SHIFT_BACKWARD_TOK);
 		}
-		common->convert_to_ascii(sShift, temp1, sShift.Length()); 
-		sprintf(temp,"Shift line: %s Value: %s%c%c", temp1, temp2, 13, 10);
-		fputs(temp,m_pFile);
+		common->convert_to_ascii(sShift, userBuffer, sShift.Length()); 
+		sprintf(lineBuffer,"Shift line: %s Value: %s%c%c", userBuffer, valueBuffer, 13, 10);
+		fputs(lineBuffer,m_pFile);
 
 		//Rotate line
 		StringC sRotate = L"";
@@ -1319,7 +1319,7 @@ char sPath[CPI::LEN_PATH_MAX];
 		if(m_pLineFitModel->selectedRotate == ROTATE_NO)
 		{
 			sRotate = L"-";
-			sprintf(temp2,"%s", "-");
+			sprintf(valueBuffer,"%s", "-");
 		}
 		else if(m_pLineFitModel->selectedRotate == ROTATE_HORIZONTAL)
 		{
@@ -1327,12 +1327,12 @@ char sPath[CPI::LEN_PATH_MAX];
 			if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 			{
 				sRotate = StringC(AT_DCP05,V_DCP_ROTATE_LINE_HOR_TOK);
-				sprintf(temp2,"%.6f", m_pLineFitModel->rotateAngle);
+				sprintf(valueBuffer,"%.6f", m_pLineFitModel->rotateAngle);
 			}
 			else
 			{
 				sRotate = StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_LEFT_RIGHT_TOK);
-				sprintf(temp2,"%.6f", m_pLineFitModel->rotateAngle);
+				sprintf(valueBuffer,"%.6f", m_pLineFitModel->rotateAngle);
 			}
 		}
 		else if(m_pLineFitModel->selectedRotate == ROTATE_VERTICAL)
@@ -1340,21 +1340,21 @@ char sPath[CPI::LEN_PATH_MAX];
 			if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 			{
 				sRotate = StringC(AT_DCP05,V_DCP_ROTATE_LINE_VER_TOK);
-				sprintf(temp2,"%.6f", m_pLineFitModel->rotateAngle);
+				sprintf(valueBuffer,"%.6f", m_pLineFitModel->rotateAngle);
 			}
 			else
 			{
 				sRotate = StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_DEPTH_TOK);
-				sprintf(temp2,"%.6f", m_pLineFitModel->rotateAngle);
+				sprintf(valueBuffer,"%.6f", m_pLineFitModel->rotateAngle);
 			}
 		}
-		common->convert_to_ascii(sRotate, temp1, sRotate.Length()); 
-		sprintf(temp,"Rotate line: %s  Angle: %s %c%c", temp1, temp2, 13,10 );
+		common->convert_to_ascii(sRotate, userBuffer, sRotate.Length()); 
+		sprintf(lineBuffer,"Rotate line: %s  Angle: %s %c%c", userBuffer, valueBuffer, 13,10 );
 
-		fputs(temp,m_pFile);
+		fputs(lineBuffer,m_pFile);
 		
-		sprintf(temp,"Results:%c%c", 13,10 );
-		fputs(temp,m_pFile);
+		sprintf(lineBuffer,"Results:%c%c", 13,10 );
+		fputs(lineBuffer,m_pFile);
 		
 		// results
 		for(int i=0; i < MAX_LINEFIT_POINTS; i++)
@@ -1363,7 +1363,7 @@ char sPath[CPI::LEN_PATH_MAX];
 			{
 				if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 				{
-					sprintf(temp,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Height:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
+					sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Height:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
 								i+1, m_pLineFitModel->points_buff[i].point_id, 
 								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].xdes,
 								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].ydes,
@@ -1382,7 +1382,7 @@ char sPath[CPI::LEN_PATH_MAX];
 				}
 				else
 				{
-						sprintf(temp,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Depth:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
+						sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Depth:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
 								i+1, m_pLineFitModel->points_buff[i].point_id, 
 								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].xdes,
 								m_pDCP06Model->m_nDecimals, m_pLineFitModel->points_buff[i].ydes,
@@ -1399,7 +1399,7 @@ char sPath[CPI::LEN_PATH_MAX];
 
 								13,10);
 				}
-				fputs(temp,m_pFile);
+				fputs(lineBuffer,m_pFile);
 	
 			}
 		}

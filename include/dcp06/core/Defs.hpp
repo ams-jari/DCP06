@@ -12,7 +12,7 @@
 namespace DCP
 {
 	//#define AMS_DEBUG 1
-	#define DCP06_CUSTOMER 1
+	#define CUSTOMER_BUILD 1  // was DCP06_CUSTOMER
 	
 	// Do not use these (Captivate 8)
     //#define TS16 // WITHOUT SCANNING
@@ -329,7 +329,7 @@ namespace DCP
 	#define	CIRCLE_FILE	5
 	#define SHAFT_FILE	6
 	#define ADF_BF_STA 7
-	#define DCP06_JOBS 8
+	#define FILE_TYPE_JOBS 8  // was DCP06_JOBS
 	#define IMPORT_ADF 9
 
 	#define ACTUAL	1
@@ -529,6 +529,20 @@ namespace DCP
 	} S_POINT_BUFF;
 	
 	#define MAX_LINEFIT_POINTS 50
+
+	// String/buffer sizes for formatting and display
+	#define STRING_BUFFER_SMALL      20
+	#define STRING_BUFFER_MEDIUM    100
+	#define STRING_BUFFER_LARGE     512
+	#define STRING_BUFFER_PATH      1024
+
+	// Geometry calculation limits
+	#define MIN_POINTS_FOR_DISTANCE     3
+	#define MIN_POINTS_FOR_LINE         2
+	#define MIN_POINTS_FOR_PLANE        3
+	#define MIN_POINTS_FOR_CIRCLE       3
+	#define BOUNDARY_PLANE_POINTS       3
+	#define DEFAULT_BOUNDARY_SIZE       500.0
 	typedef struct {
 		double height_diff;
 		double line_offset;

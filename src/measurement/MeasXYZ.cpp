@@ -985,7 +985,8 @@ DCP::DCP06Log::~DCP06Log()
 DCP::DCP06AmsLogC::DCP06AmsLogC(DCP06MeasXYZModelC* pModel, DCP06ModelC* pDCP06Model):m_pFile(0), m_pDCP06Model(pDCP06Model)
 {
 	char m_cPath[CPI::LEN_PATH_MAX];
-	char temp[1024];
+	char logFilenameBuffer[STRING_BUFFER_PATH];
+	char logLineBuffer[STRING_BUFFER_PATH];
 	short iNo = 1;
 	int iInstNo = 0;
 	char temp_hz[20];
@@ -1037,8 +1038,8 @@ DCP::DCP06AmsLogC::DCP06AmsLogC(DCP06MeasXYZModelC* pModel, DCP06ModelC* pDCP06M
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	//strcat(m_cPath,"ams.log");
 
-	sprintf(temp,"L_%02d%02d%02d.log\0", day, month, year-2000);
-	strcat(m_cPath,temp);
+	sprintf(logFilenameBuffer,"L_%02d%02d%02d.log\0", day, month, year-2000);
+	strcat(m_cPath,logFilenameBuffer);
 
 	if((m_pFile = fopen(m_cPath, "rb+")) == 0)
 	{
@@ -1067,9 +1068,9 @@ DCP::DCP06AmsLogC::DCP06AmsLogC(DCP06MeasXYZModelC* pModel, DCP06ModelC* pDCP06M
 						fgets(buff,500,m_pFile);
 						if(buff[0] == '1' && buff[1] == '1')
 						{
-							char temp[10];
-							sprintf(temp,"%4.4s",(buff +2));
-							iNo = atoi(temp);
+							char pointNoBuffer[10];
+							sprintf(pointNoBuffer,"%4.4s",(buff +2));
+							iNo = atoi(pointNoBuffer);
 							iNo++;
 							bFound = true;
 							break;
@@ -1090,9 +1091,9 @@ DCP::DCP06AmsLogC::DCP06AmsLogC(DCP06MeasXYZModelC* pModel, DCP06ModelC* pDCP06M
 			{
 				if(buff[0] == '1' && buff[1] == '1')
 				{
-					char temp[10];
-					sprintf(temp,"%4.4s",(buff +2));
-					iNo = atoi(temp);
+					char pointNoBuffer[10];
+					sprintf(pointNoBuffer,"%4.4s",(buff +2));
+					iNo = atoi(pointNoBuffer);
 					iNo++;
 				}
 			}
@@ -1130,7 +1131,7 @@ DCP::DCP06AmsLogC::DCP06AmsLogC(DCP06MeasXYZModelC* pModel, DCP06ModelC* pDCP06M
 	{
 		fseek(m_pFile,0,SEEK_END);
 		//sprintf(temp,"11%04d+%08.8s 12....+%08.8d 13....%08.8s 19....+%02d%02d%02d%02d 21.%c%c%c%09.9s 22.%c%c%c%09.9s 31..0%10.10s 58..16%9.9s 59..16%9.9s 72....+%08.8s 81..0%10.10s 82..0%10.10s 83..0%10.10s %c%c", iNo,
-		sprintf(temp,"11%04d+%08.8s 12....+%08.8d 13....+%08.8s 19....+%02d%02d%02d%02d 21.%c%c%c%09.9s 22.%c%c%c%09.9s 31..0%10.10s 58..16%9.9s 59..16%9.9s 72....+%08.8s 81..0%10.10s 82..0%10.10s 83..0%10.10s %c%c", iNo,
+		sprintf(logLineBuffer,"11%04d+%08.8s 12....+%08.8d 13....+%08.8s 19....+%02d%02d%02d%02d 21.%c%c%c%09.9s 22.%c%c%c%09.9s 31..0%10.10s 58..16%9.9s 59..16%9.9s 72....+%08.8s 81..0%10.10s 82..0%10.10s 83..0%10.10s %c%c", iNo,
 																											pModel->sPointId,	//11
 																								  			iInstNo,			//12	
 																											cInstrumentType,	//13	
@@ -1155,7 +1156,7 @@ DCP::DCP06AmsLogC::DCP06AmsLogC(DCP06MeasXYZModelC* pModel, DCP06ModelC* pDCP06M
 
 			
 																											13,10);
-		fputs(temp, m_pFile);
+		fputs(logLineBuffer, m_pFile);
 		fflush(m_pFile);
 		fclose(m_pFile);
 	}
@@ -1417,8 +1418,8 @@ char* DCP::DCP06AmsLogC::get_xyz_distance(double Dist, char* dest, DCP06ModelC* 
 DCP::DCP06AmsToolLogC::DCP06AmsToolLogC(char* pFileName, char* pointid, DCP06CommonC* pCommon, DCP06ModelC* pDCP06Model):m_pFile(0) 
 {
 	char m_cPath[CPI::LEN_PATH_MAX];
-	char temp[1024];
-	char temp1[1024];
+	char outputBuffer[STRING_BUFFER_PATH];
+	char pathBuffer[STRING_BUFFER_PATH];
 	char *ptr;
 	short iDec;
 	short iActiveTool = 0;
@@ -1436,29 +1437,29 @@ DCP::DCP06AmsToolLogC::DCP06AmsToolLogC(char* pFileName, char* pointid, DCP06Com
 	if(pCommon->check_free_space(30000L) == false)
 		return;
 
-	sprintf(temp1,"%-s", pFileName);
-	ptr = strchr(temp1,'.');
+	sprintf(pathBuffer,"%-s", pFileName);
+	ptr = strchr(pathBuffer,'.');
 		
 	if(ptr != NULL)
 	{
 		*ptr = '\0';
-		sprintf(temp,"%s.tof",temp1);
+		sprintf(outputBuffer,"%s.tof",pathBuffer);
 	}
 	
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(pDCP06Model->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
-	strcat(m_cPath,temp);
+	strcat(m_cPath,outputBuffer);
 	
 	if((m_pFile = fopen(m_cPath, "rb+")) == 0)
 	{
 		m_pFile = fopen(m_cPath,"wb+");
 		if(m_pFile)
 		{
-			sprintf(temp,"%-6.6s %8.8s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s%c%c", "PID", "TOOL ID" ,
+			sprintf(outputBuffer,"%-6.6s %8.8s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s%c%c", "PID", "TOOL ID" ,
 																							"TOOL X", "TOOL Y", "TOOL Z",
 																							"TRANS X", "TRANS Y", "TRANS Z",
 																							"TOT X", "TOT Y", "TOT Z",
 																							13,10);
-			fputs(temp, m_pFile);
+			fputs(outputBuffer, m_pFile);
 			fflush(m_pFile);
 		}
 	}
@@ -1469,7 +1470,7 @@ DCP::DCP06AmsToolLogC::DCP06AmsToolLogC(char* pFileName, char* pointid, DCP06Com
 		iDec = pDCP06Model->m_nDecimals;
 		sprintf(toolname,"%-s",pDCP06Model->tool_table[iActiveTool-1].tool_id);
 		pCommon->strbtrim(toolname);
-		sprintf(temp,"%-6.6s %8.8s %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f%c%c", pointid, toolname,
+		sprintf(outputBuffer,"%-6.6s %8.8s %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f%c%c", pointid, toolname,
 																							   iDec, pDCP06Model->tool_table[iActiveTool-1].x,
 																							   iDec, pDCP06Model->tool_table[iActiveTool-1].y,
 																							   iDec, pDCP06Model->tool_table[iActiveTool-1].z,
@@ -1482,7 +1483,7 @@ DCP::DCP06AmsToolLogC::DCP06AmsToolLogC(char* pFileName, char* pointid, DCP06Com
 																							   13,10);
 
 		
-		fputs(temp, m_pFile);
+		fputs(outputBuffer, m_pFile);
 		fflush(m_pFile);
 		fclose(m_pFile);
 	}

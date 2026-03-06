@@ -39,9 +39,9 @@ short DCP::DCP06CalcPlaneC::calc(S_PLANE_BUFF* plane, short actdes)
 short points_defined,i, ret=true;
 struct ams_vector a,b,c,a_des,b_des,c_des;
 struct plane d,d_des;
-short count,ff,des_ok;
+short count, planeFitValid, designValuesValid;
 double p_mat[MAX_POINTS_IN_PLANE*3];
-double para,parb,parc;
+double directionX, directionY, directionZ;
 double n[3];
 double dist;
 double x_tot=0.0, y_tot=0.0, z_tot=0.0;
@@ -67,7 +67,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 	else if(points_defined == 3)
 	{
 		count = 0;
-		des_ok = true;
+		designValuesValid = true;
 
 		for(i=0; i < MAX_POINTS_IN_PLANE; i++)
 		{
@@ -89,17 +89,17 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 							a_des.y = plane[0].points[i].ydes;
 							a_des.z = plane[0].points[i].zdes;
 						}
-						else
-							des_ok = false;
-					}
+	else
+						designValuesValid = false;
 				}
+			}
 
 				else if(count == 2)
 				{
 					b.x = plane[0].points[i].x;
 					b.y = plane[0].points[i].y;
 					b.z = plane[0].points[i].z;
-					if(actdes == BOTH && des_ok)
+					if(actdes == BOTH && designValuesValid)
 					{
 						if(plane->points[i].dsta == POINT_DESIGN || plane->points[i].dsta == POINT_MEASURED)
 						{
@@ -108,9 +108,9 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 							b_des.z = plane[0].points[i].zdes;
 						}
 						else
-							des_ok = false;
-					}
+							designValuesValid = false;
 				}
+			}
 
 				else if(count == 3)
 				{
@@ -118,7 +118,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 					c.y = plane[0].points[i].y;
 					c.z = plane[0].points[i].z;
 
-					if(actdes == BOTH && des_ok)
+					if(actdes == BOTH && designValuesValid)
 					{
 						if(plane->points[i].dsta == POINT_DESIGN || plane->points[i].dsta == POINT_MEASURED)
 						{
@@ -127,7 +127,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 							c_des.z = plane[0].points[i].zdes;
 						}
 						else
-							des_ok = false;
+							designValuesValid = false;
 					}
 
 					break;
@@ -149,11 +149,11 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 		{
 			plane[0].px = dcp9Plane.point().x(); plane[0].py = dcp9Plane.point().y(); plane[0].pz = dcp9Plane.point().z();
 			plane[0].nx = normal[0]; plane[0].ny = normal[1]; plane[0].nz = normal[2];
-			para = normal[0]; parb = normal[1]; parc = normal[2];
+			directionX = normal[0]; directionY = normal[1]; directionZ = normal[2];
 			plane->calc = 1;
 			plane->sta = PLANE_DEFINED;
 		}
-		if(actdes == BOTH && des_ok)
+		if(actdes == BOTH && designValuesValid)
 		{
 			DCP9::Geometry::Point pd1(a_des.x, a_des.y, a_des.z), pd2(b_des.x, b_des.y, b_des.z), pd3(c_des.x, c_des.y, c_des.z);
 			DCP9::Geometry::Plane dcp9PlaneDes(pd1, pd2, pd3);
@@ -169,7 +169,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 	}
 	else
 	{
-		des_ok = true;
+		designValuesValid = true;
 
 		if(p_mat != NULL)
 		{
@@ -180,7 +180,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 				if(plane[0].points[i].sta == 1 ||plane[0].points[i].sta == 2)
 				{
 					if(plane[0].points[i].dsta ==0)
-						des_ok = false;
+						designValuesValid = false;
 
 					if(count == 0)
 					{
@@ -229,8 +229,8 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			for(int idx=0; idx<points_defined; idx++)
 				pts.push_back(DCP9::Geometry::Point(p_mat[idx*3+0], p_mat[idx*3+1], p_mat[idx*3+2]));
 			DCP9::Core::Geometry::PlaneFitResult planeResult = DCP9::Core::Geometry::bestFitPlane(pts);
-			ff = planeResult.isValid ? 1 : -1;
-			if(ff == -1)
+			planeFitValid = planeResult.isValid ? 1 : -1;
+			if(planeFitValid == -1)
 			{
 				StringC msg;
 				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
@@ -240,9 +240,9 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			else
 			{
 				const std::vector<double>& normal = planeResult.plane.normal();
-				n[0] = para = normal[0];
-				n[1] = parb = normal[1];
-				n[2] = parc = normal[2];
+				n[0] = directionX = normal[0];
+				n[1] = directionY = normal[1];
+				n[2] = directionZ = normal[2];
 				dist = sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
 				if(dist != 0.0)
 				{
@@ -267,9 +267,9 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			ret = false;
 		}
 
-		if(actdes == BOTH && des_ok)
+		if(actdes == BOTH && designValuesValid)
 		{
-		des_ok = true;
+		designValuesValid = true;
 
 		if(p_mat != NULL)
 		{
@@ -325,8 +325,8 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			for(int idx=0; idx<points_defined; idx++)
 				ptsDes.push_back(DCP9::Geometry::Point(p_mat[idx*3+0], p_mat[idx*3+1], p_mat[idx*3+2]));
 			DCP9::Core::Geometry::PlaneFitResult planeResultDes = DCP9::Core::Geometry::bestFitPlane(ptsDes);
-			ff = planeResultDes.isValid ? 1 : -1;
-			if(ff == -1)
+			planeFitValid = planeResultDes.isValid ? 1 : -1;
+			if(planeFitValid == -1)
 			{
 				StringC msg;
 				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
@@ -336,9 +336,9 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			else
 			{
 				const std::vector<double>& normalDes = planeResultDes.plane.normal();
-				n[0] = para = normalDes[0];
-				n[1] = parb = normalDes[1];
-				n[2] = parc = normalDes[2];
+				n[0] = directionX = normalDes[0];
+				n[1] = directionY = normalDes[1];
+				n[2] = directionZ = normalDes[2];
 				dist = sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
 				if(dist != 0.0)
 				{

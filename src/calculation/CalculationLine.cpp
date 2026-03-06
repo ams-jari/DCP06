@@ -34,9 +34,9 @@ short DCP::DCP06CalcLineC::calc(S_LINE_BUFF* line, short actdes)
 short points_defined,i, ret1,lastpoint;
 struct ams_vector a,b,a_des,b_des;
 struct line c, c_des;
-double para,parb,parc;
+double directionX, directionY, directionZ;
 short   count;
-bool	des_ok,ret=true;
+bool	designValuesValid,ret=true;
 double p_mat[MAX_POINTS_IN_LINE*3];
 double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 
@@ -60,7 +60,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 	else if(points_defined == 2)
 	{
 		count = 0;
-		des_ok=true;
+		designValuesValid=true;
 
 		for(i=0;i < MAX_POINTS_IN_LINE; i++)
 		{
@@ -83,7 +83,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 							a_des.z = line[0].points[i].zdes;
 						}
 						else
-							des_ok = false;
+							designValuesValid = false;
 					}
 				}
 				if(count == 2)
@@ -92,17 +92,17 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 					b.y = line[0].points[i].y;
 					b.z = line[0].points[i].z;
 
-					if(actdes == BOTH && des_ok == true)
+					if(actdes == BOTH && designValuesValid == true)
 					{
 						if(line[0].points[i].dsta == 1 || line[0].points[i].dsta == 2)
 						{
 							b_des.x = line[0].points[i].xdes;
 							b_des.y = line[0].points[i].ydes;
 							b_des.z = line[0].points[i].zdes;
-							des_ok=true;
+							designValuesValid=true;
 						}
 						else
-							des_ok = false;
+							designValuesValid = false;
 					}
 					break;
 				}
@@ -115,9 +115,9 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 		line[0].py = c.py;
 		line[0].pz = c.pz;
 
-		para = c.ux;
-		parb = c.uy;
-		parc = c.uz;
+		directionX = c.ux;
+		directionY = c.uy;
+		directionZ = c.uz;
 
 		line[0].ux = c.ux;
 		line[0].uy = c.uy;
@@ -125,7 +125,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 		line[0].calc = 1;
 		line[0].sta = LINE_DEFINED;
 
-		if(actdes == BOTH && des_ok == true)
+		if(actdes == BOTH && designValuesValid == true)
 		{
 
 			equation_of_line(&a_des, &b_des, &c_des);
@@ -143,7 +143,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 	}
 	else
 	{
-		des_ok=true;
+		designValuesValid=true;
 
 		count = 0;
 
@@ -155,11 +155,11 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 				p_mat[count*3 +1] = line[0].points[i].y;
 				p_mat[count*3 +2] = line[0].points[i].z;
 
-				if(actdes == BOTH && des_ok != false)
+				if(actdes == BOTH && designValuesValid != false)
 				{
 					if(line[0].points[i].dsta == 0)
 					{
-						des_ok = false;
+						designValuesValid = false;
 					}
 				}
 
@@ -178,7 +178,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 				break;
 			}
 		}
-		if((ret1=FitLine(p_mat, points_defined, &para, &parb, &parc))== -1)
+		if((ret1=FitLine(p_mat, points_defined, &directionX, &directionY, &directionZ))== -1)
 		{
 			StringC msg;
 			msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
@@ -194,9 +194,9 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 		}
 		else
 		{
-			line[0].ux = para;
-			line[0].uy = parb;
-			line[0].uz = parc;
+			line[0].ux = directionX;
+			line[0].uy = directionY;
+			line[0].uz = directionZ;
 
 			line[0].px = x_tot;
 			line[0].py = y_tot;
@@ -207,7 +207,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 		}
 
 		// CALCULATION IN DESIGN VALUES
-		if(ret == true && actdes == BOTH && des_ok == true)
+		if(ret == true && actdes == BOTH && designValuesValid == true)
 		{
 
 				count = 0;
@@ -235,7 +235,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 					}
 				}
 
-				if(FitLine(p_mat, points_defined, &para, &parb, &parc)== -1)
+				if(FitLine(p_mat, points_defined, &directionX, &directionY, &directionZ)== -1)
 				{
 					StringC msg;
 					msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
@@ -244,9 +244,9 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 				}
 				else
 				{
-					line[0].des_ux = para;
-					line[0].des_uy = parb;
-					line[0].des_uz = parc;
+					line[0].des_ux = directionX;
+					line[0].des_uy = directionY;
+					line[0].des_uz = directionZ;
 
 					line[0].des_px = x_tot;
 					line[0].des_py = y_tot;

@@ -707,7 +707,7 @@ void DCP::DCP06DefinePlaneUserDefControllerC::OnF5Pressed()
 	
 	pModel->m_iDef = ACTUAL;
 	//pModel->sSelectedFile = m_pDlg->GetDataModel()->sFile;
-	pModel->m_iMinPoint = 3;
+	pModel->m_iMinPoint = MIN_POINTS_FOR_PLANE;
 	pModel->m_iMaxPoint = pModel->m_iPointsCount;
 	
 	// set info text....

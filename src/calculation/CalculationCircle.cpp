@@ -485,7 +485,7 @@ void DCP::DCP06CalculationCircleControllerC::OnF3Pressed()
 	
 		pModel->m_iDef = ACTUAL;
 		pModel->sSelectedFile = m_pDataModel->sSelected3DFile;
-		pModel->m_iMinPoint = 3;
+		pModel->m_iMinPoint = MIN_POINTS_FOR_CIRCLE;
 		pModel->m_iMaxPoint = MAX_POINTS_IN_CIRCLE;
 	
 		// set info text....
