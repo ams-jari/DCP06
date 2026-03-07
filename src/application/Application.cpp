@@ -35,6 +35,7 @@
 #include "dcp06/core/Defs.hpp"
 #include <dcp06/application/Application.hpp>
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 
 #include <dcp06/core/MsgBox.hpp>
 
@@ -131,6 +132,7 @@ REGISTER_COMMAND_FACTORY_APPLICATION(Application, AT_DCP06,
 // ================================================================================================
 DCP::Application::Application():m_pModel(0),poConfigController(0)
 {
+	DCP06_TRACE_ENTER;
 	m_pCode[0] = '\0';
 
     // Application ID for text database tokens (DCP06.men)
@@ -191,6 +193,7 @@ DCP::Application::Application():m_pModel(0),poConfigController(0)
 	 }
  
 	m_pModel->SerialNumber = serialNumber;
+	DCP06_TRACE_EXIT;
 
 	
 	/*
@@ -211,6 +214,7 @@ DCP::Application::Application():m_pModel(0),poConfigController(0)
 // ================================================================================================
 DCP::Application::~Application()
 {
+	DCP06_TRACE_ENTER;
 	//bool ret = poConfigController->StoreConfigData();		
 	int x;
 	x=1;
@@ -227,6 +231,7 @@ DCP::Application::~Application()
 		m_pModel = 0;
 	}
 */
+	DCP06_TRACE_EXIT;
 }	
 
 // ================================================================================================
@@ -234,6 +239,7 @@ DCP::Application::~Application()
 // ================================================================================================
 void DCP::Application::Run(/* bool bShowStartDialog NOT CAPTIVATE*/ )
 {
+	DCP06_TRACE_ENTER;
     (void)SetActiveController( 1, true );
 
 	// Removed namespace for eVC compability (WinCE Compiler) 
@@ -247,6 +253,7 @@ void DCP::Application::Run(/* bool bShowStartDialog NOT CAPTIVATE*/ )
 		StringC sTemp = L"Reading current date/time failed!";
 		msgBox.ShowMessageOk(sTemp);
 		Close(EC_KEY_CONT);
+		DCP06_TRACE_EXIT;
 		return;
 	}
 	
@@ -264,11 +271,13 @@ void DCP::Application::Run(/* bool bShowStartDialog NOT CAPTIVATE*/ )
     if (pDialog)
     {
        // pDialog->SetTxtApplicationId( GetTxtApplicationId() );
-    }  
+    }
+	DCP06_TRACE_EXIT;
 }
 
 bool DCP::Application::ConfirmClose(bool bEsc)
 {
+	DCP06_TRACE_ENTER;
 		MsgBox msgbox;
 		StringC msg;
 		msg.LoadTxt(AT_DCP06,M_DCP_QUIT_PROGRAM_TOK);
@@ -302,8 +311,10 @@ bool DCP::Application::ConfirmClose(bool bEsc)
 			poConfigController->StoreConfigData();
 
 
+			DCP06_TRACE_EXIT;
 			return true;
-		} 
+		}
+		DCP06_TRACE_EXIT;
 		return false;
 }
 
@@ -311,8 +322,11 @@ bool DCP::Application::ConfirmClose(bool bEsc)
 // Description:  OnActiveControllerClosed
 // ================================================================================================
 void DCP::Application::OnActiveControllerClosed( int lCtrlID, int lExitCode )
-{	
+{
+	DCP06_TRACE_ENTER;
+	DCP06_TRACE_POINT("ctrl=%d exit=%d", lCtrlID, lExitCode);
 	Close(lExitCode,true);
+	DCP06_TRACE_EXIT;
 }
 
 // ================================================================================================
@@ -320,7 +334,8 @@ void DCP::Application::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 // ================================================================================================
 void DCP::Application::OnActiveDialogClosed(int lDlgID, int lExitCode)
 {
-
+	DCP06_TRACE_ENTER;
+	DCP06_TRACE_POINT("dlg=%d exit=%d", lDlgID, lExitCode);
 	if(lDlgID == INFO_DLG)
 	{
 		char keyCodeBuffer[21];
@@ -345,6 +360,7 @@ void DCP::Application::OnActiveDialogClosed(int lDlgID, int lExitCode)
 				msgBox.ShowMessageOk(sTemp);
 				DestroyDialog(lDlgID);
 				Close(EC_KEY_CONT);
+				DCP06_TRACE_EXIT;
 				return;
 			}
 		}
@@ -393,6 +409,7 @@ void DCP::Application::OnActiveDialogClosed(int lDlgID, int lExitCode)
 			msgBox.ShowMessageOk(sTemp);
 			DestroyDialog(lDlgID);
 			Close(EC_KEY_CONT);
+			DCP06_TRACE_EXIT;
 			return;
 		}
 
@@ -471,6 +488,7 @@ void DCP::Application::OnActiveDialogClosed(int lDlgID, int lExitCode)
 		
 		DestroyDialog(lDlgID);
 	}
+	DCP06_TRACE_EXIT;
 	return;
 }
 
@@ -1112,8 +1130,8 @@ void DCP::Controller::OnActiveDialogClosed( int lDlgID, int lExitCode )
 			
 			DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >( Controller::GetModel() );
 
-			// check if dom/line and horizontal plane is defined	
-			if(pDcpModel->dom_line_buff[0].sta == 0)
+			// check if 321 line and horizontal plane is defined	
+			if(pDcpModel->align321_line_buff[0].sta == 0)
 			{
 				StringC sMsg;
 				sMsg.LoadTxt(AT_DCP06,M_DCP_DEFINE_LINE_LSET_TOK);
@@ -1121,7 +1139,7 @@ void DCP::Controller::OnActiveDialogClosed( int lDlgID, int lExitCode )
 				ret = 0;
 			}
 			
-			if(ret==1 && !pDcpModel->dom_hz_plane)
+			if(ret==1 && !pDcpModel->align321_hz_plane)
 			{
 				StringC sMsg;
 				sMsg.LoadTxt(AT_DCP06,M_DCP_HZ_PLANE_NOT_DEFINED_TOK);

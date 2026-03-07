@@ -51,7 +51,7 @@ The 32-bit SDK contains MSI installers that **must be run** for a complete SDK s
 | MSI File | Location | Purpose |
 |----------|----------|---------|
 | **Stellar_SWDC_EC7_SDK.msi** | `SWXIII_PluginDevKit\Platform-SDK\` | **Required.** Platform SDK for WinEC7 (Stellar) – target device build, cross-compilation tools, ARM libs. Run this first. |
-| **TextToolSetup_v5.1.1.msi** | `SWXIII_PluginDevKit\Tools\TextTool\` | Optional. Text database tool for localization (`.men` files). |
+| **TextToolSetup_v5.1.1.msi** | `SWXIII_PluginDevKit\Tools\TextTool\` | **Required** for DCP06. Compiles `.men` → `.LEN` for simulator localization. Build fails without it. |
 
 **Full path for the required installer:**
 ```
@@ -168,6 +168,7 @@ If you keep DCP06 elsewhere, edit `Project\MSVS\DCP06_Release_Win32.xml` and rep
 **Post-build (automatic):**
 
 - **SWXResBuilder** – Converts SVG → PNG in `SWXRes_Source/` → `SWXRes/`.
+- **build_lang.bat** – Generates `Text\Languages\en\DCP06.men` from `DCP06_TOK.HPP`, then runs TextTool to produce `DCP06.LEN`, and copies it to the simulator. **Requires** Python and TextTool (TextToolSetup_v5.1.1.msi). Build fails if TextTool is not installed – DCP06 needs its own strings, not DCP05.
 - **MkEdit** – Installs app into simulator and generates loadable `.dxx`:
   - Reg key: `HKLM\Software\Wow6432Node\Leica Geosystems\System 1500\TS\Configuration;DeviceRootPathRelease`
   - Output: `DCP06_dll.pob`, `DCP06_sys.pob`, `DCP06_Res.pob` → packaged for simulator.
@@ -267,6 +268,8 @@ The full VS 2008 DVD/ISO should include a `wcu` folder at the root with subfolde
 | MkEdit fails on LangFolder | XML expects `Text\Languages`; create it if missing (see HelloWorld sample). |
 | Link errors (missing .lib) | `Binary\Win32\libs` present? Stellar_SWDC_EC7_SDK.msi run? |
 | App not in simulator menu | Post-build ran? DCP06.sys correct? Simulator restarted? |
+| SWXResBuilder: "Svg file not in Config.xml" | Every SVG in `SWXRes_Source/` must be listed in `Config.xml` with Filename. Remove unused SVGs or add them. |
+| MkEdit: "can't build applications without valid dongle!" | The second MkEdit step (generate .dxx) requires a Leica dongle. **Simulator install still works** – the first MkEdit step copies DLL/sys to the simulator. You can run DCP06 in the simulator without the dongle. The .dxx file is for device deployment. |
 
 ## 14. Documentation in SDK
 

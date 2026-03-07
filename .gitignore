@@ -25,6 +25,9 @@ Win32/
 Thumbs.db
 .DS_Store
 
+# Language build output (TextTool produces .LEN from .men)
+Text/Languages/**/*.LEN
+
 # VS2008 / build artifacts
 *.ncb
 eigen-3.2.10.zip

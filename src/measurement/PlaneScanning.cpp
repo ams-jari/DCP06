@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/measurement/PlaneScanning.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/file/SelectFile.hpp>
@@ -93,7 +94,7 @@ DCP::PlaneScanDialog::~PlaneScanDialog()
 
 void DCP::PlaneScanDialog::OnInitDialog(void)
 {
-	
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 
 	//InsertEmptyLine(); CAPTIVATE
@@ -144,7 +145,7 @@ void DCP::PlaneScanDialog::OnInitDialog(void)
 	m_pResolutionWidthObserver.Attach(m_pResolutionWidth->GetSubject());
 	m_pFileObserver.Attach(m_pFile->GetSubject());
 	m_pPointIdObserver.Attach(m_pPointId->GetSubject());
-
+	DCP06_TRACE_EXIT;
 }
 
 void DCP::PlaneScanDialog::OnDialogActivated()
@@ -155,12 +156,12 @@ void DCP::PlaneScanDialog::OnDialogActivated()
 	memcpy(m_pDataModel->inv_matrix,GetModel()->ocsp_inv_matrix, sizeof(double) * 16);
 	m_pDataModel->calculated = (GetModel()->ocsp_defined  && GetModel()->active_coodinate_system == OCSP) ? true :false;
 
-	memcpy(&m_pDataModel->point_DCS[0], &GetModel()->POM_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_OCS[0], &GetModel()->POM_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_RES[0], &GetModel()->POM_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_DCS[0], &GetModel()->BestFit_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_OCS[0], &GetModel()->BestFit_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_RES[0], &GetModel()->BestFit_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	
-	m_pDataModel->INTO_CAPTURE = GetModel()->pom_into_capture;
-	m_pDataModel->INTO_TEMPLATE = GetModel()->pom_into_template;
+	m_pDataModel->INTO_CAPTURE = GetModel()->bestFit_into_capture;
+	m_pDataModel->INTO_TEMPLATE = GetModel()->bestFit_into_template;
 	m_pDataModel->ocs_defined = GetModel()->ocsp_defined;
 	*/
 	RefreshControls();
@@ -301,7 +302,7 @@ DCP::PlaneScanController::PlaneScanController(Model* pModel)
 	m_pCommon = new Common(m_pModel);
 	// create model
 	m_pDataModel = new PlaneScanModel(m_pModel);
-	//m_pDataModel->pom_chst = 0;
+	//m_pDataModel->bestFit_chst = 0;
 
     // Create a dialog
     m_pDlg = new DCP::PlaneScanDialog(m_pDataModel, this);  //lint !e1524 new in constructor for class 

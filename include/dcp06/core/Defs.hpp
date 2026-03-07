@@ -42,7 +42,7 @@ namespace DCP
 	#define ORIENTATION_MENU	101
 	#define USER_DLG			103
 	#define UNIT_DLG			104
-	#define DOM_DLG				105
+	#define A321_DLG				105   // 321 Alignment (was DOM)
 	#define SPECIAL_MENU		106
 	#define _3DFILE_DLG			107
 	#define FILE_MENU			108
@@ -56,7 +56,7 @@ namespace DCP
 	#define CIRCLE_DLG			116
 	#define CALC_DIST_DLG			117
 	#define CALC_ANGLE_DLG			117
-	#define  POM_POINT_DLG			118
+	#define  BESTFIT_POINT_DLG			118   // Best Fit point selection (was POM)
 	#define _3DMEAS_DLG				119
 	#define SELECT_FILE_DLG				120
 	#define SELECT_MULTIPOINTS_DLG				121
@@ -66,8 +66,8 @@ namespace DCP
 	#define MEASV_DLG				125
 	#define ROTATE_PLANE_DLG				126
 	#define ROTATE_LINE_DLG				127
-	#define DOM_USERDEF_DLG				128
-	#define POM_DLG	129
+	#define A321_USERDEF_DLG				128   // 321 UserDef (was DOM)
+	#define BESTFIT_DLG	129   // Best Fit Alignment (was POM)
 	#define SELECT_ONE_POINT_DLG				130
 	#define ADD_TOOL_DLG				131
 	#define _3DFILEVIEW_DLG				132

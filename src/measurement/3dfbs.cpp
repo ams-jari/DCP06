@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/init/Initialization.hpp>
 #include <dcp06/measurement/3dfbs.hpp>
 #include <dcp06/core/SpecialMenu.hpp>
@@ -115,7 +116,8 @@ DCP::Fbs3DDialog::~Fbs3DDialog()
 // ================================================================================================
 void DCP::Fbs3DDialog::OnInitDialog(void)
 {
-GUI::BaseDialogC::OnInitDialog();
+	DCP06_TRACE_ENTER;
+	GUI::BaseDialogC::OnInitDialog();
 
 	GUI::ComboLineCtrlC* emptyTextCtrl1 = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	GUI::ComboLineCtrlC* emptyTextCtrl2 = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -402,6 +404,7 @@ GUI::BaseDialogC::OnInitDialog();
 	// set help
 	// VIVA REMOVED
 	//SetHelpTok(H_DCP_3DROLLER_TOK,0);
+	DCP06_TRACE_EXIT;
 }
 
 // ================================================================================================
@@ -419,10 +422,12 @@ GUI::BaseDialogC::OnInitDialog();
 // ================================================================================================
 void DCP::Fbs3DDialog::OnDialogActivated()
 {
+	DCP06_TRACE_ENTER;
 	m_pDataModel->pFileFunc->setFile(GetModel()->ADFFileName);
 	m_pCommon = new Common(GetModel());
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 	RefreshControls();
+	DCP06_TRACE_EXIT;
 }
 // ================================================================================================
 // Description: UpdateData

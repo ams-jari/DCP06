@@ -25,6 +25,7 @@
 // $NoKeywords: $
 
 #include "stdafx.h"
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/core/Model.hpp>
 #include <dcp06/init/Initialization.hpp>
 #include <dcp06/measurement/ScanMeasXYZ.hpp>
@@ -76,7 +77,7 @@
 DCP::DoScanMeasXYZController::DoScanMeasXYZController()
     :TBL::MeasurementC(),poSurveyModel(0),poErrorHandler(0)
 {
-	Log("DoScanMeasXYZController::DoScanMeasXYZController");
+	DCP06_LOG_DEBUG("DoScanMeasXYZController::DoScanMeasXYZController");
 
 	poSurveyModel = new DCPSurveyModelC(/*m_poConfigModel*/);
 	//TPI::MeasDataC oMesData(poSurveyModel->GetMeas());
@@ -98,7 +99,7 @@ DCP::DoScanMeasXYZController::DoScanMeasXYZController()
 
 DCP::DoScanMeasXYZController::~DoScanMeasXYZController()
 {
-	Log("DoScanMeasXYZController::~DoScanMeasXYZController");
+	DCP06_LOG_DEBUG("DoScanMeasXYZController::~DoScanMeasXYZController");
 		if(poErrorHandler)
 	{
 		delete poErrorHandler;
@@ -155,7 +156,7 @@ TBL::MeasErrorHandlerC::HandlingKindT DCP::ScanErrorHandler::HandleMeasError(Mea
 // Description: React on close of controller
 void DCP::DoScanMeasXYZController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
-	Log("DoScanMeasXYZController::OnActiveControllerClosed",lCtrlID,lExitCode);
+	DCP06_LOG_DEBUG("DoScanMeasXYZController::OnActiveControllerClosed ctrl=%d exit=%d",lCtrlID,lExitCode);
 	// Call base class
     /*GUI::*/ControllerC::OnControllerClosed(lExitCode);
 	
@@ -166,7 +167,7 @@ void DCP::DoScanMeasXYZController::OnControllerActivated(void)
 {
 	ControllerC::OnControllerActivated();
 
-	Log("DoScanMeasXYZController::OnControllerActivated / ActivateMeasurement");
+	DCP06_LOG_DEBUG("DoScanMeasXYZController::OnControllerActivated / ActivateMeasurement");
 
 	poErrorHandler->Attach();
 	
@@ -174,12 +175,12 @@ void DCP::DoScanMeasXYZController::OnControllerActivated(void)
 	
 	//OnF1Pressed();
 
-	Log("DoScanMeasXYZController /ExecuteAll");
+	DCP06_LOG_DEBUG("DoScanMeasXYZController /ExecuteAll");
 	TBL::MeasurementC::ExecuteAll();
 }
 void DCP::DoScanMeasXYZController::OnControllerClosed(int lExitCode)
 {
-	Log("DoScanMeasXYZController::OnControllerClosed",lExitCode);
+	DCP06_LOG_DEBUG("DoScanMeasXYZController::OnControllerClosed exit=%d",lExitCode);
 	//MsgBox msgBox;
 	//msgBox.ShowMessageOk(L"DoMeasXYZController::OnControllerClosed");
 
@@ -207,7 +208,7 @@ void DCP::DoScanMeasXYZController::OnPeriodicInclineValidation(int ulParam1, int
 	/*
 	MsgBox MsgBox;
 	MsgBox.ShowMessageOk(L"OnPeriodicInclineValidation");
-	Log("DoMeasXYZController::OnPeriodicInclineValidation",ulParam1,ulParam2);
+	DCP06_LOG_DEBUG("DoMeasXYZController::OnPeriodicInclineValidation p1=%u p2=%u",ulParam1,ulParam2);
 	*/
 	
 }
@@ -234,7 +235,7 @@ void DCP::DoScanMeasXYZController::OnOperationDistEvent(int unNotifyCode,  int u
 
 	if(unNotifyCode == TBL::DistanceMeasProcedureC::NC_ON_START)
 	{
-		Log("DoScanMeasXYZController::OnOperationDistEvent NC_ON_START");
+		DCP06_LOG_DEBUG("DoScanMeasXYZController::OnOperationDistEvent NC_ON_START");
 
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"NC ON START");
@@ -263,19 +264,19 @@ void DCP::DoScanMeasXYZController::OnOperationDistEvent(int unNotifyCode,  int u
 
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"NC_SUCCESS");
-		Log("DoScanMeasXYZController::OnOperationDistEvent NC_SUCCESS");
+		DCP06_LOG_DEBUG("DoScanMeasXYZController::OnOperationDistEvent NC_SUCCESS");
 		Close(EC_KEY_CONT); 
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_STOP)
 	{
-		Log("DoScanMeasXYZController::OnOperationDistEvent NC ON STOP");
+		DCP06_LOG_DEBUG("DoScanMeasXYZController::OnOperationDistEvent NC ON STOP");
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"NC ON STOP");
 		Close(EC_KEY_ESC);
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_FAIL)
 	{
-		Log("DoScanMeasXYZController::OnOperationDistEvent NC_ON_FAIL");
+		DCP06_LOG_DEBUG("DoScanMeasXYZController::OnOperationDistEvent NC_ON_FAIL");
 		
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"Error measurement!");
@@ -322,7 +323,7 @@ short DCP::DoScanMeasXYZController::get_xyz_values(double* x, double* y, double*
 DCP::ScanMeasXYZController::ScanMeasXYZController(DCP::Model* pModel)
     :TBL::MeasurementC(),poSurveyModel(0), poModel(pModel),m_iCount(0),m_iCount2(0),m_iUseTool(0),poHourGlass(0)
 {
-	Log("MeasXYZController::MeasXYZController");
+	DCP06_LOG_DEBUG("MeasXYZController::MeasXYZController");
 
 	poHourGlass = new GUI::HourGlassC();
 	poHourGlass->Pause();
@@ -383,7 +384,7 @@ DCP::ScanMeasXYZController::~ScanMeasXYZController()
 	//MsgBox MsgBox;
 	//MsgBox.ShowMessageOk(L"Close MeasXYZController!");
 
-	Log("ScanMeasXYZController::~ScanMeasXYZController");
+	DCP06_LOG_DEBUG("ScanMeasXYZController::~ScanMeasXYZController");
 
 	if(poHourGlass)
 	{
@@ -421,7 +422,7 @@ bool DCP::ScanMeasXYZController::SetModel( GUI::ModelC* pModel )
 // Description: React on close of controller
 void DCP::ScanMeasXYZController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
-	Log("ScanMeasXYZController::OnActiveControllerClosed", lCtrlID,lExitCode);
+	DCP06_LOG_DEBUG("ScanMeasXYZController::OnActiveControllerClosed ctrl=%d exit=%d", lCtrlID,lExitCode);
 	//DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*)GetModel();
 
 	// Handle averaging and 2 face measurement
@@ -659,7 +660,7 @@ void DCP::ScanMeasXYZController::OnActiveControllerClosed( int lCtrlID, int lExi
 
 void DCP::ScanMeasXYZController::Run()
 {
-	Log("MeasXYZController::Run()");
+	DCP06_LOG_DEBUG("MeasXYZController::Run()");
 
 	//DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*)GetModel();
 
@@ -668,7 +669,7 @@ void DCP::ScanMeasXYZController::Run()
 		poHourGlass->Continue();
 		if(GetController(DO_MEAS_XYZ_FACE1_CONTROLLER) == nullptr)
 		{
-			Log("(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DoMeasXYZController );");		
+			DCP06_LOG_DEBUG("(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DoMeasXYZController );");		
 			(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DoScanMeasXYZController );
 		}
 		(void)GetController( DO_MEAS_XYZ_FACE1_CONTROLLER )->SetModel(GetModel());
@@ -680,7 +681,7 @@ void DCP::ScanMeasXYZController::OnControllerActivated(void)
 }
 void DCP::ScanMeasXYZController::OnControllerClosed(int lExitCode)
 {
-	Log( "MeasXYZController::OnControllerClosed" );
+	DCP06_LOG_DEBUG( "MeasXYZController::OnControllerClosed" );
 	if(m_pCommon)
 	{
 		delete m_pCommon;

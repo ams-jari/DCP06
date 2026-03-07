@@ -350,7 +350,7 @@ DCP::BestFitSelectPointsController::BestFitSelectPointsController(DCP::Model* pM
 
 	// Create a dialog
     m_pDlg = new DCP::BestFitSelectPointsDialog(pModel);  //lint !e1524 new in constructor for class 
-    (void)AddDialog( POM_POINT_DLG, m_pDlg, true );
+    (void)AddDialog( BESTFIT_POINT_DLG, m_pDlg, true );
 
     // Set the function key
 	
@@ -691,7 +691,7 @@ void DCP::BestFitSelectPointsController::OnActiveControllerClosed( int lCtrlID, 
 
 		AdfFileFunc adf(m_pModel);
 		adf.always_single = 1;
-		short def = (m_pDlg->GetDataModel()->iDisplay == POM_DLG) ? DESIGN : ACTUAL;
+		short def = (m_pDlg->GetDataModel()->iDisplay == BESTFIT_DLG) ? DESIGN : ACTUAL;
 
 		char jobIdBuf[64];
 		jobIdBuf[0] = '\0';

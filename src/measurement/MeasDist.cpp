@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/init/Initialization.hpp>
 
 #include <dcp06/measurement/MeasDist.hpp>
@@ -175,7 +176,7 @@ void DCP::DoMeasDistController::OnPeriodicInclineValidation(int ulParam1, int ul
 	/*
 	MsgBox MsgBox;
 	MsgBox.ShowMessageOk(L"OnPeriodicInclineValidation");
-	Log("DoMeasXYZController::OnPeriodicInclineValidation",ulParam1,ulParam2);
+	DCP06_LOG_DEBUG("DoMeasXYZController::OnPeriodicInclineValidation p1=%u p2=%u",ulParam1,ulParam2);
 	*/
 }
 

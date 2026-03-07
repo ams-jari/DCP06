@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/init/Initialization.hpp>
 #include <dcp06/measurement/MeasXYZ.hpp>
 #include <dcp06/core/Defs.hpp>
@@ -76,7 +77,7 @@
 DCP::DoMeasXYZController::DoMeasXYZController()
     :TBL::MeasurementC(),poSurveyModel(0),poErrorHandler(0)
 {
-	Log("DoMeasXYZController::DoMeasXYZController");
+	DCP06_LOG_DEBUG("DoMeasXYZController::DoMeasXYZController");
 
 	poSurveyModel = new DCPSurveyModelC(/*m_poConfigModel*/);
 	//TPI::MeasDataC oMesData(poSurveyModel->GetMeas());
@@ -98,7 +99,7 @@ DCP::DoMeasXYZController::DoMeasXYZController()
 
 DCP::DoMeasXYZController::~DoMeasXYZController()
 {
-	Log("DoMeasXYZController::~DoMeasXYZController");
+	DCP06_LOG_DEBUG("DoMeasXYZController::~DoMeasXYZController");
 		if(poErrorHandler)
 	{
 		delete poErrorHandler;
@@ -149,7 +150,7 @@ TBL::MeasErrorHandlerC::HandlingKindT DCP::MeasErrorHandler::HandleMeasError(Mea
 // Description: React on close of controller
 void DCP::DoMeasXYZController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
-	Log("DoMeasXYZController::OnActiveControllerClosed",lCtrlID,lExitCode);
+	DCP06_LOG_DEBUG("DoMeasXYZController::OnActiveControllerClosed ctrl=%d exit=%d",lCtrlID,lExitCode);
 	// Call base class
     /*GUI::*/ControllerC::OnControllerClosed(lExitCode);
 	
@@ -160,7 +161,7 @@ void DCP::DoMeasXYZController::OnControllerActivated(void)
 {
 	ControllerC::OnControllerActivated();
 
-	Log("DoMeasXYZController::OnControllerActivated / ActivateMeasurement");
+	DCP06_LOG_DEBUG("DoMeasXYZController::OnControllerActivated / ActivateMeasurement");
 
 	poErrorHandler->Attach();
 	
@@ -168,12 +169,12 @@ void DCP::DoMeasXYZController::OnControllerActivated(void)
 	
 	//OnF1Pressed();
 
-	Log("DoMeasXYZController /ExecuteAll");
+	DCP06_LOG_DEBUG("DoMeasXYZController /ExecuteAll");
 	TBL::MeasurementC::ExecuteAll();
 }
 void DCP::DoMeasXYZController::OnControllerClosed(int lExitCode)
 {
-	Log("DoMeasXYZController::OnControllerClosed",lExitCode);
+	DCP06_LOG_DEBUG("DoMeasXYZController::OnControllerClosed exit=%d",lExitCode);
 	//MsgBox msgBox;
 	//msgBox.ShowMessageOk(L"DoMeasXYZController::OnControllerClosed");
 
@@ -201,7 +202,7 @@ void DCP::DoMeasXYZController::OnPeriodicInclineValidation(int ulParam1, int ulP
 	/*
 	MsgBox MsgBox;
 	MsgBox.ShowMessageOk(L"OnPeriodicInclineValidation");
-	Log("DoMeasXYZController::OnPeriodicInclineValidation",ulParam1,ulParam2);
+	DCP06_LOG_DEBUG("DoMeasXYZController::OnPeriodicInclineValidation p1=%u p2=%u",ulParam1,ulParam2);
 	*/
 	
 }
@@ -257,7 +258,7 @@ void DCP::DoMeasXYZController::OnOperationDistEvent(int unNotifyCode,  int ulOpe
 
 	if(unNotifyCode == TBL::DistanceMeasProcedureC::NC_ON_START)
 	{
-		Log("DoMeasXYZController::OnOperationDistEvent NC_ON_START");
+		DCP06_LOG_DEBUG("DoMeasXYZController::OnOperationDistEvent NC_ON_START");
 
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"NC ON START");
@@ -286,19 +287,19 @@ void DCP::DoMeasXYZController::OnOperationDistEvent(int unNotifyCode,  int ulOpe
 
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"NC_SUCCESS");
-		Log("DoMeasXYZController::OnOperationDistEvent NC_SUCCESS");
+		DCP06_LOG_DEBUG("DoMeasXYZController::OnOperationDistEvent NC_SUCCESS");
 		Close(EC_KEY_CONT); 
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_STOP)
 	{
-		Log("DoMeasXYZController::OnOperationDistEvent NC ON STOP");
+		DCP06_LOG_DEBUG("DoMeasXYZController::OnOperationDistEvent NC ON STOP");
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"NC ON STOP");
 		Close(EC_KEY_ESC);
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_FAIL)
 	{
-		Log("DoMeasXYZController::OnOperationDistEvent NC_ON_FAIL");
+		DCP06_LOG_DEBUG("DoMeasXYZController::OnOperationDistEvent NC_ON_FAIL");
 		
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"Error measurement!");
@@ -345,7 +346,7 @@ short DCP::DoMeasXYZController::get_xyz_values(double* x, double* y, double* z)
 DCP::MeasXYZController::MeasXYZController(DCP::Model* pModel)
     :TBL::MeasurementC(),poSurveyModel(0), poModel(pModel),m_iCount(0),m_iCount2(0),m_iUseTool(0),poHourGlass(0)
 {
-	Log("MeasXYZController::MeasXYZController");
+	DCP06_LOG_DEBUG("MeasXYZController::MeasXYZController");
 
 	poHourGlass = new GUI::HourGlassC();
 	poHourGlass->Pause();
@@ -406,7 +407,7 @@ DCP::MeasXYZController::~MeasXYZController()
 	//MsgBox MsgBox;
 	//MsgBox.ShowMessageOk(L"Close MeasXYZController!");
 
-	Log("MeasXYZController::~MeasXYZController");
+	DCP06_LOG_DEBUG("MeasXYZController::~MeasXYZController");
 
 	if(poHourGlass)
 	{
@@ -444,7 +445,7 @@ bool DCP::MeasXYZController::SetModel( GUI::ModelC* pModel )
 // Description: React on close of controller
 void DCP::MeasXYZController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
-	Log("MeasXYZController::OnActiveControllerClosed", lCtrlID,lExitCode);
+	DCP06_LOG_DEBUG("MeasXYZController::OnActiveControllerClosed ctrl=%d exit=%d", lCtrlID,lExitCode);
 	DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*)GetModel();
 
 	if(lCtrlID == TOOL_CONTROLLER)
@@ -730,7 +731,7 @@ void DCP::MeasXYZController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 
 void DCP::MeasXYZController::Run()
 {
-	Log("MeasXYZController::Run()");
+	DCP06_LOG_DEBUG("MeasXYZController::Run()");
 
 	DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*)GetModel();
 
@@ -785,7 +786,7 @@ void DCP::MeasXYZController::Run()
 		poHourGlass->Continue();
 		if(GetController(DO_MEAS_XYZ_FACE1_CONTROLLER) == nullptr)
 		{
-			Log("(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DoMeasXYZController );");		
+			DCP06_LOG_DEBUG("(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DoMeasXYZController );");		
 			(void)AddController( DO_MEAS_XYZ_FACE1_CONTROLLER, new DCP::DoMeasXYZController );
 		}
 		(void)GetController( DO_MEAS_XYZ_FACE1_CONTROLLER )->SetModel(GetModel());
@@ -798,7 +799,7 @@ void DCP::MeasXYZController::OnControllerActivated(void)
 }
 void DCP::MeasXYZController::OnControllerClosed(int lExitCode)
 {
-	Log( "MeasXYZController::OnControllerClosed" );
+	DCP06_LOG_DEBUG( "MeasXYZController::OnControllerClosed" );
 	if(m_pCommon)
 	{
 		delete m_pCommon;

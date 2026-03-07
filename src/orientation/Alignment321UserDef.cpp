@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/orientation/Alignment321UserDef.hpp>
 #include <dcp06/orientation/DefinePlaneUserDef.hpp>
 #include <dcp06/orientation/DefineLineUserDef.hpp>
@@ -106,7 +107,7 @@ DCP::Alignment321UserDefDialog::~Alignment321UserDefDialog()
 //-------------------------------------------------------------------------------------------------
 void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 {
-	
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 	short iColonPos = 9 * 22;
 	//SetColonPosLong( GUI::StandardDialogC::CP_20 );
@@ -196,22 +197,22 @@ void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 
 void DCP::Alignment321UserDefDialog::load_data_from_dcp05model()
 {
-	m_pDataModel->domModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
-	memcpy(m_pDataModel->domModel->matrix,GetModel()->ocsu_matrix, sizeof(double) * 16);
-	memcpy(m_pDataModel->domModel->inv_matrix,GetModel()->ocsu_inv_matrix, sizeof(double) * 16);
+	m_pDataModel->align321Model->old_active_coodinate_system = GetModel()->active_coodinate_system;
+	memcpy(m_pDataModel->align321Model->matrix,GetModel()->ocsu_matrix, sizeof(double) * 16);
+	memcpy(m_pDataModel->align321Model->inv_matrix,GetModel()->ocsu_inv_matrix, sizeof(double) * 16);
 
-	m_pDataModel->domModel->dom_active_plane	= GetModel()->userdef_active_plane;
-	m_pDataModel->domModel->dom_active_line	= GetModel()->userdef_active_line; 
-	m_pDataModel->domModel->dom_hz_plane		=GetModel()->userdef_hz_plane;
-	memcpy(&m_pDataModel->domModel->dom_plane_buff[0], &GetModel()->userdef_plane_buff[0], sizeof(S_PLANE_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_hz_plane_buff[0], &GetModel()->userdef_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_line_buff[0], &GetModel()->userdef_line_buff[0], sizeof(S_LINE_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_ovalues_buff, &GetModel()->userdef_ovalues_buff, sizeof(S_POINT_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_ovalues_tool_buff, &GetModel()->userdef_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_ref_point_buff, &GetModel()->userdef_ref_point_buff, sizeof(S_POINT_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_rot_plane_buff, &GetModel()->userdef_rot_plane_buff, sizeof(S_POINT_BUFF));
-	memcpy(&m_pDataModel->domModel->dom_rot_line_buff, &GetModel()->userdef_rot_line_buff, sizeof(S_POINT_BUFF));
-	m_pDataModel->domModel->ocsd_defined = GetModel()->ocsu_defined;
+	m_pDataModel->align321Model->align321_active_plane	= GetModel()->userdef_active_plane;
+	m_pDataModel->align321Model->align321_active_line	= GetModel()->userdef_active_line; 
+	m_pDataModel->align321Model->align321_hz_plane		=GetModel()->userdef_hz_plane;
+	memcpy(&m_pDataModel->align321Model->align321_plane_buff[0], &GetModel()->userdef_plane_buff[0], sizeof(S_PLANE_BUFF));
+	memcpy(&m_pDataModel->align321Model->align321_hz_plane_buff[0], &GetModel()->userdef_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+	memcpy(&m_pDataModel->align321Model->align321_line_buff[0], &GetModel()->userdef_line_buff[0], sizeof(S_LINE_BUFF));
+	memcpy(&m_pDataModel->align321Model->align321_ovalues_buff, &GetModel()->userdef_ovalues_buff, sizeof(S_POINT_BUFF));
+	memcpy(&m_pDataModel->align321Model->align321_ovalues_tool_buff, &GetModel()->userdef_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+	memcpy(&m_pDataModel->align321Model->align321_ref_point_buff, &GetModel()->userdef_ref_point_buff, sizeof(S_POINT_BUFF));
+	memcpy(&m_pDataModel->align321Model->align321_rot_plane_buff, &GetModel()->userdef_rot_plane_buff, sizeof(S_POINT_BUFF));
+	memcpy(&m_pDataModel->align321Model->align321_rot_line_buff, &GetModel()->userdef_rot_line_buff, sizeof(S_POINT_BUFF));
+	m_pDataModel->align321Model->ocsd_defined = GetModel()->ocsu_defined;
 	
 	memcpy(&m_pDataModel->userdef_measured_points, &GetModel()->userdef_measured_points, sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
 	memcpy(&m_pDataModel->userdef_plane_points_no, &GetModel()->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
@@ -260,12 +261,12 @@ void DCP::Alignment321UserDefDialog::RefreshControls()
 		}
 
 		// line
-		//if(m_pDataModel->domModel->dom_line_buff[0].calc) sStatus = L"+";
+		//if(m_pDataModel->align321Model->align321_line_buff[0].calc) sStatus = L"+";
 		if(linePoints >= 2) sStatus = L"+";
 
-		if(m_pDataModel->domModel->dom_active_line	== X_LINE)
+		if(m_pDataModel->align321Model->align321_active_line	== X_LINE)
 			sTemp = sXLineText;
-		else if(m_pDataModel->domModel->dom_active_line	== Y_LINE)
+		else if(m_pDataModel->align321Model->align321_active_line	== Y_LINE)
 			sTemp = sYLineText;
 		else
 			sTemp = sZLineText;
@@ -276,27 +277,27 @@ void DCP::Alignment321UserDefDialog::RefreshControls()
 
 		// plane
 		sStatus = L"-";
-		if(m_pDataModel->domModel->dom_hz_plane)
+		if(m_pDataModel->align321Model->align321_hz_plane)
 		{
-			//if(m_pDataModel->domModel->dom_hz_plane_buff[0].calc)
+			//if(m_pDataModel->align321Model->align321_hz_plane_buff[0].calc)
 				sStatus = L"+";	
 		}
 		else 
 		{
-			//if(m_pDataModel->domModel->dom_plane_buff[0].calc) 
+			//if(m_pDataModel->align321Model->align321_plane_buff[0].calc) 
 			if(planePoints >= 3)
 				sStatus = L"+";
 		}
 
-		if(m_pDataModel->domModel->dom_active_plane	== XY_PLANE)
+		if(m_pDataModel->align321Model->align321_active_plane	== XY_PLANE)
 			sTemp = sXYPlaneText;
-		else if(m_pDataModel->domModel->dom_active_plane	== ZX_PLANE)
+		else if(m_pDataModel->align321Model->align321_active_plane	== ZX_PLANE)
 			sTemp = sZXPlaneText;
 		else
 			sTemp = sYZPlaneText;
 		
 		// check hz_plane
-		if(m_pDataModel->domModel->dom_hz_plane)
+		if(m_pDataModel->align321Model->align321_hz_plane)
 		{		
 			sTemp += L" (";
 			sTemp += sHZText;
@@ -308,13 +309,13 @@ void DCP::Alignment321UserDefDialog::RefreshControls()
 
 		// offset values
 		sStatus = L"-";
-		if(m_pDataModel->domModel->dom_ovalues_buff.sta) sStatus = L"+";
+		if(m_pDataModel->align321Model->align321_ovalues_buff.sta) sStatus = L"+";
 		m_pPointOffs->GetStringInputCtrl()->SetString(sStatus);
 
 		// reference point
 		sStatus = L"-";
 		
-		//if(m_pDataModel->domModel->dom_ref_point_buff.sta) sStatus = L"+";
+		//if(m_pDataModel->align321Model->align321_ref_point_buff.sta) sStatus = L"+";
 		if(m_pDataModel->userdef_point_no > 0)
 		{
 			if(m_pDataModel->userdef_measured_points[m_pDataModel->userdef_point_no-1].sta > 0)
@@ -324,49 +325,49 @@ void DCP::Alignment321UserDefDialog::RefreshControls()
 
 		// rot. plane
 		sStatus = L"-";
-		if(m_pDataModel->domModel->dom_active_plane == XY_PLANE)
+		if(m_pDataModel->align321Model->align321_active_plane == XY_PLANE)
 		{
-			if(m_pDataModel->domModel->dom_rot_plane_buff.x != 0.0 || m_pDataModel->domModel->dom_rot_plane_buff.z != 0.0)
+			if(m_pDataModel->align321Model->align321_rot_plane_buff.x != 0.0 || m_pDataModel->align321Model->align321_rot_plane_buff.z != 0.0)
 				sStatus = L"+";
 			
 		}
-		else if(m_pDataModel->domModel->dom_active_plane == ZX_PLANE)
+		else if(m_pDataModel->align321Model->align321_active_plane == ZX_PLANE)
 		{
-			if(m_pDataModel->domModel->dom_rot_plane_buff.x != 0.0 || m_pDataModel->domModel->dom_rot_plane_buff.z != 0.0)
+			if(m_pDataModel->align321Model->align321_rot_plane_buff.x != 0.0 || m_pDataModel->align321Model->align321_rot_plane_buff.z != 0.0)
 				sStatus = L"+";
 		}
 
-		else if(m_pDataModel->domModel->dom_active_plane == YZ_PLANE)
+		else if(m_pDataModel->align321Model->align321_active_plane == YZ_PLANE)
 		{
-			if(m_pDataModel->domModel->dom_rot_plane_buff.y != 0.0 || m_pDataModel->domModel->dom_rot_plane_buff.z != 0.0)
+			if(m_pDataModel->align321Model->align321_rot_plane_buff.y != 0.0 || m_pDataModel->align321Model->align321_rot_plane_buff.z != 0.0)
 				sStatus = L"+";
 		}
 		m_pRotPlane->GetStringInputCtrl()->SetString(sStatus);
 
 		// rot.line
 		sStatus = L"-";
-		if(m_pDataModel->domModel->dom_active_plane == XY_PLANE)
+		if(m_pDataModel->align321Model->align321_active_plane == XY_PLANE)
 		{
-			if(m_pDataModel->domModel->dom_rot_line_buff.z != 0.0)
+			if(m_pDataModel->align321Model->align321_rot_line_buff.z != 0.0)
 				sStatus = L"+";
 			
 		}
-		else if(m_pDataModel->domModel->dom_active_plane == ZX_PLANE)
+		else if(m_pDataModel->align321Model->align321_active_plane == ZX_PLANE)
 		{
-			if(m_pDataModel->domModel->dom_rot_line_buff.y != 0.0)
+			if(m_pDataModel->align321Model->align321_rot_line_buff.y != 0.0)
 				sStatus = L"+";
 		}
 
-		else //(GetModel()->dom_active_plane == YZ_PLANE)
+		else //(GetModel()->align321_active_plane == YZ_PLANE)
 		{
-			if(m_pDataModel->domModel->dom_rot_line_buff.x != 0.0 )
+			if(m_pDataModel->align321Model->align321_rot_line_buff.x != 0.0 )
 				sStatus = L"+";
 		}
 		m_pRotLine->GetStringInputCtrl()->SetString(sStatus);
 		
 		// calculate status
 		sStatus = L"-";
-		if(GetModel()->ocsu_defined == true  && m_pDataModel->domModel->old_active_coodinate_system == OCSU)
+		if(GetModel()->ocsu_defined == true  && m_pDataModel->align321Model->old_active_coodinate_system == OCSU)
 			sStatus = L"+";
 
 		m_pCalc->GetStringInputCtrl()->SetString(sStatus);
@@ -375,20 +376,20 @@ void DCP::Alignment321UserDefDialog::RefreshControls()
 //-------------------------------------------------------------------------------------------------
 void DCP::Alignment321UserDefDialog::UpdateData()
 {
-		memcpy(GetModel()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
-		memcpy(GetModel()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
-		GetModel()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
-		GetModel()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
-		GetModel()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-		memcpy(&GetModel()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&GetModel()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
-		memcpy(&GetModel()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
-		memcpy(&GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-		memcpy(&GetModel()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
-		memcpy(&GetModel()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-		memcpy(&GetModel()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
-		GetModel()->ocsu_defined = m_pDataModel->domModel->ocsd_defined;
+		memcpy(GetModel()->ocsu_matrix, m_pDataModel->align321Model->matrix,sizeof(double) * 16);
+		memcpy(GetModel()->ocsu_inv_matrix, m_pDataModel->align321Model->inv_matrix, sizeof(double) * 16);
+		GetModel()->userdef_active_plane	= m_pDataModel->align321Model->align321_active_plane;
+		GetModel()->userdef_active_line	= m_pDataModel->align321Model->align321_active_line; 
+		GetModel()->userdef_hz_plane		= m_pDataModel->align321Model->align321_hz_plane;
+		memcpy(&GetModel()->userdef_plane_buff[0], &m_pDataModel->align321Model->align321_plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->align321Model->align321_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&GetModel()->userdef_line_buff[0], &m_pDataModel->align321Model->align321_line_buff[0], sizeof(S_LINE_BUFF));
+		memcpy(&GetModel()->userdef_ovalues_buff, &m_pDataModel->align321Model->align321_ovalues_buff, sizeof(S_POINT_BUFF));
+		memcpy(&GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->align321Model->align321_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+		memcpy(&GetModel()->userdef_ref_point_buff, &m_pDataModel->align321Model->align321_ref_point_buff, sizeof(S_POINT_BUFF));
+		memcpy(&GetModel()->userdef_rot_plane_buff, &m_pDataModel->align321Model->align321_rot_plane_buff, sizeof(S_POINT_BUFF));
+		memcpy(&GetModel()->userdef_rot_line_buff, &m_pDataModel->align321Model->align321_rot_line_buff, sizeof(S_POINT_BUFF));
+		GetModel()->ocsu_defined = m_pDataModel->align321Model->ocsd_defined;
 		
 
 		memcpy(&GetModel()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
@@ -396,7 +397,7 @@ void DCP::Alignment321UserDefDialog::UpdateData()
 		memcpy(&GetModel()->userdef_line_points_no,&m_pDataModel->userdef_line_points_no,  sizeof(short) * MAX_USERDEF_POINTS);
 		GetModel()->userdef_point_no = m_pDataModel->userdef_point_no; 
 		
-		if(m_pDataModel->domModel->ocsd_defined == true)
+		if(m_pDataModel->align321Model->ocsd_defined == true)
 			GetModel()->active_coodinate_system = OCSU;
 		//else
 		//	GetModel()->active_coodinate_system = DCS;
@@ -438,7 +439,7 @@ DCP::Model* DCP::Alignment321UserDefDialog::GetModel() const
 }
 
 //-------------------------------------------------------------------------------------------------
-void DCP::Alignment321UserDefDialog::delete_dom()
+void DCP::Alignment321UserDefDialog::delete_align321()
 {
 		StringC strDomText;
 		strDomText.LoadTxt(AT_DCP05,L_DCP_USERDEF_TEXT_TOK);
@@ -449,19 +450,19 @@ void DCP::Alignment321UserDefDialog::delete_dom()
 		MsgBox msgbox;
 		if(msgbox.ShowMessageYesNo(strMsg))
 		{
-			m_pDataModel->domModel->old_active_coodinate_system = DCS;
-			m_pDataModel->domModel->ocsd_defined = false;
-			m_pDataModel->domModel->dom_active_plane = XY_PLANE;
-			m_pDataModel->domModel->dom_active_line = X_LINE;
-			m_pDataModel->domModel->dom_hz_plane = false;
+			m_pDataModel->align321Model->old_active_coodinate_system = DCS;
+			m_pDataModel->align321Model->ocsd_defined = false;
+			m_pDataModel->align321Model->align321_active_plane = XY_PLANE;
+			m_pDataModel->align321Model->align321_active_line = X_LINE;
+			m_pDataModel->align321Model->align321_hz_plane = false;
 			
-			memset(&m_pDataModel->domModel->dom_plane_buff[0],0,sizeof(S_PLANE_BUFF));
-			memset(&m_pDataModel->domModel->dom_line_buff[0],0,sizeof(S_LINE_BUFF));	
-			memset(&m_pDataModel->domModel->dom_ref_point_buff,0,sizeof(S_POINT_BUFF));	
-			memset(&m_pDataModel->domModel->dom_ovalues_buff,0,sizeof(S_POINT_BUFF));	
-			memset(&m_pDataModel->domModel->dom_ovalues_tool_buff,0,sizeof(S_POINT_BUFF));	
-			memset(&m_pDataModel->domModel->dom_rot_line_buff,0,sizeof(S_POINT_BUFF));	
-			memset(&m_pDataModel->domModel->dom_rot_plane_buff,0,sizeof(S_POINT_BUFF));	
+			memset(&m_pDataModel->align321Model->align321_plane_buff[0],0,sizeof(S_PLANE_BUFF));
+			memset(&m_pDataModel->align321Model->align321_line_buff[0],0,sizeof(S_LINE_BUFF));	
+			memset(&m_pDataModel->align321Model->align321_ref_point_buff,0,sizeof(S_POINT_BUFF));	
+			memset(&m_pDataModel->align321Model->align321_ovalues_buff,0,sizeof(S_POINT_BUFF));	
+			memset(&m_pDataModel->align321Model->align321_ovalues_tool_buff,0,sizeof(S_POINT_BUFF));	
+			memset(&m_pDataModel->align321Model->align321_rot_line_buff,0,sizeof(S_POINT_BUFF));	
+			memset(&m_pDataModel->align321Model->align321_rot_plane_buff,0,sizeof(S_POINT_BUFF));	
 
 			memset(&m_pDataModel->userdef_measured_points[0], 0, sizeof(S_POINT_BUFF) *MAX_USERDEF_POINTS);
 
@@ -492,7 +493,7 @@ DCP::Alignment321UserDefController::Alignment321UserDefController(Model* pModel)
 
     // Create a dialog
     m_pDlg = new DCP::Alignment321UserDefDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
-    (void)AddDialog( DOM_USERDEF_DLG, m_pDlg, true );
+    (void)AddDialog( A321_USERDEF_DLG, m_pDlg, true );
 	
     // Set the function key
 
@@ -578,12 +579,12 @@ void DCP::Alignment321UserDefController::OnF1Pressed()
 
 	DCP::DefinePlaneUserDefModel* pModel = new DCP::DefinePlaneUserDefModel();
 
-	pModel->planeModel->active_plane	= m_pDataModel->domModel->dom_active_plane;
-	pModel->planeModel->active_line		= m_pDataModel->domModel->dom_active_line;
-	pModel->planeModel->hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-	memcpy(&pModel->planeModel->plane_buff[0],&m_pDataModel->domModel->dom_plane_buff[0],  sizeof(S_PLANE_BUFF));
-	memcpy(&pModel->planeModel->hz_plane_buff[0],&m_pDataModel->domModel->dom_hz_plane_buff[0],  sizeof(S_PLANE_BUFF));
-	pModel->planeModel->display = DOM_USERDEF_DLG;
+	pModel->planeModel->active_plane	= m_pDataModel->align321Model->align321_active_plane;
+	pModel->planeModel->active_line		= m_pDataModel->align321Model->align321_active_line;
+	pModel->planeModel->hz_plane		= m_pDataModel->align321Model->align321_hz_plane;
+	memcpy(&pModel->planeModel->plane_buff[0],&m_pDataModel->align321Model->align321_plane_buff[0],  sizeof(S_PLANE_BUFF));
+	memcpy(&pModel->planeModel->hz_plane_buff[0],&m_pDataModel->align321Model->align321_hz_plane_buff[0],  sizeof(S_PLANE_BUFF));
+	pModel->planeModel->display = A321_USERDEF_DLG;
 
 	memcpy(&pModel->userdef_plane_points_no[0],&m_pDataModel->userdef_plane_points_no[0], sizeof(short) * MAX_USERDEF_POINTS);
 	memcpy(&pModel->userdef_measured_points[0],&m_pDataModel->userdef_measured_points[0], sizeof(S_POINT_BUFF) *MAX_USERDEF_POINTS);
@@ -612,11 +613,11 @@ void DCP::Alignment321UserDefController::OnF2Pressed()
 	m_pDlg->GetModel()->active_coodinate_system = DCS;
 
 	DCP::DefineLineUserDefModel* pModel = new DCP::DefineLineUserDefModel();
-	pModel->lineModel->active_plane	= m_pDataModel->domModel->dom_active_plane;
-	pModel->lineModel->active_line		= m_pDataModel->domModel->dom_active_line;
-	//pModel->hz_plane		= m_pDataModel->dom_hz_plane;
-	memcpy(&pModel->lineModel->line_buff[0],&m_pDataModel->domModel->dom_line_buff[0],  sizeof(S_LINE_BUFF));
-	pModel->lineModel->display = DOM_USERDEF_DLG;
+	pModel->lineModel->active_plane	= m_pDataModel->align321Model->align321_active_plane;
+	pModel->lineModel->active_line		= m_pDataModel->align321Model->align321_active_line;
+	//pModel->hz_plane		= m_pDataModel->align321_hz_plane;
+	memcpy(&pModel->lineModel->line_buff[0],&m_pDataModel->align321Model->align321_line_buff[0],  sizeof(S_LINE_BUFF));
+	pModel->lineModel->display = A321_USERDEF_DLG;
 	
 	memcpy(&pModel->userdef_line_points_no[0],&m_pDataModel->userdef_line_points_no[0], sizeof(short) * MAX_USERDEF_POINTS);
 	memcpy(&pModel->userdef_measured_points[0],&m_pDataModel->userdef_measured_points[0], sizeof(S_POINT_BUFF) *MAX_USERDEF_POINTS);
@@ -644,10 +645,10 @@ void DCP::Alignment321UserDefController::OnF3Pressed()
 	m_pDlg->GetModel()->active_coodinate_system = DCS;
 
 	DCP::OffsetVModel* pModel = new DCP::OffsetVModel();
-	memcpy(&pModel->ovalues_buff,&m_pDataModel->domModel->dom_ovalues_buff,sizeof(S_POINT_BUFF));
-	memcpy(&pModel->ref_point_buff,&m_pDataModel->domModel->dom_ref_point_buff,sizeof(S_POINT_BUFF));
-	memcpy(&pModel->ovalues_tool_buff,&m_pDataModel->domModel->dom_ovalues_tool_buff,sizeof(S_POINT_BUFF));
-	pModel->display = DOM_USERDEF_DLG;
+	memcpy(&pModel->ovalues_buff,&m_pDataModel->align321Model->align321_ovalues_buff,sizeof(S_POINT_BUFF));
+	memcpy(&pModel->ref_point_buff,&m_pDataModel->align321Model->align321_ref_point_buff,sizeof(S_POINT_BUFF));
+	memcpy(&pModel->ovalues_tool_buff,&m_pDataModel->align321Model->align321_ovalues_tool_buff,sizeof(S_POINT_BUFF));
+	pModel->display = A321_USERDEF_DLG;
 
 	if(GetController(OFFSV_CONTROLLER) == nullptr)
 	{
@@ -726,7 +727,7 @@ void DCP::Alignment321UserDefController::OnF5Pressed()
 	// calc line
 	if(GetController(CALC_LINE_CONTROLLER) == nullptr)
 	{
-		(void)AddController( CALC_LINE_CONTROLLER, new DCP::CalcLineController(&m_pDataModel->domModel->dom_line_buff[0],ACTUAL, 0) );
+		(void)AddController( CALC_LINE_CONTROLLER, new DCP::CalcLineController(&m_pDataModel->align321Model->align321_line_buff[0],ACTUAL, 0) );
 	}
 
 	(void)GetController( CALC_LINE_CONTROLLER )->SetModel(m_pDlg->GetModel());
@@ -734,26 +735,26 @@ void DCP::Alignment321UserDefController::OnF5Pressed()
 
 	/* siirr� t�m� oikeaan paikkaan
 
-	CalcAlignment321 calc_dom(m_pDataModel->domModel);
+	CalcAlignment321 calc_dom(m_pDataModel->align321Model);
 	if(calc_dom.calc())
 	{	
 		m_pDlg->GetModel()->active_coodinate_system = OCSU;
-		m_pDataModel->domModel->ocsd_defined = true;
+		m_pDataModel->align321Model->ocsd_defined = true;
 		m_pDlg->GetModel()->ocsu_defined = true;
 		// kopioi arvot DCP05Model:iin
-		memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
-		memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
-		m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
-		m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
-		m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-		memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
-		memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
+		memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->align321Model->matrix,sizeof(double) * 16);
+		memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->align321Model->inv_matrix, sizeof(double) * 16);
+		m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->align321Model->align321_active_plane;
+		m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->align321Model->align321_active_line; 
+		m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->align321Model->align321_hz_plane;
+		memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->align321Model->align321_plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->align321Model->align321_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->align321Model->align321_line_buff[0], sizeof(S_LINE_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->align321Model->align321_ovalues_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->align321Model->align321_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->align321Model->align321_ref_point_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->align321Model->align321_rot_plane_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->align321Model->align321_rot_line_buff, sizeof(S_POINT_BUFF));
 		Close(EC_KEY_CONT);
 	}
 	*/
@@ -780,7 +781,7 @@ void DCP::Alignment321UserDefController::OnF6Pressed()
 //-------------------------------------------------------------------------------------------------
 void DCP::Alignment321UserDefController::OnSHF2Pressed()
 {	
-	m_pDlg->delete_dom();
+	m_pDlg->delete_align321();
 }
 //-------------------------------------------------------------------------------------------------
 void DCP::Alignment321UserDefController::OnSHF3Pressed()
@@ -792,9 +793,9 @@ void DCP::Alignment321UserDefController::OnSHF3Pressed()
     }
 	DCP::RotatePlaneModel* pModel = new DCP::RotatePlaneModel();
 	
-	memcpy(&pModel->point_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-	pModel->plane_type = m_pDataModel->domModel->dom_active_plane;
-	pModel->display = DOM_USERDEF_DLG;
+	memcpy(&pModel->point_buff, &m_pDataModel->align321Model->align321_rot_plane_buff, sizeof(S_POINT_BUFF));
+	pModel->plane_type = m_pDataModel->align321Model->align321_active_plane;
+	pModel->display = A321_USERDEF_DLG;
 	StringC sTitle;
 	sTitle.LoadTxt(AT_DCP05,T_DCP_USERDEF_ROTATE_PLANE_TOK);
 	pModel->sTitle = sTitle;
@@ -821,9 +822,9 @@ void DCP::Alignment321UserDefController::OnSHF4Pressed()
 
 	DCP::RotateLineModel* pModel = new DCP::RotateLineModel();
 	
-	memcpy(&pModel->point_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
-	pModel->plane_type = m_pDataModel->domModel->dom_active_plane;
-	pModel->display = DOM_USERDEF_DLG;
+	memcpy(&pModel->point_buff, &m_pDataModel->align321Model->align321_rot_line_buff, sizeof(S_POINT_BUFF));
+	pModel->plane_type = m_pDataModel->align321Model->align321_active_plane;
+	pModel->display = A321_USERDEF_DLG;
 	StringC sTitle;
 	sTitle.LoadTxt(AT_DCP05,T_DCP_USERDEF_ROTATE_LINE_TOK);
 	pModel->sTitle = sTitle;
@@ -983,7 +984,7 @@ void DCP::Alignment321UserDefController::OnActiveDialogClosed( int lDlgID, int l
 		if(lExitCode == 100 || lExitCode == 200)
 		{
 			//if(GetController(A321_USERDEF_CONTROLLER) == nullptr)
-				SetActiveDialog(DOM_USERDEF_DLG, true);
+				SetActiveDialog(A321_USERDEF_DLG, true);
 
 				if(lExitCode == 100)
 				{
@@ -1040,7 +1041,7 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 			memcpy(&m_pDataModel->userdef_measured_points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
 			
 			m_pDataModel->build_select_point_list();
-			m_pDataModel->domModel->old_active_coodinate_system = DCS;
+			m_pDataModel->align321Model->old_active_coodinate_system = DCS;
 			m_pDlg->GetModel()->ocsu_defined = false;
 		}
 		else if(lExitCode == EC_KEY_ESC)
@@ -1059,7 +1060,7 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 		{
 			m_pDataModel->userdef_point_no = iSelectedPointId;
 		}
-		m_pDataModel->domModel->old_active_coodinate_system = DCS;
+		m_pDataModel->align321Model->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsu_defined = false;
 	}
 
@@ -1069,20 +1070,20 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 		DCP::DefinePlaneUserDefModel* pModel = (DCP::DefinePlaneUserDefModel*) GetController( DEFINE_PLANE_USERDEF_CONTROLLER )->GetModel();		
 
 		// copy values into dommodel
-		m_pDataModel->domModel->dom_active_plane	= pModel->planeModel->active_plane;
-		m_pDataModel->domModel->dom_active_line	= pModel->planeModel->active_line; 
-		m_pDataModel->domModel->dom_hz_plane		= pModel->planeModel->hz_plane;
-		memcpy(&m_pDataModel->domModel->dom_plane_buff[0], &pModel->planeModel->plane_buff[0], sizeof(S_PLANE_BUFF));
-		memcpy(&m_pDataModel->domModel->dom_hz_plane_buff[0], &pModel->planeModel->hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+		m_pDataModel->align321Model->align321_active_plane	= pModel->planeModel->active_plane;
+		m_pDataModel->align321Model->align321_active_line	= pModel->planeModel->active_line; 
+		m_pDataModel->align321Model->align321_hz_plane		= pModel->planeModel->hz_plane;
+		memcpy(&m_pDataModel->align321Model->align321_plane_buff[0], &pModel->planeModel->plane_buff[0], sizeof(S_PLANE_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_hz_plane_buff[0], &pModel->planeModel->hz_plane_buff[0], sizeof(S_PLANE_BUFF));
 
 		memcpy(&m_pDataModel->userdef_plane_points_no[0], &pModel->userdef_plane_points_no[0], sizeof(short)* MAX_USERDEF_POINTS);
 
-		if(m_pDataModel->domModel->dom_active_plane == XY_PLANE || m_pDataModel->domModel->dom_active_plane == ZX_PLANE)
-			m_pDataModel->domModel->dom_active_line = X_LINE;
+		if(m_pDataModel->align321Model->align321_active_plane == XY_PLANE || m_pDataModel->align321Model->align321_active_plane == ZX_PLANE)
+			m_pDataModel->align321Model->align321_active_line = X_LINE;
 		else
-			m_pDataModel->domModel->dom_active_line = Y_LINE;
+			m_pDataModel->align321Model->align321_active_line = Y_LINE;
 
-		m_pDataModel->domModel->old_active_coodinate_system = DCS;
+		m_pDataModel->align321Model->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsu_defined = false;
 
 	}
@@ -1090,11 +1091,11 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 	{
 		DCP::DefineLineUserDefModel* pModel = (DCP::DefineLineUserDefModel*) GetController( DEFINE_LINE_USERDEF_CONTROLLER )->GetModel();		
 		// copy values into dommodel
-		m_pDataModel->domModel->dom_active_line	= pModel->lineModel->active_line; 
-		memcpy(&m_pDataModel->domModel->dom_line_buff[0], &pModel->lineModel->line_buff[0], sizeof(S_LINE_BUFF));
+		m_pDataModel->align321Model->align321_active_line	= pModel->lineModel->active_line; 
+		memcpy(&m_pDataModel->align321Model->align321_line_buff[0], &pModel->lineModel->line_buff[0], sizeof(S_LINE_BUFF));
 		memcpy(&m_pDataModel->userdef_line_points_no[0], &pModel->userdef_line_points_no[0], sizeof(short)* MAX_USERDEF_POINTS);
 
-		m_pDataModel->domModel->old_active_coodinate_system = DCS;
+		m_pDataModel->align321Model->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsu_defined = false;
 		
 	}
@@ -1103,11 +1104,11 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 	{
 		DCP::OffsetVModel* pModel = (DCP::OffsetVModel*) GetController( OFFSV_CONTROLLER )->GetModel();		
 		// copy values into dommodel
-		memcpy(&m_pDataModel->domModel->dom_ovalues_buff, &pModel->ovalues_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDataModel->domModel->dom_ovalues_tool_buff, &pModel->ovalues_tool_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDataModel->domModel->dom_ref_point_buff, &pModel->ref_point_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_ovalues_buff, &pModel->ovalues_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_ovalues_tool_buff, &pModel->ovalues_tool_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_ref_point_buff, &pModel->ref_point_buff, sizeof(S_POINT_BUFF));
 
-		m_pDataModel->domModel->old_active_coodinate_system = DCS;
+		m_pDataModel->align321Model->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsu_defined = false;
 
 	}
@@ -1116,11 +1117,11 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 	{
 		DCP::OffsetVModel* pModel = (DCP::OffsetVModel*) GetController( MEASV_CONTROLLER )->GetModel();		
 		// copy values into dommodel
-		memcpy(&m_pDataModel->domModel->dom_ovalues_buff, &pModel->ovalues_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDataModel->domModel->dom_ovalues_tool_buff,&pModel->ovalues_tool_buff, sizeof(S_POINT_BUFF));
-		memcpy(&m_pDataModel->domModel->dom_ref_point_buff, &pModel->ref_point_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_ovalues_buff, &pModel->ovalues_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_ovalues_tool_buff,&pModel->ovalues_tool_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_ref_point_buff, &pModel->ref_point_buff, sizeof(S_POINT_BUFF));
 
-		m_pDataModel->domModel->old_active_coodinate_system = DCS;
+		m_pDataModel->align321Model->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsu_defined = false;
 
 	}
@@ -1130,9 +1131,9 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 		DCP::RotatePlaneModel* pModel = (DCP::RotatePlaneModel*) GetController( ROTATE_PLANE_CONTROLLER )->GetModel();		
 		// copy values into dommodel
 				
-		memcpy(&m_pDataModel->domModel->dom_rot_plane_buff, &pModel->point_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_rot_plane_buff, &pModel->point_buff, sizeof(S_POINT_BUFF));
 		
-		m_pDataModel->domModel->old_active_coodinate_system = DCS;
+		m_pDataModel->align321Model->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsu_defined = false;
 	}
 
@@ -1141,25 +1142,25 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 		DCP::RotatePlaneModel* pModel = (DCP::RotatePlaneModel*) GetController( ROTATE_LINE_CONTROLLER )->GetModel();		
 		// copy values into dommodel
 				
-		memcpy(&m_pDataModel->domModel->dom_rot_line_buff, &pModel->point_buff, sizeof(S_POINT_BUFF));
+		memcpy(&m_pDataModel->align321Model->align321_rot_line_buff, &pModel->point_buff, sizeof(S_POINT_BUFF));
 
-		m_pDataModel->domModel->old_active_coodinate_system = DCS;
+		m_pDataModel->align321Model->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsu_defined = false;
 	}
 	
 	if(lCtrlID == CALC_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		//m_pDataModel->domModel->line_buff[0].sta = m_pDlg->GetDataModel()->line_buff[0].points[0].sta;
+		//m_pDataModel->align321Model->line_buff[0].sta = m_pDlg->GetDataModel()->line_buff[0].points[0].sta;
 
-		if(!m_pDataModel->domModel->dom_hz_plane)
+		if(!m_pDataModel->align321Model->align321_hz_plane)
 		{
 			// LASKETAAN Plane
-			//if(m_pDlg->GetDataModel()->display == DOM_USERDEF_DLG)
+			//if(m_pDlg->GetDataModel()->display == A321_USERDEF_DLG)
 			//	m_pDlg->GetDataModel()->hz_plane = false;
 			
 			if(GetController(CALC_PLANE_CONTROLLER) == nullptr)
 			{
-				(void)AddController( CALC_PLANE_CONTROLLER, new DCP::CalcPlaneontrollerC(&m_pDataModel->domModel->dom_plane_buff[0],ACTUAL, 0) );
+				(void)AddController( CALC_PLANE_CONTROLLER, new DCP::CalcPlaneontrollerC(&m_pDataModel->align321Model->align321_plane_buff[0],ACTUAL, 0) );
 			}
 
 			(void)GetController( CALC_PLANE_CONTROLLER )->SetModel(m_pDlg->GetModel());
@@ -1168,26 +1169,26 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 		else
 		{
 			
-			CalcAlignment321 calc_dom(m_pDataModel->domModel);
+			CalcAlignment321 calc_dom(m_pDataModel->align321Model);
 			if(calc_dom.calc())
 			{	
 				m_pDlg->GetModel()->active_coodinate_system = OCSU;
-				m_pDataModel->domModel->ocsd_defined = true;
+				m_pDataModel->align321Model->ocsd_defined = true;
 				m_pDlg->GetModel()->ocsu_defined = true;
 				// kopioi arvot DCP05Model:iin
-				memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
-				memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
-				m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
-				m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
-				m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-				memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
-				memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-				memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
-				memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
-				memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-				memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
-				memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-				memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
+				memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->align321Model->matrix,sizeof(double) * 16);
+				memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->align321Model->inv_matrix, sizeof(double) * 16);
+				m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->align321Model->align321_active_plane;
+				m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->align321Model->align321_active_line; 
+				m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->align321Model->align321_hz_plane;
+				memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->align321Model->align321_plane_buff[0], sizeof(S_PLANE_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->align321Model->align321_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->align321Model->align321_line_buff[0], sizeof(S_LINE_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->align321Model->align321_ovalues_buff, sizeof(S_POINT_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->align321Model->align321_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->align321Model->align321_ref_point_buff, sizeof(S_POINT_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->align321Model->align321_rot_plane_buff, sizeof(S_POINT_BUFF));
+				memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->align321Model->align321_rot_line_buff, sizeof(S_POINT_BUFF));
 
 				memcpy(&m_pDlg->GetModel()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
 				memcpy(&m_pDlg->GetModel()->userdef_plane_points_no,&m_pDataModel->userdef_plane_points_no, sizeof(short) * MAX_USERDEF_POINTS);
@@ -1201,26 +1202,26 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 	if(lCtrlID == CALC_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 			// calc_dom
-		CalcAlignment321 calc_dom(m_pDataModel->domModel);
+		CalcAlignment321 calc_dom(m_pDataModel->align321Model);
 		if(calc_dom.calc())
 		{	
 			m_pDlg->GetModel()->active_coodinate_system = OCSU;
-			m_pDataModel->domModel->ocsd_defined = true;
+			m_pDataModel->align321Model->ocsd_defined = true;
 			m_pDlg->GetModel()->ocsu_defined = true;
 			// kopioi arvot DCP05Model:iin
-			memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->domModel->matrix,sizeof(double) * 16);
-			memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->domModel->inv_matrix, sizeof(double) * 16);
-			m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->domModel->dom_active_plane;
-			m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->domModel->dom_active_line; 
-			m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->domModel->dom_hz_plane;
-			memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->domModel->dom_plane_buff[0], sizeof(S_PLANE_BUFF));
-			memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->domModel->dom_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-			memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->domModel->dom_line_buff[0], sizeof(S_LINE_BUFF));
-			memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->domModel->dom_ovalues_buff, sizeof(S_POINT_BUFF));
-			memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->domModel->dom_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-			memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->domModel->dom_ref_point_buff, sizeof(S_POINT_BUFF));
-			memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->domModel->dom_rot_plane_buff, sizeof(S_POINT_BUFF));
-			memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->domModel->dom_rot_line_buff, sizeof(S_POINT_BUFF));
+			memcpy(m_pDlg->GetModel()->ocsu_matrix, m_pDataModel->align321Model->matrix,sizeof(double) * 16);
+			memcpy(m_pDlg->GetModel()->ocsu_inv_matrix, m_pDataModel->align321Model->inv_matrix, sizeof(double) * 16);
+			m_pDlg->GetModel()->userdef_active_plane	= m_pDataModel->align321Model->align321_active_plane;
+			m_pDlg->GetModel()->userdef_active_line	= m_pDataModel->align321Model->align321_active_line; 
+			m_pDlg->GetModel()->userdef_hz_plane		= m_pDataModel->align321Model->align321_hz_plane;
+			memcpy(&m_pDlg->GetModel()->userdef_plane_buff[0], &m_pDataModel->align321Model->align321_plane_buff[0], sizeof(S_PLANE_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_hz_plane_buff[0], &m_pDataModel->align321Model->align321_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_line_buff[0], &m_pDataModel->align321Model->align321_line_buff[0], sizeof(S_LINE_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_ovalues_buff, &m_pDataModel->align321Model->align321_ovalues_buff, sizeof(S_POINT_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_ovalues_tool_buff, &m_pDataModel->align321Model->align321_ovalues_tool_buff, sizeof(S_POINT_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_ref_point_buff, &m_pDataModel->align321Model->align321_ref_point_buff, sizeof(S_POINT_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_rot_plane_buff, &m_pDataModel->align321Model->align321_rot_plane_buff, sizeof(S_POINT_BUFF));
+			memcpy(&m_pDlg->GetModel()->userdef_rot_line_buff, &m_pDataModel->align321Model->align321_rot_line_buff, sizeof(S_POINT_BUFF));
 
 			
 			memcpy(&m_pDlg->GetModel()->userdef_measured_points,&m_pDataModel->userdef_measured_points,  sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
@@ -1245,7 +1246,7 @@ void DCP::Alignment321UserDefController::OnActiveControllerClosed( int lCtrlID, 
 // Instantiate template classes
 DCP::Alignment321UserDefModel::Alignment321UserDefModel(Model* pModel): m_pModel(pModel)
 {
-	domModel = new Alignment321Model;
+	align321Model = new Alignment321Model;
 	memset(&userdef_measured_points, 0, sizeof(S_POINT_BUFF) * MAX_USERDEF_POINTS);
 
 	memset(&select_point_list[0], 0, sizeof(S_SELECT_POINTS) * MAX_USERDEF_POINTS);
@@ -1253,10 +1254,10 @@ DCP::Alignment321UserDefModel::Alignment321UserDefModel(Model* pModel): m_pModel
 
 DCP::Alignment321UserDefModel::~Alignment321UserDefModel()
 {
-	if(domModel != 0)
+	if(align321Model != 0)
 	{
-		delete domModel;
-		domModel = 0;
+		delete align321Model;
+		align321Model = 0;
 	}
 }
 
@@ -1346,20 +1347,20 @@ short DCP::Alignment321UserDefModel::copy_measured_points()
 	short point_no = 0;
 	int i = 0;
 
-	memset(&domModel->dom_plane_buff[0],0,sizeof(S_PLANE_BUFF));
-	memset(&domModel->dom_line_buff[0],0,sizeof(S_LINE_BUFF));	
-	memset(&domModel->dom_ref_point_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_plane_buff[0],0,sizeof(S_PLANE_BUFF));
+	memset(&align321Model->align321_line_buff[0],0,sizeof(S_LINE_BUFF));	
+	memset(&align321Model->align321_ref_point_buff,0,sizeof(S_POINT_BUFF));	
 
 	if(userdef_point_no > 0)
 	{
-		domModel->dom_ref_point_buff.x = userdef_measured_points[userdef_point_no -1].x;
-		domModel->dom_ref_point_buff.y = userdef_measured_points[userdef_point_no -1].y;
-		domModel->dom_ref_point_buff.z = userdef_measured_points[userdef_point_no -1].z;
-		domModel->dom_ref_point_buff.sta = userdef_measured_points[userdef_point_no -1].sta;
+		align321Model->align321_ref_point_buff.x = userdef_measured_points[userdef_point_no -1].x;
+		align321Model->align321_ref_point_buff.y = userdef_measured_points[userdef_point_no -1].y;
+		align321Model->align321_ref_point_buff.z = userdef_measured_points[userdef_point_no -1].z;
+		align321Model->align321_ref_point_buff.sta = userdef_measured_points[userdef_point_no -1].sta;
 	}
 	else
 	{
-		memset(&domModel->dom_ref_point_buff,0,sizeof(S_POINT_BUFF));	
+		memset(&align321Model->align321_ref_point_buff,0,sizeof(S_POINT_BUFF));	
 	}
 
 	// line points
@@ -1369,14 +1370,14 @@ short DCP::Alignment321UserDefModel::copy_measured_points()
 
 		if(point_no > 0)
 		{
-			domModel->dom_line_buff[0].points[i].x = userdef_measured_points[point_no -1].x;
-			domModel->dom_line_buff[0].points[i].y = userdef_measured_points[point_no -1].y;
-			domModel->dom_line_buff[0].points[i].z = userdef_measured_points[point_no -1].z;
-			domModel->dom_line_buff[0].points[i].sta = userdef_measured_points[point_no -1].sta;
+			align321Model->align321_line_buff[0].points[i].x = userdef_measured_points[point_no -1].x;
+			align321Model->align321_line_buff[0].points[i].y = userdef_measured_points[point_no -1].y;
+			align321Model->align321_line_buff[0].points[i].z = userdef_measured_points[point_no -1].z;
+			align321Model->align321_line_buff[0].points[i].sta = userdef_measured_points[point_no -1].sta;
 		}
 	}
 
-	if(!domModel->dom_hz_plane)
+	if(!align321Model->align321_hz_plane)
 	{
 		// plane points
 		for(i = 0; i < MAX_USERDEF_POINTS; i++)
@@ -1385,10 +1386,10 @@ short DCP::Alignment321UserDefModel::copy_measured_points()
 
 			if(point_no > 0)
 			{
-				domModel->dom_plane_buff[0].points[i].x = userdef_measured_points[point_no -1].x;
-				domModel->dom_plane_buff[0].points[i].y = userdef_measured_points[point_no -1].y;
-				domModel->dom_plane_buff[0].points[i].z = userdef_measured_points[point_no -1].z;
-				domModel->dom_plane_buff[0].points[i].sta = userdef_measured_points[point_no -1].sta;
+				align321Model->align321_plane_buff[0].points[i].x = userdef_measured_points[point_no -1].x;
+				align321Model->align321_plane_buff[0].points[i].y = userdef_measured_points[point_no -1].y;
+				align321Model->align321_plane_buff[0].points[i].z = userdef_measured_points[point_no -1].z;
+				align321Model->align321_plane_buff[0].points[i].sta = userdef_measured_points[point_no -1].sta;
 			}
 		}
 	}

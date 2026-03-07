@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <sstream>
@@ -315,6 +316,7 @@ bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
 }
 
 bool JsonDatabase::createJob(const std::string& jobId) {
+    DCP06_TRACE_ENTER;
     m_currentJob = DCP_UNIQUE_PTR<JobData>(new JobData());
     std::string tid = trim(jobId);
     m_currentJob->type = "job";
@@ -329,48 +331,75 @@ bool JsonDatabase::createJob(const std::string& jobId) {
     m_currentJob->active_orientation.id = "SCS";
     m_currentJob->active_orientation.object_key = 0;
     m_isJobLoaded = true;
+    DCP06_TRACE_POINT("jobId=%s", m_currentJob->id.c_str());
+    DCP06_TRACE_EXIT;
     return true;
 }
 
 bool JsonDatabase::loadJob(const std::string& jobId) {
+    DCP06_TRACE_ENTER;
     Json::Value j;
-    if (!readJsonFromFile(getJobFilePath(jobId), j)) return false;
+    if (!readJsonFromFile(getJobFilePath(jobId), j)) { DCP06_TRACE_EXIT; return false; }
     m_currentJob = DCP_UNIQUE_PTR<JobData>(new JobData());
     if (!jsonToJobData(j, *m_currentJob)) {
         m_currentJob.reset();
-        return false;
+        DCP06_TRACE_EXIT; return false;
     }
     m_isJobLoaded = true;
+    DCP06_TRACE_POINT("jobId=%s pts=%d", jobId.c_str(), (int)m_currentJob->points.size());
+    DCP06_TRACE_EXIT;
     return true;
 }
 
 bool JsonDatabase::saveJob(const std::string& jobId) {
-    if (!m_isJobLoaded || !m_currentJob.get()) return false;
-    return writeJsonToFile(getJobFilePath(jobId), jobDataToJson(*m_currentJob));
+    DCP06_TRACE_ENTER;
+    if (!m_isJobLoaded || !m_currentJob.get()) { DCP06_TRACE_EXIT; return false; }
+    bool ok = writeJsonToFile(getJobFilePath(jobId), jobDataToJson(*m_currentJob));
+    DCP06_TRACE_POINT("jobId=%s ok=%d", jobId.c_str(), ok);
+    DCP06_TRACE_EXIT;
+    return ok;
+}
+
+void JsonDatabase::closeJob() {
+    DCP06_TRACE_ENTER;
+    m_currentJob.reset();
+    m_isJobLoaded = false;
+    DCP06_TRACE_EXIT;
 }
 
 bool JsonDatabase::deleteJob(const std::string& jobId) {
+    DCP06_TRACE_ENTER;
     std::string path = getJobFilePath(jobId);
-    if (!boost::filesystem::exists(path)) return true;
+    if (!boost::filesystem::exists(path)) { DCP06_TRACE_EXIT; return true; }
     boost::system::error_code ec;
-    return boost::filesystem::remove(path, ec);
+    bool ok = boost::filesystem::remove(path, ec);
+    DCP06_TRACE_POINT("jobId=%s ok=%d", jobId.c_str(), ok);
+    DCP06_TRACE_EXIT;
+    return ok;
 }
 
 bool JsonDatabase::copyJob(const std::string& sourceId, const std::string& targetId) {
+    DCP06_TRACE_ENTER;
     Json::Value j;
-    if (!readJsonFromFile(getJobFilePath(sourceId), j)) return false;
+    if (!readJsonFromFile(getJobFilePath(sourceId), j)) { DCP06_TRACE_EXIT; return false; }
     j["id"] = targetId;
-    return writeJsonToFile(getJobFilePath(targetId), j);
+    bool ok = writeJsonToFile(getJobFilePath(targetId), j);
+    DCP06_TRACE_POINT("%s->%s ok=%d", sourceId.c_str(), targetId.c_str(), ok);
+    DCP06_TRACE_EXIT;
+    return ok;
 }
 
 bool JsonDatabase::swapJob(const std::string& jobId1, const std::string& jobId2) {
+    DCP06_TRACE_ENTER;
     Json::Value j1, j2;
     if (!readJsonFromFile(getJobFilePath(jobId1), j1) || !readJsonFromFile(getJobFilePath(jobId2), j2))
-        return false;
+        { DCP06_TRACE_EXIT; return false; }
     std::string t = j1["id"].asString();
     j1["id"] = jobId2;
     j2["id"] = t;
-    return writeJsonToFile(getJobFilePath(jobId1), j2) && writeJsonToFile(getJobFilePath(jobId2), j1);
+    bool ok = writeJsonToFile(getJobFilePath(jobId1), j2) && writeJsonToFile(getJobFilePath(jobId2), j1);
+    DCP06_TRACE_EXIT;
+    return ok;
 }
 
 bool JsonDatabase::addPoint(const std::string& pointId, const PointData& data) {
@@ -501,6 +530,77 @@ bool JsonDatabase::getPointByIndex(int index1Based, bool useActual, char* pid,
     if (note) {
         std::string n = pt->note.size() <= 6 ? pt->note : pt->note.substr(0, 6);
         sprintf(note, "%-6.6s", n.c_str());
+    }
+    return true;
+}
+
+std::string JsonDatabase::getJobDisplayName() const {
+    if (!m_currentJob.get()) return "";
+    return m_currentJob->id;
+}
+
+int JsonDatabase::getJobPointsCount() const {
+    if (!m_currentJob.get()) return 0;
+    return static_cast<int>(m_currentJob->points.size());
+}
+
+std::string JsonDatabase::getJobFileSizeString() const {
+    if (!m_currentJob.get()) return "";
+    std::string path = getJobFilePath(m_currentJob->id);
+    boost::system::error_code ec;
+    if (!boost::filesystem::exists(path, ec)) return "";
+    boost::uintmax_t sz = boost::filesystem::file_size(path, ec);
+    if (ec) return "";
+    char buf[32];
+    sprintf(buf, "%u", static_cast<unsigned>(sz));
+    return buf;
+}
+
+std::string JsonDatabase::getJobModDateString() const {
+    if (!m_currentJob.get()) return "";
+    std::string path = getJobFilePath(m_currentJob->id);
+    boost::system::error_code ec;
+    if (!boost::filesystem::exists(path, ec)) return "";
+    std::time_t t = boost::filesystem::last_write_time(path, ec);
+    if (ec) return "";
+    struct tm buf;
+#ifdef _WIN32
+    if (localtime_s(&buf, &t) != 0) return "";
+#else
+    if (!localtime_r(&t, &buf)) return "";
+#endif
+    char out[16];
+    std::strftime(out, sizeof(out), "%Y-%m-%d", &buf);
+    return std::string(out);
+}
+
+std::string JsonDatabase::getJobModTimeString() const {
+    if (!m_currentJob.get()) return "";
+    std::string path = getJobFilePath(m_currentJob->id);
+    boost::system::error_code ec;
+    if (!boost::filesystem::exists(path, ec)) return "";
+    std::time_t t = boost::filesystem::last_write_time(path, ec);
+    if (ec) return "";
+    struct tm buf;
+#ifdef _WIN32
+    if (localtime_s(&buf, &t) != 0) return "";
+#else
+    if (!localtime_r(&t, &buf)) return "";
+#endif
+    char out[16];
+    std::strftime(out, sizeof(out), "%H:%M:%S", &buf);
+    return std::string(out);
+}
+
+bool JsonDatabase::swapMeasDesign() {
+    if (!m_currentJob.get()) return false;
+    for (std::map<std::string, DCP_SHARED_PTR<PointData> >::iterator it = m_currentJob->points.begin();
+         it != m_currentJob->points.end(); ++it) {
+        if (!it->second) continue;
+        PointData& p = *it->second;
+        std::swap(p.x_mea, p.x_dsg);
+        std::swap(p.y_mea, p.y_dsg);
+        std::swap(p.z_mea, p.z_dsg);
     }
     return true;
 }

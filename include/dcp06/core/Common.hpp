@@ -77,7 +77,7 @@ namespace DCP
 			char *strtrim(char *s);
 			char *strltrim(char *s);
 
-			short defined_pom_points(S_POINT_BUFF *point_OCS, short *lastpoint);
+			short defined_bestFit_points(S_POINT_BUFF *point_OCS, short *lastpoint);
 			short get_OCS_SCS_points_count(S_POINT_BUFF *point_OCS,S_POINT_BUFF *point_DCS, short max);
 			void copy_xyz_to_buffer(double *x, double *y, double *z, char *bX, char *bY, char *bZ, short pit, short dec);
 			void copy_xyz_to_buffer_f(float *x, float *y, float *z, char *bX, char *bY, char *bZ, short pit, short dec);

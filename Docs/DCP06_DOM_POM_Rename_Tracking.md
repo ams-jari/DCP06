@@ -1,13 +1,13 @@
 # DCP06 DOM/POM → 321 Alignment / Best Fit Rename Tracking
 
 **Date:** March 2025  
-**Goal:** Use DCP9 terminology (321 Alignment, Best Fit Alignment) instead of DCP05 legacy (DOM, POM) in user-facing strings and documentation. Internal code identifiers and file names may retain DOM/POM for now; icons will be renamed in a future phase.
+**Goal:** Use DCP9 terminology (321 Alignment, Best Fit Alignment) instead of DCP05 legacy (DOM, POM) in user-facing strings and documentation. Code identifiers and file names have been renamed; token names and icons remain for resource compatibility.
 
 ---
 
 ## 1. Completed Changes
 
-### 1.1 UI Strings (Text/DCP05_TOK)
+### 1.1 UI Strings (Text/DCP06_TOK.HPP)
 
 | Token | Old | New |
 |-------|-----|-----|
@@ -30,7 +30,7 @@
 
 ### 1.2 Icon Comment
 
-**File:** `src/application/DCP_Application.cpp` (lines ~1350-1351)
+**File:** `src/application/Application.cpp` (lines ~1363-1365)
 
 Added TODO comment for future icon rename:
 ```cpp
@@ -58,36 +58,37 @@ Icons currently used: `DOM_$SCALEFACTOR$.png`, `POM_$SCALEFACTOR$.png` — kept 
 | `DOM_$SCALEFACTOR$.png` | `Alignment321_$SCALEFACTOR$.png` |
 | `POM_$SCALEFACTOR$.png` | `BestFitAlignment_$SCALEFACTOR$.png` |
 
-Reference in code: `DCP_Application.cpp` — search for `DOM_$SCALEFACTOR$` and `POM_$SCALEFACTOR$`.
+Reference in code: `src/application/Application.cpp` — search for `DOM_$SCALEFACTOR$` and `POM_$SCALEFACTOR$`.
 
 ---
 
-## 3. Remaining: File Names and Internal Identifiers
+## 3. Internal Identifiers and File Names
 
-These retain DOM/POM for backward compatibility and minimal code churn. Consider renaming in a future refactor.
+### 3.1 File Names (Done)
 
-### 3.1 File Names
-
-| File | Contains | Rename To (future) |
-|------|----------|-------------------|
-| DCP_DCP05Dom.cpp/.hpp | 321 Alignment (DOM) logic | DCP_321Alignment.cpp/.hpp |
-| DCP_DCP05DomUserDef.cpp/.hpp | User-defined 321 | DCP_321AlignmentUserDef.cpp/.hpp |
-| DCP_DCP05Pom.cpp/.hpp | Best Fit logic | DCP_BestFitAlignment.cpp/.hpp |
-| DCP_PomSelectPoints.cpp/.hpp | Best Fit point selection | DCP_BestFitSelectPoints.cpp/.hpp |
-| DCP_ResPom.hpp | Best Fit residuals | DCP_ResBestFit.hpp |
-| DCP_CalcDom.hpp | 321 calculation | DCP_Calc321.hpp |
+| Current File | Contains |
+|--------------|----------|
+| Alignment321.cpp/.hpp | 321 Alignment logic |
+| Alignment321UserDef.cpp/.hpp | User-defined 321 |
+| BestFit.cpp/.hpp | Best Fit logic |
+| BestFitSelectPoints.cpp/.hpp | Best Fit point selection |
+| ResBestFit.cpp/.hpp | Best Fit residuals |
+| Calculation321.hpp | 321 calculation |
 
 ### 3.2 Internal #defines and Identifiers (DCP_Defs.hpp, etc.)
 
-| Identifier | Purpose | Rename To (future) |
-|------------|---------|-------------------|
-| DOM_DLG, DOM_CONTROLLER, DOM_USERDEF_* | 321 Alignment dialogs | ALIGNMENT321_* |
-| POM_DLG, POM_CONTROLLER, POM_POINT_*, RES_POM_*, FILE_CONTROLLER_POM | Best Fit dialogs | BESTFIT_* |
-| DCP_DOM_MENU, DCP_POM_MENU | Menu IDs | DCP_321_MENU, DCP_BESTFIT_MENU |
-| MAX_POM_POINTS, MIN_POM_POINTS | Point limits | MAX_BESTFIT_POINTS, etc. |
-| dom_*, pom_* (model members) | Config/serialization | alignment321_*, bestFit_* |
+| Identifier | Purpose | Status |
+|------------|---------|--------|
+| A321_DLG, A321_CONTROLLER, A321_USERDEF_* | 321 Alignment dialogs | Done |
+| BESTFIT_DLG, BESTFIT_CONTROLLER, BESTFIT_POINT_*, RES_BESTFIT_*, FILE_CONTROLLER_BESTFIT | Best Fit dialogs | Done |
+| DCP_A321_MENU, DCP_BESTFIT_MENU | Menu IDs | Done |
+| MAX_BESTFIT_POINTS, MIN_BESTFIT_POINTS | Point limits | Done |
+| align321_*, bestFit_* (model members) | Config/serialization | Done |
+| DOM_ROTATION (local var) | 321 rotation status | Renamed to A321_ROTATION |
+| DCP_CALCDOM_HPP | Include guard | Renamed to DCP_CALC321_HPP |
+| DOM_USER_DLG, DOM_DSP (in comments) | Legacy display constants | Updated to A321_USERDEF_DLG, A321_DLG |
 
-**Note:** Config keys `CNF_KEY_DOM`, `CNF_KEY_POM` and serialized fields (e.g. `dom_plane_buff`, `POM_point_DCS`) affect saved user data. Renaming these requires a migration path.
+**Note:** Token names (T_DCP_DOM_*, L_DCP_POM_*, etc.) remain for string resource IDs; display text was updated. Config keys and serialized fields may require migration for full rename.
 
 ---
 

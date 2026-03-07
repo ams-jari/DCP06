@@ -238,7 +238,7 @@ namespace DCP
 
 			S_LINE_BUFF* pLline_buff;
 			S_LINE_BUFF* pLline_buff_ocs;
-			Alignment321Model* domModel;
+			Alignment321Model* align321Model;
 			//S_POINT_BUFF points_buff[MAX_LINEFIT_POINTS];	
 			S_LINE_FITTING_RESULTS linefit_results[MAX_LINEFIT_POINTS];
 			double manualHeight;

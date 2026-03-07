@@ -58,7 +58,7 @@ namespace DCP
 			~CalcChangeStation();
 			
 			//bool calc();
-			short defined_pom_points(/*point_buff_ *point_OCS,*/ short *lastpoint);
+			short defined_bestFit_points(/*point_buff_ *point_OCS,*/ short *lastpoint);
 			short get_last_defined_point(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/);
 			short get_OCS_points_count(/*point_buff_ *point_OCS*/);
 			short get_OCS_SCS_points_count(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/);

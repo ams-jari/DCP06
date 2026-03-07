@@ -33,6 +33,7 @@
 #include <dcp06/calculation/CalculationPlane.hpp>
 #include <dcp06/calculation/CalculationLine.hpp>
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/core/SelectMultiPoints.hpp>
 #include <dcp06/file/SelectFile.hpp>
 #include <dcp06/core/SelectOnePoint.hpp>
@@ -97,6 +98,7 @@ DCP::CalculationAngleDialog::~CalculationAngleDialog()
 // ================================================================================================
 void DCP::CalculationAngleDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 	m_p3DFile = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_p3DFile->SetId(e3DFile);

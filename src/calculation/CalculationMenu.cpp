@@ -49,6 +49,7 @@
 #include <dcp06/core/MsgBox.hpp>
 
 #include "dcp06/core/Defs.hpp"
+#include <dcp06/core/Logger.hpp>
 
 //lint -e714 Symbol not referenced
 
@@ -81,7 +82,7 @@ CalculationMenuDialog::~CalculationMenuDialog()
 
 void CalculationMenuDialog::OnInitDialog(void)
 {
-		
+	DCP06_TRACE_ENTER;
 	SetTitle(StringC(AT_DCP06,T_DCP_CALCULATION_MENU_TOK ));
 	//SetHelpTok(H_DCP_CALCULATION_MENU_TOK,0);
 
@@ -118,6 +119,7 @@ void CalculationMenuDialog::OnInitDialog(void)
 	vDef1.strLable =L"";
 	SetFunctionKey( SHFK6, vDef1 );
 	SetFunctionKey( SHFK2, vDef1 );
+	DCP06_TRACE_EXIT;
 
 }
 
@@ -126,13 +128,16 @@ void CalculationMenuDialog::OnInitDialog(void)
 
 void CalculationMenuDialog::OnSelectionDone(void)
 {
+	DCP06_TRACE_ENTER;
 	short unId = GetSelected();
-	
+	DCP06_TRACE_POINT("selected=%d", unId);
 	OnF1Pressed();
+	DCP06_TRACE_EXIT;
 }
 
 void CalculationMenuDialog::OnF1Pressed(void)
 {
+	DCP06_TRACE_ENTER;
 	/*if(m_pModel->bDemoMode)
 	{
 		MsgBox msgBox;
@@ -143,5 +148,6 @@ void CalculationMenuDialog::OnF1Pressed(void)
 	{*/
 		Close(GetSelected());
 	//}
+	DCP06_TRACE_EXIT;
 }
 

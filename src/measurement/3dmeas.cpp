@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/init/Initialization.hpp>
 #include <dcp06/measurement/3dmeas.hpp>
 #include <dcp06/core/SpecialMenu.hpp>
@@ -135,7 +136,7 @@ DCP::Meas3DDialog::~Meas3DDialog()
 // ================================================================================================
 void DCP::Meas3DDialog::OnInitDialog(void)
 {
-	
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 
 	// Add fields to dialogds
@@ -395,6 +396,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	//SetHelpTok(H_DCP_3DMEAS_TOK,0);
 
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
+	DCP06_TRACE_EXIT;
 }
 
 // ================================================================================================
@@ -413,7 +415,8 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 // Description: OnDialogActivated
 // ================================================================================================
 void DCP::Meas3DDialog::OnDialogActivated()
-{	
+{
+	DCP06_TRACE_ENTER;
 	//MsgBox msgbox;
 	//msgbox.ShowMessageOk(GetModel()->ADFFileName);
 	m_pDataModel->m_pFileFunc->setFile(GetModel()->ADFFileName);
@@ -422,6 +425,7 @@ void DCP::Meas3DDialog::OnDialogActivated()
 	//m_pTimer.StartCycle(2000);//.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 	//m_pTimer.StartOneShot(5000);
 	RefreshControls();
+	DCP06_TRACE_EXIT;
 }
 
 // ================================================================================================

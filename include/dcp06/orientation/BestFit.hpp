@@ -101,7 +101,7 @@ namespace DCP
 
 			short/*DCP_COORDINATE_SYSTEM*/ old_coordinate;
 			//AdfFileFunc* adf;
-			bool delete_pom();
+			bool delete_bestFit();
 
     };
 
@@ -189,14 +189,14 @@ namespace DCP
 			double rms_x;
 			double rms_y;
 			double rms_z;
-			short pom_chst;
+			short bestFit_chst;
 			bool ocs_defined;
 
 			//short LAST_SEL;
 			/*
-			short dom_hz_plane; //muista asettaa
-			DCP::DCP_PLANE_TYPE dom_plane_type;
-			dom_rot_plane_buff
+			short align321_hz_plane; //muista asettaa
+			DCP::DCP_PLANE_TYPE align321_plane_type;
+			align321_rot_plane_buff
 			*/
 
     };

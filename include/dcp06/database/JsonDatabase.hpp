@@ -26,6 +26,7 @@ public:
     bool createJob(const std::string& jobId) DCP_OVERRIDE;
     bool loadJob(const std::string& jobId) DCP_OVERRIDE;
     bool saveJob(const std::string& jobId) DCP_OVERRIDE;
+    void closeJob();
     bool deleteJob(const std::string& jobId) DCP_OVERRIDE;
     bool copyJob(const std::string& sourceId, const std::string& targetId) DCP_OVERRIDE;
     bool swapJob(const std::string& jobId1, const std::string& jobId2) DCP_OVERRIDE;
@@ -48,6 +49,15 @@ public:
     /// Get point by 1-based index (sorted by point ID). Fills coord buffers like form_pnt1. Returns true if found.
     bool getPointByIndex(int index1Based, bool useActual, char* pid,
         char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const;
+
+    /// Job display helpers (replace AdfFileFunc getFileName/getPointsCountString/etc when using DB)
+    std::string getJobDisplayName() const;
+    int getJobPointsCount() const;
+    std::string getJobFileSizeString() const;
+    std::string getJobModDateString() const;
+    std::string getJobModTimeString() const;
+    /// Swap measured/design coords for all points in current job (replaces swap_meas_design)
+    bool swapMeasDesign();
 
     bool addMidpoint(const std::string&, const MidpointData&) DCP_OVERRIDE { return false; }
     bool updateMidpoint(const std::string&, const MidpointData&) DCP_OVERRIDE { return false; }

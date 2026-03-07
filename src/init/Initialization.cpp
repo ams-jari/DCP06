@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/init/Initialization.hpp>
 #include <dcp06/init/Unit.hpp>
 #include <dcp06/init/User.hpp>
@@ -86,6 +87,7 @@ DCP::InitializationDialog::InitializationDialog(bool disableFileStorage) :// m_p
 //
 void DCP::InitializationDialog::OnInitDialog()
 {
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 	int textW = 9 * 22;
 
@@ -292,11 +294,13 @@ void DCP::InitializationDialog::OnInitDialog()
 	//SetHelpTok(H_DCP_INIT_TOK,0);
 
 	// m_pComboBoxObserver.Attach(m_pComboBox->GetSubject());
+	DCP06_TRACE_EXIT;
 }
 
 // Description: only accept DCP06 Model objects
 bool DCP::InitializationDialog::SetModel( GUI::ModelC* pModel )
 {
+	DCP06_TRACE_ENTER;
     // Verify type
     DCP::Model* pDcpModel = dynamic_cast< DCP::Model* >( pModel );
 
@@ -305,15 +309,18 @@ bool DCP::InitializationDialog::SetModel( GUI::ModelC* pModel )
     if ( pDcpModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDcpModel ))
     {
         RefreshControls();
+		DCP06_TRACE_EXIT;
         return true;
     }
     USER_APP_VERIFY( false );
+	DCP06_TRACE_EXIT;
     return false;
 }
 
 // Description: refresh all controls
 void DCP::InitializationDialog::RefreshControls()
 {
+	DCP06_TRACE_ENTER;
 	if (m_pTextTarget && m_pUser && m_pUnit && m_pAtmCorr && m_p2Face && m_pDesignValues && 
 		m_pOverwriteInfo && m_ToolInfo && m_pAutoIncrement &&   m_pAverageCount && 
 		m_pLeftRightHand && m_pAutoMatch && m_pAmsLog && m_pSaveTool && m_pFileStorage)
@@ -392,11 +399,13 @@ void DCP::InitializationDialog::RefreshControls()
 #endif
 
 	}
+	DCP06_TRACE_EXIT;
 }
 
 // Description: update the road model with the new values
 void DCP::InitializationDialog::UpdateData()
 {
+	DCP06_TRACE_ENTER;
 	//m_pTextTarget(0), 
 	GetModel()->m_sUser = m_pUser->GetStringInputCtrl()->GetString();
     //m_pUnit(0),
@@ -410,6 +419,7 @@ void DCP::InitializationDialog::UpdateData()
 	GetModel()->m_nLeftRightHand	= m_pLeftRightHand->GetComboBoxInputCtrl()->GetSelectedId();
 	GetModel()->m_nAutoMatch		= m_pAutoMatch->GetComboBoxInputCtrl()->GetSelectedId();
 	GetModel()->m_nAmsLog			= m_pAmsLog->GetComboBoxInputCtrl()->GetSelectedId();
+	DCP::Logger::setEnabled(GetModel()->m_nAmsLog == 1);
 	GetModel()->m_nSaveTool		= m_pSaveTool->GetComboBoxInputCtrl()->GetSelectedId();
 
 #ifdef CS35
@@ -420,7 +430,7 @@ void DCP::InitializationDialog::UpdateData()
 
 	GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
 	GetModel()->poConfigController->StoreConfigData();
-
+	DCP06_TRACE_EXIT;
 }
 
 // Description: DCP06 model
@@ -450,6 +460,7 @@ OBS_IMPLEMENT_EXECUTE(DCP::InitializationController);
 DCP::InitializationController::InitializationController(bool disableFileStorage)
     : m_pDlg( nullptr ),m_pOnApplicationClosedObserver(OBS_METHOD_TO_PARAM0(InitializationController, OnApplicationClosed), this)
 {
+	DCP06_TRACE_ENTER;
 	int ii = GetTxtApplicationId(); 
 	SetTxtApplicationId(AT_DCP06);
 	// Set title token
@@ -493,7 +504,7 @@ DCP::InitializationController::InitializationController(bool disableFileStorage)
 
 
 	m_pOnApplicationClosedObserver.Attach(GUI::AppMgntC::Instance()->GetAppCloseSubject());
-
+	DCP06_TRACE_EXIT;
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 
@@ -516,14 +527,17 @@ bool DCP::InitializationController::SetModel( GUI::ModelC* pModel )
 // Description: Handle change of position values
 void DCP::InitializationController::OnF1Pressed()
 {
+	DCP06_TRACE_ENTER;
     if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
+		DCP06_TRACE_EXIT;
         return;
     }
       // Remove the following statement if you don't want an exit
     // to the main menu
     (void)Close(EC_KEY_CONT);
+	DCP06_TRACE_EXIT;
 }
 
 // TARGET

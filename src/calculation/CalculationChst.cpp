@@ -84,7 +84,7 @@ DCP::CalcChangeStation::~CalcChangeStation()
 /**************************************************************
 		  check how many points are defined
 ***************************************************************/
-short DCP::CalcChangeStation::defined_pom_points(/*point_buff_ *point_OCS,*/ short *lastpoint)
+short DCP::CalcChangeStation::defined_bestFit_points(/*point_buff_ *point_OCS,*/ short *lastpoint)
 {
 short points_defined=0,i;
 	
@@ -165,11 +165,11 @@ short i,ret=0;
 ***************************************************************/
 short DCP::CalcChangeStation::get_min_points_count()
 {
-short ret, DOM_ROTATION;
+short ret, A321_ROTATION;
 
-		DOM_ROTATION = get_rotation_status();
-		//ret = (get_LEVELING() == TRUE && DOM_ROTATION == FALSE  && get_HZ_PLANE_ONOFF() == TRUE ? 2: 3);
-		ret = (!DOM_ROTATION  && m_pModel->dom_hz_plane ? 2: 3);
+		A321_ROTATION = get_rotation_status();
+		//ret = (get_LEVELING() == TRUE && A321_ROTATION == FALSE  && get_HZ_PLANE_ONOFF() == TRUE ? 2: 3);
+		ret = (!A321_ROTATION  && m_pModel->align321_hz_plane ? 2: 3);
 		return ret;
 }
 
@@ -181,17 +181,17 @@ short DCP::CalcChangeStation::get_rotation_status()
 double deg;
 short ACTIVE_PLANE, rotation=false;
 
-		ACTIVE_PLANE = m_pModel->dom_active_plane; //get_active_plane_dom();
+		ACTIVE_PLANE = m_pModel->align321_active_plane; //get_active_plane_dom();
 
 		if(ACTIVE_PLANE == XY_PLANE)
 		{
-			deg = m_pModel->dom_rot_plane_buff.x;//get_x_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.x;//get_x_plane_rot();
 			if(deg != 0.0)
 			{
 			  rotation = true;
 			}
 
-			deg = m_pModel->dom_rot_plane_buff.y;//get_y_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.y;//get_y_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -199,13 +199,13 @@ short ACTIVE_PLANE, rotation=false;
 		}
 		else if(ACTIVE_PLANE == ZX_PLANE)
 		{
-			deg = m_pModel->dom_rot_plane_buff.x;//get_x_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.x;//get_x_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
 			}
 
-			deg = m_pModel->dom_rot_plane_buff.z; //get_z_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.z; //get_z_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -213,13 +213,13 @@ short ACTIVE_PLANE, rotation=false;
 		}
 		else if(ACTIVE_PLANE == YZ_PLANE)
 		{
-			deg = m_pModel->dom_rot_plane_buff.y; //get_y_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.y; //get_y_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
 			}
 
-			deg = m_pModel->dom_rot_plane_buff.z;//get_z_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.z;//get_z_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -324,7 +324,7 @@ short DCP::CalcChangeStation::calc_transform(
 					point_buff_ *point_RES,			// Residuals
 				   	double (*ocs_matrix)[4][4],		
 				   	double (*ocs_inv_matrix)[4][4],
-				   	short pom_chst,					// 0=Pom 1 = Chst
+				   	short bestFit_chst,					// 0=Pom 1 = Chst
 				   	double *rms_x, 
 				   	double *rms_y, 
 				   	double *rms_z*/) 	
@@ -353,7 +353,7 @@ short sta_OCS,sta_DCS;
 				points_defined++;
 		}
 		/*
-		DOM_ROTATION = get_rotation_status();
+		A321_ROTATION = get_rotation_status();
 		
 		TPI::MeasConfigC oMeasConfig;
 	
@@ -368,12 +368,12 @@ short sta_OCS,sta_DCS;
 		/**************************************************************
 		  2 points levelled
 		***************************************************************/
-		/*if(points_defined == 2 && DOM_ROTATION == false
-			&& m_pModel->dom_hz_plane  && m_pBestFitModel->pom_chst != 0)*/
+		/*if(points_defined == 2 && A321_ROTATION == false
+			&& m_pModel->align321_hz_plane  && m_pBestFitModel->bestFit_chst != 0)*/
 
 		if(points_defined == 2 && min == 2)
 		{
-			calculate_2points_levelled(/*point_OCS, point_DCS, ocs_matrix,pom_chst*/) ;
+			calculate_2points_levelled(/*point_OCS, point_DCS, ocs_matrix,bestFit_chst*/) ;
 		}
 
 		/**************************************************************
@@ -381,9 +381,9 @@ short sta_OCS,sta_DCS;
 		***************************************************************/
 
 		/*else if(points_defined < 2 &&
-				DOM_ROTATION == false &&
-				m_pModel->dom_hz_plane && 
-				m_pBestFitModel->pom_chst == 1)*/
+				A321_ROTATION == false &&
+				m_pModel->align321_hz_plane && 
+				m_pBestFitModel->bestFit_chst == 1)*/
 
 		else if(points_defined < 2 && min == 2)
 		{
@@ -399,9 +399,9 @@ short sta_OCS,sta_DCS;
 		***************************************************************/
 
 		else if(points_defined == 3 && active_plane != 0) //&& bComp && ret1)
-			//&& m_pModel->dom_hz_plane && m_pBestFitModel->pom_chst != 0) 
+			//&& m_pModel->align321_hz_plane && m_pBestFitModel->bestFit_chst != 0) 
 		{
-			calculate_3points_levelled(/*point_OCS, point_DCS, ocs_matrix,pom_chst*/);
+			calculate_3points_levelled(/*point_OCS, point_DCS, ocs_matrix,bestFit_chst*/);
 		}
 
 		/**************************************************************
@@ -409,15 +409,15 @@ short sta_OCS,sta_DCS;
 		***************************************************************/
 		/*
 		else if (points_defined == 3 &&				(
-				 DOM_ROTATION ||
-				 m_pModel->dom_hz_plane == false  ||
-				 m_pBestFitModel->pom_chst == 0))
+				 A321_ROTATION ||
+				 m_pModel->align321_hz_plane == false  ||
+				 m_pBestFitModel->bestFit_chst == 0))
 		*/
 		else if (points_defined == 3)
 		
 		{
 //			PrintLn("3 points, not levelled");
-			calculate_3points_not_levelled(/*point_OCS, point_DCS, ocs_matrix,pom_chst*/);
+			calculate_3points_not_levelled(/*point_OCS, point_DCS, ocs_matrix,bestFit_chst*/);
 		}
 
 		/**************************************************************
@@ -426,9 +426,9 @@ short sta_OCS,sta_DCS;
 		/*
 		else if(points_defined < 3 && (
 				
-				DOM_ROTATION ||
-				m_pModel->dom_hz_plane == false ||
-				m_pBestFitModel->pom_chst == 0))
+				A321_ROTATION ||
+				m_pModel->align321_hz_plane == false ||
+				m_pBestFitModel->bestFit_chst == 0))
 		*/
 		else if(points_defined < 3 && min == 3)
 		{
@@ -498,7 +498,7 @@ short sta_OCS,sta_DCS;
 				else if(ret == -1)
 				{
 					m_pBestFitModel->ocs_defined = false;	
-					//set_ocs_defined(FALSE, pom_chst);
+					//set_ocs_defined(FALSE, bestFit_chst);
 					StringC msg;
 					msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 					msgbox.ShowMessageOk(msg);
@@ -507,7 +507,7 @@ short sta_OCS,sta_DCS;
 				else
 				{
 					m_pBestFitModel->ocs_defined = false;	
-					//set_ocs_defined(FALSE,pom_chst);
+					//set_ocs_defined(FALSE,bestFit_chst);
 					StringC msg;
 					msg.LoadTxt(AT_DCP06,M_DCP_ABORTED_TOK);
 					msgbox.ShowMessageOk(msg);
@@ -518,11 +518,11 @@ short sta_OCS,sta_DCS;
 			else
 			{
 				m_pBestFitModel->ocs_defined = false;	
-				//set_ocs_defined(FALSE,pom_chst);
+				//set_ocs_defined(FALSE,bestFit_chst);
 			}
 		}
 
-		if(m_pBestFitModel->ocs_defined/*get_ocs_defined(pom_chst) == TRUE*/)
+		if(m_pBestFitModel->ocs_defined/*get_ocs_defined(bestFit_chst) == TRUE*/)
 		{
 			//show_matrix4x4(ocsp_matrix);
 			/*******************************
@@ -591,7 +591,7 @@ short sta_OCS,sta_DCS;
 			*/
 			matinv4x4(&m_pBestFitModel->matrix[0]/*[0]*/, &m_pBestFitModel->inv_matrix);
 
-			if(m_pBestFitModel->pom_chst == 0) // POM
+			if(m_pBestFitModel->bestFit_chst == 0) // POM
 			{
 				/*
 				set_ocsp_matrix((*ocs_matrix)[0][0], (*ocs_matrix)[1][0],(*ocs_matrix)[2][0],(*ocs_matrix)[3][0],
@@ -630,14 +630,14 @@ short sta_OCS,sta_DCS;
 
 		// show_values(1,TRUE);
 
-		if(m_pBestFitModel->ocs_defined/*get_ocs_defined(pom_chst) == TRUE*/)
+		if(m_pBestFitModel->ocs_defined/*get_ocs_defined(bestFit_chst) == TRUE*/)
 		{
 //				sprintf(msgTxt,"%-s \n\033V %-s %6.1f \n\033V %-s %6.1f \n\033V %-s %6.1f",
 //						   "RMS of Calculation", RMS_X_TEXT, rms_x, RMS_Y_TEXT,rms_y, RMS_Z_TEXT,rms_z);
 //				show_message(msgTxt); //ms removed
 
 				
-				//set_ocs_defined(TRUE,pom_chst);
+				//set_ocs_defined(TRUE,bestFit_chst);
 		}
 /*
 		if(SHOW_INFO == 1)
@@ -645,7 +645,7 @@ short sta_OCS,sta_DCS;
 		   show_matrix4x4(ocs_matrix);
 		}
 */
-		return (m_pBestFitModel->ocs_defined/*get_ocs_defined(pom_chst)*/);
+		return (m_pBestFitModel->ocs_defined/*get_ocs_defined(bestFit_chst)*/);
 
 }
 
@@ -656,7 +656,7 @@ short sta_OCS,sta_DCS;
 short DCP::CalcChangeStation::calculate_3points_levelled(/*point_buff_ *point_OCS,	// Object points
 								point_buff_ *point_DCS,		// Sensor
 								double (*ocs_matrix)[4][4],
-							    short pom_chst*/)				// 0=Pom 1 = Chst)
+							    short bestFit_chst*/)				// 0=Pom 1 = Chst)
 {
 short i, count, first, second, third;
 double mea1[4], mea2[4], mea3[4];
@@ -674,7 +674,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 			MsgBox msgbox;
 //			PrintLn("3 points, levelled");
 			
-			//active_plane = m_pModel->dom_active_plane;//get_active_plane_dom();
+			//active_plane = m_pModel->align321_active_plane;//get_active_plane_dom();
 
 			/***********************
 				Find defined points
@@ -746,7 +746,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 				m_pBestFitModel->ocs_defined = false;
 				//msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
 				
-				//set_ocs_defined(FALSE,pom_chst);
+				//set_ocs_defined(FALSE,bestFit_chst);
 				return false;
 			}
 
@@ -801,7 +801,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 				return false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
-				set_ocs_defined(FALSE,pom_chst);
+				set_ocs_defined(FALSE,bestFit_chst);
 				return FALSE;
 				*/
 			}
@@ -856,7 +856,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 				return false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
-				set_ocs_defined(FALSE,pom_chst);
+				set_ocs_defined(FALSE,bestFit_chst);
 				return FALSE;
 				*/
 			}
@@ -904,7 +904,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 				return false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
-				set_ocs_defined(FALSE,pom_chst);
+				set_ocs_defined(FALSE,bestFit_chst);
 				return FALSE;
 				*/
 			}
@@ -961,7 +961,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 				return false;
 				/*	
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
-				set_ocs_defined(FALSE,pom_chst);
+				set_ocs_defined(FALSE,bestFit_chst);
 				return FALSE;
 				*/
 			}
@@ -1030,7 +1030,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 				m_pBestFitModel->matrix[3][2] = ocsp22[3][2] / 2;
 				m_pBestFitModel->matrix[3][3] = ocsp22[3][3] / 2;
 				m_pBestFitModel->ocs_defined = true;
-				//set_ocs_defined(TRUE,pom_chst);
+				//set_ocs_defined(TRUE,bestFit_chst);
 			}
 
 			/***************************************
@@ -1044,10 +1044,10 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 				m_pBestFitModel->ocs_defined = false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
-				set_ocs_defined(FALSE,pom_chst);
+				set_ocs_defined(FALSE,bestFit_chst);
 				*/
 			}
-			return m_pBestFitModel->ocs_defined; //get_ocs_defined(pom_chst);
+			return m_pBestFitModel->ocs_defined; //get_ocs_defined(bestFit_chst);
 }
 
 /************************************************************************
@@ -1056,7 +1056,7 @@ short /*active_plane,*/sta_OCS,sta_DCS;
 short DCP::CalcChangeStation::calculate_2points_levelled(/*point_buff_ *point_OCS,		// Object points
 								point_buff_ *point_DCS,			// Sensor
 							   double (*ocs_matrix)[4][4],		
-							   short pom_chst*/)					// 0=Pom 1 = Chst))
+							   short bestFit_chst*/)					// 0=Pom 1 = Chst))
 {
 short i, count, first, second;
 double mea1[4], mea2[4], mea3[4];
@@ -1069,7 +1069,7 @@ double unit[4];
 //double dcs_matrix[4][4];
 
 			MsgBox msgbox;
-			//active_plane = m_pModel->dom_active_plane;//get_active_plane_dom();
+			//active_plane = m_pModel->align321_active_plane;//get_active_plane_dom();
 
 			/************************
 			 find last defined point
@@ -1123,7 +1123,7 @@ double unit[4];
 					return false;
 					/*
 					msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
-					set_ocs_defined(FALSE,pom_chst);
+					set_ocs_defined(FALSE,bestFit_chst);
 					return FALSE;
 					*/
 				}
@@ -1188,7 +1188,7 @@ double unit[4];
 					m_pBestFitModel->ocs_defined = false;
 					return false;
 					//msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
-					//set_ocs_defined(FALSE,pom_chst);
+					//set_ocs_defined(FALSE,bestFit_chst);
 					//return FALSE;
 				}
 
@@ -1237,7 +1237,7 @@ double unit[4];
 					matmul4x4(m_pModel->dcs_matrix, temp1,&temp3); 		/* dcs_matrix is unitmatrix */
 					matmul4x4(temp3, temp2_inv, &m_pBestFitModel->matrix);
 					m_pBestFitModel->ocs_defined = true;
-					//set_ocs_defined(TRUE,pom_chst);
+					//set_ocs_defined(TRUE,bestFit_chst);
 				}
 
 			/***************************************
@@ -1252,7 +1252,7 @@ double unit[4];
 				/*
 
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);
-				set_ocs_defined(FALSE,pom_chst);
+				set_ocs_defined(FALSE,bestFit_chst);
 				*/
 			}
 		return (m_pBestFitModel->ocs_defined);
@@ -1264,7 +1264,7 @@ double unit[4];
 short DCP::CalcChangeStation::calculate_3points_not_levelled(/*point_buff_ *point_OCS,	// Object points
 									point_buff_ *point_DCS,	// Sensor
 								   double (*ocs_matrix)[4][4],		
-								   short pom_chst*/)	// 0=Pom 1 = Chst))
+								   short bestFit_chst*/)	// 0=Pom 1 = Chst))
 {
 short i,  count,sta_OCS,sta_DCS;
 double mea1[4], mea2[4], mea3[4];
@@ -1339,7 +1339,7 @@ double temp3[4][4];
 				matmul4x4(m_pModel->dcs_matrix, temp1,&temp3); 		/* dcs_matrix is unitmatrix */
 				matmul4x4(temp3, temp2_inv, &m_pBestFitModel->matrix);
 				m_pBestFitModel->ocs_defined = true;
-				//set_ocs_defined(TRUE,pom_chst);
+				//set_ocs_defined(TRUE,bestFit_chst);
 			}
 
 			/***************************************
@@ -1351,10 +1351,10 @@ double temp3[4][4];
 				m_pBestFitModel->ocs_defined = false;
 				/*
 				msgbox(TXT_NIL_TOKEN, M_CANNOT_CALC_TOK,MB_OK);	
-				set_ocs_defined(FALSE,pom_chst);
+				set_ocs_defined(FALSE,bestFit_chst);
 				*/
 			}
-			return m_pBestFitModel->ocs_defined; //(get_ocs_defined(pom_chst));
+			return m_pBestFitModel->ocs_defined; //(get_ocs_defined(bestFit_chst));
 }
 
 

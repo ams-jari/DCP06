@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 //#include <dcp06/application/ShaftLine.hpp>
 #include <dcp06/application/LineFitting.hpp>
 #include <dcp06/core/Measure.hpp>
@@ -101,6 +102,7 @@ DCP::LineFitDialog::~LineFitDialog()
 
 void DCP::LineFitDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 	
     
@@ -239,6 +241,7 @@ void DCP::LineFitDialog::OnInitDialog(void)
 	//SetHelpTok(H_DCP_SHAFT_TOK,0);
 	
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
+	DCP06_TRACE_EXIT;
 }
 void DCP::LineFitDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 {
@@ -296,7 +299,7 @@ void DCP::LineFitDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_DEPTH_TOK),		ROTATE_VERTICAL_DEPTH);
 			}
 			
-			m_pCalcLineFit->CalcLineFitDom(m_pLineFitModel->domModel, &m_pLineFitModel->line_buff[0],m_pLineFitModel->selectedRefLine);
+			m_pCalcLineFit->CalcLineFitDom(m_pLineFitModel->align321Model, &m_pLineFitModel->line_buff[0],m_pLineFitModel->selectedRefLine);
  
 		}
 		m_pCalcLineFit->CalcAllPoints(&m_pLineFitModel->line_buff[0],
@@ -308,7 +311,7 @@ void DCP::LineFitDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 								m_pLineFitModel->selectedHeight,
 								m_pLineFitModel->selectedShift,
 								m_pLineFitModel->selectedRotate,
-								m_pLineFitModel->domModel,
+								m_pLineFitModel->align321Model,
 								&m_pLineFitModel->line_ocs[0],
 								&m_pLineFitModel->points_in_line[0],
 								m_pLineFitModel->selectedRefLine);
@@ -338,7 +341,7 @@ void DCP::LineFitDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 								m_pLineFitModel->selectedHeight,
 								m_pLineFitModel->selectedShift,
 								m_pLineFitModel->selectedRotate,
-								m_pLineFitModel->domModel, &m_pLineFitModel->line_ocs[0],
+								m_pLineFitModel->align321Model, &m_pLineFitModel->line_ocs[0],
 								&m_pLineFitModel->points_in_line[0],
 								m_pLineFitModel->selectedRefLine);
 		RefreshControls();
@@ -404,7 +407,7 @@ void DCP::LineFitDialog::RefreshControls()
 		}
 
 		StringC sStatus(L"-");
-		if(m_pLineFitModel->line_buff[0].calc && m_pLineFitModel->domModel->calculated)
+		if(m_pLineFitModel->line_buff[0].calc && m_pLineFitModel->align321Model->calculated)
 			sStatus = L"+";
 		m_pLine->GetStringInputCtrl()->SetString(sStatus);
 
@@ -580,7 +583,7 @@ DCP::LineFitController::LineFitController(DCP::Model* pModel)
 
 	m_pLineFitModel = new LineFitModel();
 
-	m_pLineFitModel->domModel->old_active_coodinate_system = pModel->active_coodinate_system;
+	m_pLineFitModel->align321Model->old_active_coodinate_system = pModel->active_coodinate_system;
 
 	// set active coordinate system to scs
 	pModel->active_coodinate_system = DCS;
@@ -599,7 +602,7 @@ DCP::LineFitController::LineFitController(DCP::Model* pModel)
 	// lasketaan dom jos suora on laskettu koska emme nyt talleta matriisia.. 
 	if(m_pLineFitModel->line_buff[0].calc)
 	{
-		calcLineFit->CalcLineFitDom(m_pLineFitModel->domModel, &m_pLineFitModel->line_buff[0],m_pLineFitModel->selectedRefLine);
+		calcLineFit->CalcLineFitDom(m_pLineFitModel->align321Model, &m_pLineFitModel->line_buff[0],m_pLineFitModel->selectedRefLine);
 		calcLineFit->CalcAllPoints(&m_pLineFitModel->line_buff[0],
 								&m_pLineFitModel->points_buff[0],
 								m_pLineFitModel->linefit_results,
@@ -609,7 +612,7 @@ DCP::LineFitController::LineFitController(DCP::Model* pModel)
 								m_pLineFitModel->selectedHeight,
 								m_pLineFitModel->selectedShift,
 								m_pLineFitModel->selectedRotate,
-								m_pLineFitModel->domModel,
+								m_pLineFitModel->align321Model,
 								&m_pLineFitModel->line_ocs[0],&m_pLineFitModel->points_in_line[0],
 								m_pLineFitModel->selectedRefLine);
 	}
@@ -666,7 +669,7 @@ DCP::LineFitController::~LineFitController()
 		calcLineFit = 0;
 	}
 
-	m_pModel->active_coodinate_system = m_pLineFitModel->domModel->old_active_coodinate_system;
+	m_pModel->active_coodinate_system = m_pLineFitModel->align321Model->old_active_coodinate_system;
 }
 // Description: Route model to everybody else
 bool DCP::LineFitController::SetModel( GUI::ModelC* pModel )
@@ -811,7 +814,7 @@ void DCP::LineFitController::OnF3Pressed()
 	
 	pModel->pLline_buff_ocs = &m_pLineFitModel->line_ocs[0];
 	
-	pModel->domModel = m_pLineFitModel->domModel;
+	pModel->align321Model = m_pLineFitModel->align321Model;
 	pModel->manualHeight = m_pLineFitModel->manualHeight;
 	pModel->rotateAngle = m_pLineFitModel->rotateAngle;
 	pModel->shiftValue = m_pLineFitModel->shiftValue;
@@ -842,7 +845,7 @@ void DCP::LineFitController::OnF5Pressed()
         return;
     }
 
-	if(m_pLineFitModel->line_buff[0].calc != 0 && m_pLineFitModel->domModel->calculated)
+	if(m_pLineFitModel->line_buff[0].calc != 0 && m_pLineFitModel->align321Model->calculated)
 	{
 		DCP::InputTextModel* pModel = new InputTextModel;
 		pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_NEW_FILENAME_TOK);
@@ -925,7 +928,7 @@ void DCP::LineFitController::OnSHF2Pressed()
 			m_pLineFitModel->selectedHeight = FIRST_POINT;
 			m_pLineFitModel->selectedShift = SHIFT_NO;
 			m_pLineFitModel->selectedRotate = ROTATE_NO;
-			calcLineFit->delete_dom_values(m_pLineFitModel->domModel);
+			calcLineFit->delete_align321_values(m_pLineFitModel->align321Model);
 
 			/*m_pShaftModel->active_line =0; 
 			memset(&m_pLineFitModel->line_buff[0],0,sizeof(S_LINE_BUFF));
@@ -1042,7 +1045,7 @@ void DCP::LineFitController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 		m_pLineFitModel->line_buff[0].sta = m_pLineFitModel->line_buff[0].points[0].sta;
 
 		// calc dom
-		calcLineFit->CalcLineFitDom(m_pLineFitModel->domModel, &m_pLineFitModel->line_buff[0],m_pLineFitModel->selectedRefLine);
+		calcLineFit->CalcLineFitDom(m_pLineFitModel->align321Model, &m_pLineFitModel->line_buff[0],m_pLineFitModel->selectedRefLine);
 
 		calcLineFit->CalcAllPoints(&m_pLineFitModel->line_buff[0],
 								&m_pLineFitModel->points_buff[0],
@@ -1053,7 +1056,7 @@ void DCP::LineFitController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 								m_pLineFitModel->selectedHeight,
 								m_pLineFitModel->selectedShift,
 								m_pLineFitModel->selectedRotate,
-								m_pLineFitModel->domModel,
+								m_pLineFitModel->align321Model,
 								&m_pLineFitModel->line_ocs[0],&m_pLineFitModel->points_in_line[0],
 								m_pLineFitModel->selectedRefLine);
 
@@ -1420,7 +1423,7 @@ char sPath[CPI::LEN_PATH_MAX];
 // ===========================================================================================
 DCP::LineFitModel::LineFitModel()
 {
-	domModel = new Alignment321Model;
+	align321Model = new Alignment321Model;
 	
 	memset(&line_buff[0],0, sizeof(S_LINE_BUFF));
 	memset(&line_ocs[0],0, sizeof(S_LINE_BUFF));
@@ -1435,7 +1438,7 @@ DCP::LineFitModel::LineFitModel()
 	selectedHeight = FIRST_POINT;
 	selectedShift = SHIFT_NO;
 	selectedRotate = ROTATE_NO;
-	domModel->calculated = false;
+	align321Model->calculated = false;
 	fileName = L"";
 	selectedRefLine = REF_LINE_HORIZONTAL;
 	/*
@@ -1458,10 +1461,10 @@ DCP::LineFitModel::LineFitModel()
 
 DCP::LineFitModel::~LineFitModel()
 {
-	if(domModel != 0)
+	if(align321Model != 0)
 	{
-		delete domModel;
-		domModel = 0;
+		delete align321Model;
+		align321Model = 0;
 	}
 }
 

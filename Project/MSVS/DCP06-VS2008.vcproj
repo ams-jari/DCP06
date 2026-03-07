@@ -110,7 +110,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="echo === Convert the svg files from SWXRes_Source folders to pngs =======================&#x0D;&#x0A;%SYSTEM1500_ROOT%\Tools\SWXResBuilder\SWXResBuilder.exe &quot;$(ProjectDir)../../&quot; &quot;%INCSCAPE%&quot;&#x0D;&#x0A;echo === Install application on local machine ======================================&#x0D;&#x0A;%SYSTEM1500_ROOT%\Tools\MKTools\MkEdit.exe &quot;-M:mk&quot; &quot;-F:$(ProjectDir)$(ProjectName)_$(ConfigurationName)_$(PlatformName).xml&quot; &quot;-C&quot; &quot;-I:%%@HKLM\Software\Wow6432Node\Leica Geosystems\System 1500\TS\Configuration;DeviceRootPathRelease%%\Leica Geosystems\Leica Captivate\System&quot;&#x0D;&#x0A;echo === Generate loadable application file (*.dxx)  ==================================&#x0D;&#x0A;%SYSTEM1500_ROOT%\Tools\MKTools\MkEdit.exe &quot;-M:mk&quot; &quot;-F:$(ProjectDir)$(ProjectName)_$(ConfigurationName)_$(PlatformName).xml&quot; &quot;-C&quot;&#x0D;&#x0A;"
+				CommandLine="echo === Convert the svg files from SWXRes_Source folders to pngs =======================&#x0D;&#x0A;%SYSTEM1500_ROOT%\Tools\SWXResBuilder\SWXResBuilder.exe &quot;$(ProjectDir)../../&quot; &quot;%INCSCAPE%&quot;&#x0D;&#x0A;echo === Generate language files (DCP06.men to DCP06.LEN) =======================&#x0D;&#x0A;call &quot;$(ProjectDir)..\..\scripts\build_lang.bat&quot;&#x0D;&#x0A;echo === Install application on local machine ======================================&#x0D;&#x0A;%SYSTEM1500_ROOT%\Tools\MKTools\MkEdit.exe &quot;-M:mk&quot; &quot;-F:$(ProjectDir)$(ProjectName)_$(ConfigurationName)_$(PlatformName).xml&quot; &quot;-C&quot; &quot;-I:%%@HKLM\Software\Wow6432Node\Leica Geosystems\System 1500\TS\Configuration;DeviceRootPathRelease%%\Leica Geosystems\Leica Captivate\System&quot;&#x0D;&#x0A;echo === Generate loadable application file (*.dxx)  ==================================&#x0D;&#x0A;%SYSTEM1500_ROOT%\Tools\MKTools\MkEdit.exe &quot;-M:mk&quot; &quot;-F:$(ProjectDir)$(ProjectName)_$(ConfigurationName)_$(PlatformName).xml&quot; &quot;-C&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -510,6 +510,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\measurement\MidPointController.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\core\Logger.cpp"
 				>
 			</File>
 			<File

@@ -29,6 +29,7 @@
 
 #include <dcp06/core/Model.hpp>
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #ifndef DCP_USE_JSON_DATABASE
 #define DCP_USE_JSON_DATABASE 1
@@ -70,7 +71,7 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 					m_nAutoMatch(NO),m_nUnit(MM), m_nDecimals(1),ADFFileName(L""),active_coodinate_system(DCS),
 					isMotorized(false),active_tool(0),isATR(false),tool_trans_x(0.0),tool_trans_y(0.0),tool_trans_z(0.0),
 					poConfigController(0),stationNumber(1),bDemoMode(true), m_nAmsLog(NO),iStartCount(0),chst_last_sel(0), m_nSaveTool(NO),
-					chst_used_hz_plane(0), startDate(0), lastStartedDate(0),fullDemoMode(false)
+					chst_used_hz_plane(0), startDate(0), lastStartedDate(0),fullDemoMode(false), m_currentPointIndex(0)
 
 {
 	
@@ -86,8 +87,8 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 			ocsc_defined = false;
 			ocsu_defined = false;
 
-			pom_into_template	 = 0;
-			pom_into_capture	 = 0;
+			bestFit_into_template	 = 0;
+			bestFit_into_capture	 = 0;
 
 			circle_plane_type = CIRCLE_POINTS_PLANE;
 			circle_cx = 0.0;
@@ -104,18 +105,18 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 			memset(&circle_points[0],0,sizeof(S_CIRCLE_BUFF));
 			memset(&circle_points_in_plane[0],0,sizeof(S_CIRCLE_BUFF));
 
-			// DOM
-			dom_active_plane	= XY_PLANE;
-			dom_active_line		= X_LINE; 
-			dom_hz_plane		= false;
-			memset(&dom_plane_buff[0],0,sizeof(S_PLANE_BUFF));
-			memset(&dom_hz_plane_buff[0],0, sizeof(S_PLANE_BUFF));
-			memset(&dom_line_buff[0], 0, sizeof(S_LINE_BUFF));
-			memset(&dom_ovalues_buff, 0, sizeof(S_POINT_BUFF));
-			memset(&dom_ovalues_tool_buff, 0, sizeof(S_POINT_BUFF));
-			memset(&dom_ref_point_buff, 0, sizeof(S_POINT_BUFF));
-			memset(&dom_rot_plane_buff, 0, sizeof(S_POINT_BUFF));
-			memset(&dom_rot_line_buff, 0, sizeof(S_POINT_BUFF));
+			// 321 Alignment (was DOM)
+			align321_active_plane	= XY_PLANE;
+			align321_active_line		= X_LINE;
+			align321_hz_plane		= false;
+			memset(&align321_plane_buff[0],0,sizeof(S_PLANE_BUFF));
+			memset(&align321_hz_plane_buff[0],0, sizeof(S_PLANE_BUFF));
+			memset(&align321_line_buff[0], 0, sizeof(S_LINE_BUFF));
+			memset(&align321_ovalues_buff, 0, sizeof(S_POINT_BUFF));
+			memset(&align321_ovalues_tool_buff, 0, sizeof(S_POINT_BUFF));
+			memset(&align321_ref_point_buff, 0, sizeof(S_POINT_BUFF));
+			memset(&align321_rot_plane_buff, 0, sizeof(S_POINT_BUFF));
+			memset(&align321_rot_line_buff, 0, sizeof(S_POINT_BUFF));
 
 			// USERDEF
 			userdef_active_plane	= XY_PLANE;
@@ -136,10 +137,10 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 			memset(&userdef_line_points_no[0], 0, sizeof(short)* MAX_USERDEF_POINTS); 
 			userdef_point_no = 0;
 
-			// POM
-			memset(&POM_point_DCS, 0, sizeof(S_POINT_BUFF)*MAX_BESTFIT_POINTS);
-			memset(&POM_point_OCS, 0, sizeof(S_POINT_BUFF)*MAX_BESTFIT_POINTS);
-			memset(&POM_point_RES, 0, sizeof(S_POINT_BUFF)*MAX_BESTFIT_POINTS);
+			// Best Fit (was POM)
+			memset(&BestFit_point_DCS, 0, sizeof(S_POINT_BUFF)*MAX_BESTFIT_POINTS);
+			memset(&BestFit_point_OCS, 0, sizeof(S_POINT_BUFF)*MAX_BESTFIT_POINTS);
+			memset(&BestFit_point_RES, 0, sizeof(S_POINT_BUFF)*MAX_BESTFIT_POINTS);
 
 			memset(&CHST_point_DCS, 0, sizeof(S_POINT_BUFF)*MAX_BESTFIT_POINTS);
 			memset(&CHST_point_OCS, 0, sizeof(S_POINT_BUFF)*MAX_BESTFIT_POINTS);
@@ -236,7 +237,14 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 				std::string dir(dbPath);
 				dir += "/DCP06/jobs";
 				m_pDatabase->setDataDirectory(dir);
+				// DCP06.log in same base path for simulator debugging
+				std::string logPath = std::string(dbPath) + "/DCP06/DCP06.log";
+				DCP::Logger::setLogPath(logPath.c_str());
 			}
+			DCP::Logger::init();  // uses default DCP06.log if setLogPath not called
+			// Enable by default for simulator debugging; m_nAmsLog can override when config loaded
+			DCP::Logger::setEnabled(true);
+			DCP::Logger::setLevel(DCP::Logger::Debug);  // entry/exit tracing uses Debug level
 			//getSpecialInfo();
 			//oVers.
 }
@@ -433,7 +441,7 @@ void DCP::ConfigController::UpdateModel(unsigned int ulKey, CPI::CFG::ArchiveC* 
 	    case CNF_KEY_A321:
 			if(nullptr != poArchive)
 			{	
-				load_dom_data(poArchive, poModel);
+				load_align321_data(poArchive, poModel);
 			}
 			break;
 	
@@ -447,9 +455,9 @@ void DCP::ConfigController::UpdateModel(unsigned int ulKey, CPI::CFG::ArchiveC* 
 		case CNF_KEY_BESTFIT:
 			if(nullptr != poArchive)
 			{	
-				load_pom_data(poArchive, poModel);
-				*poArchive >> poModel->pom_into_capture;
-				*poArchive >> poModel->pom_into_template;
+				load_bestFit_data(poArchive, poModel);
+				*poArchive >> poModel->bestFit_into_capture;
+				*poArchive >> poModel->bestFit_into_template;
 			}
 			break;
 
@@ -541,16 +549,16 @@ void DCP::ConfigController::ReadModel(unsigned int ulKey, CPI::CFG::ArchiveC* po
 	    case CNF_KEY_A321:
 			if(nullptr != poArchive)
 			{	
-				save_dom_data(poArchive, poModel);
+				save_align321_data(poArchive, poModel);
 			}
 			break;
 	
 		case CNF_KEY_BESTFIT:
 			if(nullptr != poArchive)
 			{	
-				save_pom_data(poArchive, poModel);
-				*poArchive << poModel->pom_into_capture;
-				*poArchive << poModel->pom_into_template;
+				save_bestFit_data(poArchive, poModel);
+				*poArchive << poModel->bestFit_into_capture;
+				*poArchive << poModel->bestFit_into_template;
 
 			}
 			break;
@@ -715,25 +723,26 @@ void DCP::ConfigController::load_init_data(CPI::CFG::ArchiveC* poArchive, Model*
 			
 			*poArchive >> poModel->active_coodinate_system;
 			*poArchive >> poModel->m_nAmsLog;
+			DCP::Logger::setEnabled(poModel->m_nAmsLog == 1);
 			*poArchive >> poModel->m_nSaveTool;
 			*poArchive >> poModel->FILE_STORAGE1;
 
 	
 }
 
-void DCP::ConfigController::load_dom_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
+void DCP::ConfigController::load_align321_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
-			*poArchive >> poModel->dom_active_plane; 
-			*poArchive >>  poModel->dom_active_line;
-			*poArchive >>  poModel->dom_hz_plane;
-			load_plane(poArchive,&poModel->dom_plane_buff[0]);
-			load_plane(poArchive,&poModel->dom_hz_plane_buff[0]);
-			load_line(poArchive,&poModel->dom_line_buff[0]);
-			load_point(poArchive,&poModel->dom_ovalues_buff);
-			load_point(poArchive,&poModel->dom_ovalues_tool_buff);
-			load_point(poArchive,&poModel->dom_ref_point_buff);
-			load_point(poArchive,&poModel->dom_rot_plane_buff);
-			load_point(poArchive,&poModel->dom_rot_line_buff);
+			*poArchive >> poModel->align321_active_plane;
+			*poArchive >>  poModel->align321_active_line;
+			*poArchive >>  poModel->align321_hz_plane;
+			load_plane(poArchive,&poModel->align321_plane_buff[0]);
+			load_plane(poArchive,&poModel->align321_hz_plane_buff[0]);
+			load_line(poArchive,&poModel->align321_line_buff[0]);
+			load_point(poArchive,&poModel->align321_ovalues_buff);
+			load_point(poArchive,&poModel->align321_ovalues_tool_buff);
+			load_point(poArchive,&poModel->align321_ref_point_buff);
+			load_point(poArchive,&poModel->align321_rot_plane_buff);
+			load_point(poArchive,&poModel->align321_rot_line_buff);
 
 			*poArchive >> poModel->ocsd_defined;
 
@@ -880,13 +889,13 @@ void DCP::ConfigController::save_lisence(CPI::CFG::ArchiveC* poArchive, Model* p
 		*poArchive << poModel->sKeyCode;
 		*poArchive << poModel->iStartCount;
 }
-void DCP::ConfigController::load_pom_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
+void DCP::ConfigController::load_bestFit_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	for(int i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
-		load_point(poArchive,&poModel->POM_point_DCS[i]);	
-		load_point(poArchive,&poModel->POM_point_OCS[i]);	
-		load_point(poArchive,&poModel->POM_point_RES[i]);	
+		load_point(poArchive,&poModel->BestFit_point_DCS[i]);
+		load_point(poArchive,&poModel->BestFit_point_OCS[i]);
+		load_point(poArchive,&poModel->BestFit_point_RES[i]);
 	}
 
 	*poArchive >> poModel->ocsp_defined;
@@ -1092,34 +1101,34 @@ void DCP::ConfigController::save_init_data(CPI::CFG::ArchiveC* poArchive, Model*
 
 }
 
-void DCP::ConfigController::save_dom_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
-{		
-			*poArchive << poModel->dom_active_plane; 
-			*poArchive <<  poModel->dom_active_line;
-			*poArchive <<  poModel->dom_hz_plane;
-			save_plane(poArchive,&poModel->dom_plane_buff[0]);
-			save_plane(poArchive,&poModel->dom_hz_plane_buff[0]);
-			save_line(poArchive,&poModel->dom_line_buff[0]);
-			save_point(poArchive,&poModel->dom_ovalues_buff);
-			save_point(poArchive,&poModel->dom_ovalues_tool_buff);
-			save_point(poArchive,&poModel->dom_ref_point_buff);
-			save_point(poArchive,&poModel->dom_rot_plane_buff);
-			save_point(poArchive,&poModel->dom_rot_line_buff);
+void DCP::ConfigController::save_align321_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
+{
+			*poArchive << poModel->align321_active_plane;
+			*poArchive <<  poModel->align321_active_line;
+			*poArchive <<  poModel->align321_hz_plane;
+			save_plane(poArchive,&poModel->align321_plane_buff[0]);
+			save_plane(poArchive,&poModel->align321_hz_plane_buff[0]);
+			save_line(poArchive,&poModel->align321_line_buff[0]);
+			save_point(poArchive,&poModel->align321_ovalues_buff);
+			save_point(poArchive,&poModel->align321_ovalues_tool_buff);
+			save_point(poArchive,&poModel->align321_ref_point_buff);
+			save_point(poArchive,&poModel->align321_rot_plane_buff);
+			save_point(poArchive,&poModel->align321_rot_line_buff);
 
 			*poArchive << poModel->ocsd_defined;
 
 			/*
-			DCP_PLANE_TYPE dom_active_plane;
-			DCP_LINE_TYPE  dom_active_line; 
-			bool dom_hz_plane;
-			S_PLANE_BUFF	dom_plane_buff[1];
-			S_PLANE_BUFF	dom_hz_plane_buff[1];
-			S_LINE_BUFF		dom_line_buff[1];
-			S_POINT_BUFF	dom_ovalues_buff;
-			S_POINT_BUFF	dom_ovalues_tool_buff;
-			S_POINT_BUFF	dom_ref_point_buff;
-			S_POINT_BUFF	dom_rot_plane_buff;
-			S_POINT_BUFF	dom_rot_line_buff;
+			DCP_PLANE_TYPE align321_active_plane;
+			DCP_LINE_TYPE  align321_active_line;
+			bool align321_hz_plane;
+			S_PLANE_BUFF	align321_plane_buff[1];
+			S_PLANE_BUFF	align321_hz_plane_buff[1];
+			S_LINE_BUFF		align321_line_buff[1];
+			S_POINT_BUFF	align321_ovalues_buff;
+			S_POINT_BUFF	align321_ovalues_tool_buff;
+			S_POINT_BUFF	align321_ref_point_buff;
+			S_POINT_BUFF	align321_rot_plane_buff;
+			S_POINT_BUFF	align321_rot_line_buff;
 			*/
 }
 
@@ -1178,13 +1187,13 @@ void DCP::ConfigController::save_tool_data(CPI::CFG::ArchiveC* poArchive, Model*
 		}
 }
 
-void DCP::ConfigController::save_pom_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
+void DCP::ConfigController::save_bestFit_data(CPI::CFG::ArchiveC* poArchive, Model* poModel)
 {
 	for(int i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
-		save_point(poArchive,&poModel->POM_point_DCS[i]);	
-		save_point(poArchive,&poModel->POM_point_OCS[i]);	
-		save_point(poArchive,&poModel->POM_point_RES[i]);	
+		save_point(poArchive,&poModel->BestFit_point_DCS[i]);
+		save_point(poArchive,&poModel->BestFit_point_OCS[i]);
+		save_point(poArchive,&poModel->BestFit_point_RES[i]);
 	}
 
 	*poArchive << poModel->ocsp_defined;

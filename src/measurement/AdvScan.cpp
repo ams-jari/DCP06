@@ -14,6 +14,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/measurement/AdvScan.hpp>
 
 //#include <GUI_TabbedDialog.hpp>
@@ -99,6 +100,7 @@ DCP::DCPScanningDialogC::~DCPScanningDialogC()
 //
 void DCP::DCPScanningDialogC::OnDialogActivated()
 {
+	DCP06_TRACE_ENTER;
     // call base
     StandardDialogC::OnDialogActivated();
 	
@@ -107,6 +109,7 @@ void DCP::DCPScanningDialogC::OnDialogActivated()
     {
         m_poAvailableScan->GetSubject()->Notify(GUI::NC_ONCOMBOBOX_SELECTION_CHANGED, DCP::DCPScanningModelC::MI_AVAILABLE_SCAN);
     }
+	DCP06_TRACE_EXIT;
 }
 
 void DCP::DCPScanningDialogC::RefreshControls()
@@ -374,7 +377,7 @@ void HEW::DCPScanningControllerC::OnF1Pressed(void)
         CPI::ModjulC oTime;
         oTime.SetFromUTCTime();
 
-        (void)strScanName.Format(L"HZ_%03.0f∞", m_dHorizScanV);        
+        (void)strScanName.Format(L"HZ_%03.0fù", m_dHorizScanV);        
         m_dHorizScanV += 10.;
         USER_APP_VERIFY( m_spScan->SetScanName(strScanName) );
 
@@ -800,15 +803,15 @@ StringC DCP::DCPScanningControllerC::GetDescription(HEW::ScanningModelC::Predefi
     case HEW::ScanningModelC::PS_HZ_V45:
         {
         StringC strScanName;        
-        (void)strScanName.Format(L"HZ_%03.0f∞", m_dHorizScanV);
+        (void)strScanName.Format(L"HZ_%03.0fù", m_dHorizScanV);
         return strScanName;
         }
 
     case HEW::ScanningModelC::PS_HZ_V90:
-        return L"Horizontal Scan V = 90∞";
+        return L"Horizontal Scan V = 90ù";
 
     case HEW::ScanningModelC::PS_HZ_V135:
-        return L"Horizontal Scan V = 135∞";
+        return L"Horizontal Scan V = 135ù";
 
     default:
         return L"";

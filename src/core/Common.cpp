@@ -275,7 +275,7 @@ void DCP::Common::delete_point(S_POINT_BUFF *points)
 /**************************************************************
 		  check how many points are defined
 ***************************************************************/
-short DCP::Common::defined_pom_points(S_POINT_BUFF *point_OCS, short *lastpoint)
+short DCP::Common::defined_bestFit_points(S_POINT_BUFF *point_OCS, short *lastpoint)
 {
 short points_defined=0,i;
 	
@@ -1080,17 +1080,17 @@ short DCP::Common::get_rotation_status()
 double deg;
 short ACTIVE_PLANE, rotation=false;
 
-		ACTIVE_PLANE = m_pModel->dom_active_plane; //get_active_plane_dom();
+		ACTIVE_PLANE = m_pModel->align321_active_plane; //get_active_plane_dom();
 
 		if(ACTIVE_PLANE == XY_PLANE)
 		{
-			deg = m_pModel->dom_rot_plane_buff.x;//get_x_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.x;//get_x_plane_rot();
 			if(deg != 0.0)
 			{
 			  rotation = true;
 			} 
 
-			deg = m_pModel->dom_rot_plane_buff.y;//get_y_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.y;//get_y_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -1098,13 +1098,13 @@ short ACTIVE_PLANE, rotation=false;
 		} 
 		else if(ACTIVE_PLANE == ZX_PLANE)
 		{
-			deg = m_pModel->dom_rot_plane_buff.x;//get_x_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.x;//get_x_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
 			}
 
-			deg = m_pModel->dom_rot_plane_buff.z; //get_z_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.z; //get_z_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
@@ -1112,13 +1112,13 @@ short ACTIVE_PLANE, rotation=false;
 		}
 		else if(ACTIVE_PLANE == YZ_PLANE)
 		{
-			deg = m_pModel->dom_rot_plane_buff.y; //get_y_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.y; //get_y_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;
 			}
 
-			deg = m_pModel->dom_rot_plane_buff.z;//get_z_plane_rot();
+			deg = m_pModel->align321_rot_plane_buff.z;//get_z_plane_rot();
 			if(deg != 0.0)
 			{
 				rotation = true;

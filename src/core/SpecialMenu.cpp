@@ -49,6 +49,7 @@
 #include <dcp06/core/MsgBox.hpp>  
 
 #include "dcp06/core/Defs.hpp"
+#include <dcp06/core/Logger.hpp>
 
 //lint -e714 Symbol not referenced
 
@@ -81,7 +82,7 @@ SpecialMenuDialog::~SpecialMenuDialog()
 
 void SpecialMenuDialog::OnInitDialog(void)
 {
-		
+	DCP06_TRACE_ENTER;
 	SetTitle(StringC(AT_DCP06,T_DCP_SPECIAL_MENU_TOK ));
 	//SetHelpTok(H_DCP_SPECIAL_MENU_TOK,0);
 	/*
@@ -119,7 +120,7 @@ void SpecialMenuDialog::OnInitDialog(void)
 		DisableMenuItem(HOME_POINTS);
 		*/
 	}
-
+	DCP06_TRACE_EXIT;
 }
 
 // Description: Called if selection is completed (by ENTER, mouse click or numeric keys)
@@ -127,13 +128,16 @@ void SpecialMenuDialog::OnInitDialog(void)
 
 void SpecialMenuDialog::OnSelectionDone(void)
 {
+	DCP06_TRACE_ENTER;
 	short unId = GetSelected();
 	
 	OnF1Pressed();
+	DCP06_TRACE_EXIT;
 }
 
 void SpecialMenuDialog::OnF1Pressed(void)
 {
+	DCP06_TRACE_ENTER;
 	/*if(m_pModel->bDemoMode)
 	{
 		MsgBox msgBox;
@@ -144,12 +148,14 @@ void SpecialMenuDialog::OnF1Pressed(void)
 	{*/
 		Close(GetSelected());
 	//}
+	DCP06_TRACE_EXIT;
 }
 
 
 DCP::SpecialMenuController::SpecialMenuController(Model* pModel,int showItems) 
     : m_pDlg( nullptr ),m_pModel(pModel)
 {
+	DCP06_TRACE_ENTER;
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
@@ -174,8 +180,7 @@ DCP::SpecialMenuController::SpecialMenuController(Model* pModel,int showItems)
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
-
-
+	DCP06_TRACE_EXIT;
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
 DCP::SpecialMenuController::~SpecialMenuController()
@@ -185,9 +190,11 @@ DCP::SpecialMenuController::~SpecialMenuController()
 // Description: Handle change of position values
 void DCP::SpecialMenuController::OnF1Pressed()
 {
+	DCP06_TRACE_ENTER;
     // Remove the following statement if you don't want an exit
     // to the main menu
     (void)Close(EC_KEY_CONT);
+	DCP06_TRACE_EXIT;
 }
 
 

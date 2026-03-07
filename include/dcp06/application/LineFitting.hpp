@@ -213,7 +213,7 @@ namespace DCP
 			int selectedShift;
 			int selectedRotate;
 			StringC fileName;
-			Alignment321Model* domModel;
+			Alignment321Model* align321Model;
 
 			S_LINE_BUFF line_ocs[1];
 			S_POINT_BUFF points_in_line[MAX_LINEFIT_POINTS];

@@ -67,7 +67,7 @@ namespace DCP
 								int selectedHeight,
 								int selectedShift,
 								int selectedRotate,
-								Alignment321Model* domModel,
+								Alignment321Model* align321Model,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* pointsInLine,
 								int selectedRefLine);
@@ -80,21 +80,21 @@ namespace DCP
 								double rotateAngle,
 								int selectedHeight,
 								int selectedShift,
-								int selectedRotate,Alignment321Model* domModel,
+								int selectedRotate,Alignment321Model* align321Model,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* pointsInLine,int selectedRefLine);//(/*point_buff_ *point_OCS,point_buff_ *point_DCS*/);
 
-			short CalcLineFitDom(Alignment321Model* domModel, S_LINE_BUFF* line_buff, int refLine);
-			void delete_dom_values(Alignment321Model* domModel);
+			short CalcLineFitDom(Alignment321Model* align321Model, S_LINE_BUFF* line_buff, int refLine);
+			void delete_align321_values(Alignment321Model* align321Model);
 	private:
 		Common* common;
-		short set_horizontal_plane(Alignment321Model* domModel);
-		short set_hz_plane1(Alignment321Model* domModel,short actualdesign);
+		short set_horizontal_plane(Alignment321Model* align321Model);
+		short set_hz_plane1(Alignment321Model* align321Model,short actualdesign);
 		short calc_plane(S_PLANE_BUFF *plane, short actdes);
 		
-		short convert_point_to_ocs(S_POINT_BUFF* points, short index, Alignment321Model* domModel, double (*p_out)[4]);
-		short convert_point_to_ocs(double p_in[4], Alignment321Model* domModel, double (*p_out)[4]);
-		short convert_point_to_scs(double p_in[4], Alignment321Model* domModel, double (*p_out)[4]);
+		short convert_point_to_ocs(S_POINT_BUFF* points, short index, Alignment321Model* align321Model, double (*p_out)[4]);
+		short convert_point_to_ocs(double p_in[4], Alignment321Model* align321Model, double (*p_out)[4]);
+		short convert_point_to_scs(double p_in[4], Alignment321Model* align321Model, double (*p_out)[4]);
 	//	//DCP::BestFitModel *m_pBestFitModel;
 		Model* m_pModel;
     };

@@ -146,11 +146,11 @@ void DCP::ResBestFitDialog::OnF1Pressed(void)
 	
 	short iMin = 3;
 
-	if(m_pDataModel->pom_chst == 0)
+	if(m_pDataModel->bestFit_chst == 0)
 		iMin = 3;
 	else
 	{
-		iMin = (!m_pCommon->get_rotation_status() && GetModel()->dom_hz_plane) ? 2 : 3;
+		iMin = (!m_pCommon->get_rotation_status() && GetModel()->align321_hz_plane) ? 2 : 3;
 	}
 	
 	

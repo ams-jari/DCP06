@@ -221,8 +221,8 @@ bool DCP::LineSettingDialog::SetModel( GUI::ModelC* pModel )
     {
 		// kopioidaan tarvittavat arvot
 		m_pDataModel->left_cds = pDcpModel->m_nLeftRightHand;
-		memcpy(&m_pDataModel->line_dom[0],&pDcpModel->dom_line_buff[0],sizeof(S_LINE_BUFF));
-		m_pDataModel->line = m_pDataModel->line_dom;
+		memcpy(&m_pDataModel->line_align321[0],&pDcpModel->align321_line_buff[0],sizeof(S_LINE_BUFF));
+		m_pDataModel->line = m_pDataModel->line_align321;
 
         RefreshControls();
 		return true;

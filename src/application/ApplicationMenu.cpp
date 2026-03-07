@@ -50,6 +50,7 @@
 #include <dcp06/core/MsgBox.hpp>
  
 #include "dcp06/core/Defs.hpp"
+#include <dcp06/core/Logger.hpp>
 
 //lint -e714 Symbol not referenced
 
@@ -95,7 +96,7 @@ ApplicationMenuDialog::~ApplicationMenuDialog()
 // ================================================================================================
 void ApplicationMenuDialog::OnInitDialog(void)
 {
-		
+	DCP06_TRACE_ENTER;
 	SetTitle(StringC(AT_DCP06,T_DCP_APPLICATION_MENU_TOK ));
 	//SetHelpTok(H_DCP_APPLICATION_MENU_TOK,0);
 
@@ -127,7 +128,7 @@ void ApplicationMenuDialog::OnInitDialog(void)
 		DisableMenuItem(FRONT_BACK_SINGLE);
 		DisableMenuItem(SHAFT_ALIGMENT);
 		*/
-		//SetSelected(-1);
+		//		SetSelected(-1);
 	}
 
     FKDef vDef;
@@ -144,7 +145,7 @@ void ApplicationMenuDialog::OnInitDialog(void)
 	SetFunctionKey( SHFK6, vDef1 );
 	SetFunctionKey( SHFK2, vDef1 );
 
-
+	DCP06_TRACE_EXIT;
 }
 
 // ================================================================================================
@@ -152,9 +153,11 @@ void ApplicationMenuDialog::OnInitDialog(void)
 // ================================================================================================
 void ApplicationMenuDialog::OnSelectionDone(void)
 {
+	DCP06_TRACE_ENTER;
 	short unId = GetSelected();
-	
+	DCP06_TRACE_POINT("selected=%d", unId);
 	OnF1Pressed();
+	DCP06_TRACE_EXIT;
 }
 
 // ================================================================================================
@@ -162,7 +165,7 @@ void ApplicationMenuDialog::OnSelectionDone(void)
 // ================================================================================================
 void ApplicationMenuDialog::OnF1Pressed(void)
 {
-
+	DCP06_TRACE_ENTER;
 	short unId = GetSelected();
 	
 	/*if(m_pModel->bDemoMode)
@@ -176,6 +179,7 @@ void ApplicationMenuDialog::OnF1Pressed(void)
 	
 		Close(GetSelected());
 	//}
+	DCP06_TRACE_EXIT;
 }
 
 

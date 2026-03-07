@@ -144,7 +144,7 @@ namespace DCP
 
 			virtual void RefreshControls();
 
-			virtual void delete_dom();
+			virtual void delete_align321();
 			void load_data_from_dcp05model();
 
 	protected:
@@ -189,17 +189,17 @@ namespace DCP
             //
             virtual ~Alignment321UserDefModel();
 			/*
-			short dom_active_plane;
-			short   dom_active_line; 
-			bool dom_hz_plane;
-			S_PLANE_BUFF	dom_plane_buff[1];
-			S_PLANE_BUFF	dom_hz_plane_buff[1];
-			S_LINE_BUFF		dom_line_buff[1];
-			S_POINT_BUFF	dom_ovalues_buff;
-			S_POINT_BUFF	dom_ovalues_tool_buff;
-			S_POINT_BUFF	dom_ref_point_buff;
-			S_POINT_BUFF	dom_rot_plane_buff;
-			S_POINT_BUFF	dom_rot_line_buff;
+			short align321_active_plane;
+			short   align321_active_line; 
+			bool align321_hz_plane;
+			S_PLANE_BUFF	align321_plane_buff[1];
+			S_PLANE_BUFF	align321_hz_plane_buff[1];
+			S_LINE_BUFF		align321_line_buff[1];
+			S_POINT_BUFF	align321_ovalues_buff;
+			S_POINT_BUFF	align321_ovalues_tool_buff;
+			S_POINT_BUFF	align321_ref_point_buff;
+			S_POINT_BUFF	align321_rot_plane_buff;
+			S_POINT_BUFF	align321_rot_line_buff;
 
 			double matrix[4][4];
 			double inv_matrix[4][4];
@@ -207,7 +207,7 @@ namespace DCP
 			bool ocsd_defined;
 			short  old_active_coodinate_system;
 			*/
-			Alignment321Model* domModel;
+			Alignment321Model* align321Model;
 
 			S_POINT_BUFF userdef_measured_points[MAX_USERDEF_POINTS];
 			short userdef_plane_points_no[20];

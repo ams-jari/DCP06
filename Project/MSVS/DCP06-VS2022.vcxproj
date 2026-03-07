@@ -91,6 +91,8 @@
     <PostBuildEvent>
       <Command>echo === Convert the svg files from SWXRes_Source folders to pngs =======================
 %25SYSTEM1500_ROOT%25\Tools\SWXResBuilder\SWXResBuilder.exe "$(ProjectDir)../../" "%25INCSCAPE%25"
+echo === Generate language files (DCP06.men to DCP06.LEN) =======================
+call "$(ProjectDir)..\..\scripts\build_lang.bat"
 echo === Install application on local machine ======================================
 %25SYSTEM1500_ROOT%25\Tools\MKTools\MkEdit.exe "-M:mk" "-F:$(ProjectDir)$(ProjectName)_$(Configuration)_$(Platform).xml" "-C" "-I:C:\Users\Public\Documents\Leica Captivate\CS_x64\Leica Geosystems\Leica Captivate\System"
 echo === Generate loadable application file (*.dxx)  ==================================
@@ -208,6 +210,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\orientation\MeasV.cpp" />
     <ClCompile Include="..\..\src\measurement\MeasXYZ.cpp" />
     <ClCompile Include="..\..\src\measurement\MidPointController.cpp" />
+    <ClCompile Include="..\..\src\core\Logger.cpp" />
     <ClCompile Include="..\..\src\core\Model.cpp" />
     <ClCompile Include="..\..\src\core\MsgBox.cpp" />
     <ClCompile Include="..\..\src\orientation\Offsv.cpp" />

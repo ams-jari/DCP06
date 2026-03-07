@@ -158,7 +158,7 @@ namespace DCP
 			double ang,ang1,ang2,pit,kulma,ang_h,ang_p;
 			double ver_temp, theta1, fii1; 
 			short left_cds;
-			S_LINE_BUFF line_dom[1];
+			S_LINE_BUFF line_align321[1];
 			S_LINE_BUFF line_userdef[1];
 			S_LINE_BUFF* line;
 

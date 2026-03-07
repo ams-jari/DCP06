@@ -89,18 +89,18 @@ namespace DCP
 				DCP_MATRIX matrix;
 				double hidden_point_bar[MAX_POINTS_IN_HIDDENPOINT_BAR];				
 
-				// DOM
-				DCP_PLANE_TYPE dom_active_plane;
-				DCP_LINE_TYPE  dom_active_line; 
-				bool dom_hz_plane;
-				S_PLANE_BUFF	dom_plane_buff[1];
-				S_PLANE_BUFF	dom_hz_plane_buff[1];
-				S_LINE_BUFF		dom_line_buff[1];
-				S_POINT_BUFF	dom_ovalues_buff;
-				S_POINT_BUFF	dom_ovalues_tool_buff;
-				S_POINT_BUFF	dom_ref_point_buff;
-				S_POINT_BUFF	dom_rot_plane_buff;
-				S_POINT_BUFF	dom_rot_line_buff;
+				// 321 Alignment (was DOM)
+				DCP_PLANE_TYPE align321_active_plane;
+				DCP_LINE_TYPE  align321_active_line;
+				bool align321_hz_plane;
+				S_PLANE_BUFF	align321_plane_buff[1];
+				S_PLANE_BUFF	align321_hz_plane_buff[1];
+				S_LINE_BUFF		align321_line_buff[1];
+				S_POINT_BUFF	align321_ovalues_buff;
+				S_POINT_BUFF	align321_ovalues_tool_buff;
+				S_POINT_BUFF	align321_ref_point_buff;
+				S_POINT_BUFF	align321_rot_plane_buff;
+				S_POINT_BUFF	align321_rot_line_buff;
 
 			}DCP_DATA;
 			*/
@@ -153,6 +153,7 @@ namespace DCP
 
 			StringC ADFFileName;
 			std::string m_currentJobId;  // DB-primary: active job (empty = no job / legacy ADF mode)
+			int m_currentPointIndex;     // DB-primary: 1-based current point in 3D view (0 = none)
 
 			//short m_ActiveCoordinateSystem;
 			
@@ -187,18 +188,18 @@ namespace DCP
 			bool ocsc_defined;
 			bool ocsu_defined;
 			
-			// DOM
-			short dom_active_plane;
-			short dom_active_line; 
-			bool dom_hz_plane;
-			S_PLANE_BUFF	dom_plane_buff[1];
-			S_PLANE_BUFF	dom_hz_plane_buff[1];
-			S_LINE_BUFF		dom_line_buff[1];
-			S_POINT_BUFF	dom_ovalues_buff;
-			S_POINT_BUFF	dom_ovalues_tool_buff;
-			S_POINT_BUFF	dom_ref_point_buff;
-			S_POINT_BUFF	dom_rot_plane_buff;
-			S_POINT_BUFF	dom_rot_line_buff;
+			// 321 Alignment (was DOM)
+			short align321_active_plane;
+			short align321_active_line; 
+			bool align321_hz_plane;
+			S_PLANE_BUFF	align321_plane_buff[1];
+			S_PLANE_BUFF	align321_hz_plane_buff[1];
+			S_LINE_BUFF		align321_line_buff[1];
+			S_POINT_BUFF	align321_ovalues_buff;
+			S_POINT_BUFF	align321_ovalues_tool_buff;
+			S_POINT_BUFF	align321_ref_point_buff;
+			S_POINT_BUFF	align321_rot_plane_buff;
+			S_POINT_BUFF	align321_rot_line_buff;
 			
 			// USERDEF
 			short userdef_active_plane;
@@ -220,13 +221,13 @@ namespace DCP
 			short userdef_point_no;
 
 
-			// POM
-			S_POINT_BUFF	POM_point_DCS[MAX_BESTFIT_POINTS];
-			S_POINT_BUFF	POM_point_OCS[MAX_BESTFIT_POINTS];
-			S_POINT_BUFF	POM_point_RES[MAX_BESTFIT_POINTS];
+			// Best Fit (was POM)
+			S_POINT_BUFF	BestFit_point_DCS[MAX_BESTFIT_POINTS];
+			S_POINT_BUFF	BestFit_point_OCS[MAX_BESTFIT_POINTS];
+			S_POINT_BUFF	BestFit_point_RES[MAX_BESTFIT_POINTS];
 
-			short pom_into_capture;
-			short pom_into_template;
+			short bestFit_into_capture;
+			short bestFit_into_template;
 
 			// CHST
 			S_POINT_BUFF	CHST_point_DCS[MAX_BESTFIT_POINTS];
@@ -392,8 +393,8 @@ namespace DCP
 			void load_crl_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void load_shaft_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void load_init_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
-			void load_dom_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
-			void load_pom_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_align321_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void load_bestFit_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void load_chst_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void load_userdef_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void load_matrix_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
@@ -404,8 +405,8 @@ namespace DCP
 			void save_crl_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void save_shaft_file_name(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void save_init_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
-			void save_dom_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
-			void save_pom_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_align321_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
+			void save_bestFit_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void save_chst_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void save_userdef_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);
 			void save_matrix_data(CPI::CFG::ArchiveC* poArchive, Model* pModel);

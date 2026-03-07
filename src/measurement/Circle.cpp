@@ -28,6 +28,7 @@
 
 #include "calc.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/init/Initialization.hpp>
 #include <dcp06/core/Measure.hpp>
 #include <dcp06/core/SpecialMenu.hpp>
@@ -100,6 +101,7 @@ DCP::CircleDialog::~CircleDialog()
 // ================================================================================================
 void DCP::CircleDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 	
 	// Add fields to dialog
@@ -167,7 +169,7 @@ void DCP::CircleDialog::OnInitDialog(void)
 	*/
 	if(m_iDisplay != SHAFT_DLG)
 	m_pToolRadiusObserver.Attach(m_pToolRadius->GetSubject());
-
+	DCP06_TRACE_EXIT;
 }
 
 // ================================================================================================

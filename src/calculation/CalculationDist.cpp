@@ -34,6 +34,7 @@
 #include <dcp06/measurement/HiddenPoint.hpp>
 #include <dcp06/calculation/CalculationDist.hpp>
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/file/SelectFile.hpp>
 #include <dcp06/core/SelectOnePoint.hpp>
 #include <dcp06/core/SelectMultiPoints.hpp>
@@ -97,6 +98,7 @@ DCP::CalculationDistDialog::~CalculationDistDialog()
 // ================================================================================================
 void DCP::CalculationDistDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 	// Add fields to dialog
 	

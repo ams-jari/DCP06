@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/orientation/DefinePlane.hpp>
 #include <dcp06/core/Measure.hpp>
 #include <dcp06/core/Defs.hpp>
@@ -85,6 +86,7 @@ DCP::DefinePlaneDialog::~DefinePlaneDialog()
 
 void DCP::DefinePlaneDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 	//SetColonPosLong( GUI::StandardDialogC::CP_20 );
 	//unsigned short unHeight = DialogC::GetDefaultCtrlHeight();
@@ -132,6 +134,7 @@ void DCP::DefinePlaneDialog::OnInitDialog(void)
 	
 	//SetHelpTok(H_DCP_DOM_PLANE_TOK,0);
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
+	DCP06_TRACE_EXIT;
 }
 
 void DCP::DefinePlaneDialog::OnDialogActivated()
@@ -236,7 +239,7 @@ void DCP::DefinePlaneDialog::delete_plane()
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
 		GetDataModel()->active_plane	= XY_PLANE;
-		//m_pDomModel->dom_active_line	= pModel->active_line; 
+		//m_pAlign321Model->align321_active_line	= pModel->active_line; 
 		GetDataModel()->hz_plane		= false;
 		memset(&GetDataModel()->plane_buff[0], 0, sizeof(S_PLANE_BUFF));
 		memset(&GetDataModel()->hz_plane_buff[0], 0, sizeof(S_PLANE_BUFF));
@@ -272,7 +275,7 @@ bool DCP::DefinePlaneDialog::CalculatePlaneAfterMeas()
 			GetDataModel()->plane_buff[0].points[i].sta = POINT_MEASURED;
 
 	}
-	if(GetDataModel()->display == DOM_DLG)
+	if(GetDataModel()->display == A321_DLG)
 		GetDataModel()->hz_plane = false;
 
 	if(calc_plane(&GetDataModel()->plane_buff[0],ACTUAL))
@@ -363,7 +366,7 @@ short dist_count,ret;
 
 			/* 6.11.1995 */
 			/*
-			if(GetDataModel()->display == DOM_DLG)
+			if(GetDataModel()->display == A321_DLG)
 			{*/
 				sprintf(GetDataModel()->hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
 				sprintf(GetDataModel()->hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
@@ -371,7 +374,7 @@ short dist_count,ret;
 				GetDataModel()->hz_plane = true;
 			/*
 			}
-			if(GetDataModel()->display == DOM_USER_DLG)
+			if(GetDataModel()->display == A321_USERDEF_DLG)
 			{
 							sprintf(&GetModel()->hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
 				sprintf(&GetModel()->hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
@@ -383,7 +386,7 @@ short dist_count,ret;
 		}
 		else
 		{
-			//if(display == DOM_DSP)
+			//if(display == A321_DLG)
 				GetDataModel()->hz_plane = false;
 			
 			//else if(display == DLG_DOMUSER)
@@ -411,7 +414,7 @@ short ret;
 
 	points = common.points_count_in_plane(&GetDataModel()->hz_plane_buff[0]);
 
-	if(GetDataModel()->display == DOM_DLG || GetDataModel()->display == DOM_USERDEF_DLG)
+	if(GetDataModel()->display == A321_DLG || GetDataModel()->display == A321_USERDEF_DLG)
 	{
 		if(points > 0)
 		{
@@ -754,7 +757,7 @@ void DCP::DefinePlaneController::OnActiveControllerClosed( int lCtrlID, int lExi
 		m_pDlg->GetDataModel()->plane_buff[0].points[4].sta = 1;
 		*/
 		
-		if(m_pDlg->GetDataModel()->display == DOM_DLG)
+		if(m_pDlg->GetDataModel()->display == A321_DLG)
 		m_pDlg->GetDataModel()->hz_plane = false;
 		
 		if(GetController(CALC_PLANE_CONTROLLER) == nullptr)

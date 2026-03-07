@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/orientation/BestFit.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/file/SelectFile.hpp>
@@ -84,6 +85,7 @@ DCP::BestFitDialog::~BestFitDialog()
 
 void DCP::BestFitDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 	m_pCommon = new Common(GetModel());
 
 	GUI::BaseDialogC::OnInitDialog();
@@ -150,28 +152,32 @@ void DCP::BestFitDialog::OnInitDialog(void)
 	SetFunctionKey( FK1, vDef );
 */
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
+	DCP06_TRACE_EXIT;
 }
 
 void DCP::BestFitDialog::OnDialogActivated()
 {
+	DCP06_TRACE_ENTER;
 	m_pDataModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
 	memcpy(m_pDataModel->matrix,GetModel()->ocsp_matrix, sizeof(double) * 16);
 	memcpy(m_pDataModel->inv_matrix,GetModel()->ocsp_inv_matrix, sizeof(double) * 16);
 	m_pDataModel->calculated = (GetModel()->ocsp_defined  && GetModel()->active_coodinate_system == OCSP) ? true :false;
 
-	memcpy(&m_pDataModel->point_DCS[0], &GetModel()->POM_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_OCS[0], &GetModel()->POM_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&m_pDataModel->point_RES[0], &GetModel()->POM_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_DCS[0], &GetModel()->BestFit_point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_OCS[0], &GetModel()->BestFit_point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&m_pDataModel->point_RES[0], &GetModel()->BestFit_point_RES[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	
-	m_pDataModel->INTO_CAPTURE = GetModel()->pom_into_capture;
-	m_pDataModel->INTO_TEMPLATE = GetModel()->pom_into_template;
+	m_pDataModel->INTO_CAPTURE = GetModel()->bestFit_into_capture;
+	m_pDataModel->INTO_TEMPLATE = GetModel()->bestFit_into_template;
 	m_pDataModel->ocs_defined = GetModel()->ocsp_defined;
 	RefreshControls();
+	DCP06_TRACE_EXIT;
 }
 
 // Description: refresh all controls
 void DCP::BestFitDialog::RefreshControls()
-{	
+{
+	DCP06_TRACE_ENTER;
 	if(m_pFile && m_pPoints && 	m_pPointMeas &&  m_pCalc)
 	{
 		Common common(GetModel());
@@ -197,23 +203,24 @@ void DCP::BestFitDialog::RefreshControls()
 
 		m_pCalc->GetStringInputCtrl()->SetString(sStat);
 	}
+	DCP06_TRACE_EXIT;
 }
 
 void DCP::BestFitDialog::UpdateData()
 {
-
+	DCP06_TRACE_ENTER;
 	// copy values
 
 	//m_pDataModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
 	memcpy(GetModel()->ocsp_matrix,m_pDataModel->matrix, sizeof(double) * 16);
 	memcpy(GetModel()->ocsp_inv_matrix, m_pDataModel->inv_matrix, sizeof(double) * 16);
 
-	memcpy(&GetModel()->POM_point_DCS[0],&m_pDataModel->point_DCS[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy( &GetModel()->POM_point_OCS[0], &m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	memcpy(&GetModel()->POM_point_RES[0],&m_pDataModel->point_RES[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&GetModel()->BestFit_point_DCS[0],&m_pDataModel->point_DCS[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy( &GetModel()->BestFit_point_OCS[0], &m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memcpy(&GetModel()->BestFit_point_RES[0],&m_pDataModel->point_RES[0],  sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 
-	GetModel()->pom_into_capture  = m_pDataModel->INTO_CAPTURE;
-	GetModel()->pom_into_template = m_pDataModel->INTO_TEMPLATE;
+	GetModel()->bestFit_into_capture  = m_pDataModel->INTO_CAPTURE;
+	GetModel()->bestFit_into_template = m_pDataModel->INTO_TEMPLATE;
 	GetModel()->ocsp_defined = m_pDataModel->ocs_defined;
 	if(m_pDataModel->ocs_defined)
 		GetModel()->active_coodinate_system = OCSP;
@@ -226,6 +233,7 @@ void DCP::BestFitDialog::UpdateData()
 	GetModel()->poConfigController->StoreConfigData();
 
 	update_bft_adf();
+	DCP06_TRACE_EXIT;
 
 	//GetModel()->m_nOption = m_pComboBox->GetComboBoxInputCtrl()->GetSelectedId();
 }
@@ -528,11 +536,11 @@ DCP::BestFitController::BestFitController(Model* pModel)
 
 	// create model
 	m_pDataModel = new BestFitModel;
-	m_pDataModel->pom_chst = 0;
+	m_pDataModel->bestFit_chst = 0;
 
     // Create a dialog
     m_pDlg = new DCP::BestFitDialog(m_pDataModel);  //lint !e1524 new in constructor for class 
-    (void)AddDialog( POM_DLG, m_pDlg, true );
+    (void)AddDialog( BESTFIT_DLG, m_pDlg, true );
 	
     // Set the function key
 	
@@ -605,7 +613,7 @@ void DCP::BestFitController::OnF1Pressed()
 
 		if(common.get_OCS_points_count(&m_pDataModel->point_OCS[0],MAX_BESTFIT_POINTS) > 0)
 		{
-			if(!delete_pom())
+			if(!delete_bestFit())
 			{
 				return;
 			}
@@ -635,7 +643,7 @@ void DCP::BestFitController::OnF2Pressed()
 
 	memcpy(&pModel->points[0], &m_pDataModel->point_OCS[0],sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	memcpy(&pModel->points1[0], &m_pDataModel->point_DCS[0],sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
-	pModel->iDisplay = POM_DLG;
+	pModel->iDisplay = BESTFIT_DLG;
 	pModel->iMaxPoint = MAX_BESTFIT_POINTS;
 	pModel->iMinPoint = 3;
 	pModel->iCurrentPoint = 1;
@@ -673,7 +681,7 @@ void DCP::BestFitController::OnF3Pressed()
 	MsgBox msgbox;
 	StringC msg;
 
-	short sum = common.defined_pom_points(&m_pDataModel->point_OCS[0],nullptr);
+	short sum = common.defined_bestFit_points(&m_pDataModel->point_OCS[0],nullptr);
 	if(sum==0)
 	{
 		msg.LoadTxt(AT_DCP05,M_DCP_NO_POINTS_TOK	);
@@ -833,7 +841,7 @@ void DCP::BestFitController::OnF6Pressed()
 
 void DCP::BestFitController::OnSHF2Pressed()
 {	
-	delete_pom();
+	delete_bestFit();
 	m_pDlg->RefreshControls();
 
 }
@@ -988,7 +996,7 @@ void DCP::BestFitController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 	DestroyController( lCtrlID );
 }
 
-bool DCP::BestFitController::delete_pom()
+bool DCP::BestFitController::delete_bestFit()
 {
 		StringC strPomText;
 		strPomText.LoadTxt(AT_DCP05,L_DCP_POM_TEXT_TOK);

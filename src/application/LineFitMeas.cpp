@@ -1059,7 +1059,7 @@ void DCP::LineFitMeasController::calculate_linefit(short iCurrPoint)
 		m_pDlg->GetDataModel()->selectedHeight,
 		m_pDlg->GetDataModel()->selectedShift,
 		m_pDlg->GetDataModel()->selectedRotate,
-		m_pDlg->GetDataModel()->domModel,
+		m_pDlg->GetDataModel()->align321Model,
 		&m_pDlg->GetDataModel()->pLline_buff_ocs[0],
 		&m_pDlg->GetDataModel()->points_in_line[0],
 		m_pDlg->GetDataModel()->selectedRefLine);

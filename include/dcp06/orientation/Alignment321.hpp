@@ -114,7 +114,7 @@ namespace DCP
 				eCalc
 			};
 
-		   Alignment321Dialog(Alignment321Model* pDomModel);
+		   Alignment321Dialog(Alignment321Model* pAlign321Model);
 
             // Description: Destructor
             virtual ~Alignment321Dialog();
@@ -135,7 +135,7 @@ namespace DCP
 
 			virtual void RefreshControls();
 
-			virtual void delete_dom();
+			virtual void delete_align321();
 
 	protected:
 			
@@ -179,17 +179,17 @@ namespace DCP
             //
             virtual ~Alignment321Model();
 
-			short /*DCP_PLANE_TYPE*/ dom_active_plane;
-			short /*DCP_LINE_TYPE*/  dom_active_line; 
-			bool dom_hz_plane;
-			S_PLANE_BUFF	dom_plane_buff[1];
-			S_PLANE_BUFF	dom_hz_plane_buff[1];
-			S_LINE_BUFF		dom_line_buff[1];
-			S_POINT_BUFF	dom_ovalues_buff;
-			S_POINT_BUFF	dom_ovalues_tool_buff;
-			S_POINT_BUFF	dom_ref_point_buff;
-			S_POINT_BUFF	dom_rot_plane_buff;
-			S_POINT_BUFF	dom_rot_line_buff;
+			short /*DCP_PLANE_TYPE*/ align321_active_plane;
+			short /*DCP_LINE_TYPE*/  align321_active_line; 
+			bool align321_hz_plane;
+			S_PLANE_BUFF	align321_plane_buff[1];
+			S_PLANE_BUFF	align321_hz_plane_buff[1];
+			S_LINE_BUFF		align321_line_buff[1];
+			S_POINT_BUFF	align321_ovalues_buff;
+			S_POINT_BUFF	align321_ovalues_tool_buff;
+			S_POINT_BUFF	align321_ref_point_buff;
+			S_POINT_BUFF	align321_rot_plane_buff;
+			S_POINT_BUFF	align321_rot_line_buff;
 
 			double matrix[4][4];
 			double inv_matrix[4][4];

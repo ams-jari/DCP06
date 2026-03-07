@@ -275,7 +275,7 @@ void DCP::DefinePlaneUserDefDialog::delete_plane()
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
 		GetDataModel()->planeModel->active_plane	= XY_PLANE;
-		//m_pDomModel->dom_active_line	= pModel->active_line; 
+		//m_pAlign321Model->align321_active_line	= pModel->active_line; 
 		GetDataModel()->planeModel->hz_plane		= false;
 		memset(&GetDataModel()->planeModel->plane_buff[0], 0, sizeof(S_PLANE_BUFF));
 		memset(&GetDataModel()->planeModel->hz_plane_buff[0], 0, sizeof(S_PLANE_BUFF));
@@ -312,7 +312,7 @@ bool DCP::DefinePlaneUserDefDialog::CalculatePlaneAfterMeas()
 			GetDataModel()->planeModel->plane_buff[0].points[i].sta = POINT_MEASURED;
 
 	}
-	if(GetDataModel()->planeModel->display == DOM_DLG)
+	if(GetDataModel()->planeModel->display == A321_DLG)
 		GetDataModel()->planeModel->hz_plane = false;
 
 	if(calc_plane(&GetDataModel()->planeModel->plane_buff[0],ACTUAL))
@@ -403,7 +403,7 @@ short dist_count,ret;
 
 			/* 6.11.1995 */
 			/*
-			if(GetDataModel()->display == DOM_DLG)
+			if(GetDataModel()->display == A321_DLG)
 			{*/
 				sprintf(GetDataModel()->planeModel->hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
 				sprintf(GetDataModel()->planeModel->hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
@@ -411,7 +411,7 @@ short dist_count,ret;
 				GetDataModel()->planeModel->hz_plane = true;
 			/*
 			}
-			if(GetDataModel()->display == DOM_USER_DLG)
+			if(GetDataModel()->display == A321_USERDEF_DLG)
 			{
 							sprintf(&GetModel()->hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
 				sprintf(&GetModel()->hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
@@ -423,7 +423,7 @@ short dist_count,ret;
 		}
 		else
 		{
-			//if(display == DOM_DSP)
+			//if(display == A321_DLG)
 				GetDataModel()->planeModel->hz_plane = false;
 			
 			//else if(display == DLG_DOMUSER)
@@ -451,7 +451,7 @@ short ret;
 
 	points = common.points_count_in_plane(&GetDataModel()->planeModel->hz_plane_buff[0]);
 
-	if(GetDataModel()->planeModel->display == DOM_DLG || GetDataModel()->planeModel->display == DOM_USERDEF_DLG)
+	if(GetDataModel()->planeModel->display == A321_DLG || GetDataModel()->planeModel->display == A321_USERDEF_DLG)
 	{
 		if(points > 0)
 		{

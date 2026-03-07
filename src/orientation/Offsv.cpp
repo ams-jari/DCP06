@@ -254,7 +254,7 @@ DCP::OffsetVController::OffsetVController(DCP::Model* pModel, short display)
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
 
-	if(display != DOM_USERDEF_DLG)
+	if(display != A321_USERDEF_DLG)
 		SetTitle(StringC( AT_DCP06, T_ORIE_DOM_POINT_OFFSV_TOK ));
 	else
 		SetTitle(StringC( AT_DCP06, T_DCP_USERDEF_OFFSV_TOK ));
@@ -275,7 +275,7 @@ DCP::OffsetVController::OffsetVController(DCP::Model* pModel, short display)
 	vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_ID_TOK);
 	SetFunctionKey( FK2, vDef );
 
-	if(display != DOM_USERDEF_DLG)
+	if(display != A321_USERDEF_DLG)
 	{
 		vDef.strLable = StringC(AT_DCP06,K_DCP_MEASV_TOK);
 		SetFunctionKey( FK5, vDef );

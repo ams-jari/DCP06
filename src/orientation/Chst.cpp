@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/orientation/Chst.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/file/SelectFile.hpp>
@@ -95,6 +96,7 @@ DCP::ChangeStationDialog::~ChangeStationDialog()
 
 void DCP::ChangeStationDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 		m_pCommon = new Common(GetModel());
 
 		check_hz_plane_status();
@@ -106,8 +108,8 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 	*/
 
 /*
-		int DOM_ROTATION = m_pCommon->get_rotation_status();
-		short iMin = (!DOM_ROTATION  && GetModel()->dom_hz_plane ? 2: 3);
+		int A321_ROTATION = m_pCommon->get_rotation_status();
+		short iMin = (!A321_ROTATION  && GetModel()->align321_hz_plane ? 2: 3);
 		*/
 		/*
 
@@ -128,7 +130,7 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 			{
 				use_hz_plane =  m_pCommon->get_rotation_status() ? false : true;
 				disable_hz_plane = m_pCommon->get_rotation_status() ? true : false;
-				active_plane = GetModel()->dom_active_plane;
+				active_plane = GetModel()->align321_active_plane;
 			}
 			else if(m_pDataModel->old_active_coodinate_system == OCSC)
 			{
@@ -259,6 +261,7 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 	m_pHorizPlaneObserver.Attach(m_pHorizPlane->GetSubject());
 
 	m_pController->check_function_keys();
+	DCP06_TRACE_EXIT;
 }
 
 //
@@ -284,7 +287,7 @@ void DCP::ChangeStationDialog::check_hz_plane_status()
 
 				use_hz_plane =  m_pCommon->get_rotation_status() ? false : true;
 				disable_hz_plane = m_pCommon->get_rotation_status() ? true : false;
-				active_plane = GetModel()->dom_active_plane;
+				active_plane = GetModel()->align321_active_plane;
 			}
 			else if(GetModel()->active_coodinate_system == OCSC)
 			{
@@ -409,8 +412,8 @@ void DCP::ChangeStationDialog::RefreshControls()
 	if(m_pInfo1/* && m_pFile*/ &&  m_pPoints && m_pPointMeas && m_pCurrentStation)
 	{
 		/*
-		int DOM_ROTATION = m_pCommon->get_rotation_status();
-		short iMin = (!DOM_ROTATION  && GetModel()->dom_hz_plane ? 2: 3);
+		int A321_ROTATION = m_pCommon->get_rotation_status();
+		short iMin = (!A321_ROTATION  && GetModel()->align321_hz_plane ? 2: 3);
 		*/
 		/*
 		TPI::MeasConfigC oMeasConfig;
@@ -857,7 +860,7 @@ DCP::ChangeStationController::ChangeStationController(Model* pModel)
 	
 	// create model
 	m_pDataModel = new BestFitModel;
-	m_pDataModel->pom_chst = 1;
+	m_pDataModel->bestFit_chst = 1;
 
 	m_pFileModel = new FileModel (pModel);
 
@@ -1015,8 +1018,8 @@ void DCP::ChangeStationController::OnF1Pressed()
 	int min=3, max=MAX_BESTFIT_POINTS;
 
 	/*
-	int DOM_ROTATION = m_pCommon->get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
+	int A321_ROTATION = m_pCommon->get_rotation_status();
+	min = (!A321_ROTATION  && m_pDlg->GetModel()->align321_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1082,8 +1085,8 @@ void DCP::ChangeStationController::OnF2Pressed()
 	//Common common;
 	// added 041111
 	/*
-	int DOM_ROTATION = m_pCommon->get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
+	int A321_ROTATION = m_pCommon->get_rotation_status();
+	min = (!A321_ROTATION  && m_pDlg->GetModel()->align321_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1158,8 +1161,8 @@ void DCP::ChangeStationController::OnF4Pressed()
 	//check_values(min,max);
 	// added 041111
 	/*
-	int DOM_ROTATION = m_pCommon->get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
+	int A321_ROTATION = m_pCommon->get_rotation_status();
+	min = (!A321_ROTATION  && m_pDlg->GetModel()->align321_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1254,8 +1257,8 @@ void DCP::ChangeStationController::OnF5Pressed()
 	//check_values(min,max);
 	// added 041111
 	/*
-	int DOM_ROTATION = m_pCommon->get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
+	int A321_ROTATION = m_pCommon->get_rotation_status();
+	min = (!A321_ROTATION  && m_pDlg->GetModel()->align321_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1728,8 +1731,8 @@ bool DCP::ChangeStationController::check_values(int& min, int& count)
 			trans_points = 0;
 	}
 	/* removed 28122012
-	int DOM_ROTATION = common.get_rotation_status();
-	min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
+	int A321_ROTATION = common.get_rotation_status();
+	min = (!A321_ROTATION  && m_pDlg->GetModel()->align321_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;
@@ -1772,10 +1775,10 @@ void DCP::ChangeStationController::check_function_keys()
 	int ref_count = 0;
 	int pos2_count = 0;
 
-	//int DOM_ROTATION = m_pDlg->m_pCommon->get_rotation_status();
+	//int A321_ROTATION = m_pDlg->m_pCommon->get_rotation_status();
 	/* removed 28122012
-	int DOM_ROTATION =m_pCommon->get_rotation_status();
-	int min = (!DOM_ROTATION  && m_pDlg->GetModel()->dom_hz_plane ? 2: 3);
+	int A321_ROTATION =m_pCommon->get_rotation_status();
+	int min = (!A321_ROTATION  && m_pDlg->GetModel()->align321_hz_plane ? 2: 3);
 	*/
 	/*
 	TPI::MeasConfigC oMeasConfig;

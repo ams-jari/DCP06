@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/orientation/DefineLine.hpp>
 #include <dcp06/core/Measure.hpp>
 #include <dcp06/core/Defs.hpp>
@@ -79,6 +80,7 @@ DCP::DefineLineDialog::~DefineLineDialog()
 
 void DCP::DefineLineDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 	
     
@@ -114,6 +116,7 @@ void DCP::DefineLineDialog::OnInitDialog(void)
 	//SetHelpTok(H_DCP_DOM_LINE_TOK,0);
 	
 	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
+	DCP06_TRACE_EXIT;
 }
 
 void DCP::DefineLineDialog::OnDialogActivated()

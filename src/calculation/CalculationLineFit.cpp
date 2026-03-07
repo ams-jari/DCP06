@@ -83,11 +83,11 @@ DCP::CalcLineFit::~CalcLineFit()
 	}
 }
 
-short DCP::CalcLineFit::CalcLineFitDom(Alignment321Model* domModel, S_LINE_BUFF* line_buff, int refLine)
+short DCP::CalcLineFit::CalcLineFitDom(Alignment321Model* align321Model, S_LINE_BUFF* line_buff, int refLine)
 {
 MsgBox msgbox;
 
-	domModel->calculated = 0;
+	align321Model->calculated = 0;
 
 	if(!line_buff[0].calc)
 	{
@@ -97,55 +97,55 @@ MsgBox msgbox;
 	}
 
 	// delete old values
-	delete_dom_values(domModel);
+	delete_align321_values(align321Model);
 
-	/*domModel->ocsd_defined = false;
-	domModel->dom_active_line = X_LINE;
-	domModel->dom_hz_plane = false;
+	/*align321Model->ocsd_defined = false;
+	align321Model->align321_active_line = X_LINE;
+	align321Model->align321_hz_plane = false;
 	
-	memset(&domModel->dom_plane_buff[0],0,sizeof(S_PLANE_BUFF));
-	memset(&domModel->dom_line_buff[0],0,sizeof(S_LINE_BUFF));	
-	memset(&domModel->dom_ref_point_buff,0,sizeof(S_POINT_BUFF));	
-	memset(&domModel->dom_ovalues_buff,0,sizeof(S_POINT_BUFF));	
-	memset(&domModel->dom_ovalues_tool_buff,0,sizeof(S_POINT_BUFF));	
-	memset(&domModel->dom_rot_line_buff,0,sizeof(S_POINT_BUFF));	
-	memset(&domModel->dom_rot_plane_buff,0,sizeof(S_POINT_BUFF));	*/
+	memset(&align321Model->align321_plane_buff[0],0,sizeof(S_PLANE_BUFF));
+	memset(&align321Model->align321_line_buff[0],0,sizeof(S_LINE_BUFF));	
+	memset(&align321Model->align321_ref_point_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_ovalues_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_ovalues_tool_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_rot_line_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_rot_plane_buff,0,sizeof(S_POINT_BUFF));	*/
 
 	// calculate new
 
-	domModel->dom_active_plane = XY_PLANE;
-	domModel->dom_active_line = X_LINE;
-	domModel->dom_hz_plane = true;
+	align321Model->align321_active_plane = XY_PLANE;
+	align321Model->align321_active_line = X_LINE;
+	align321Model->align321_hz_plane = true;
 
-	if(!set_hz_plane1(domModel, ACTUAL))
+	if(!set_hz_plane1(align321Model, ACTUAL))
 	{
 		GUI::DesktopC::Instance()->MessageShow(L"Linefit/Dom error setting Hz..!");
 		//msgbox.ShowMessageOk(L"Linefit/Dom error setting Hz..!");
 		return 0;
 	}
 	// copy line into dom...
-	memcpy(&domModel->dom_line_buff[0],&line_buff[0],  sizeof(S_LINE_BUFF));
-	memcpy(&domModel->dom_ref_point_buff, &line_buff[0].points[0], sizeof(S_POINT_BUFF));
+	memcpy(&align321Model->align321_line_buff[0],&line_buff[0],  sizeof(S_LINE_BUFF));
+	memcpy(&align321Model->align321_ref_point_buff, &line_buff[0].points[0], sizeof(S_POINT_BUFF));
 
 	// jos vertkaalisuora
 	if(refLine == REF_LINE_VERTICAL)
 	{
-		domModel->dom_line_buff[0].points[0].x = 0.0;
-		domModel->dom_line_buff[0].points[0].y = 0.0;
-		domModel->dom_line_buff[0].points[0].z = 0.0;
-		domModel->dom_line_buff[0].points[0].sta = 1;
+		align321Model->align321_line_buff[0].points[0].x = 0.0;
+		align321Model->align321_line_buff[0].points[0].y = 0.0;
+		align321Model->align321_line_buff[0].points[0].z = 0.0;
+		align321Model->align321_line_buff[0].points[0].sta = 1;
 
-		domModel->dom_line_buff[0].points[1].x = line_buff[0].points[0].x;
-		domModel->dom_line_buff[0].points[1].y = line_buff[0].points[0].y;
-		domModel->dom_line_buff[0].points[1].z = line_buff[0].points[0].z;
-		domModel->dom_line_buff[0].points[1].sta = 1;
+		align321Model->align321_line_buff[0].points[1].x = line_buff[0].points[0].x;
+		align321Model->align321_line_buff[0].points[1].y = line_buff[0].points[0].y;
+		align321Model->align321_line_buff[0].points[1].z = line_buff[0].points[0].z;
+		align321Model->align321_line_buff[0].points[1].sta = 1;
 		
 		// laske suora uudestaan
 		CalcLine calcLine;
-		calcLine.calc(&domModel->dom_line_buff[0], ACTUAL);
+		calcLine.calc(&align321Model->align321_line_buff[0], ACTUAL);
 	}
 
-	CalcAlignment321 calc_dom(domModel);
+	CalcAlignment321 calc_dom(align321Model);
 	if(!calc_dom.calc(false))
 	{
 		GUI::DesktopC::Instance()->MessageShow(L"Calculation LineFit/Dom error!");
@@ -153,28 +153,28 @@ MsgBox msgbox;
 	}
 	else
 	{
-		domModel->calculated = true;
+		align321Model->calculated = true;
 	}
 
 
 	return 1;
 }
 
-void DCP::CalcLineFit::delete_dom_values(Alignment321Model* domModel)
+void DCP::CalcLineFit::delete_align321_values(Alignment321Model* align321Model)
 {
 	// delete old values
-	domModel->ocsd_defined = false;
-	domModel->dom_active_plane = XY_PLANE;
-	domModel->dom_active_line = X_LINE;
-	domModel->dom_hz_plane = true;
+	align321Model->ocsd_defined = false;
+	align321Model->align321_active_plane = XY_PLANE;
+	align321Model->align321_active_line = X_LINE;
+	align321Model->align321_hz_plane = true;
 	
-	memset(&domModel->dom_plane_buff[0],0,sizeof(S_PLANE_BUFF));
-	memset(&domModel->dom_line_buff[0],0,sizeof(S_LINE_BUFF));	
-	memset(&domModel->dom_ref_point_buff,0,sizeof(S_POINT_BUFF));	
-	memset(&domModel->dom_ovalues_buff,0,sizeof(S_POINT_BUFF));	
-	memset(&domModel->dom_ovalues_tool_buff,0,sizeof(S_POINT_BUFF));	
-	memset(&domModel->dom_rot_line_buff,0,sizeof(S_POINT_BUFF));	
-	memset(&domModel->dom_rot_plane_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_plane_buff[0],0,sizeof(S_PLANE_BUFF));
+	memset(&align321Model->align321_line_buff[0],0,sizeof(S_LINE_BUFF));	
+	memset(&align321Model->align321_ref_point_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_ovalues_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_ovalues_tool_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_rot_line_buff,0,sizeof(S_POINT_BUFF));	
+	memset(&align321Model->align321_rot_plane_buff,0,sizeof(S_POINT_BUFF));	
 }
 
 // ****************************************************************************************
@@ -186,7 +186,7 @@ short DCP::CalcLineFit::CalcAllPoints(S_LINE_BUFF* line_buff,
 								double rotateAngle,
 								int selectedHeight,
 								int selectedShift,
-								int selectedRotate,Alignment321Model* domModel,
+								int selectedRotate,Alignment321Model* align321Model,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* points_in_line,
 								int selectedRefLine)
@@ -201,7 +201,7 @@ short DCP::CalcLineFit::CalcAllPoints(S_LINE_BUFF* line_buff,
 	{
 		if(points[i].sta == 1)
 		{
-			CalcPoint(i, line_buff,points,results,manualHeight,shiftValue,rotateAngle,selectedHeight,selectedShift,selectedRotate,domModel,line_ocs, points_in_line,selectedRefLine);
+			CalcPoint(i, line_buff,points,results,manualHeight,shiftValue,rotateAngle,selectedHeight,selectedShift,selectedRotate,align321Model,line_ocs, points_in_line,selectedRefLine);
 		}
 	}
 	return 1;
@@ -218,19 +218,19 @@ short DCP::CalcLineFit::CalcPoint(short index,
 								int selectedHeight,
 								int selectedShift,
 								int selectedRotate,
-								Alignment321Model* domModel,
+								Alignment321Model* align321Model,
 								S_LINE_BUFF* line_ocs,
 								S_POINT_BUFF* points_in_line,
 								int selectedRefLine)
 {
 
-	if( points[index].sta == 1 && domModel->calculated) 
+	if( points[index].sta == 1 && align321Model->calculated) 
 	{
 
 		double p_ocs[4];
 
 		// convert measured point to ocs
-		convert_point_to_ocs(points, index, domModel, &p_ocs);
+		convert_point_to_ocs(points, index, align321Model, &p_ocs);
 		points[index].xdes = p_ocs[0];
 		points[index].ydes = p_ocs[1];
 		points[index].zdes = p_ocs[2];
@@ -261,7 +261,7 @@ short DCP::CalcLineFit::CalcPoint(short index,
 			p_in1[1] = line_ocs[0].points[i].y;
 			p_in1[2] = line_ocs[0].points[i].z;
 
-			convert_point_to_ocs(p_in1, domModel, &p_temp);
+			convert_point_to_ocs(p_in1, align321Model, &p_temp);
 			
 			line_ocs[0].points[i].x = p_temp[0];
 			line_ocs[0].points[i].y = p_temp[1];
@@ -272,7 +272,7 @@ short DCP::CalcLineFit::CalcPoint(short index,
 			//p_in1[1] = line_ocs[0].points[i].y;
 			//p_in1[2] = 0.0;//line_ocs[0].points[i].z;
 
-			//convert_point_to_ocs(p_in1, domModel, &p_temp);
+			//convert_point_to_ocs(p_in1, align321Model, &p_temp);
 			//
 			//line_ocs_hz[0].points[i].x = p_temp[0];
 			//line_ocs_hz[0].points[i].y = p_temp[1];
@@ -545,7 +545,7 @@ short DCP::CalcLineFit::CalcPoint(short index,
 		p_in[1] = dest_point.y;
 		p_in[2] = dest_point.z;*/
 
-		//convert_point_to_ocs(p_in, domModel, &p_ocs_line);
+		//convert_point_to_ocs(p_in, align321Model, &p_ocs_line);
 
 		// lasketaan shiftattu linepisteeen et�isyys mitatuun pisteeseen
 		//ams_vector dest_point_ocs;
@@ -652,7 +652,7 @@ short DCP::CalcLineFit::CalcPoint(short index,
 	return 1;
 }
 
-short DCP::CalcLineFit::convert_point_to_ocs(double p_in[4], Alignment321Model* domModel, double (*p_out)[4])
+short DCP::CalcLineFit::convert_point_to_ocs(double p_in[4], Alignment321Model* align321Model, double (*p_out)[4])
 {
 	double x[4];
 	double xu[4];
@@ -662,7 +662,7 @@ short DCP::CalcLineFit::convert_point_to_ocs(double p_in[4], Alignment321Model* 
 	x[2] = p_in[2];
 	x[3] = 1;
 
-		ptrans(x, &domModel->matrix[0], &xu);
+		ptrans(x, &align321Model->matrix[0], &xu);
 
 		(*p_out)[0] = xu[0];
 		(*p_out)[1] = xu[1];
@@ -671,7 +671,7 @@ short DCP::CalcLineFit::convert_point_to_ocs(double p_in[4], Alignment321Model* 
 		return 1;
 }
 
-short DCP::CalcLineFit::convert_point_to_scs(double p_in[4], Alignment321Model* domModel, double (*p_out)[4])
+short DCP::CalcLineFit::convert_point_to_scs(double p_in[4], Alignment321Model* align321Model, double (*p_out)[4])
 {
 	double x[4];
 	double xu[4];
@@ -681,7 +681,7 @@ short DCP::CalcLineFit::convert_point_to_scs(double p_in[4], Alignment321Model* 
 	x[2] = p_in[2];
 	x[3] = 1;
 
-		ptrans(x, &domModel->inv_matrix[0], &xu);
+		ptrans(x, &align321Model->inv_matrix[0], &xu);
 
 		(*p_out)[0] = xu[0];
 		(*p_out)[1] = xu[1];
@@ -691,7 +691,7 @@ short DCP::CalcLineFit::convert_point_to_scs(double p_in[4], Alignment321Model* 
 }
 
 //double v[4],double a[4][4], double (*w)[4])
-short DCP::CalcLineFit::convert_point_to_ocs(S_POINT_BUFF* points, short index, Alignment321Model* domModel, double (*p_out)[4])
+short DCP::CalcLineFit::convert_point_to_ocs(S_POINT_BUFF* points, short index, Alignment321Model* align321Model, double (*p_out)[4])
 {
 
 	double x[4];
@@ -702,7 +702,7 @@ short DCP::CalcLineFit::convert_point_to_ocs(S_POINT_BUFF* points, short index, 
 		x[2] = points[index].z;
 		x[3] = 1;
 
-		ptrans(x, &domModel->matrix[0], &xu);
+		ptrans(x, &align321Model->matrix[0], &xu);
 
 		points[index].xdes = xu[0];
 		points[index].ydes = xu[1];
@@ -716,7 +716,7 @@ short DCP::CalcLineFit::convert_point_to_ocs(S_POINT_BUFF* points, short index, 
 		
 }
 // ================================================================================================
-short DCP::CalcLineFit::set_hz_plane1(Alignment321Model* domModel,short actualdesign)
+short DCP::CalcLineFit::set_hz_plane1(Alignment321Model* align321Model,short actualdesign)
 {
 short dist_count,ret;
 
@@ -725,7 +725,7 @@ ret = false;
 	//Common common(m_pModel);
 	MsgBox msgbox;
 
-	dist_count = common->points_count_in_plane(&domModel->dom_hz_plane_buff[0]);
+	dist_count = common->points_count_in_plane(&align321Model->align321_hz_plane_buff[0]);
 	
 	TPI::MeasConfigC oMeasConfig;
 	
@@ -748,25 +748,25 @@ ret = false;
 		return false;
 	}
 
-	if(set_horizontal_plane(domModel/*&GetDataModel()->hz_plane_buff[0], display, plane_type*/))
+	if(set_horizontal_plane(align321Model/*&GetDataModel()->hz_plane_buff[0], display, plane_type*/))
 	{
-		if(calc_plane(&domModel->dom_hz_plane_buff[0],actualdesign))// == true)
+		if(calc_plane(&align321Model->align321_hz_plane_buff[0],actualdesign))// == true)
 		{
-			domModel->dom_hz_plane_buff[0].calc = 1;
-			domModel->dom_hz_plane_buff[0].sta = PLANE_DEFINED; 
+			align321Model->align321_hz_plane_buff[0].calc = 1;
+			align321Model->align321_hz_plane_buff[0].sta = PLANE_DEFINED; 
 
-			dist_count = common->points_count_in_plane(&domModel->dom_hz_plane_buff[0]);
+			dist_count = common->points_count_in_plane(&align321Model->align321_hz_plane_buff[0]);
 
-			sprintf(domModel->dom_hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
-			sprintf(domModel->dom_hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
-			sprintf(domModel->dom_hz_plane_buff[0].points[2].point_id,"%-6.6s","rp-p3");
-			domModel->dom_hz_plane = true;
+			sprintf(align321Model->align321_hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
+			sprintf(align321Model->align321_hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
+			sprintf(align321Model->align321_hz_plane_buff[0].points[2].point_id,"%-6.6s","rp-p3");
+			align321Model->align321_hz_plane = true;
 			ret = true;
 		}
 		else
 		{
-			//if(display == DOM_DSP)
-				domModel->dom_hz_plane = false;
+			//if(display == A321_DLG)
+				align321Model->align321_hz_plane = false;
 			
 			//else if(display == DLG_DOMUSER)
 			//	GetModel()->hz_plane = false;
@@ -789,7 +789,7 @@ short DCP::CalcLineFit::calc_plane(S_PLANE_BUFF *plane, short actdes)
 }
 
 // ================================================================================================
-short DCP::CalcLineFit::set_horizontal_plane(Alignment321Model* domModel/*plane_buff_ *planes, short DISPLAY, short PLANE_TYPE*/)
+short DCP::CalcLineFit::set_horizontal_plane(Alignment321Model* align321Model/*plane_buff_ *planes, short DISPLAY, short PLANE_TYPE*/)
 {
 short points;
 short ret;
@@ -799,34 +799,34 @@ short ret;
 
 	//Common common(m_pModel);//(/*m_pModel*/);
 
-	points = common->points_count_in_plane(&domModel->dom_hz_plane_buff[0]);
+	points = common->points_count_in_plane(&align321Model->align321_hz_plane_buff[0]);
 
 		if(points > 0)
 		{
-			memset(&domModel->dom_hz_plane_buff[0],0, sizeof(S_PLANE_BUFF));
+			memset(&align321Model->align321_hz_plane_buff[0],0, sizeof(S_PLANE_BUFF));
 			//delete_all_plane(MAX_POINTS_IN_PLANE,&planes[0]);	
 			points = 0;
 		}
 		
 		if(points == 0)
 		{
-			if(domModel->dom_active_plane == XY_PLANE)
+			if(align321Model->align321_active_plane == XY_PLANE)
 			{
-				domModel->dom_hz_plane_buff[0].points[0].x = 0.0;
-				domModel->dom_hz_plane_buff[0].points[0].y = 0.0;
-				domModel->dom_hz_plane_buff[0].points[0].z = 0.0;
-				domModel->dom_hz_plane_buff[0].points[0].sta = POINT_DESIGN;
+				align321Model->align321_hz_plane_buff[0].points[0].x = 0.0;
+				align321Model->align321_hz_plane_buff[0].points[0].y = 0.0;
+				align321Model->align321_hz_plane_buff[0].points[0].z = 0.0;
+				align321Model->align321_hz_plane_buff[0].points[0].sta = POINT_DESIGN;
 
 
-				domModel->dom_hz_plane_buff[0].points[1].x = 1.0;
-				domModel->dom_hz_plane_buff[0].points[1].y = 0.0;
-				domModel->dom_hz_plane_buff[0].points[1].z = 0.0;
-				domModel->dom_hz_plane_buff[0].points[1].sta = POINT_DESIGN;
+				align321Model->align321_hz_plane_buff[0].points[1].x = 1.0;
+				align321Model->align321_hz_plane_buff[0].points[1].y = 0.0;
+				align321Model->align321_hz_plane_buff[0].points[1].z = 0.0;
+				align321Model->align321_hz_plane_buff[0].points[1].sta = POINT_DESIGN;
 
-				domModel->dom_hz_plane_buff[0].points[2].x = 0.0;
-				domModel->dom_hz_plane_buff[0].points[2].y = 1.0;
-				domModel->dom_hz_plane_buff[0].points[2].z = 0.0;
-				domModel->dom_hz_plane_buff[0].points[2].sta = POINT_DESIGN;
+				align321Model->align321_hz_plane_buff[0].points[2].x = 0.0;
+				align321Model->align321_hz_plane_buff[0].points[2].y = 1.0;
+				align321Model->align321_hz_plane_buff[0].points[2].z = 0.0;
+				align321Model->align321_hz_plane_buff[0].points[2].sta = POINT_DESIGN;
 
 				ret = true;
 			}
