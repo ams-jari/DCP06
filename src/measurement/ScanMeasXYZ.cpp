@@ -514,7 +514,7 @@ void DCP::ScanMeasXYZController::OnActiveControllerClosed( int lCtrlID, int lExi
 			{
 				MsgBox msgbox;
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_AIM_TO_POINT_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_AIM_TO_POINT_TOK);
 				if(!msgbox.ShowMessageOkAbort(msg))
 					Close(EC_KEY_ESC);
 			}

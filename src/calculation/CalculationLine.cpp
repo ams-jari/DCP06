@@ -52,7 +52,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 	if(points_defined < 2)
 	{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_IN_MIN_2_POINTS_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_IN_MIN_2_POINTS_TOK);
 			msgbox.ShowMessageOk(msg);
 			ret = false;
 	}
@@ -181,14 +181,14 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 		if((ret1=FitLine(p_mat, points_defined, &directionX, &directionY, &directionZ))== -1)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 			msgbox.ShowMessageOk(msg);
 			ret = false;
 		}
 		else if(ret1 == -2)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_ABORTED_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_ABORTED_TOK);
 			msgbox.ShowMessageOk(msg);
 			ret = false;	
 		}
@@ -238,7 +238,7 @@ double x_tot = 0.0, y_tot = 0.0, z_tot = 0.0;
 				if(FitLine(p_mat, points_defined, &directionX, &directionY, &directionZ)== -1)
 				{
 					StringC msg;
-					msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 					msgbox.ShowMessageOk(msg);
 					ret = false;
 				}

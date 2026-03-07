@@ -109,7 +109,7 @@ bool DCP::Common::check_distance(double x, double y, double z, S_POINT_BUFF* poi
 					StringC msg;
 					StringC sPoint;
 					sPoint.Format(L"%d/%d %s", i+1, iCount,(const wchar_t*) StringC(points[i].point_id));
-					msg.LoadTxt(AT_DCP05,M_DCP_SAME_MEASURED_VALUES_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_SAME_MEASURED_VALUES_TOK);
 					msg.Format(msg,(const wchar_t*)StringC(sPoint));
 					MsgBox msgbox;
 					if(!msgbox.ShowMessageYesNo(msg))
@@ -358,7 +358,7 @@ short DCP::Common::overwrite_point(StringC sPid)
 	MsgBox msgbox;
 	StringC msg;
 	
-	msg.LoadTxt(AT_DCP05,M_DCP_OVERWRITE_POINT_TOK);
+	msg.LoadTxt(AT_DCP06,M_DCP_OVERWRITE_POINT_TOK);
 	msg.Format(msg,(const wchar_t*)sPid);
 			
 	return msgbox.ShowMessageYesNo(msg);
@@ -429,7 +429,7 @@ short DCP::Common::check_free_space(unsigned int si)
 		{
 			MsgBox msgbox;
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_NOT_FREE_SPACE_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_NOT_FREE_SPACE_TOK);
 			msgbox.ShowMessageOk(msg);
 			return false;
 		}
@@ -667,14 +667,14 @@ StringC DCP::Common::get_info_text(short& ind)
 
 					if(cid == MM)
 					{
-						ret2.LoadTxt(AT_DCP05,V_DCP_MM_TOK);
+						ret2.LoadTxt(AT_DCP06,V_DCP_MM_TOK);
 						ret +=  L"  ";
 						ret +=	ret2;
 						//sprintf(buff2,"%-8.8s", TextTokenToString(AppID, TXT_MM_TOK)); // "mm");
 					}
 					else if(cid == FEET)
 					{
-						ret2.LoadTxt(AT_DCP05,V_DCP_FEET_TOK);
+						ret2.LoadTxt(AT_DCP06,V_DCP_FEET_TOK);
 						ret +=  L"  ";
 						ret +=	ret2;
 
@@ -682,7 +682,7 @@ StringC DCP::Common::get_info_text(short& ind)
 					}
 					else
 					{
-						ret2.LoadTxt(AT_DCP05,V_DCP_INCH_TOK);
+						ret2.LoadTxt(AT_DCP06,V_DCP_INCH_TOK);
 						ret +=  L"  ";
 						ret +=	ret2;
 
@@ -693,7 +693,7 @@ StringC DCP::Common::get_info_text(short& ind)
 
 			// USER
 			case 1:  	
-				ret.LoadTxt(AT_DCP05, K_DCP_USER_TOK);
+				ret.LoadTxt(AT_DCP06, K_DCP_USER_TOK);
 				ret += "   ";
 				ret += m_pModel->m_sUser;
 				//sprintf(buff1,"%-8.8s",   TextTokenToString(AppID,TXT_USER_TOK));
@@ -726,7 +726,7 @@ StringC DCP::Common::get_info_text(short& ind)
 						//if(isToolActive() == TRUE)
 						{
 							//get_toolname(tmp);
-							ret.LoadTxt(AT_DCP05,V_DCP_TOOL_TEXT_TOK);
+							ret.LoadTxt(AT_DCP06,V_DCP_TOOL_TEXT_TOK);
 							ret = ret + L":";
 							ret += StringC(m_pModel->tool_table[iActivetool-1].tool_id);
 						}
@@ -747,7 +747,7 @@ StringC DCP::Common::get_info_text(short& ind)
 						if(m_pModel->m_nAverageCount > 1)
 						//if(get_AVERAGE_ON_OFF() == TRUE)
 						{
-							ret.LoadTxt(AT_DCP05,V_DCP_AVERAGE_TEXT_TOK);
+							ret.LoadTxt(AT_DCP06,V_DCP_AVERAGE_TEXT_TOK);
 							//sprintf(buff1,"%-8.8s", TextTokenToString(AppID,TXT_AVERAGE_TOK));
 							//sprintf(buff2,"%-8.8s"," ");
 						}
@@ -1442,7 +1442,7 @@ bool DCP::Common::check_edm_mode()
 		MsgBox msgbox;
 		StringC sMsg;
 
-		sMsg.LoadTxt(AT_DCP05, M_DCP_WRONG_EDM_MODE_TOK);
+		sMsg.LoadTxt(AT_DCP06, M_DCP_WRONG_EDM_MODE_TOK);
 		msgbox.ShowMessageOk(sMsg);
 		ret = false;
 	}

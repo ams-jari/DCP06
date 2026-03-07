@@ -65,10 +65,10 @@ DCP::ResLineDialog::ResLineDialog(DCP::Model *pModel):poMultiColCtrl(nullptr),m_
 	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(SelectOnePointDialog, OnChanged), this),
 	m_pModel(pModel)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 	
 	// load title
-	sTitle.LoadTxt(AT_DCP05,T_DCP_DEV_OF_LINE_TOK);
+	sTitle.LoadTxt(AT_DCP06,T_DCP_DEV_OF_LINE_TOK);
 	
 	m_pCommon = new Common(pModel);
 }
@@ -104,9 +104,9 @@ void DCP::ResLineDialog::OnInitDialog(void)
 
 
 	// text
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_POINT_NUMBER_TOK), CI_No));
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_POINT_ID_TOK), CI_Point));
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_DEVIATION_TOK), CI_Deviation));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_POINT_NUMBER_TOK), CI_No));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_POINT_ID_TOK), CI_Point));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_DEVIATION_TOK), CI_Deviation));
 	
 	poMultiColCtrl->AddColSelection(CI_No, CI_Point, CI_Deviation);
 
@@ -115,10 +115,10 @@ void DCP::ResLineDialog::OnInitDialog(void)
 	AddTable(poMultiColCtrl);
 
 	FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_REJECT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_REJECT_TOK);
 	SetFunctionKey( FK1, vDef );
 	
 	//SetHelpTok(H_DCP_DEV_OF_LINE_TOK,0);
@@ -140,7 +140,7 @@ void DCP::ResLineDialog::OnF1Pressed(void)
 		if(m_pCommon-> defined_points_count_in_line(&GetDataModel()->line_buff[0],nullptr) <= 2)
 		{
 			StringC strText;
-			strText.LoadTxt(AT_DCP05,M_DCP_CANNOT_REJECT_PNT_TOK);
+			strText.LoadTxt(AT_DCP06,M_DCP_CANNOT_REJECT_PNT_TOK);
 			MsgBox msgbox;
 			
 			msgbox.ShowMessageOk(strText);
@@ -373,7 +373,7 @@ DCP::ResLineController::ResLineController(DCP::Model *pModel)
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_DEV_OF_LINE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_DEV_OF_LINE_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 	StringC sTitle;
 	sTitle = L"Dev of line RMS:";
 	sTitle += L"Points:";
@@ -386,19 +386,19 @@ DCP::ResLineController::ResLineController(DCP::Model *pModel)
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
 	// moved into dialog
 	//vDef.nLable = K_DCP_REJECT_TOK;
 	//SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";
 	SetFunctionKey( SHFK6, vDef1 );

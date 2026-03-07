@@ -91,6 +91,9 @@
     <PostBuildEvent>
       <Command>echo === Convert the svg files from SWXRes_Source folders to pngs =======================
 %25SYSTEM1500_ROOT%25\Tools\SWXResBuilder\SWXResBuilder.exe "$(ProjectDir)../../" "%25INCSCAPE%25"
+echo === Ensure DCP06 logo icons exist (DCP06.sys expects DCP06_logo_1X/2X.png) =======================
+if exist "$(ProjectDir)..\..\SWXRes\DCP06_LOGO_1X.png" if not exist "$(ProjectDir)..\..\SWXRes\DCP06_logo_1X.png" copy /Y "$(ProjectDir)..\..\SWXRes\DCP06_LOGO_1X.png" "$(ProjectDir)..\..\SWXRes\DCP06_logo_1X.png"
+if exist "$(ProjectDir)..\..\SWXRes\DCP06_LOGO_2X.png" if not exist "$(ProjectDir)..\..\SWXRes\DCP06_logo_2X.png" copy /Y "$(ProjectDir)..\..\SWXRes\DCP06_LOGO_2X.png" "$(ProjectDir)..\..\SWXRes\DCP06_logo_2X.png"
 echo === Generate language files (DCP06.men to DCP06.LEN) =======================
 call "$(ProjectDir)..\..\scripts\build_lang.bat"
 echo === Install application on local machine ======================================

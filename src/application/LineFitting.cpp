@@ -82,13 +82,13 @@ DCP::LineFitDialog::LineFitDialog(LineFitModel* pModel,CalcLineFit* calcLineFit)
 		GUI::ModelHandlerC(),GUI::StandardDialogC()
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 
 
-	m_strXLine.LoadTxt(AT_DCP05,V_DCP_X_LINE_TOK);
-	m_strYLine.LoadTxt(AT_DCP05,V_DCP_Y_LINE_TOK);
-	m_strZLine.LoadTxt(AT_DCP05,V_DCP_Z_LINE_TOK);
-	m_strMeasLine.LoadTxt(AT_DCP05,V_DCP_MEASURED_LINE_TOK);
+	m_strXLine.LoadTxt(AT_DCP06,V_DCP_X_LINE_TOK);
+	m_strYLine.LoadTxt(AT_DCP06,V_DCP_Y_LINE_TOK);
+	m_strZLine.LoadTxt(AT_DCP06,V_DCP_Z_LINE_TOK);
+	m_strMeasLine.LoadTxt(AT_DCP06,V_DCP_MEASURED_LINE_TOK);
 
 
 }
@@ -111,16 +111,16 @@ void DCP::LineFitDialog::OnInitDialog(void)
 
 	m_pRefLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_ComboBox);
 	m_pRefLine->SetId(eRefLine);
-	m_pRefLine->SetText(StringC(AT_DCP05,P_DCP_LINE_FITTING_USED_REF_LINE_TOK));
+	m_pRefLine->SetText(StringC(AT_DCP06,P_DCP_LINE_FITTING_USED_REF_LINE_TOK));
 
-		m_pRefLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05, V_DCP_ROTATE_LINE_HOR_TOK),		REF_LINE_HORIZONTAL);
-		m_pRefLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05, V_DCP_ROTATE_LINE_VER_TOK),		REF_LINE_VERTICAL);
+		m_pRefLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06, V_DCP_ROTATE_LINE_HOR_TOK),		REF_LINE_HORIZONTAL);
+		m_pRefLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06, V_DCP_ROTATE_LINE_VER_TOK),		REF_LINE_VERTICAL);
 
 	AddCtrl(m_pRefLine);
 
 	m_pLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pLine->SetId(eLine);
-	m_pLine->SetText(StringC(AT_DCP05,P_DCP_REF_LINE_TOK));
+	m_pLine->SetText(StringC(AT_DCP06,P_DCP_REF_LINE_TOK));
 	//m_pLine->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
 	void(m_pLine->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pLine->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
@@ -132,16 +132,16 @@ void DCP::LineFitDialog::OnInitDialog(void)
 
 	m_pUsedHeight = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_ComboBox);
 	m_pUsedHeight->SetId(eUsedHeight);
-	m_pUsedHeight->SetText(StringC(AT_DCP05,P_DCP_LINE_FITTING_USED_HEIGHT_TOK));
-	m_pUsedHeight->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_FIRST_POINT_TOK),		FIRST_POINT);
-	m_pUsedHeight->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_LAST_POINT_TOK),		LAST_POINT);
-	m_pUsedHeight->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_INTERPOLATION_TOK),		INTERPOLATION);
-	m_pUsedHeight->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_MANUALLY_ENTERED_TOK), 	MANUALLY_ENTERED);
+	m_pUsedHeight->SetText(StringC(AT_DCP06,P_DCP_LINE_FITTING_USED_HEIGHT_TOK));
+	m_pUsedHeight->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_FIRST_POINT_TOK),		FIRST_POINT);
+	m_pUsedHeight->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_LAST_POINT_TOK),		LAST_POINT);
+	m_pUsedHeight->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_INTERPOLATION_TOK),		INTERPOLATION);
+	m_pUsedHeight->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_MANUALLY_ENTERED_TOK), 	MANUALLY_ENTERED);
 	AddCtrl(m_pUsedHeight);
 	
 	m_pEnteredHeight = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pEnteredHeight->SetId(eEnteredHeight);
-	m_pEnteredHeight->SetText(StringC(AT_DCP05,P_DCP_MANUAL_HEIGHT_TOK));
+	m_pEnteredHeight->SetText(StringC(AT_DCP06,P_DCP_MANUAL_HEIGHT_TOK));
 	m_pEnteredHeight->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	m_pEnteredHeight->SetEmptyAllowed(true);
 
@@ -151,27 +151,27 @@ void DCP::LineFitDialog::OnInitDialog(void)
 
 	m_pShiftLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_ComboBox);
 	m_pShiftLine->SetId(eShiftLine);
-	m_pShiftLine->SetText(StringC(AT_DCP05,P_DCP_SHIFT_LINE_TOK));
-	m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_NO_TOK),		SHIFT_NO);
-	m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_RIGHT_TOK),	SHIFT_RIGHT);
-	m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_LEFT_TOK),	SHIFT_LEFT);
+	m_pShiftLine->SetText(StringC(AT_DCP06,P_DCP_SHIFT_LINE_TOK));
+	m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_NO_TOK),		SHIFT_NO);
+	m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_RIGHT_TOK),	SHIFT_RIGHT);
+	m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_LEFT_TOK),	SHIFT_LEFT);
 
 	if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 	{
-		m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_UP_TOK),		SHIFT_UP);
-		m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_DOWN_TOK), 	SHIFT_DOWN);
+		m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_UP_TOK),		SHIFT_UP);
+		m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_DOWN_TOK), 	SHIFT_DOWN);
 	}
 	else
 	{
-		m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_FORWARD_TOK),	SHIFT_FORWARD);
-		m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_BACKWARD_TOK), 	SHIFT_BACKWARD);
+		m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_FORWARD_TOK),	SHIFT_FORWARD);
+		m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_BACKWARD_TOK), 	SHIFT_BACKWARD);
 	}
 	/*m_pShiftLine->SetCtrlState(GUI::BaseCtrlC::CS_Disabled);*/
 	AddCtrl(m_pShiftLine);
 
 	m_pShiftValue = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pShiftValue->SetId(eShiftValue);
-	m_pShiftValue->SetText(StringC(AT_DCP05,P_DCP_SHIFT_VALUE_TOK));
+	m_pShiftValue->SetText(StringC(AT_DCP06,P_DCP_SHIFT_VALUE_TOK));
 	m_pShiftValue->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	m_pShiftValue->SetEmptyAllowed(true);
 	m_pShiftValue->SetCtrlState( m_pLineFitModel->selectedShift != SHIFT_NO ? GUI::BaseCtrlC::CS_ReadWrite : GUI::BaseCtrlC::CS_Disabled);
@@ -180,25 +180,25 @@ void DCP::LineFitDialog::OnInitDialog(void)
 
 	m_pRotateLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_ComboBox);
 	m_pRotateLine->SetId(eRotateLine);
-	m_pRotateLine->SetText(StringC(AT_DCP05,P_DCP_ROTATE_LINE_TOK));
-	m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_LINE_NO_TOK),		ROTATE_NO);
+	m_pRotateLine->SetText(StringC(AT_DCP06,P_DCP_ROTATE_LINE_TOK));
+	m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_LINE_NO_TOK),		ROTATE_NO);
 	
 	if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 	{
-		m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_LINE_HOR_TOK),		ROTATE_HORIZONTAL);
-		m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_LINE_VER_TOK),		ROTATE_VERTICAL);
+		m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_LINE_HOR_TOK),		ROTATE_HORIZONTAL);
+		m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_LINE_VER_TOK),		ROTATE_VERTICAL);
 	}
 	else
 	{
-		m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_LEFT_RIGHT_TOK),		ROTATE_VERTICAL_LEFT_RIGHT);
-		m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_DEPTH_TOK),		ROTATE_VERTICAL_DEPTH);
+		m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_VERTICAL_LEFT_RIGHT_TOK),		ROTATE_VERTICAL_LEFT_RIGHT);
+		m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_VERTICAL_DEPTH_TOK),		ROTATE_VERTICAL_DEPTH);
 	}
 	//m_pRotateLine->SetCtrlState(GUI::BaseCtrlC::CS_Disabled);
 	AddCtrl(m_pRotateLine);
 
 	m_pRotateValue = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pRotateValue->SetId(eRotateValue);
-	m_pRotateValue->SetText(StringC(AT_DCP05,P_DCP_ROTATE_VALUE_TOK));
+	m_pRotateValue->SetText(StringC(AT_DCP06,P_DCP_ROTATE_VALUE_TOK));
 	m_pRotateValue->GetFloatInputCtrl()->SetDecimalPlaces(6);
 	m_pRotateValue->GetFloatInputCtrl()->SetRange(-45.000000,45.000000);
 	m_pRotateValue->SetEmptyAllowed(true);
@@ -217,7 +217,7 @@ void DCP::LineFitDialog::OnInitDialog(void)
 
 	//m_pCircle = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	//m_pCircle->SetId(eCircle);
-	//m_pCircle->SetText(StringC(AT_DCP05,P_DCP_CIRCLE_TOK));
+	//m_pCircle->SetText(StringC(AT_DCP06,P_DCP_CIRCLE_TOK));
 	////m_pCircle->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
 	//void(m_pCircle->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	//void(m_pCircle->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
@@ -276,13 +276,13 @@ void DCP::LineFitDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 				m_pShiftLine->GetComboBoxInputCtrl()->RemoveItem(SHIFT_UP);
 				m_pShiftLine->GetComboBoxInputCtrl()->RemoveItem(SHIFT_DOWN);
 
-				m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_UP_TOK),		SHIFT_UP);
-				m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_DOWN_TOK), 	SHIFT_DOWN);
+				m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_UP_TOK),		SHIFT_UP);
+				m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_DOWN_TOK), 	SHIFT_DOWN);
 
 				m_pRotateLine->GetComboBoxInputCtrl()->RemoveItem(ROTATE_HORIZONTAL);
 				m_pRotateLine->GetComboBoxInputCtrl()->RemoveItem(ROTATE_VERTICAL);
-				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_LINE_HOR_TOK),		ROTATE_HORIZONTAL);
-				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_LINE_VER_TOK),		ROTATE_VERTICAL);
+				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_LINE_HOR_TOK),		ROTATE_HORIZONTAL);
+				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_LINE_VER_TOK),		ROTATE_VERTICAL);
 
 			}
 			else
@@ -290,13 +290,13 @@ void DCP::LineFitDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 				m_pShiftLine->GetComboBoxInputCtrl()->RemoveItem(SHIFT_UP);
 				m_pShiftLine->GetComboBoxInputCtrl()->RemoveItem(SHIFT_DOWN);
 
-				m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_FORWARD_TOK),	SHIFT_FORWARD);
-				m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_SHIFT_BACKWARD_TOK), 	SHIFT_BACKWARD);
+				m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_FORWARD_TOK),	SHIFT_FORWARD);
+				m_pShiftLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_SHIFT_BACKWARD_TOK), 	SHIFT_BACKWARD);
 
 				m_pRotateLine->GetComboBoxInputCtrl()->RemoveItem(ROTATE_HORIZONTAL);
 				m_pRotateLine->GetComboBoxInputCtrl()->RemoveItem(ROTATE_VERTICAL);
-				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_LEFT_RIGHT_TOK),		ROTATE_VERTICAL_LEFT_RIGHT);
-				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_DEPTH_TOK),		ROTATE_VERTICAL_DEPTH);
+				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_VERTICAL_LEFT_RIGHT_TOK),		ROTATE_VERTICAL_LEFT_RIGHT);
+				m_pRotateLine->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06,V_DCP_ROTATE_VERTICAL_DEPTH_TOK),		ROTATE_VERTICAL_DEPTH);
 			}
 			
 			m_pCalcLineFit->CalcLineFitDom(m_pLineFitModel->align321Model, &m_pLineFitModel->line_buff[0],m_pLineFitModel->selectedRefLine);
@@ -371,13 +371,13 @@ void DCP::LineFitDialog::RefreshControls()
 		
 		if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 		{
-				m_pUsedHeight->SetText(StringC(AT_DCP05,P_DCP_LINE_FITTING_USED_HEIGHT_TOK));
-				m_pEnteredHeight->SetText(StringC(AT_DCP05,P_DCP_MANUAL_HEIGHT_TOK));
+				m_pUsedHeight->SetText(StringC(AT_DCP06,P_DCP_LINE_FITTING_USED_HEIGHT_TOK));
+				m_pEnteredHeight->SetText(StringC(AT_DCP06,P_DCP_MANUAL_HEIGHT_TOK));
 		}
 		else
 		{
-				m_pUsedHeight->SetText(StringC(AT_DCP05,P_DCP_LINE_FITTING_USED_DEPTH_TOK));
-				m_pEnteredHeight->SetText(StringC(AT_DCP05,P_DCP_LINEFIT_DEPTH_TOK));
+				m_pUsedHeight->SetText(StringC(AT_DCP06,P_DCP_LINE_FITTING_USED_DEPTH_TOK));
+				m_pEnteredHeight->SetText(StringC(AT_DCP06,P_DCP_LINEFIT_DEPTH_TOK));
 		}
 
 		if(ret != MANUALLY_ENTERED) {
@@ -501,7 +501,7 @@ void DCP::LineFitDialog::delete_line()
 {
 	/*
 	StringC strMsg;
-	strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_POINTS_OF_LINE_TOK);
+	strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_POINTS_OF_LINE_TOK);
 	MsgBox MsgBox;
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
@@ -575,7 +575,7 @@ DCP::LineFitController::LineFitController(DCP::Model* pModel)
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_LINE_FITTING_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_LINE_FITTING_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 	
 	common = new Common(pModel);
 
@@ -624,30 +624,30 @@ DCP::LineFitController::LineFitController(DCP::Model* pModel)
     // Set the function key
 	
     FKDef vDef;
-    //vDef.nAppId = AT_DCP05;
+    //vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_LINE_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_LINE_TOK);
 	SetFunctionKey( FK1, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_POINTS_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_POINTS_TOK);
     SetFunctionKey( FK3, vDef );
 
-   /* vDef.strLable = StringC(AT_DCP05,K_DCP_CALC_TOK);
+   /* vDef.strLable = StringC(AT_DCP06,K_DCP_CALC_TOK);
     SetFunctionKey( FK5, vDef );*/
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_SAVE_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_SAVE_TOK);
 	SetFunctionKey( FK5, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
     SetFunctionKey( FK6, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_DEL_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
     SetFunctionKey( SHFK2, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -766,7 +766,7 @@ void DCP::LineFitController::OnF1Pressed()
 	{
 		(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pModel) );
 	}
-	(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_LINE_FITTING_LINE_MEAS_TOK));
+	(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_LINE_FITTING_LINE_MEAS_TOK));
 	
 	(void)GetController( MEAS_CONTROLLER )->SetModel(pModel);
 	SetActiveController(MEAS_CONTROLLER, true);
@@ -827,7 +827,7 @@ void DCP::LineFitController::OnF3Pressed()
 	{
 		(void)AddController( LINEFIT_MEAS_CONTROLLER, new DCP::LineFitMeasController(m_pModel) );
 	}
-	(void)GetController(LINEFIT_MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_LINE_FITTING_POINTS_TOK));
+	(void)GetController(LINEFIT_MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_LINE_FITTING_POINTS_TOK));
 	
 	(void)GetController( LINEFIT_MEAS_CONTROLLER )->SetModel(pModel);
 	SetActiveController(LINEFIT_MEAS_CONTROLLER, true);
@@ -848,7 +848,7 @@ void DCP::LineFitController::OnF5Pressed()
 	if(m_pLineFitModel->line_buff[0].calc != 0 && m_pLineFitModel->align321Model->calculated)
 	{
 		DCP::InputTextModel* pModel = new InputTextModel;
-		pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_NEW_FILENAME_TOK);
+		pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_NEW_FILENAME_TOK);
 		pModel->m_StrTitle = GetTitle();
 		pModel->m_iTextLength = 20;
 		pModel->m_StrText = L" ";
@@ -880,7 +880,7 @@ void DCP::LineFitController::OnF5Pressed()
 				(void)AddController( RES_LineFit_CONTROLLER, new DCP::ResLineFitController(m_pModel, m_pLineFitModel) );
 			}
 
-			(void)GetController(RES_LineFit_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_DEV_OF_SHAFT_TOK));
+			(void)GetController(RES_LineFit_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DEV_OF_SHAFT_TOK));
 			(void)GetController( RES_SHAFT_CONTROLLER )->SetModel(m_pModel);
 			SetActiveController(RES_SHAFT_CONTROLLER, true);
 		}*/
@@ -908,9 +908,9 @@ void DCP::LineFitController::OnSHF2Pressed()
 {	
 	
 		StringC strDomText;
-		strDomText.LoadTxt(AT_DCP05,L_DCP_3DSHAFT_ALIGMENT_TOK);
+		strDomText.LoadTxt(AT_DCP06,L_DCP_3DSHAFT_ALIGMENT_TOK);
 		StringC strMsg;
-		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_ALL_LINE_FITTING_TOK);
+		strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_ALL_LINE_FITTING_TOK);
 		strMsg.Format(strMsg,(const wchar_t*)strDomText);
 		
 		MsgBox msgbox;
@@ -1026,7 +1026,7 @@ void DCP::LineFitController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 					(void)AddController( RES_LINE_CONTROLLER, new DCP::ResLineController(m_pModel) );
 				}
 
-				(void)GetController(RES_LINE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_LINE_MEAS_TOK);
+				(void)GetController(RES_LINE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_LINE_MEAS_TOK);
 
 				(void)GetController( RES_LINE_CONTROLLER )->SetModel(m_pDlg->GetDataModel());
 				SetActiveController(RES_LINE_CONTROLLER, true);
@@ -1174,7 +1174,7 @@ char sPath[CPI::LEN_PATH_MAX];
 	{
 			MsgBox msgbox;
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_DELETE_OLD_FILE_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_DELETE_OLD_FILE_TOK);
 			msg.Format(msg,StringC(fname));
 			if(!msgbox.ShowMessageYesNo(msg))
 			{
@@ -1254,19 +1254,19 @@ char sPath[CPI::LEN_PATH_MAX];
 
 		if(m_pLineFitModel->selectedHeight == FIRST_POINT)
 		{
-			sHeight = StringC(AT_DCP05,V_DCP_FIRST_POINT_TOK);
+			sHeight = StringC(AT_DCP06,V_DCP_FIRST_POINT_TOK);
 		}
 		else if(m_pLineFitModel->selectedHeight == LAST_POINT)
 		{
-			sHeight = StringC(AT_DCP05,V_DCP_LAST_POINT_TOK);
+			sHeight = StringC(AT_DCP06,V_DCP_LAST_POINT_TOK);
 		}
 		else if(m_pLineFitModel->selectedHeight == INTERPOLATION)
 		{
-			sHeight = StringC(AT_DCP05,V_DCP_INTERPOLATION_TOK);
+			sHeight = StringC(AT_DCP06,V_DCP_INTERPOLATION_TOK);
 		}
 		else
 		{
-			sHeight = StringC(AT_DCP05,V_DCP_MANUALLY_ENTERED_TOK);
+			sHeight = StringC(AT_DCP06,V_DCP_MANUALLY_ENTERED_TOK);
 			sprintf(valueBuffer,"%*.f", m_pModel->m_nDecimals, m_pLineFitModel->manualHeight);
 		}
 		common->convert_to_ascii(sHeight, userBuffer,sHeight.Length()); 
@@ -1292,25 +1292,25 @@ char sPath[CPI::LEN_PATH_MAX];
 		}
 		else if(m_pLineFitModel->selectedShift == SHIFT_RIGHT)
 		{
-			sShift = StringC(AT_DCP05,V_DCP_SHIFT_RIGHT_TOK);
+			sShift = StringC(AT_DCP06,V_DCP_SHIFT_RIGHT_TOK);
 		}
 		else if(m_pLineFitModel->selectedShift == SHIFT_LEFT)
 		{
-			sShift = StringC(AT_DCP05,V_DCP_SHIFT_LEFT_TOK);
+			sShift = StringC(AT_DCP06,V_DCP_SHIFT_LEFT_TOK);
 		}
 		else if(m_pLineFitModel->selectedShift == SHIFT_UP)
 		{
 			if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
-				sShift = StringC(AT_DCP05,V_DCP_SHIFT_UP_TOK);
+				sShift = StringC(AT_DCP06,V_DCP_SHIFT_UP_TOK);
 			else
-				sShift = StringC(AT_DCP05,V_DCP_SHIFT_FORWARD_TOK);
+				sShift = StringC(AT_DCP06,V_DCP_SHIFT_FORWARD_TOK);
 		}
 		else if(m_pLineFitModel->selectedShift == SHIFT_DOWN)
 		{
 			if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
-				sShift = StringC(AT_DCP05,V_DCP_SHIFT_DOWN_TOK);
+				sShift = StringC(AT_DCP06,V_DCP_SHIFT_DOWN_TOK);
 			else
-				sShift = StringC(AT_DCP05,V_DCP_SHIFT_BACKWARD_TOK);
+				sShift = StringC(AT_DCP06,V_DCP_SHIFT_BACKWARD_TOK);
 		}
 		common->convert_to_ascii(sShift, userBuffer, sShift.Length()); 
 		sprintf(lineBuffer,"Shift line: %s Value: %s%c%c", userBuffer, valueBuffer, 13, 10);
@@ -1329,12 +1329,12 @@ char sPath[CPI::LEN_PATH_MAX];
 
 			if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 			{
-				sRotate = StringC(AT_DCP05,V_DCP_ROTATE_LINE_HOR_TOK);
+				sRotate = StringC(AT_DCP06,V_DCP_ROTATE_LINE_HOR_TOK);
 				sprintf(valueBuffer,"%.6f", m_pLineFitModel->rotateAngle);
 			}
 			else
 			{
-				sRotate = StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_LEFT_RIGHT_TOK);
+				sRotate = StringC(AT_DCP06,V_DCP_ROTATE_VERTICAL_LEFT_RIGHT_TOK);
 				sprintf(valueBuffer,"%.6f", m_pLineFitModel->rotateAngle);
 			}
 		}
@@ -1342,12 +1342,12 @@ char sPath[CPI::LEN_PATH_MAX];
 		{
 			if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 			{
-				sRotate = StringC(AT_DCP05,V_DCP_ROTATE_LINE_VER_TOK);
+				sRotate = StringC(AT_DCP06,V_DCP_ROTATE_LINE_VER_TOK);
 				sprintf(valueBuffer,"%.6f", m_pLineFitModel->rotateAngle);
 			}
 			else
 			{
-				sRotate = StringC(AT_DCP05,V_DCP_ROTATE_VERTICAL_DEPTH_TOK);
+				sRotate = StringC(AT_DCP06,V_DCP_ROTATE_VERTICAL_DEPTH_TOK);
 				sprintf(valueBuffer,"%.6f", m_pLineFitModel->rotateAngle);
 			}
 		}
@@ -1524,14 +1524,14 @@ DCP::LineFitModel::~LineFitModel()
 //	//	}
 //	//	else
 //	//	{
-//	//		sMsg.LoadTxt(AT_DCP05, M_DCP_DEFINE_REF_LINE_TOK);
+//	//		sMsg.LoadTxt(AT_DCP06, M_DCP_DEFINE_REF_LINE_TOK);
 //	//		msgbox.ShowMessageOk(sMsg);
 //	//		return 0;
 //	//	}
 //	//}
 //	//else
 //	//{
-//	//	sMsg.LoadTxt(AT_DCP05, M_DCP_DEFINE_SHAFT_CIRCLE_TOK);
+//	//	sMsg.LoadTxt(AT_DCP06, M_DCP_DEFINE_SHAFT_CIRCLE_TOK);
 //	//	msgbox.ShowMessageOk(sMsg);
 //	//	return 0;
 //	//}

@@ -25,8 +25,13 @@ Win32/
 Thumbs.db
 .DS_Store
 
-# Language build output (TextTool produces .LEN from .men)
+# Language build output (TextTool produces .LEN, .L, DCP06_TOK.* from .men)
 Text/Languages/**/*.LEN
+Text/Languages/**/*.L
+Text/Languages/**/DCP06_TOK.HPP
+Text/Languages/**/DCP06_TOK.IPP
+Text/Languages/**/DCP06_TOK.lua
+Text/Languages/**/*.bak
 
 # VS2008 / build artifacts
 *.ncb

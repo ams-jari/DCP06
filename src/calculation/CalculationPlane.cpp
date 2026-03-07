@@ -59,7 +59,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 	if(points_defined < 3)
 	{
 		StringC msg;
-		msg.LoadTxt(AT_DCP05,M_DCP_IN_MIN_3_POINTS_TOK);
+		msg.LoadTxt(AT_DCP06,M_DCP_IN_MIN_3_POINTS_TOK);
 		msgbox.ShowMessageOk(msg);
 		ret = false;
 	}
@@ -141,7 +141,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 		if(normal[0] == 0.0 && normal[1] == 0.0 && normal[2] == 0.0)
 		{
 			StringC msg;
-			msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 			msgbox.ShowMessageOk(msg);
 			ret = false;
 		}
@@ -233,7 +233,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			if(planeFitValid == -1)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
 				ret = false;
 			}
@@ -256,7 +256,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 				else
 				{
 					StringC msg;
-					msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 					msgbox.ShowMessageOk(msg);
 					ret = false;
 				}
@@ -329,7 +329,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 			if(planeFitValid == -1)
 			{
 				StringC msg;
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 				msgbox.ShowMessageOk(msg);
 				ret = false;
 			}
@@ -352,7 +352,7 @@ double x_tot=0.0, y_tot=0.0, z_tot=0.0;
 				else
 				{
 					StringC msg;
-					msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_CALC_TOK);
+					msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_CALC_TOK);
 					msgbox.ShowMessageOk(msg);
 					ret = false;
 				}

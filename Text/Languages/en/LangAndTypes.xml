@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LangAndTypes>
+  <Language>
+      <Name>English</Name>
+      <Abbreviation>EN</Abbreviation>
+      <NativeName>English</NativeName>
+      <FontName>Tahoma</FontName>
+      <FixedFontWidth>1</FixedFontWidth>
+      <FontWidth>9</FontWidth>
+      <FontHeight>17</FontHeight>
+  </Language>
+  <AppTypes>
+    <Type>
+      <Name>BubblePrompt</Name>
+      <Length>200</Length>
+      <Prefix>BP</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>16</FontSize>
+    </Type>
+    <Type>
+      <Name>BubbleTitle</Name>
+      <Length>410</Length>
+      <Prefix>BT</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Bold</FontWeight>
+      <FontSize>17</FontSize>
+    </Type>
+    <Type>
+      <Name>BubbleValue</Name>
+      <Length>210</Length>
+      <Prefix>BV</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Bold</FontWeight>
+      <FontSize>16</FontSize>
+    </Type>
+    <Type>
+      <Name>ContextMenu</Name>
+      <Length>228</Length>
+      <Prefix>CM</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>18</FontSize>
+    </Type>
+    <Type>
+      <Name>DropDnMenu</Name>
+      <Length>390</Length>
+      <Prefix>DM</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Bold</FontWeight>
+      <FontSize>20</FontSize>
+    </Type>
+    <Type>
+      <Name>EntryPoint</Name>
+      <Length>0</Length>
+      <Prefix>EP</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>13</FontSize>
+    </Type>
+    <Type>
+      <Name>EntryPointHK</Name>
+      <Length>0</Length>
+      <Prefix>EPHK</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>18</FontSize>
+    </Type>
+    <Type>
+      <Name>EntryPointMM</Name>
+      <Length>138</Length>
+      <Prefix>EPMM</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>13</FontSize>
+    </Type>
+    <Type>
+      <Name>Help text</Name>
+      <Length>0</Length>
+      <Prefix>H</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Bold</FontWeight>
+      <FontSize>12</FontSize>
+    </Type>
+    <Type>
+      <Name>IconText</Name>
+      <Length>132</Length>
+      <Prefix>IT</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>12</FontSize>
+    </Type>
+    <Type>
+      <Name>Info-Line</Name>
+      <Length>347</Length>
+      <Prefix>I</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Bold</FontWeight>
+      <FontSize>14</FontSize>
+    </Type>
+    <Type>
+      <Name>JobMenu</Name>
+      <Length>360</Length>
+      <Prefix>JM</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>17</FontSize>
+    </Type>
+    <Type>
+      <Name>Key</Name>
+      <Length>116</Length>
+      <Prefix>K</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>17</FontSize>
+    </Type>
+    <Type>
+      <Name>Line</Name>
+      <Length>0</Length>
+      <Prefix>L</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>18</FontSize>
+    </Type>
+    <Type>
+      <Name>MenuText</Name>
+      <Length>230</Length>
+      <Prefix>MT</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>13</FontSize>
+    </Type>
+    <Type>
+      <Name>Message</Name>
+      <Length>0</Length>
+      <Prefix>M</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>18</FontSize>
+    </Type>
+    <Type>
+      <Name>Metadata</Name>
+      <Length>105</Length>
+      <Prefix>MD</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>13</FontSize>
+    </Type>
+    <Type>
+      <Name>others</Name>
+      <Length>270</Length>
+      <Prefix>O</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>20</FontSize>
+    </Type>
+    <Type>
+      <Name>Prompt</Name>
+      <Length>740</Length>
+      <Prefix>P</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>18</FontSize>
+    </Type>
+    <Type>
+      <Name>Tab-Title</Name>
+      <Length>290</Length>
+      <Prefix>TT</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Bold</FontWeight>
+      <FontSize>16</FontSize>
+    </Type>
+    <Type>
+      <Name>Test-Text</Name>
+      <Length>270</Length>
+      <Prefix>X</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>16</FontSize>
+    </Type>
+    <Type>
+      <Name>Title</Name>
+      <Length>357</Length>
+      <Prefix>T</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Bold</FontWeight>
+      <FontSize>20</FontSize>
+    </Type>
+    <Type>
+      <Name>Unit</Name>
+      <Length>75</Length>
+      <Prefix>U</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>20</FontSize>
+    </Type>
+    <Type>
+      <Name>Value</Name>
+      <Length>335</Length>
+      <Prefix>V</Prefix>
+      <FontName>Segoe UI</FontName>
+      <FontWeight>Bold</FontWeight>
+      <FontSize>18</FontSize>
+    </Type>
+  </AppTypes>
+  <WebTypes>
+    <Type>
+      <Name>Web</Name>
+      <Length>0</Length>
+      <Prefix>W</Prefix>
+      <FontName>Tahoma</FontName>
+      <FontWeight>Regular</FontWeight>
+      <FontSize>20</FontSize>
+    </Type>
+  </WebTypes>
+</LangAndTypes>

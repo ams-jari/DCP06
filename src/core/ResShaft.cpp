@@ -68,10 +68,10 @@ DCP::ResShaftDialog::ResShaftDialog(DCP::Model *pModel,ShaftModel* pShaftModel):
 	//m_pMultiColCtrlObserver(OBS_METHOD_TO_PARAM0(SelectOnePointDialog, OnChanged), this),
 	m_pModel(pModel), m_pShaftModel(pShaftModel)
 {
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 	
 	// load title
-	sTitle.LoadTxt(AT_DCP05,T_DCP_DEV_OF_SHAFT_TOK);
+	sTitle.LoadTxt(AT_DCP06,T_DCP_DEV_OF_SHAFT_TOK);
 	
 	
 }
@@ -107,10 +107,10 @@ void DCP::ResShaftDialog::OnInitDialog(void)
 
 
 	// text
-	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_POINT_NUMBER_TOK), CI_No));
-	//USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_POINT_ID_TOK),CI_Point));
+	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_POINT_NUMBER_TOK), CI_No));
+	//USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_POINT_ID_TOK),CI_Point));
 	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(L""),CI_Point));
-	//USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP05,P_DCP_DEVIATION_TOK),CI_Deviation));
+	//USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(AT_DCP06,P_DCP_DEVIATION_TOK),CI_Deviation));
 	USER_APP_VERIFY(poMultiColCtrl->AddCol(StringC(L""),CI_Deviation));
 	
 	poMultiColCtrl->AddColSelection(CI_No, CI_Point, CI_Deviation);
@@ -128,7 +128,7 @@ void DCP::ResShaftDialog::OnInitDialog(void)
 
 
 	// text
-	//USER_APP_VERIFY(poMultiColCtrlDist->AddCol(StringC(AT_DCP05,P_DCP_POINT_NUMBER_TOK), CI_No));
+	//USER_APP_VERIFY(poMultiColCtrlDist->AddCol(StringC(AT_DCP06,P_DCP_POINT_NUMBER_TOK), CI_No));
 	USER_APP_VERIFY(poMultiColCtrlDist->AddCol(StringC(L"Distance"),CI_Text));
 	USER_APP_VERIFY(poMultiColCtrlDist->AddCol(StringC(L"Dist"),CI_Dist));
 	
@@ -148,7 +148,7 @@ void DCP::ResShaftDialog::OnInitDialog(void)
 
 
 	// text
-	//USER_APP_VERIFY(poMultiColCtrlDist->AddCol(StringC(AT_DCP05,P_DCP_POINT_NUMBER_TOK), CI_No));
+	//USER_APP_VERIFY(poMultiColCtrlDist->AddCol(StringC(AT_DCP06,P_DCP_POINT_NUMBER_TOK), CI_No));
 	USER_APP_VERIFY(poMultiColCtrlAngle->AddCol(StringC(L"!Angle"),CI_Text))
 	USER_APP_VERIFY(poMultiColCtrlAngle->AddCol(StringC(L"Angle"),CI_Angle));
 	//USER_APP_VERIFY(poMultiColCtrlDist->AddCol(StringC(L"Dist"),CI_Dist));
@@ -165,7 +165,7 @@ void DCP::ResShaftDialog::OnInitDialog(void)
 	/*
 	m_pDist = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pDist->SetId(eDist);
-	m_pDist->SetText(StringC(AT_DCP05,P_DCP_CIRCLE_TOK));
+	m_pDist->SetText(StringC(AT_DCP06,P_DCP_CIRCLE_TOK));
 	//m_pCircle->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
 	void(m_pDist->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pDist->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
@@ -192,7 +192,7 @@ void DCP::ResShaftDialog::OnF1Pressed(void)
 		if(m_pCommon->defined_circle_points(&GetDataModel()->circle_points[0],nullptr) <= 3)
 		{
 			StringC strText;
-			strText.LoadTxt(AT_DCP05,M_DCP_CANNOT_REJECT_PNT_TOK);
+			strText.LoadTxt(AT_DCP06,M_DCP_CANNOT_REJECT_PNT_TOK);
 			MsgBox msgbox;
 			
 			msgbox.ShowMessageOk(strText);
@@ -421,7 +421,7 @@ DCP::ResShaftController::ResShaftController(DCP::Model *pModel,ShaftModel* pShaf
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_DEV_OF_SHAFT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_DEV_OF_SHAFT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 	
 	//StringC sTitle;
 	//sTitle = L"Dev of circle RMS:";
@@ -435,23 +435,23 @@ DCP::ResShaftController::ResShaftController(DCP::Model *pModel,ShaftModel* pShaf
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
     vDef.poOwner = this;
 	
 	// moved into dialog
 	//vDef.nLable = K_DCP_REJECT_TOK;
 	//SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_SAVE_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_SAVE_TOK);
 	SetFunctionKey( FK3, vDef );
 
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";
 	SetFunctionKey( SHFK6, vDef1 );
@@ -501,7 +501,7 @@ void DCP::ResShaftController::OnF3Pressed()
 		(void)AddController( SHAFT_SAVE_CONTROLLER, new DCP::SaveShaftController(m_pShaftModel,m_pModel) );
 	}
 
-	(void)GetController(SHAFT_SAVE_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_SHAFT_SAVE_TOK));
+	(void)GetController(SHAFT_SAVE_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_SHAFT_SAVE_TOK));
 	(void)GetController( SHAFT_SAVE_CONTROLLER )->SetModel(m_pModel);
 	SetActiveController(SHAFT_SAVE_CONTROLLER, true);
 	

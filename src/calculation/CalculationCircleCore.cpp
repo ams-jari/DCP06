@@ -134,7 +134,7 @@ S_PLANE_BUFF temp_plane_buffer[1];
 
 	if(m_iPlaneType == 0)
 	{
-		sMsg.LoadTxt(AT_DCP05, M_DCP_DEFINE_CIRCLE_PLANE_TOK);
+		sMsg.LoadTxt(AT_DCP06, M_DCP_DEFINE_CIRCLE_PLANE_TOK);
 		m_pMsgBox->ShowMessageOk(sMsg);
 		return false;
 	}
@@ -144,7 +144,7 @@ S_PLANE_BUFF temp_plane_buffer[1];
 
 	if(count < 3)
 	{	
-		sMsg.LoadTxt(AT_DCP05, M_DCP_CIRCLE_WITH_AT_LEAST_PNTS_TOK);
+		sMsg.LoadTxt(AT_DCP06, M_DCP_CIRCLE_WITH_AT_LEAST_PNTS_TOK);
 		m_pMsgBox->ShowMessageOk(sMsg);
 		return false;
 	}
@@ -290,12 +290,12 @@ S_PLANE_BUFF temp_plane_buffer[1];
 	{
 		if(ret1 == -3) // Samalla suoralla // ret ->ret1 171000
 		{	
-			sMsg.LoadTxt(AT_DCP05,M_DCP_POINTS_ARE_IN_LINE_TOK);
+			sMsg.LoadTxt(AT_DCP06,M_DCP_POINTS_ARE_IN_LINE_TOK);
 			m_pMsgBox->ShowMessageOk(sMsg);
 		}
 		else if(ret1 == -1) // K��nteismatriisi ei onninstunut   ret ->ret1 171000
 		{
-			sMsg.LoadTxt(AT_DCP05, M_DCP_CANNOT_CALC_TOK);
+			sMsg.LoadTxt(AT_DCP06, M_DCP_CANNOT_CALC_TOK);
 			m_pMsgBox->ShowMessageOk(sMsg);
 		}
 		m_pCircle_points[0].calc= 0;
@@ -559,7 +559,7 @@ short count1;
 		}
 		if(count1 < 3)
 		{
-			sMsg.LoadTxt(AT_DCP05, M_DCP_CPLANE_WITH_3_PNTS_TOK);
+			sMsg.LoadTxt(AT_DCP06, M_DCP_CPLANE_WITH_3_PNTS_TOK);
 			m_pMsgBox->ShowMessageOk(sMsg);
 			return 0;
 		}

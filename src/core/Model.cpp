@@ -241,10 +241,24 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 				std::string logPath = std::string(dbPath) + "/DCP06/DCP06.log";
 				DCP::Logger::setLogPath(logPath.c_str());
 			}
-			DCP::Logger::init();  // uses default DCP06.log if setLogPath not called
+			else
+			{
+				// Fallback for simulator: use %TEMP%\DCP06.log (always writable, easy to find)
+#ifdef _WIN32
+				char tmpPath[CPI::LEN_PATH_MAX];
+				if (CPI::LEN_PATH_MAX > 32 && GetEnvironmentVariableA("TEMP", tmpPath, CPI::LEN_PATH_MAX - 16) > 0)
+				{
+					std::string logPath = std::string(tmpPath) + "\\DCP06.log";
+					DCP::Logger::setLogPath(logPath.c_str());
+				}
+#endif
+			}
+			DCP::Logger::init();  // uses default DCP06.log in CWD if setLogPath not called
 			// Enable by default for simulator debugging; m_nAmsLog can override when config loaded
 			DCP::Logger::setEnabled(true);
 			DCP::Logger::setLevel(DCP::Logger::Debug);  // entry/exit tracing uses Debug level
+			// Log path at startup so user can find DCP06.log
+			DCP::Logger::info("DCP06.log path: %s", DCP::Logger::getLogPath());
 			//getSpecialInfo();
 			//oVers.
 }

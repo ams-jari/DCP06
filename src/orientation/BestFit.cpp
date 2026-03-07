@@ -69,7 +69,7 @@ DCP::BestFitDialog::BestFitDialog(DCP::BestFitModel* pPomModel):m_pInfo1(0), m_p
 			m_pPointMeas(0), m_pCalc(0),m_pDataModel(pPomModel)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 }
 
 
@@ -93,12 +93,12 @@ void DCP::BestFitDialog::OnInitDialog(void)
 
 	m_pInfo1 = new GUI::TextCtrlC();
 	m_pInfo1->SetId(eInfo1);
-	m_pInfo1->SetText(StringC(AT_DCP05,L_DCP_POM_SELECT_OCS_POINTS_TOK));
+	m_pInfo1->SetText(StringC(AT_DCP06,L_DCP_POM_SELECT_OCS_POINTS_TOK));
 	AddCtrl(m_pInfo1);
 
 	m_pFile = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pFile->SetId(eFile);
-	m_pFile->SetText(StringC(AT_DCP05,P_DCP_TEMPLATE_SK_TOK));
+	m_pFile->SetText(StringC(AT_DCP06,P_DCP_TEMPLATE_SK_TOK));
 	void(m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pFile->SetAutoColon(false);
@@ -108,7 +108,7 @@ void DCP::BestFitDialog::OnInitDialog(void)
 	
 	m_pPoints = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPoints->SetId(ePoints);
-	m_pPoints->SetText(StringC(AT_DCP05,P_DCP_OCS_POINTS_SK_TOK));
+	m_pPoints->SetText(StringC(AT_DCP06,P_DCP_OCS_POINTS_SK_TOK));
 	void(m_pPoints->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPoints->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pPoints->SetAutoColon(false);
@@ -118,13 +118,13 @@ void DCP::BestFitDialog::OnInitDialog(void)
 
 	m_pInfo2 = new GUI::TextCtrlC();
 	m_pInfo2->SetId(eInfo2);
-	m_pInfo2->SetText(StringC(AT_DCP05,L_DCP_POM_MEASURE_SCS_POINTS_TOK));
+	m_pInfo2->SetText(StringC(AT_DCP06,L_DCP_POM_MEASURE_SCS_POINTS_TOK));
 	
 	AddCtrl(m_pInfo2);
 
 	m_pPointMeas = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointMeas->SetId(ePointMeas);
-	m_pPointMeas->SetText(StringC(AT_DCP05,P_DCP_POM_MEASURE_SCS_POINTS_TOK));
+	m_pPointMeas->SetText(StringC(AT_DCP06,P_DCP_POM_MEASURE_SCS_POINTS_TOK));
 	void(m_pPointMeas->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPointMeas->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pPointMeas->SetAutoColon(false);
@@ -134,7 +134,7 @@ void DCP::BestFitDialog::OnInitDialog(void)
 
 	m_pCalc = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pCalc->SetId(eCalc);
-	m_pCalc->SetText(StringC(AT_DCP05,P_DCP_POM_CALC_TOK));
+	m_pCalc->SetText(StringC(AT_DCP06,P_DCP_POM_CALC_TOK));
 	void(m_pCalc->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pCalc->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pCalc->SetAutoColon(false);
@@ -145,7 +145,7 @@ void DCP::BestFitDialog::OnInitDialog(void)
 	//SetHelpTok(H_DCP_POM_TOK,0);
 /*
 	 FKDef vDef;
-	vDef.nAppId = AT_DCP05;
+	vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
 
 	vDef.nLable	= K_DCP_FILE_TOK;
@@ -532,7 +532,7 @@ DCP::BestFitController::BestFitController(Model* pModel)
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_POM_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_POM_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// create model
 	m_pDataModel = new BestFitModel;
@@ -545,36 +545,36 @@ DCP::BestFitController::BestFitController(Model* pModel)
     // Set the function key
 	
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_FILE_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_FILE_TOK);
 	SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_POINT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_TOK);
 	SetFunctionKey( FK2, vDef );
     
-	vDef.strLable = StringC(AT_DCP05,K_DCP_MEAS_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 	SetFunctionKey( FK3, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CALC_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CALC_TOK);
 	SetFunctionKey( FK4, vDef );
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_DEL_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
 	SetFunctionKey( SHFK2, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_RMS_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_RMS_TOK);
 	SetFunctionKey( SHFK3, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_RESIDUALS_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_RESIDUALS_TOK);
 	SetFunctionKey( SHFK4, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -684,7 +684,7 @@ void DCP::BestFitController::OnF3Pressed()
 	short sum = common.defined_bestFit_points(&m_pDataModel->point_OCS[0],nullptr);
 	if(sum==0)
 	{
-		msg.LoadTxt(AT_DCP05,M_DCP_NO_POINTS_TOK	);
+		msg.LoadTxt(AT_DCP06,M_DCP_NO_POINTS_TOK	);
 		msgbox.ShowMessageOk(msg);
 		//msgbox(TXT_NIL_TOKEN, M_NO_POINTS_TOK,MB_OK);
 			//show_message("No points!");
@@ -762,10 +762,10 @@ void DCP::BestFitController::OnF4Pressed()
 		StringC sMsg;
 		
 		StringC sX, sY, sZ, sRMS;
-		sX.LoadTxt(AT_DCP05, P_DCP_X_TOK);
-		sY.LoadTxt(AT_DCP05, P_DCP_Y_TOK);
-		sZ.LoadTxt(AT_DCP05, P_DCP_Z_TOK);
-		sRMS.LoadTxt(AT_DCP05, P_DCP_RMS_TOK);
+		sX.LoadTxt(AT_DCP06, P_DCP_X_TOK);
+		sY.LoadTxt(AT_DCP06, P_DCP_Y_TOK);
+		sZ.LoadTxt(AT_DCP06, P_DCP_Z_TOK);
+		sRMS.LoadTxt(AT_DCP06, P_DCP_RMS_TOK);
 		
 		StringC sXline;
 		StringC sYline;
@@ -803,14 +803,14 @@ void DCP::BestFitController::OnF4Pressed()
 		else if(ret == -1) // ABort
 		{
 			StringC sMsg;
-			sMsg.LoadTxt(AT_DCP05,M_DCP_ORIENTATION_LOST_TOK);
+			sMsg.LoadTxt(AT_DCP06,M_DCP_ORIENTATION_LOST_TOK);
 			msgbox.ShowMessageOk(sMsg);
 			m_pDataModel->calculated = false;
 		}
 		else				// retry
 		{
 			StringC sMsg;
-			sMsg.LoadTxt(AT_DCP05,M_DCP_REMEASURE_SCS_POINTS_TOK);
+			sMsg.LoadTxt(AT_DCP06,M_DCP_REMEASURE_SCS_POINTS_TOK);
 			msgbox.ShowMessageOk(sMsg);
 			m_pDataModel->calculated = false;
 		}
@@ -854,10 +854,10 @@ void DCP::BestFitController::OnSHF3Pressed()
 		StringC sMsg;
 		
 		StringC sX, sY, sZ, sRMS;
-		sX.LoadTxt(AT_DCP05, P_DCP_X_TOK);
-		sY.LoadTxt(AT_DCP05, P_DCP_Y_TOK);
-		sZ.LoadTxt(AT_DCP05, P_DCP_Z_TOK);
-		sRMS.LoadTxt(AT_DCP05, P_DCP_RMS_TOK);
+		sX.LoadTxt(AT_DCP06, P_DCP_X_TOK);
+		sY.LoadTxt(AT_DCP06, P_DCP_Y_TOK);
+		sZ.LoadTxt(AT_DCP06, P_DCP_Z_TOK);
+		sRMS.LoadTxt(AT_DCP06, P_DCP_RMS_TOK);
 		
 		StringC sXline;
 		StringC sYline;
@@ -999,9 +999,9 @@ void DCP::BestFitController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 bool DCP::BestFitController::delete_bestFit()
 {
 		StringC strPomText;
-		strPomText.LoadTxt(AT_DCP05,L_DCP_POM_TEXT_TOK);
+		strPomText.LoadTxt(AT_DCP06,L_DCP_POM_TEXT_TOK);
 		StringC strMsg;
-		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_ALL_TOK);
+		strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_ALL_TOK);
 		strMsg.Format(strMsg,(const wchar_t*)strPomText);
 		
 		MsgBox msgbox;

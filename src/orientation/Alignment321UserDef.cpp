@@ -82,17 +82,17 @@ DCP::Alignment321UserDefDialog::Alignment321UserDefDialog(DCP::Alignment321UserD
 								m_pRotPlane(0),m_pCalc(0),m_pRotLine(0),m_pDataModel(pDomUserDefModel)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 
-	sXYPlaneText.LoadTxt(AT_DCP05,V_DCP_XY_PLANE_TOK);
-	sZXPlaneText.LoadTxt(AT_DCP05,V_DCP_ZX_PLANE_TOK);
-	sYZPlaneText.LoadTxt(AT_DCP05,V_DCP_YZ_PLANE_TOK);
+	sXYPlaneText.LoadTxt(AT_DCP06,V_DCP_XY_PLANE_TOK);
+	sZXPlaneText.LoadTxt(AT_DCP06,V_DCP_ZX_PLANE_TOK);
+	sYZPlaneText.LoadTxt(AT_DCP06,V_DCP_YZ_PLANE_TOK);
 
-	sHZText.LoadTxt(AT_DCP05,V_DCP_HZ_TOK);
+	sHZText.LoadTxt(AT_DCP06,V_DCP_HZ_TOK);
 
-	sXLineText.LoadTxt(AT_DCP05,V_DCP_X_LINE_TOK);
-	sYLineText.LoadTxt(AT_DCP05,V_DCP_Y_LINE_TOK);
-	sZLineText.LoadTxt(AT_DCP05,V_DCP_Z_LINE_TOK);
+	sXLineText.LoadTxt(AT_DCP06,V_DCP_X_LINE_TOK);
+	sYLineText.LoadTxt(AT_DCP06,V_DCP_Y_LINE_TOK);
+	sZLineText.LoadTxt(AT_DCP06,V_DCP_Z_LINE_TOK);
 
 	
 }
@@ -114,7 +114,7 @@ void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 
 	m_pPlane = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPlane->SetId(ePlane);
-	m_pPlane->SetText(StringC(AT_DCP05,P_DCP_REF_PLANE_SK_TOK));
+	m_pPlane->SetText(StringC(AT_DCP06,P_DCP_REF_PLANE_SK_TOK));
 	//m_pPlane->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
 	void(m_pPlane->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPlane->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
@@ -125,7 +125,7 @@ void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 
 	m_pLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pLine->SetId(eLine);
-	m_pLine->SetText(StringC(AT_DCP05,P_DCP_REF_LINE_SK_TOK));
+	m_pLine->SetText(StringC(AT_DCP06,P_DCP_REF_LINE_SK_TOK));
 	void(m_pLine->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pLine->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pLine->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
@@ -136,7 +136,7 @@ void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 	
 	m_pPointOffs = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointOffs->SetId(ePointOffs);
-	m_pPointOffs->SetText(StringC(AT_DCP05,P_DCP_REF_PNT_OFFSV_TOK));
+	m_pPointOffs->SetText(StringC(AT_DCP06,P_DCP_REF_PNT_OFFSV_TOK));
 	void(m_pPointOffs->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPointOffs->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	// m_pPointOffs->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
@@ -147,7 +147,7 @@ void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 
 	m_pPointMeas = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointMeas->SetId(ePointMeas);
-	m_pPointMeas->SetText(StringC(AT_DCP05,P_DCP_REF_PNT_MEASV_TOK));
+	m_pPointMeas->SetText(StringC(AT_DCP06,P_DCP_REF_PNT_MEASV_TOK));
 	void(m_pPointMeas->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPointMeas->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pPointMeas->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
@@ -158,7 +158,7 @@ void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 
 	m_pRotPlane = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pRotPlane->SetId(eRotPlane);
-	m_pRotPlane->SetText(StringC(AT_DCP05,P_DCP_REF_ROTATE_PLANE_TOK));
+	m_pRotPlane->SetText(StringC(AT_DCP06,P_DCP_REF_ROTATE_PLANE_TOK));
 	void(m_pRotPlane->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pRotPlane->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pRotPlane->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
@@ -169,7 +169,7 @@ void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 	
 	m_pRotLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pRotLine->SetId(eRotLine);
-	m_pRotLine->SetText(StringC(AT_DCP05,P_DCP_REF_ROTATE_LINE_TOK));
+	m_pRotLine->SetText(StringC(AT_DCP06,P_DCP_REF_ROTATE_LINE_TOK));
 	void(m_pRotLine->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pRotLine->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pRotLine->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
@@ -180,7 +180,7 @@ void DCP::Alignment321UserDefDialog::OnInitDialog(void)
 
 	m_pCalc = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pCalc->SetId(eCalc);
-	m_pCalc->SetText(StringC(AT_DCP05,P_DCP_DOM_CALC_TOK));
+	m_pCalc->SetText(StringC(AT_DCP06,P_DCP_DOM_CALC_TOK));
 	void(m_pCalc->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pCalc->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pCalc->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
@@ -442,9 +442,9 @@ DCP::Model* DCP::Alignment321UserDefDialog::GetModel() const
 void DCP::Alignment321UserDefDialog::delete_align321()
 {
 		StringC strDomText;
-		strDomText.LoadTxt(AT_DCP05,L_DCP_USERDEF_TEXT_TOK);
+		strDomText.LoadTxt(AT_DCP06,L_DCP_USERDEF_TEXT_TOK);
 		StringC strMsg;
-		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_ALL_TOK);
+		strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_ALL_TOK);
 		strMsg.Format(strMsg,(const wchar_t*)strDomText);
 		
 		MsgBox msgbox;
@@ -486,7 +486,7 @@ DCP::Alignment321UserDefController::Alignment321UserDefController(Model* pModel)
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_USERDEF_CONFIG_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_USERDEF_CONFIG_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	// create model
 	m_pDataModel = new Alignment321UserDefModel(m_pModel);
@@ -514,42 +514,42 @@ void DCP::Alignment321UserDefController::show_function_keys()
 {
     FKDef vDef;
 	vDef.poOwner = this;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_PLANE_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_PLANE_TOK);
 	SetFunctionKey( FK1, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_LINE_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_LINE_TOK);
     SetFunctionKey( FK2, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_OFFSET_VALUE_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_OFFSET_VALUE_TOK);
     SetFunctionKey( FK3, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_MEASV_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_MEASV_TOK);
     SetFunctionKey( FK4, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_CALC_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_CALC_TOK);
     SetFunctionKey( FK5, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
     SetFunctionKey( FK6, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_DEL_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
     SetFunctionKey( SHFK2, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_ROTATE_PLANE_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_ROTATE_PLANE_TOK);
     SetFunctionKey( SHFK3, vDef );
 
-	vDef.strLable = StringC(AT_DCP05,K_DCP_ROTATE_LINE_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_ROTATE_LINE_TOK);
     SetFunctionKey( SHFK4, vDef );
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_MEAS_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
     SetFunctionKey( SHFK5, vDef );
 
 	// HIDE SHIFT F6
     FKDef vDef1;
 	vDef1.poOwner = this;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
 	vDef1.strLable =L"";
 	SetFunctionKey( SHFK6, vDef1 );
 }
@@ -670,7 +670,7 @@ void DCP::Alignment321UserDefController::OnF4Pressed()
 	
 
 	StringC sActualSelected;
-	sActualSelected.LoadTxt(AT_DCP05,P_DCP_ACTUAL_SELECTED_TOK);
+	sActualSelected.LoadTxt(AT_DCP06,P_DCP_ACTUAL_SELECTED_TOK);
 
     char cActSelected[10];
 
@@ -704,7 +704,7 @@ void DCP::Alignment321UserDefController::OnF4Pressed()
 		(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
 	}
 
-	//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_PLANE_MEAS_TOK);
+	//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
 
 	(void)GetController( SELECT_POINT_CONTROLLER )->SetModel(pModel);
 	SetActiveController(SELECT_POINT_CONTROLLER, true);
@@ -797,7 +797,7 @@ void DCP::Alignment321UserDefController::OnSHF3Pressed()
 	pModel->plane_type = m_pDataModel->align321Model->align321_active_plane;
 	pModel->display = A321_USERDEF_DLG;
 	StringC sTitle;
-	sTitle.LoadTxt(AT_DCP05,T_DCP_USERDEF_ROTATE_PLANE_TOK);
+	sTitle.LoadTxt(AT_DCP06,T_DCP_USERDEF_ROTATE_PLANE_TOK);
 	pModel->sTitle = sTitle;
 
 	if(GetController(ROTATE_PLANE_CONTROLLER) == nullptr)
@@ -826,7 +826,7 @@ void DCP::Alignment321UserDefController::OnSHF4Pressed()
 	pModel->plane_type = m_pDataModel->align321Model->align321_active_plane;
 	pModel->display = A321_USERDEF_DLG;
 	StringC sTitle;
-	sTitle.LoadTxt(AT_DCP05,T_DCP_USERDEF_ROTATE_LINE_TOK);
+	sTitle.LoadTxt(AT_DCP06,T_DCP_USERDEF_ROTATE_LINE_TOK);
 	pModel->sTitle = sTitle;
 
 	if(GetController(ROTATE_LINE_CONTROLLER) == nullptr)
@@ -856,7 +856,7 @@ void DCP::Alignment321UserDefController::open_meas_display()
 	if(iCount > 0)
 	{
 		StringC msg;
-		msg.LoadTxt(AT_DCP05, M_DCP_DELETE_POINTS_TOK);
+		msg.LoadTxt(AT_DCP06, M_DCP_DELETE_POINTS_TOK);
 		msg.Format(msg,L"");
 		
 
@@ -864,7 +864,7 @@ void DCP::Alignment321UserDefController::open_meas_display()
 		{
 			if(m_pDataModel->is_point_id_defined())
 			{
-				msg.LoadTxt(AT_DCP05,M_DCP_DELETE_POINT_IDS_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_DELETE_POINT_IDS_TOK);
 				if(!msgBox.ShowMessageYesNo(msg))
 				{
 					iLastDefinedPoint = m_pDataModel->get_last_defined_point();
@@ -928,7 +928,7 @@ void DCP::Alignment321UserDefController::open_meas_display()
 	{
 		(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()));
 	}
-	(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_USERDEF_MEAS_TOK));
+	(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_USERDEF_MEAS_TOK));
 
 	(void)GetController( MEAS_CONTROLLER )->SetModel(pModel);
 	SetActiveController(MEAS_CONTROLLER, true);
@@ -959,7 +959,7 @@ void DCP::Alignment321UserDefController::OnSHF5Pressed()
 	{
 		(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()));
 	}
-	(void)GetController(MEAS_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_USERDEF_MEAS_TOK);
+	(void)GetController(MEAS_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_USERDEF_MEAS_TOK);
 
 	(void)GetController( MEAS_CONTROLLER )->SetModel(pModel);
 	SetActiveController(MEAS_CONTROLLER, true);

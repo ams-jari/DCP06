@@ -101,21 +101,21 @@ StringC msg;
 
 	if(pPlane[0].calc == 0)
 	{	
-		msg.LoadTxt(AT_DCP05, M_DCP_DEFINE_REF_PLANE_TOK);
+		msg.LoadTxt(AT_DCP06, M_DCP_DEFINE_REF_PLANE_TOK);
 		msgbox.ShowMessageOk(msg);
 		return false;
 	}
 
 	if(m_pAlignment321Model->align321_line_buff[0].calc == 0)
 	{
-		msg.LoadTxt(AT_DCP05, M_DCP_DEFINE_REF_LINE_TOK);
+		msg.LoadTxt(AT_DCP06, M_DCP_DEFINE_REF_LINE_TOK);
 		msgbox.ShowMessageOk(msg);
 		return false;
 	}
 
 	if(m_pAlignment321Model->align321_ref_point_buff.sta == 0)
 	{
-		msg.LoadTxt(AT_DCP05, M_DCP_DEFINE_REF_POINT_TOK);
+		msg.LoadTxt(AT_DCP06, M_DCP_DEFINE_REF_POINT_TOK);
 		msgbox.ShowMessageOk(msg);
 		return false;
 	}
@@ -394,7 +394,7 @@ StringC msg;
 
 		if(matinv4x4(tempmat2, &tempmat3) == -1)
 		{
-			msg.LoadTxt(AT_DCP05, M_DCP_CANNOT_CALC_TOK);
+			msg.LoadTxt(AT_DCP06, M_DCP_CANNOT_CALC_TOK);
 			msgbox.ShowMessageOk(msg);
 			//m_pModel->ocsd_defined=false;
 			return false;
@@ -424,7 +424,7 @@ StringC msg;
 		*/
 		
 		if(show_message) {
-			msg.LoadTxt(AT_DCP05, M_DCP_CALCULATION_OK_TOK);
+			msg.LoadTxt(AT_DCP06, M_DCP_CALCULATION_OK_TOK);
 			msgbox.ShowMessageOk(msg);
 		}
 		

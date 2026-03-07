@@ -113,8 +113,8 @@ DCP::Meas3DDialog::Meas3DDialog(Meas3DModel* pMeasModel):GUI::ModelHandlerC(),GU
 
 			//,m_pInfo(0)
 {
-	//SetTxtApplicationId(AT_DCP05);
-	strInfoText.LoadTxt(AT_DCP05,P_DCP_INFO_TOK);
+	//SetTxtApplicationId(AT_DCP06);
+	strInfoText.LoadTxt(AT_DCP06,P_DCP_INFO_TOK);
 }
            
 // ================================================================================================
@@ -176,7 +176,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 
 	m_pFile = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pFile->SetId(eFile);
-	m_pFile->SetText(StringC(AT_DCP05,P_DCP_3DFILE_SK_TOK));
+	m_pFile->SetText(StringC(AT_DCP06,P_DCP_3DFILE_SK_TOK));
 	m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	//m_pFile->GetStringInputCtrl()-
@@ -186,7 +186,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	
 	m_pPointId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointId->SetId(ePointId);
-	m_pPointId->SetText(StringC(AT_DCP05,P_DCP_POINT_ID_SK_TOK));
+	m_pPointId->SetText(StringC(AT_DCP06,P_DCP_POINT_ID_SK_TOK));
 	m_pPointId->GetStringInputCtrl()->SetCharsCountMax(DCP_POINT_ID_LENGTH);
 	m_pPointId->SetEmptyAllowed(true);
 	//m_pPointId->GetStringInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
@@ -197,7 +197,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 
 	m_pXDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pXDsg->SetId(eXDsg);
-	m_pXDsg->SetText(StringC(AT_DCP05,P_DCP_X_DSG_TOK));
+	m_pXDsg->SetText(StringC(AT_DCP06,P_DCP_X_DSG_TOK));
 	m_pXDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short) GetModel()->m_nDecimals);
 	//m_pXDsg->GetFloatInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	//m_pXDsg->GetFloatInputCtrl()->SetRange(SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
@@ -211,7 +211,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 
 	m_pYDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pYDsg->SetId(eYDsg);
-	m_pYDsg->SetText(StringC(AT_DCP05,P_DCP_Y_DSG_TOK));
+	m_pYDsg->SetText(StringC(AT_DCP06,P_DCP_Y_DSG_TOK));
 	m_pYDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	//m_pYDsg->GetStringInputCtrl()->SetCharsCountMax(DCP_XYZ_VALUE_LENGTH);
 	m_pYDsg->SetEmptyAllowed(true);
@@ -225,7 +225,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 
 	m_pZDsg = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_Float);
 	m_pZDsg->SetId(eZDsg);
-	m_pZDsg->SetText(StringC(AT_DCP05,P_DCP_Z_DSG_TOK));
+	m_pZDsg->SetText(StringC(AT_DCP06,P_DCP_Z_DSG_TOK));
 	m_pZDsg->GetFloatInputCtrl()->SetDecimalPlaces((unsigned short)GetModel()->m_nDecimals);
 	m_pZDsg->SetEmptyAllowed(true);
 	//m_pZDsg->SetAutoColon(false);
@@ -236,14 +236,14 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	
 	m_pXAct = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pXAct->SetId(eXAct);
-	m_pXAct->SetText(StringC(AT_DCP05,P_DCP_X_ACT_TOK));
+	m_pXAct->SetText(StringC(AT_DCP06,P_DCP_X_ACT_TOK));
 	m_pXAct->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pXAct->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pXAct->SetEmptyAllowed(true);
 
 	m_pYAct = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pYAct->SetId(eYAct);
-	m_pYAct->SetText(StringC(AT_DCP05,P_DCP_Y_ACT_TOK));
+	m_pYAct->SetText(StringC(AT_DCP06,P_DCP_Y_ACT_TOK));
 	m_pYAct->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pYAct->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pYAct->SetEmptyAllowed(true);
@@ -251,14 +251,14 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 
 	m_pZAct = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pZAct->SetId(eZAct);
-	m_pZAct->SetText(StringC(AT_DCP05,P_DCP_Z_ACT_TOK));
+	m_pZAct->SetText(StringC(AT_DCP06,P_DCP_Z_ACT_TOK));
 	m_pZAct->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pZAct->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pZAct->SetEmptyAllowed(true);
 
 	m_pXDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pXDev->SetId(eXDev);
-	m_pXDev->SetText(StringC(AT_DCP05,P_DCP_X_DEV_TOK));
+	m_pXDev->SetText(StringC(AT_DCP06,P_DCP_X_DEV_TOK));
 	m_pXDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pXDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pXDev->SetEmptyAllowed(true);
@@ -266,14 +266,14 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 
 	m_pYDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pYDev->SetId(eYDev);
-	m_pYDev->SetText(StringC(AT_DCP05,P_DCP_Y_DEV_TOK));
+	m_pYDev->SetText(StringC(AT_DCP06,P_DCP_Y_DEV_TOK));
 	m_pYDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pYDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pYDev->SetEmptyAllowed(true);
 
 	m_pZDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pZDev->SetId(eZDev);
-	m_pZDev->SetText(StringC(AT_DCP05,P_DCP_Z_DEV_TOK));
+	m_pZDev->SetText(StringC(AT_DCP06,P_DCP_Z_DEV_TOK));
 	m_pZDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pZDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pZDev->SetEmptyAllowed(true);
@@ -313,7 +313,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	/*
 	m_pXActDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pXActDev->SetId(eXActDev);
-	m_pXActDev->SetText(StringC(AT_DCP05,P_DCP_X_ACT_DEV_TOK));
+	m_pXActDev->SetText(StringC(AT_DCP06,P_DCP_X_ACT_DEV_TOK));
 	m_pXActDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pXActDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pXActDev->SetEmptyAllowed(true);
@@ -326,7 +326,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 
 	m_pYActDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pYActDev->SetId(eYActDev);
-	m_pYActDev->SetText(StringC(AT_DCP05,P_DCP_Y_ACT_DEV_TOK));
+	m_pYActDev->SetText(StringC(AT_DCP06,P_DCP_Y_ACT_DEV_TOK));
 	m_pYActDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pYActDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pYActDev->SetEmptyAllowed(true);
@@ -338,7 +338,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	//m_pZActDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pZActDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pZActDev->SetId(eZActDev);
-	m_pZActDev->SetText(StringC(AT_DCP05,P_DCP_Z_ACT_DEV_TOK));
+	m_pZActDev->SetText(StringC(AT_DCP06,P_DCP_Z_ACT_DEV_TOK));
 	m_pZActDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pZActDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pZActDev->SetEmptyAllowed(true);
@@ -355,7 +355,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	m_pXActDev->AddItem(2,GUI::MultiTextValueCtrlC::ValueTypeT::VT_String,50,AlignmentT::AL_LEFT,42,AlignmentT::AL_RIGHT, false);
 	//m_pXActDev->SetString(1,StringC(L"100.0"));
 	//m_pXActDev->SetString(2,StringC(L"-99100.0"));
-	m_pXActDev->SetText(1, StringC(AT_DCP05,P_DCP_X_ACT_DEV_TOK));
+	m_pXActDev->SetText(1, StringC(AT_DCP06,P_DCP_X_ACT_DEV_TOK));
 	AddCtrl(m_pXActDev);
 
 	m_pYActDev = new GUI::MultiTextValueCtrlC();
@@ -364,7 +364,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	m_pYActDev->AddItem(2,GUI::MultiTextValueCtrlC::ValueTypeT::VT_String,50,AlignmentT::AL_LEFT,42,AlignmentT::AL_RIGHT, false);
 	//m_pXActDev->SetString(1,StringC(L"100.0"));
 	//m_pXActDev->SetString(2,StringC(L"-99100.0"));
-	m_pYActDev->SetText(1, StringC(AT_DCP05,P_DCP_Y_ACT_DEV_TOK));
+	m_pYActDev->SetText(1, StringC(AT_DCP06,P_DCP_Y_ACT_DEV_TOK));
 	AddCtrl(m_pYActDev);
 
 	m_pZActDev = new GUI::MultiTextValueCtrlC();
@@ -373,7 +373,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	m_pZActDev->AddItem(2,GUI::MultiTextValueCtrlC::ValueTypeT::VT_String,50,AlignmentT::AL_LEFT,42,AlignmentT::AL_RIGHT, false);
 	//m_pXActDev->SetString(1,StringC(L"100.0"));
 	//m_pXActDev->SetString(2,StringC(L"-99100.0"));
-	m_pZActDev->SetText(1, StringC(AT_DCP05,P_DCP_Z_ACT_DEV_TOK));
+	m_pZActDev->SetText(1, StringC(AT_DCP06,P_DCP_Z_ACT_DEV_TOK));
 	AddCtrl(m_pZActDev);
 	*/
 
@@ -639,9 +639,9 @@ DCP::Meas3DController::Meas3DController(bool bShaft, DCP::Model* pModel )
     // is a token from the text database 'DCP05.men'
 	
 	if(!bShaft)
-		SetTitle( StringC(AT_DCP05, T_DCP_3DMEAS_TOK) );
+		SetTitle( StringC(AT_DCP06, T_DCP_3DMEAS_TOK) );
 	else
-		SetTitle( StringC(AT_DCP05, T_DCP_3DSHAFT_ALIGMENT_TOK ));
+		SetTitle( StringC(AT_DCP06, T_DCP_3DSHAFT_ALIGMENT_TOK ));
 
 	msgbox  = new MsgBox;
 		
@@ -703,16 +703,16 @@ void DCP::Meas3DController::show_function_keys()
 		FKDef vDef;
 		vDef.poOwner = this;
 		
-		//vDef.nAppId = AT_DCP05;
+		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP05, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
 		SetFunctionKey( FK1, vDef );
 
-		vDef.strLable = StringC(AT_DCP05, K_DCP_CONT_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK);
 		SetFunctionKey( FK6, vDef );
 
 		FKDef vDef1;
-			//vDef1.nAppId = AT_DCP05;
+			//vDef1.nAppId = AT_DCP06;
 			vDef1.poOwner = this;
 			vDef1.strLable = L" ";;
 			SetFunctionKey( SHFK1, vDef1 );
@@ -726,30 +726,30 @@ void DCP::Meas3DController::show_function_keys()
 		{
 			// change function keys
 			FKDef vDef;
-			//vDef.nAppId = AT_DCP05;
+			//vDef.nAppId = AT_DCP06;
 			vDef.poOwner = this;
 			
-			vDef.strLable = StringC(AT_DCP05,K_DCP_PREV_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_PREV_TOK);
 			SetFunctionKey( FK1, vDef );
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_ADD_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_ADD_TOK);
 			SetFunctionKey( FK2, vDef );
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_NEXT_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_NEXT_TOK);
 			SetFunctionKey( FK3, vDef );
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_SWAP_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_SWAP_TOK);
 			SetFunctionKey( FK4, vDef );
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_3DFILE_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_3DFILE_TOK);
 			SetFunctionKey( FK5, vDef );
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_CLEAR_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_CLEAR_TOK);
 			SetFunctionKey( SHFK2, vDef );
 
 			// Hide quit
 			FKDef vDef1;
-			//vDef1.nAppId = AT_DCP05;
+			//vDef1.nAppId = AT_DCP06;
 			vDef1.poOwner = this;
 			vDef1.strLable = L" ";;
 			SetFunctionKey( SHFK6, vDef1 );
@@ -769,50 +769,50 @@ void DCP::Meas3DController::show_function_keys()
 		else
 		{
 			FKDef vDef;
-			//vDef.nAppId = AT_DCP05;
+			//vDef.nAppId = AT_DCP06;
 			vDef.poOwner = this;
-			vDef.strLable = StringC(AT_DCP05,K_DCP_ALL_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
 			SetFunctionKey( FK1, vDef );
 
 			if(m_pDlg->GetModel()->isATR)
 			{
-				vDef.strLable = StringC(AT_DCP05,K_DCP_DIST_TOK);
+				vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
 				SetFunctionKey( FK2, vDef );
 			}
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_POINT_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_TOK);
 			SetFunctionKey( FK3, vDef );
 			
 			if(!m_bShaft)
-				vDef.strLable = StringC(AT_DCP05,K_DCP_AIM_TOK);
+				vDef.strLable = StringC(AT_DCP06,K_DCP_AIM_TOK);
 			else
-				vDef.strLable = StringC(AT_DCP05,K_DCP_SHAFT_TOK);
+				vDef.strLable = StringC(AT_DCP06,K_DCP_SHAFT_TOK);
 			SetFunctionKey( FK4, vDef );
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_POINT_ID_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_ID_TOK);
 			SetFunctionKey( FK5, vDef );
 		
-			vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 			SetFunctionKey( FK6, vDef );
 			
 			// SHIFT
 			/// CAPTIVATE 
 			//if( ABL::VideoDialogC::IsCameraAvailable(CFA::CT_OVC) )
 			{
-				vDef.strLable = StringC(AT_DCP05,K_DCP_CAMERA_TOK);
+				vDef.strLable = StringC(AT_DCP06,K_DCP_CAMERA_TOK);
 				SetFunctionKey( SHFK1, vDef );
 			}
 			
-			vDef.strLable = StringC(AT_DCP05,K_DCP_INIT_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_INIT_TOK);
 			SetFunctionKey( SHFK2, vDef );
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_SPECIAL_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_SPECIAL_TOK);
 			SetFunctionKey( SHFK3, vDef );
 			
-			vDef.strLable = StringC(AT_DCP05,K_DCP_TOOL_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_TOOL_TOK);
 			SetFunctionKey( SHFK4, vDef );
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_CALC_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_CALC_TOK);
 			SetFunctionKey( SHFK5, vDef );
 
 
@@ -822,7 +822,7 @@ void DCP::Meas3DController::show_function_keys()
 				//DisableFunctionKey(SHFK5);
 			//}
 
-			vDef.strLable = StringC(AT_DCP05,K_DCP_CHANGE_FACE_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_CHANGE_FACE_TOK);
 			SetFunctionKey( SHFK6, vDef );
 			GUI::DesktopC::Instance()->UpdateFunctionKeys();
 			//m_bPointMenu = false;
@@ -875,7 +875,7 @@ void DCP::Meas3DController::OnF1Pressed()
 		}
 		else
 		{
-			msg.LoadTxt(AT_DCP05,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
+			msg.LoadTxt(AT_DCP06,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
 			msgbox->ShowMessageOk(msg);
 			//(void ) msgbox(TXT_NIL_TOKEN, M_DCP_3DFILE_ISNOT_OPEN_TOK,MB_OK);
 		}
@@ -903,7 +903,7 @@ void DCP::Meas3DController::OnF1Pressed()
 				!m_pCommon->strblank(m_pDataModel->ymea_ptr) || 
 				!m_pCommon->strblank(m_pDataModel->zmea_ptr))
 			{
-				msg.LoadTxt(AT_DCP05, M_DCP_OVERWRITE_POINT_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_OVERWRITE_POINT_TOK);
 				msg.Format(msg,(const wchar_t*)StringC(m_pDataModel->pid_ptr));
 				if(!msgbox->ShowMessageYesNo(msg))
 				//if(msgbox1(TXT_NIL_TOKEN, M_OVERWRITE_POINT_TOK,(void *) pid_ptr, MB_YESNO) == FALSE)
@@ -973,7 +973,7 @@ void DCP::Meas3DController::OnF2Pressed()
 					}
 					*/
 				DCP::InputTextModel* pModel = new InputTextModel;
-				pModel->m_StrInfoText.LoadTxt(AT_DCP05, L_DCP_ENTER_POINT_ID_TOK);
+				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_POINT_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
 				pModel->m_iTextLength = 6;
 				pModel->m_StrText = StringC(buffer);
@@ -998,14 +998,14 @@ void DCP::Meas3DController::OnF2Pressed()
 			}
 			else
 			{
-				msg.LoadTxt(AT_DCP05,M_DCP_CANNOT_ADD_POINT_TOK);
+				msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_ADD_POINT_TOK);
 				msgbox->ShowMessageOk(msg);
 				//(void ) msgbox(TXT_NIL_TOKEN, M_CANNOT_ADDPNT_TOK,MB_OK);
 			}
 		}
 		else
 		{
-			msg.LoadTxt(AT_DCP05,M_DCP_3DFILE_ISNOT_OPEN_TOK);
+			msg.LoadTxt(AT_DCP06,M_DCP_3DFILE_ISNOT_OPEN_TOK);
 			msgbox->ShowMessageOk(msg);
 			//(void ) msgbox(TXT_NIL_TOKEN, M_3DFILE_ISNOT_OPEN_TOK,MB_OK);
 		}
@@ -1060,14 +1060,14 @@ void DCP::Meas3DController::OnF3Pressed()
 			}
 			else
 			{
-				 GUI::DesktopC::Instance()->MessageShow(StringC(AT_DCP05,I_DCP_LAST_POINT_TOK));
+				 GUI::DesktopC::Instance()->MessageShow(StringC(AT_DCP06,I_DCP_LAST_POINT_TOK));
 	
 			}
 			m_pDlg->RefreshControls();
 		}
 		else
 		{
-			msg.LoadTxt(AT_DCP05,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
+			msg.LoadTxt(AT_DCP06,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
 			msgbox->ShowMessageOk(msg);
 		}
 
@@ -1157,7 +1157,7 @@ void DCP::Meas3DController::OnF4Pressed()
 				if(pid[iLen-1] == 'd' || pid[iLen-1] == 'D')
 				{
 					StringC sMsg;
-					sMsg.LoadTxt(AT_DCP05, M_DCP_CANNOT_SHAFT_POINT_TOK);
+					sMsg.LoadTxt(AT_DCP06, M_DCP_CANNOT_SHAFT_POINT_TOK);
 					msgbox->ShowMessageOk(sMsg);
 					return;
 				}
@@ -1201,7 +1201,7 @@ void DCP::Meas3DController::OnF5Pressed()
 			(void)AddController( FILE_CONTROLLER, new DCP::FileController(m_pDlg->GetModel()) );
 		}
 
-		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_PLANE_MEAS_TOK);
+		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
 
 		(void)GetController( FILE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(FILE_CONTROLLER, true);
@@ -1221,7 +1221,7 @@ void DCP::Meas3DController::OnF5Pressed()
 			ShowSelectPointDlg();
 		else
 		{
-			msg.LoadTxt(AT_DCP05,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
+			msg.LoadTxt(AT_DCP06,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
 			msgbox->ShowMessageOk(msg);
 		}
 	}
@@ -1264,7 +1264,7 @@ void DCP::Meas3DController::OnSHF1Pressed()
     {
 		if(poVideoDlg == 0)
 		{
-			poVideoDlg = new ABL::VideoDialogC( AT_DCP05);
+			poVideoDlg = new ABL::VideoDialogC( AT_DCP06);
 			CFA::CameraT cameraType = poVideoDlg->GetCameraType();
 			
 			poVideoDlg->SetId(CAMERA_DLG);
@@ -1374,7 +1374,7 @@ void DCP::Meas3DController::OnSHF5Pressed()
 
 	// title for calc2points display
 	StringC sTemp;
-	sTemp.LoadTxt(AT_DCP05, T_CALC_DISTANCE_2_POINTS_TOK);
+	sTemp.LoadTxt(AT_DCP06, T_CALC_DISTANCE_2_POINTS_TOK);
 	pModel->sTitle = GetTitle();
 	pModel->sTitle += sTemp;
 
@@ -1512,7 +1512,7 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 							!m_pCommon->strblank(m_pDataModel->ymea_ptr) || 
 							!m_pCommon->strblank(m_pDataModel->zmea_ptr))
 						{
-							msg.LoadTxt(AT_DCP05,M_DCP_OVERWRITE_POINT_TOK);
+							msg.LoadTxt(AT_DCP06,M_DCP_OVERWRITE_POINT_TOK);
 							msg.Format(msg,(const wchar_t*)StringC(m_pDataModel->pid_ptr));
 							if(!msgbox->ShowMessageYesNo(msg))
 							//if(msgbox1(TXT_NIL_TOKEN, M_OVERWRITE_POINT_TOK,(void *) pid_ptr, MB_YESNO) == FALSE)
@@ -1586,7 +1586,7 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 					!m_pCommon->strblank(m_pDataModel->ymea_ptr) || 
 					!m_pCommon->strblank(m_pDataModel->zmea_ptr))
 					{
-						msg.LoadTxt(AT_DCP05,M_DCP_OVERWRITE_POINT_TOK);
+						msg.LoadTxt(AT_DCP06,M_DCP_OVERWRITE_POINT_TOK);
 						msg.Format(msg,(const wchar_t*)StringC(m_pDataModel->pid_ptr));
 						if(!msgbox->ShowMessageYesNo(msg))
 							//if(msgbox1(TXT_NIL_TOKEN, M_OVERWRITE_POINT_TOK,(void *) pid_ptr, MB_YESNO) == FALSE)
@@ -1843,7 +1843,7 @@ void DCP::Meas3DController::ShowSelectPointDlg()
 			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
 		}
 
-		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_DOM_PLANE_MEAS_TOK);
+		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
 
 		(void)GetController( SELECT_POINT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_POINT_CONTROLLER, true);
@@ -1955,7 +1955,7 @@ void DCP::Meas3DController::ShowMidPointDlg()
 		//	(void)AddController( MID_POINT_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 		//}
 
-		//(void)GetController(MID_POINT_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_MID_POINT_TOK));
+		//(void)GetController(MID_POINT_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_MID_POINT_TOK));
 
 		//(void)GetController( MID_POINT_CONTROLLER )->SetModel(pModel);
 		//SetActiveController(MID_POINT_CONTROLLER, true);
@@ -2152,7 +2152,7 @@ void DCP::Meas3DModel::save_point()
 		//		{
 		//			MsgBox msgbox;
 		//			StringC sMsg;
-		//			sMsg.LoadTxt(AT_DCP05,M_DCP_DEMO_3_POINT_TOK);
+		//			sMsg.LoadTxt(AT_DCP06,M_DCP_DEMO_3_POINT_TOK);
 		//			msgbox.ShowMessageOk(sMsg);
 
 		//			m_pCommon->empty_xyz_buffers(xmea_ptr,

@@ -65,13 +65,13 @@ DCP::ShaftDialog::ShaftDialog(DCP::ShaftModel* pModel):m_pLine(0),m_pCircle(0),
 		m_pShaftModel(pModel)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 
 
-	m_strXLine.LoadTxt(AT_DCP05,V_DCP_X_LINE_TOK);
-	m_strYLine.LoadTxt(AT_DCP05,V_DCP_Y_LINE_TOK);
-	m_strZLine.LoadTxt(AT_DCP05,V_DCP_Z_LINE_TOK);
-	m_strMeasLine.LoadTxt(AT_DCP05,V_DCP_MEASURED_LINE_TOK);
+	m_strXLine.LoadTxt(AT_DCP06,V_DCP_X_LINE_TOK);
+	m_strYLine.LoadTxt(AT_DCP06,V_DCP_Y_LINE_TOK);
+	m_strZLine.LoadTxt(AT_DCP06,V_DCP_Z_LINE_TOK);
+	m_strMeasLine.LoadTxt(AT_DCP06,V_DCP_MEASURED_LINE_TOK);
 
 
 }
@@ -93,7 +93,7 @@ void DCP::ShaftDialog::OnInitDialog(void)
 
 	m_pLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pLine->SetId(eLine);
-	m_pLine->SetText(StringC(AT_DCP05,P_DCP_REF_LINE_TOK));
+	m_pLine->SetText(StringC(AT_DCP06,P_DCP_REF_LINE_TOK));
 	//m_pLine->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
 	void(m_pLine->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pLine->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
@@ -104,7 +104,7 @@ void DCP::ShaftDialog::OnInitDialog(void)
 	
 	m_pCircle = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pCircle->SetId(eCircle);
-	m_pCircle->SetText(StringC(AT_DCP05,P_DCP_CIRCLE_TOK));
+	m_pCircle->SetText(StringC(AT_DCP06,P_DCP_CIRCLE_TOK));
 	//m_pCircle->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
 	void(m_pCircle->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pCircle->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
@@ -227,7 +227,7 @@ void DCP::ShaftDialog::delete_line()
 {
 	/*
 	StringC strMsg;
-	strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_POINTS_OF_LINE_TOK);
+	strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_POINTS_OF_LINE_TOK);
 	MsgBox MsgBox;
 	if(MsgBox.ShowMessageYesNo(strMsg))
 	{
@@ -301,7 +301,7 @@ DCP::ShaftController::ShaftController(DCP::Model* pModel)
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_SHAFT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+    SetTitle(StringC( AT_DCP06, T_DCP_SHAFT_TOK /*C_DCP_APPLICATION_NAME_TOK */));
 
 	m_pShaftModel = new ShaftModel();
 
@@ -355,27 +355,27 @@ DCP::ShaftController::ShaftController(DCP::Model* pModel)
     // Set the function key
 	
     FKDef vDef;
-    //vDef.nAppId = AT_DCP05;
+    //vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
 	
-	vDef.strLable = StringC(AT_DCP05,K_DCP_LINE_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_LINE_TOK);
 	SetFunctionKey( FK1, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_CIRCLE_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_CIRCLE_TOK);
     SetFunctionKey( FK3, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_CALC_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_CALC_TOK);
     SetFunctionKey( FK5, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_CONT_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
     SetFunctionKey( FK6, vDef );
 
-    vDef.strLable = StringC(AT_DCP05,K_DCP_DEL_TOK);
+    vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
     SetFunctionKey( SHFK2, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -471,7 +471,7 @@ void DCP::ShaftController::OnF5Pressed()
 				(void)AddController( RES_SHAFT_CONTROLLER, new DCP::ResShaftController(m_pModel, m_pShaftModel) );
 			}
 
-			(void)GetController(RES_SHAFT_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_DEV_OF_SHAFT_TOK));
+			(void)GetController(RES_SHAFT_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_DEV_OF_SHAFT_TOK));
 			(void)GetController( RES_SHAFT_CONTROLLER )->SetModel(m_pModel);
 			SetActiveController(RES_SHAFT_CONTROLLER, true);
 		}
@@ -499,9 +499,9 @@ void DCP::ShaftController::OnSHF2Pressed()
 {	
 	
 		StringC strDomText;
-		strDomText.LoadTxt(AT_DCP05,L_DCP_3DSHAFT_ALIGMENT_TOK);
+		strDomText.LoadTxt(AT_DCP06,L_DCP_3DSHAFT_ALIGMENT_TOK);
 		StringC strMsg;
-		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_ALL_TOK);
+		strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_ALL_TOK);
 		strMsg.Format(strMsg,(const wchar_t*)strDomText);
 		
 		MsgBox msgbox;
@@ -674,14 +674,14 @@ short DCP::ShaftModel::calc_shaft()
 		}
 		else
 		{
-			sMsg.LoadTxt(AT_DCP05, M_DCP_DEFINE_REF_LINE_TOK);
+			sMsg.LoadTxt(AT_DCP06, M_DCP_DEFINE_REF_LINE_TOK);
 			msgbox.ShowMessageOk(sMsg);
 			return 0;
 		}
 	}
 	else
 	{
-		sMsg.LoadTxt(AT_DCP05, M_DCP_DEFINE_SHAFT_CIRCLE_TOK);
+		sMsg.LoadTxt(AT_DCP06, M_DCP_DEFINE_SHAFT_CIRCLE_TOK);
 		msgbox.ShowMessageOk(sMsg);
 		return 0;
 	}

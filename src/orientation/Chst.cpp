@@ -78,7 +78,7 @@ DCP::ChangeStationDialog::ChangeStationDialog(DCP::BestFitModel* pModel,DCP::Cha
 		disable_hz_plane(false),use_hz_plane(false), active_plane(0),m_pController(pController)
 {
 	//SetTxtApplicationId( GetTxtApplicationId());
-	//SetTxtApplicationId(AT_DCP05);
+	//SetTxtApplicationId(AT_DCP06);
 
 	
 }
@@ -171,7 +171,7 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 
 	m_pCurrentStation = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pCurrentStation->SetId(eCurrentStation);
-	m_pCurrentStation->SetText(StringC(AT_DCP05,P_DCP_CHST_CURRENT_STATION_TOK));
+	m_pCurrentStation->SetText(StringC(AT_DCP06,P_DCP_CHST_CURRENT_STATION_TOK));
 	void(m_pCurrentStation->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pCurrentStation->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pCurrentStation->SetAutoColon(false);
@@ -181,9 +181,9 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 	
 	m_pHorizPlane = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_ComboBox);
 	m_pHorizPlane->SetId(eHorizPlane);
-	m_pHorizPlane->SetText(StringC(AT_DCP05,P_DCP_USE_HORIZONTAL_PLANE_TOK));
-	m_pHorizPlane->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05, V_DCP_NO_TOK), NO);
-	m_pHorizPlane->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP05, V_DCP_YES_TOK), YES);
+	m_pHorizPlane->SetText(StringC(AT_DCP06,P_DCP_USE_HORIZONTAL_PLANE_TOK));
+	m_pHorizPlane->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06, V_DCP_NO_TOK), NO);
+	m_pHorizPlane->GetComboBoxInputCtrl()->AddItem(StringC(AT_DCP06, V_DCP_YES_TOK), YES);
 	//m_pHorizPlane->SetAutoColon(false);
 	//m_pHorizPlane->SetColonPosition(9*25);
 	
@@ -202,7 +202,7 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 
 	m_pInfo1 = new GUI::TextCtrlC();
 	m_pInfo1->SetId(eInfo1);
-	m_pInfo1->SetText(StringC(AT_DCP05, L_DCP_CHST_DEFINE_TRANSFER_POINTS_TOK));
+	m_pInfo1->SetText(StringC(AT_DCP06, L_DCP_CHST_DEFINE_TRANSFER_POINTS_TOK));
 	AddCtrl(m_pInfo1);
 
 	/* removed 271011
@@ -218,7 +218,7 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 
 	m_pPoints = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPoints->SetId(ePoints);
-	m_pPoints->SetText(StringC(AT_DCP05, P_DCP_CHST_SELECT_POINTS_TOK));
+	m_pPoints->SetText(StringC(AT_DCP06, P_DCP_CHST_SELECT_POINTS_TOK));
 	void(m_pPoints->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPoints->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pPoints->SetAutoColon(false);
@@ -227,7 +227,7 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 
 	m_pPointMeas = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointMeas->SetId(ePointMeas);
-	m_pPointMeas->SetText(StringC(AT_DCP05, P_DCP_CHST_MEASURE_POINTS_TOK));
+	m_pPointMeas->SetText(StringC(AT_DCP06, P_DCP_CHST_MEASURE_POINTS_TOK));
 	void(m_pPointMeas->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPointMeas->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
 	//m_pPointMeas->SetAutoColon(false);
@@ -238,12 +238,12 @@ void DCP::ChangeStationDialog::OnInitDialog(void)
 
 	m_pRemeasurePos2 = new GUI::TextCtrlC();
 	m_pRemeasurePos2->SetId(eRemeasPos2);
-	m_pRemeasurePos2->SetText(StringC(AT_DCP05, L_DCP_CHST_REMEASURE_POS2_TOK));
+	m_pRemeasurePos2->SetText(StringC(AT_DCP06, L_DCP_CHST_REMEASURE_POS2_TOK));
 	AddCtrl(m_pRemeasurePos2);
 
 	m_pCreateNewStation = new GUI::TextCtrlC();
 	m_pCreateNewStation->SetId(eCreateNewStation);
-	m_pCreateNewStation->SetText(StringC(AT_DCP05, L_DCP_CHST_CREATE_NEW_STATION_TOK));
+	m_pCreateNewStation->SetText(StringC(AT_DCP06, L_DCP_CHST_CREATE_NEW_STATION_TOK));
 	AddCtrl(m_pCreateNewStation);
 
 	//SetHelpTok(H_DCP_CHANGE_STATION_TOK,0);
@@ -760,7 +760,7 @@ bool DCP::ChangeStationDialog::delete_chst()
 		StringC strText;
 		//strText.LoadTxt(AT_PMP7,L_DCP_CHST_TEXT_TOK);
 		StringC strMsg;
-		strMsg.LoadTxt(AT_DCP05,M_DCP_DELETE_CHST_TOK);
+		strMsg.LoadTxt(AT_DCP06,M_DCP_DELETE_CHST_TOK);
 		strMsg.Format(strMsg,GetModel()->stationNumber);
 
 		//strMsg.LoadTxt(AT_PMP7,M_DCP_DELETE_ALL_TOK);
@@ -856,7 +856,7 @@ DCP::ChangeStationController::ChangeStationController(Model* pModel)
 	// Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP05, T_DCP_CHANGE_STATION_POS1_TOK));
+    SetTitle(StringC( AT_DCP06, T_DCP_CHANGE_STATION_POS1_TOK));
 	
 	// create model
 	m_pDataModel = new BestFitModel;
@@ -877,17 +877,17 @@ DCP::ChangeStationController::ChangeStationController(Model* pModel)
     // Set the function key
 	 
     FKDef vDef;
-	//vDef.nAppId = AT_DCP05;
+	//vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
 
 	//vDef.nLable	= K_DCP_FILE_TOK;
 	//SetFunctionKey( FK1, vDef );
 
-	vDef.strLable	= StringC(AT_DCP05,K_DCP_CHST_SELECT_REF_POINTS_TOK);
+	vDef.strLable	= StringC(AT_DCP06,K_DCP_CHST_SELECT_REF_POINTS_TOK);
 	SetFunctionKey( FK1, vDef );
     
 	//vDef.nLable	= K_DCP_MEAS_TOK;
-	vDef.strLable	= StringC(AT_DCP05,K_DCP_CHST_MEAS_REF_POINTS_TOK);
+	vDef.strLable	= StringC(AT_DCP06,K_DCP_CHST_MEAS_REF_POINTS_TOK);
 	SetFunctionKey( FK2, vDef );
 
 	//vDef.nLable	= K_DCP_CALC_TOK;
@@ -895,16 +895,16 @@ DCP::ChangeStationController::ChangeStationController(Model* pModel)
 	
 	//vDef.nLable	= K_DCP_POS2_TOK;
 
-	vDef.strLable	= StringC(AT_DCP05,K_DCP_CHST_REMEAS_POS2_TOK);
+	vDef.strLable	= StringC(AT_DCP06,K_DCP_CHST_REMEAS_POS2_TOK);
 	SetFunctionKey( FK4, vDef );
 
-	vDef.strLable	= StringC(AT_DCP05,K_DCP_CHST_NEWST_TOK);
+	vDef.strLable	= StringC(AT_DCP06,K_DCP_CHST_NEWST_TOK);
 	SetFunctionKey( FK5, vDef );
 
-	vDef.strLable	= StringC(AT_DCP05,K_DCP_CONT_TOK);
+	vDef.strLable	= StringC(AT_DCP06,K_DCP_CONT_TOK);
 	SetFunctionKey( FK6, vDef );
 
-	vDef.strLable	= StringC(AT_DCP05,K_DCP_DEL_TOK);
+	vDef.strLable	= StringC(AT_DCP06,K_DCP_DEL_TOK);
 	SetFunctionKey( SHFK2, vDef );
 	/*
 	vDef.nLable	= K_DCP_RMS_TOK;
@@ -913,12 +913,12 @@ DCP::ChangeStationController::ChangeStationController(Model* pModel)
 	vDef.nLable	= K_DCP_RESIDUALS_TOK;
 	SetFunctionKey( SHFK4, vDef );
 	*/
-	vDef.strLable = StringC(AT_DCP05,K_DCP_VIEW_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_VIEW_TOK);
 	SetFunctionKey( SHFK5, vDef );
 
 	// Hide quit
 	FKDef vDef1;
-	//vDef1.nAppId = AT_DCP05;
+	//vDef1.nAppId = AT_DCP06;
     vDef1.poOwner = this;
 	vDef1.strLable = L" ";;
 	SetFunctionKey( SHFK6, vDef1 );
@@ -991,7 +991,7 @@ void DCP::ChangeStationController::OnF1Pressed()
 		return;
 
 	StringC sText;
-	sText.LoadTxt(AT_DCP05,M_CHG_INST_POS_TOK);
+	sText.LoadTxt(AT_DCP06,M_CHG_INST_POS_TOK);
 	m_pMsgBox->ShowMessageOk(sText);
 
 	// select file
@@ -1038,7 +1038,7 @@ void DCP::ChangeStationController::OnF1Pressed()
 	//	return;
 
 	//StringC sText;
-	//sText.LoadTxt(AT_DCP05,M_CHG_INST_POS_TOK);
+	//sText.LoadTxt(AT_DCP06,M_CHG_INST_POS_TOK);
 	//m_pMsgBox->ShowMessageOk(sText);
 
 	DCP::BestFitSelectPointsModel* pModel = new BestFitSelectPointsModel;
@@ -1104,7 +1104,7 @@ void DCP::ChangeStationController::OnF2Pressed()
 	//	return;
 
 	//StringC sText;
-	//sText.LoadTxt(AT_DCP05,M_DCP_MEAS_TRANSFER_POINTS_TOK);
+	//sText.LoadTxt(AT_DCP06,M_DCP_MEAS_TRANSFER_POINTS_TOK);
 	//m_pMsgBox->ShowMessageOk(sText);
 
 
@@ -1137,7 +1137,7 @@ void DCP::ChangeStationController::OnF2Pressed()
 		{
 			(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 		}
-		(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP05,T_DCP_CHANGE_STATION_POS1_MEAS_TOK));
+		(void)GetController(MEAS_CONTROLLER)->SetTitle(StringC(AT_DCP06,T_DCP_CHANGE_STATION_POS1_MEAS_TOK));
 		(void)GetController( MEAS_CONTROLLER )->SetModel(pModel);
 		SetActiveController(MEAS_CONTROLLER, true);
 
@@ -1190,11 +1190,11 @@ void DCP::ChangeStationController::OnF4Pressed()
 		
 		if(min ==2)
 		{
-			sMsg.LoadTxt(AT_DCP05,M_DCP_IN_MIN_2_POINTS_TOK);	
+			sMsg.LoadTxt(AT_DCP06,M_DCP_IN_MIN_2_POINTS_TOK);	
 		}
 		else
 		{	
-			sMsg.LoadTxt(AT_DCP05,M_DCP_IN_MIN_3_POINTS_TOK);
+			sMsg.LoadTxt(AT_DCP06,M_DCP_IN_MIN_3_POINTS_TOK);
 		}
 		MsgBox.ShowMessageOk(sMsg);
 		return;
@@ -1230,10 +1230,10 @@ void DCP::ChangeStationController::OnF4Pressed()
 	}
 
 	StringC msg;
-	msg.LoadTxt(AT_DCP05,T_DCP_CHST_POS2_MEAS_TOK);
+	msg.LoadTxt(AT_DCP06,T_DCP_CHST_POS2_MEAS_TOK);
 	msg.Format(msg,m_pDlg->GetModel()->stationNumber);
 
-	//(void)GetController(MEAS_POS2_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_CHST_POS2_MEAS_TOK);
+	//(void)GetController(MEAS_POS2_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_CHST_POS2_MEAS_TOK);
 	(void)GetController(MEAS_POS2_CONTROLLER)->SetTitle(msg);
 
 	(void)GetController( MEAS_POS2_CONTROLLER )->SetModel(pModel);
@@ -1291,11 +1291,11 @@ void DCP::ChangeStationController::OnF5Pressed()
 		
 		if(min ==2)
 		{
-			sMsg.LoadTxt(AT_DCP05,M_DCP_IN_MIN_2_POINTS_TOK);	
+			sMsg.LoadTxt(AT_DCP06,M_DCP_IN_MIN_2_POINTS_TOK);	
 		}
 		else
 		{	
-			sMsg.LoadTxt(AT_DCP05,M_DCP_IN_MIN_3_POINTS_TOK);
+			sMsg.LoadTxt(AT_DCP06,M_DCP_IN_MIN_3_POINTS_TOK);
 		}
 		MsgBox.ShowMessageOk(sMsg);
 		return;
@@ -1315,7 +1315,7 @@ void DCP::ChangeStationController::OnF5Pressed()
 	/* 130212
 	if(count2 > 0)
 	{
-		sMsg.LoadTxt(AT_DCP05,M_DCP_CHST_DELETE_STA_POINTS_TOK);
+		sMsg.LoadTxt(AT_DCP06,M_DCP_CHST_DELETE_STA_POINTS_TOK);
 		sMsg.Format(sMsg, m_pDlg->GetModel()->stationNumber);
 
 		if(MsgBox.ShowMessageYesNo(sMsg))
@@ -1329,7 +1329,7 @@ void DCP::ChangeStationController::OnF5Pressed()
 	} 
 	*/
 		// show always the message
-		sMsg.LoadTxt(AT_DCP05,M_DCP_CHST_DELETE_STA_POINTS_TOK);
+		sMsg.LoadTxt(AT_DCP06,M_DCP_CHST_DELETE_STA_POINTS_TOK);
 		sMsg.Format(sMsg, m_pDlg->GetModel()->stationNumber);
 
 		if(MsgBox.ShowMessageYesNo(sMsg))
@@ -1376,10 +1376,10 @@ void DCP::ChangeStationController::OnF5Pressed()
 		(void)AddController( MEAS_POS2_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 	}
 	StringC msg;
-	msg.LoadTxt(AT_DCP05,T_DCP_CHST_POS2_MEAS_TOK);
+	msg.LoadTxt(AT_DCP06,T_DCP_CHST_POS2_MEAS_TOK);
 	msg.Format(msg,m_pDlg->GetModel()->stationNumber);
 
-	//(void)GetController(MEAS_POS2_CONTROLLER)->SetTitleTok(AT_DCP05,T_DCP_CHST_POS2_MEAS_TOK);
+	//(void)GetController(MEAS_POS2_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_CHST_POS2_MEAS_TOK);
 	(void)GetController(MEAS_POS2_CONTROLLER)->SetTitle(msg);
 
 	(void)GetController( MEAS_POS2_CONTROLLER )->SetModel(pModel);
@@ -1616,10 +1616,10 @@ void DCP::ChangeStationController::OnActiveControllerClosed( int lCtrlID, int lE
 				StringC sMsg;
 		
 				StringC sX, sY, sZ, sRMS;
-				sX.LoadTxt(AT_DCP05, P_DCP_X_TOK);
-				sY.LoadTxt(AT_DCP05, P_DCP_Y_TOK);
-				sZ.LoadTxt(AT_DCP05, P_DCP_Z_TOK);
-				sRMS.LoadTxt(AT_DCP05, P_DCP_RMS_TOK);
+				sX.LoadTxt(AT_DCP06, P_DCP_X_TOK);
+				sY.LoadTxt(AT_DCP06, P_DCP_Y_TOK);
+				sZ.LoadTxt(AT_DCP06, P_DCP_Z_TOK);
+				sRMS.LoadTxt(AT_DCP06, P_DCP_RMS_TOK);
 				
 				StringC sXline;
 				StringC sYline;
@@ -1657,14 +1657,14 @@ void DCP::ChangeStationController::OnActiveControllerClosed( int lCtrlID, int lE
 				else if(ret == -1) // Abort
 				{
 					StringC sMsg;
-					sMsg.LoadTxt(AT_DCP05,M_DCP_ORIENTATION_LOST_TOK);
+					sMsg.LoadTxt(AT_DCP06,M_DCP_ORIENTATION_LOST_TOK);
 					msgbox.ShowMessageOk(sMsg);
 					m_pDataModel->calculated = false;
 				}
 				else	// remeasure
 				{
 					StringC sMsg;
-					sMsg.LoadTxt(AT_DCP05,M_DCP_REMEASURE_POS2_POINTS_TOK);
+					sMsg.LoadTxt(AT_DCP06,M_DCP_REMEASURE_POS2_POINTS_TOK);
 					msgbox.ShowMessageOk(sMsg);
 					m_pDataModel->calculated = false;
 				}
