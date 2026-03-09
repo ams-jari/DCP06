@@ -905,16 +905,21 @@ void DCP::Controller::OnActiveDialogClosed( int lDlgID, int lExitCode )
 			SetActiveDialog(ORIENTATION_MENU, true);
 		}
 		// File
-		else if(lExitCode == 13) 
+		else if(lExitCode == 13)
 		{
-
-			
+#ifdef DCP_SKIP_FILE_TYPE_MENU
+			// Skip file-type selection; go directly to Job File display (OPEN, NEW, COPY, SWAP, CLOSE)
+			if(GetController(FILE_CONTROLLER) == nullptr)
+			{
+				(void)AddController( FILE_CONTROLLER, new DCP::FileController(dynamic_cast< DCP::Model* >(GetModel())) );
+			}
+			(void)GetController( FILE_CONTROLLER )->SetModel( Controller::GetModel());
+			SetActiveController(FILE_CONTROLLER, true);
+#else
 			DCP::FileMenuDialog* poMenuDlg = new DCP::FileMenuDialog();
-			AddDialog(FILE_MENU,poMenuDlg); 	
-			// TODO VIVA	
-			//poMenuDlg->SetTxtApplicationId( GetTxtApplicationId());
+			AddDialog(FILE_MENU,poMenuDlg);
 			SetActiveDialog(FILE_MENU, true);
-			
+#endif
 		}
 		// Measurement
 		else if(lExitCode == 14) 

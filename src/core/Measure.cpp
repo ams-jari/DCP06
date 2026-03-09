@@ -597,7 +597,7 @@ void DCP::MeasureController::OnF1Pressed()
 
 		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 		
-		sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
+		sprintf(pModel->sPointId,DCP_POINT_ID_FMT,m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 		
 		if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
@@ -776,7 +776,7 @@ void DCP::MeasureController::OnSHF5Pressed()
 		for(int i = 0; i < m_pDlg->GetDataModel()->m_iPointsCount;i++)
 		{
 			pModel->points[i].no = i+1;
-			sprintf(pModel->points[i].point_id,"%-6.6s", m_pDlg->GetDataModel()->point_table[i].point_id);
+			sprintf(pModel->points[i].point_id,DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->point_table[i].point_id);
 			sprintf(pModel->points[i].point_status,"%c", m_pDlg->GetDataModel()->point_table[i].sta != POINT_NOT_DEFINED ? '+': '-');
 		}
 		pModel->m_iCounts = m_pDlg->GetDataModel()->m_iPointsCount;
@@ -953,7 +953,7 @@ void DCP::MeasureController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 		{
 			DCP::PointBuffModel* pModel = new PointBuffModel;
 
-			sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", "");
+			sprintf(pModel->m_pPointBuff[0].point_id,DCP_POINT_ID_FMT, "");
 
 			//pModel->m_pPointBuff[0].xsta = pMeasModel->
 			if(GetController(MID_POINT_CONTROLLER) == nullptr)

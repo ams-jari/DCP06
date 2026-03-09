@@ -238,6 +238,7 @@ namespace DCP
 			void set_dcp05_model(Model *pModel);
 
 			AdfFileFunc* m_pFileFunc;
+			bool m_bJobOpen;  // true when JsonDatabase job is loaded (not ADF)
 
 			char *xmea_ptr,*ymea_ptr,*zmea_ptr;
 			char *xdes_ptr,*ydes_ptr,*zdes_ptr;

@@ -36,6 +36,12 @@
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/file/File.hpp>
 #include <dcp06/core/SelectPoint.hpp>
+#ifndef DCP_USE_JSON_DATABASE
+#define DCP_USE_JSON_DATABASE 1
+#endif
+#if DCP_USE_JSON_DATABASE
+#include <dcp06/database/JsonDatabase.hpp>
+#endif
 #include <dcp06/calculation/CalculationDist2Points.hpp>
 #include <dcp06/core/Aim.hpp>
 #include <dcp06/measurement/Circle.hpp>
@@ -417,13 +423,19 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 void DCP::Meas3DDialog::OnDialogActivated()
 {
 	DCP06_TRACE_ENTER;
-	//MsgBox msgbox;
-	//msgbox.ShowMessageOk(GetModel()->ADFFileName);
-	m_pDataModel->m_pFileFunc->setFile(GetModel()->ADFFileName);
 	m_pCommon = new Common(GetModel());
-	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
-	//m_pTimer.StartCycle(2000);//.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
-	//m_pTimer.StartOneShot(5000);
+#if DCP_USE_JSON_DATABASE
+	DCP::Database::JsonDatabase* jdb = GetModel() && GetModel()->GetDatabase() ?
+		dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
+	bool jobOpen = jdb && jdb->isJobLoaded() && !GetModel()->m_currentJobId.empty();
+	if (jobOpen)
+	{
+		int nPts = jdb->getJobPointsCount();
+		GetModel()->m_currentPointIndex = (nPts > 0) ? 1 : 0;
+	}
+	else
+#endif
+		m_pDataModel->m_pFileFunc->setFile(GetModel()->ADFFileName);
 	RefreshControls();
 	DCP06_TRACE_EXIT;
 }
@@ -444,29 +456,49 @@ void DCP::Meas3DDialog::RefreshControls()
 		m_pYAct && m_pZAct && m_pXDev &&
 		m_pYDev && m_pZDev) 
 	{
-		
 		m_pCommon->empty_xyz_buffers(m_pDataModel->bXdif,m_pDataModel->bYdif,m_pDataModel->bZdif,9);
 		sprintf(m_pDataModel->bFid,"%-8.8s","");
-		sprintf(m_pDataModel->bPid,"%-6.6s","");
+		m_pDataModel->bPid[0] = '\0';
 
+#if DCP_USE_JSON_DATABASE
+		DCP::Database::JsonDatabase* jdb = GetModel() && GetModel()->GetDatabase() ?
+			dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
+		m_pDataModel->m_bJobOpen = (jdb && jdb->isJobLoaded() && !GetModel()->m_currentJobId.empty());
+		if (m_pDataModel->m_bJobOpen)
+		{
+			m_pPointId->GetStringInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadWrite);
+			m_pFile->GetStringInputCtrl()->SetString(StringC(GetModel()->m_currentJobId.c_str()));
+			m_pDataModel->DSP_MODE = SINGLE;
+			int idx = GetModel()->m_currentPointIndex;
+			if (idx > 0 && jdb->getPointByIndex(idx, true,
+				m_pDataModel->bPid,
+				m_pDataModel->bXmea, m_pDataModel->bXdes,
+				m_pDataModel->bYmea, m_pDataModel->bYdes,
+				m_pDataModel->bZmea, m_pDataModel->bZdes,
+				m_pDataModel->bNote))
+			{
+				m_pCommon->strbtrim(m_pDataModel->bPid);
+			}
+			else
+			{
+				m_pDataModel->bPid[0] = '\0';
+				m_pDataModel->bXmea[0] = m_pDataModel->bXdes[0] = '\0';
+				m_pDataModel->bYmea[0] = m_pDataModel->bYdes[0] = '\0';
+				m_pDataModel->bZmea[0] = m_pDataModel->bZdes[0] = '\0';
+			}
+		}
+		else
+#endif
 		if(m_pDataModel->m_pFileFunc->IsOpen())
 		{
 			m_pPointId->GetStringInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadWrite);
-			//m_pXDsg->GetFloatInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadWrite);
-			//m_pYDsg->GetFloatInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadWrite);
-			//m_pZDsg->GetFloatInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadWrite);
-
 			m_pFile->GetStringInputCtrl()->SetString(StringC(m_pDataModel->m_pFileFunc->getFileName()));
-		
-			if(m_pDataModel->m_pFileFunc->point_type == 0 ) // && DSP_MODE != SINGLE)
+			if(m_pDataModel->m_pFileFunc->point_type == 0 )
 				m_pDataModel->DSP_MODE = SINGLE;
 		}
 		else
 		{
 			m_pPointId->GetStringInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
-			//m_pXDsg->GetFloatInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
-			//m_pYDsg->GetFloatInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
-			//m_pZDsg->GetFloatInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 			m_pFile->GetStringInputCtrl()->SetString(L"");
 		}
 		m_pDataModel->set_xyz_mea_ptr();
@@ -865,21 +897,29 @@ void DCP::Meas3DController::OnF1Pressed()
 	if(m_bPointMenu)
 	{
 		// PreviousPoint
+#if DCP_USE_JSON_DATABASE
+		if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel())
+		{
+			if (m_pDlg->GetModel()->m_currentPointIndex > 1)
+			{
+				m_pDlg->GetModel()->m_currentPointIndex--;
+				m_pDataModel->DSP_MODE = SINGLE;
+			}
+			m_pDlg->RefreshControls();
+		}
+		else
+#endif
 		if(m_pDataModel->m_pFileFunc->IsOpen())
 		{
 			m_pDataModel->m_pFileFunc->form_prev_pnt();
-			{
-				m_pDataModel->DSP_MODE = SINGLE;
-			}
+			m_pDataModel->DSP_MODE = SINGLE;
 			m_pDlg->RefreshControls();
 		}
 		else
 		{
 			msg.LoadTxt(AT_DCP06,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
 			msgbox->ShowMessageOk(msg);
-			//(void ) msgbox(TXT_NIL_TOKEN, M_DCP_3DFILE_ISNOT_OPEN_TOK,MB_OK);
 		}
-		//m_pDlg->PointPrev();
 		m_bPointMenu = false;	
 		show_function_keys();
 	}
@@ -957,8 +997,37 @@ void DCP::Meas3DController::OnF2Pressed()
 			return;
 		}
 		
-		char buffer[20]; buffer[0] = '\0';
+		char buffer[POINT_ID_BUFF_LEN]; buffer[0] = '\0';
 
+#if DCP_USE_JSON_DATABASE
+		if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel())
+		{
+			DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+				dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+			if (jdb && jdb->isJobLoaded())
+			{
+				int n = jdb->getJobPointsCount();
+				sprintf(buffer, "P%d", n + 1);
+				DCP::InputTextModel* pModel = new InputTextModel;
+				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_POINT_ID_TOK);
+				pModel->m_StrTitle = GetTitle();
+				pModel->m_iTextLength = static_cast<int>(DCP_POINT_ID_LENGTH);
+				pModel->m_StrText = StringC(buffer);
+				if(GetController(INPUT_TEXT_CONTROLLER) == nullptr)
+					(void)AddController( INPUT_TEXT_CONTROLLER, new DCP::InputTextController(m_pDlg->GetModel()));
+				(void)GetController( INPUT_TEXT_CONTROLLER )->SetModel(pModel);
+				SetActiveController(INPUT_TEXT_CONTROLLER, true);
+				m_bPointMenu = false;
+				show_function_keys();
+			}
+			else
+			{
+				msg.LoadTxt(AT_DCP06,M_DCP_3DFILE_ISNOT_OPEN_TOK);
+				msgbox->ShowMessageOk(msg);
+			}
+		}
+		else
+#endif
 		if(m_pDataModel->m_pFileFunc->IsOpen())
 		{
 			m_pDataModel->m_pFileFunc->get_next_point_id(buffer);
@@ -975,7 +1044,7 @@ void DCP::Meas3DController::OnF2Pressed()
 				DCP::InputTextModel* pModel = new InputTextModel;
 				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_POINT_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
-				pModel->m_iTextLength = 6;
+				pModel->m_iTextLength = static_cast<int>(DCP_POINT_ID_LENGTH);
 				pModel->m_StrText = StringC(buffer);
 
 				if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
@@ -1052,6 +1121,23 @@ void DCP::Meas3DController::OnF3Pressed()
 
 	if(m_bPointMenu) 
 	{ 
+#if DCP_USE_JSON_DATABASE
+		if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel())
+		{
+			DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+				dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+			int nPts = jdb ? jdb->getJobPointsCount() : 0;
+			if (m_pDlg->GetModel()->m_currentPointIndex < nPts)
+			{
+				m_pDlg->GetModel()->m_currentPointIndex++;
+				m_pDataModel->DSP_MODE = SINGLE;
+				m_pDlg->RefreshControls();
+			}
+			else
+				GUI::DesktopC::Instance()->MessageShow(StringC(AT_DCP06,I_DCP_LAST_POINT_TOK));
+		}
+		else
+#endif
 		if(m_pDataModel->m_pFileFunc->IsOpen())
 		{
 			if(m_pDataModel->m_pFileFunc->form_next_pnt())
@@ -1217,7 +1303,7 @@ void DCP::Meas3DController::OnF5Pressed()
 		    USER_APP_VERIFY( false );
 			return;
 		}
-		if(m_pDataModel->m_pFileFunc->IsOpen())
+		if(m_pDataModel->m_bJobOpen || m_pDataModel->m_pFileFunc->IsOpen())
 			ShowSelectPointDlg();
 		else
 		{
@@ -1543,19 +1629,39 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 			}
 				
 			// Auto Increment codes
+#if DCP_USE_JSON_DATABASE
+			if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel() && m_pDlg->GetModel()->m_nAutoIncrement)
+			{
+				DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+					dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+				if (jdb && jdb->isJobLoaded())
+				{
+					int nPts = jdb->getJobPointsCount();
+					if (m_pDlg->GetModel()->m_currentPointIndex < nPts)
+						m_pDlg->GetModel()->m_currentPointIndex++;
+					else
+					{
+						char buf[32]; sprintf(buf, "P%d", nPts + 1);
+						jdb->addPoint(buf, DCP::Database::PointData());
+						m_pDlg->GetModel()->m_currentPointIndex = nPts + 1;
+					}
+					m_pDataModel->DSP_MODE = SINGLE;
+					m_pDlg->RefreshControls();
+				}
+			}
+			else
+#endif
 			if(m_pDataModel->m_pFileFunc->IsOpen())
 			{
 				if(m_pDlg->GetModel()->m_nAutoIncrement)
-				//if(get_AUTO_INCREMENT() == TRUE)
 				{
 					short ret = m_pDataModel->m_pFileFunc->form_next_pnt();
 					m_pDataModel->DSP_MODE = SINGLE;
-					if(ret == 0) // Ei seuraavaa pistett�, lis�t��n
+					if(ret == 0)
 					{
 						char buff[20]; buff[0] = '\0';
 						m_pDataModel->m_pFileFunc->add_point(buff);								
 					}
-
 				}
 			}
 		}	
@@ -1637,10 +1743,14 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
-		StringC strSelectedPoint = pModel->m_strSelectedPoint;
-		short iSelectedPointId = pModel->m_iSelectedId;
+#if DCP_USE_JSON_DATABASE
+		if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel())
+			m_pDlg->GetModel()->m_currentPointIndex = pModel->m_iSelectedId;
+		else
+#endif
 		m_pDataModel->m_pFileFunc->form_pnt(pModel->m_iSelectedId);
-		//m_pDlg->SelectPoint(strSelectedPoint,iSelectedPointId);
+		m_pDataModel->DSP_MODE = SINGLE;
+		m_pDlg->RefreshControls();
 	}
 	// SPECIAL MENU
 	if(lCtrlID == SPECIAL_MENU_CONTROLLER && lExitCode != EC_KEY_ESC )
@@ -1667,9 +1777,26 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 	{
 			DCP::InputTextModel* pModel = (DCP::InputTextModel*) GetController( INPUT_TEXT_CONTROLLER )->GetModel();		
 			StringC strNewFile = pModel->m_StrText;
-			char buffer[10]; buffer[0] = '\0';
-			m_pCommon->convert_to_ascii(strNewFile, buffer,DCP_POINT_ID_LENGTH + 1); // +1 280508
-
+			char buffer[POINT_ID_BUFF_LEN]; buffer[0] = '\0';
+			m_pCommon->convert_to_ascii(strNewFile, buffer, DCP_POINT_ID_LENGTH + 1);
+			m_pCommon->strbtrim(buffer);
+			std::string pointId(buffer);
+#if DCP_USE_JSON_DATABASE
+			if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel())
+			{
+				DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+					dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+				if (jdb && jdb->isJobLoaded() && !pointId.empty())
+				{
+					DCP::Database::PointData data;
+					jdb->addPoint(pointId, data);
+					int n = jdb->getJobPointsCount();
+					m_pDlg->GetModel()->m_currentPointIndex = n;
+					m_pDlg->RefreshControls();
+				}
+			}
+			else
+#endif
 			m_pDataModel->m_pFileFunc->add_point(buffer);
 	}
 
@@ -1831,20 +1958,33 @@ bool DCP::Meas3DController::ConfirmClose(bool bEsc)
 // ================================================================================================
 void DCP::Meas3DController::ShowSelectPointDlg()
 {
+#if DCP_USE_JSON_DATABASE
+	if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel())
+	{
+		DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+			dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+		if (jdb && jdb->isJobLoaded())
+		{
+			DCP::SelectPointModel* pModel = new SelectPointModel;
+			int iCount = jdb->getPointListAsSelectPoint(&pModel->points[0], MAX_SELECT_POINTS);
+			pModel->m_iCounts = iCount;
+			pModel->m_iSelectedId = m_pDlg->GetModel()->m_currentPointIndex;
+			if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
+				(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
+			(void)GetController( SELECT_POINT_CONTROLLER )->SetModel(pModel);
+			SetActiveController(SELECT_POINT_CONTROLLER, true);
+		}
+		return;
+	}
+#endif
 	if(m_pDataModel->m_pFileFunc->IsOpen())
 	{
 		DCP::SelectPointModel* pModel = new SelectPointModel;
 		int iCount = m_pDataModel->m_pFileFunc->GetPointList(&pModel->points[0],MAX_SELECT_POINTS);
 		pModel->m_iCounts = iCount;
 		pModel->m_iSelectedId = m_pDataModel->m_pFileFunc->active_point_front;
-		
 		if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
-		{
 			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
-		}
-
-		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
-
 		(void)GetController( SELECT_POINT_CONTROLLER )->SetModel(pModel);
 		SetActiveController(SELECT_POINT_CONTROLLER, true);
 	}
@@ -1982,7 +2122,7 @@ void DCP::Meas3DController::ShowToolDlg()
 // ================================================================================================
 // Description: Constructor
 // ================================================================================================
-DCP::Meas3DModel::Meas3DModel(DCP::Model* pModel):m_pModel(pModel),m_pCommon(0)
+DCP::Meas3DModel::Meas3DModel(DCP::Model* pModel):m_pModel(pModel),m_pCommon(0),m_bJobOpen(false)
 {
 	m_pFileFunc = new AdfFileFunc(m_pModel);
 	m_pFileFunc->always_single = 1;
@@ -2039,7 +2179,15 @@ DCP::Meas3DModel::~Meas3DModel()
 // ================================================================================================
 void DCP::Meas3DModel::set_xyz_mea_ptr()
 {
-	
+	if (m_bJobOpen)
+	{
+		pid_ptr  = bPid;
+		xmea_ptr = bXmea;
+		ymea_ptr = bYmea;
+		zmea_ptr = bZmea;
+		note_ptr = bNote;
+		return;
+	}
 	if(m_pFileFunc->IsOpen())
 	{
 		switch(DSP_MODE)
@@ -2094,7 +2242,13 @@ void DCP::Meas3DModel::set_xyz_mea_ptr()
 // ================================================================================================
 void DCP::Meas3DModel::set_xyz_des_ptr()
 {
-
+	if (m_bJobOpen)
+	{
+		xdes_ptr = bXdes;
+		ydes_ptr = bYdes;
+		zdes_ptr = bZdes;
+		return;
+	}
 	if(m_pFileFunc->IsOpen())
 	{
 		switch(DSP_MODE)
@@ -2144,36 +2298,39 @@ void DCP::Meas3DModel::set_xyz_des_ptr()
 // ================================================================================================
 void DCP::Meas3DModel::save_point()
 {
+#if DCP_USE_JSON_DATABASE
+	if (m_bJobOpen && m_pModel)
+	{
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
+			dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (jdb && jdb->isJobLoaded())
+		{
+			char pidBuf[POINT_ID_BUFF_LEN];
+			m_pCommon->strbtrim(pid_ptr);
+			sprintf(pidBuf, "%.64s", pid_ptr);
+			m_pCommon->strbtrim(pidBuf);
+			std::string pointId(pidBuf);
+			if (pointId.empty()) return;
+			DCP::Database::PointData data;
+			bool exists = jdb->getPoint(pointId, data);
+			data.x_mea = m_pCommon->strblank(xmea_ptr) ? 0.0 : atof(xmea_ptr);
+			data.y_mea = m_pCommon->strblank(ymea_ptr) ? 0.0 : atof(ymea_ptr);
+			data.z_mea = m_pCommon->strblank(zmea_ptr) ? 0.0 : atof(zmea_ptr);
+			data.x_dsg = m_pCommon->strblank(xdes_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(xdes_ptr);
+			data.y_dsg = m_pCommon->strblank(ydes_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(ydes_ptr);
+			data.z_dsg = m_pCommon->strblank(zdes_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(zdes_ptr);
+			if (note_ptr && !m_pCommon->strblank(note_ptr)) { char n[16]; sprintf(n, "%.14s", note_ptr); m_pCommon->strbtrim(n); data.note = n; }
+			if (exists) jdb->updatePoint(pointId, data);
+			else jdb->addPoint(pointId, data);
+			file_updated = 1;
+		}
+		return;
+	}
+#endif
 	if(m_pFileFunc->IsOpen())
 	{
-		//if(m_pModel->bDemoMode == true)
-		//{
-  //            	if(m_pFileFunc->active_point_front-1 >= 3)
-		//		{
-		//			MsgBox msgbox;
-		//			StringC sMsg;
-		//			sMsg.LoadTxt(AT_DCP06,M_DCP_DEMO_3_POINT_TOK);
-		//			msgbox.ShowMessageOk(sMsg);
-
-		//			m_pCommon->empty_xyz_buffers(xmea_ptr,
-		//										 ymea_ptr,
-		//										 zmea_ptr,9);
-		//			m_pCommon->empty_xyz_buffers(
-		//				m_pFileFunc->xmea_front,
-		//				m_pFileFunc->ymea_front,
-		//				m_pFileFunc->zmea_front,9);
-		//		}
-		//		else
-		//		{
-  //					m_pFileFunc->form_save_pnt();
-		//			file_updated = 1;
-		//		}
-		////}
-		//else
-		//{
-			m_pFileFunc->form_save_pnt();
-			file_updated = 1;
-		//}
+		m_pFileFunc->form_save_pnt();
+		file_updated = 1;
 	}
 }
 

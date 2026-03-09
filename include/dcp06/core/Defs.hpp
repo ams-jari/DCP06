@@ -269,7 +269,7 @@ namespace DCP
 	*/
 	// LENGTHS
 	#define DCP_USER_LENGTH			6
-	#define DCP_POINT_ID_LENGTH		6
+	#define DCP_POINT_ID_LENGTH		64  // max point ID length (DCP06; was 6 in DCP05)
 	#define DCP_XYZ_VALUE_LENGTH	9
 	#define DCP_HIDDENPOINT_DIST_LENGTH 9
 	#define DCP_TOOL_ID_LENGTH 6
@@ -310,6 +310,8 @@ namespace DCP
 	#define DCP_USER_DEFINED_MENU	14
 
 	// FILE
+	// DCP_SKIP_FILE_TYPE_MENU: when defined (in project PreprocessorDefinitions), "File" goes
+	// directly to Job File (OPEN/NEW/COPY/SWAP/CLOSE) instead of showing the file-type selection.
 	#define DCP_3DFILE_MENU			11
 	#define DCP_DIST_FILE_MENU		12
 	#define DCP_ANGLE_FILE_MENU		13
@@ -344,7 +346,11 @@ namespace DCP
 	#define BOTH	3
 	//structures
 
-	#define POINT_ID_BUFF_LEN	7
+	#define POINT_ID_BUFF_LEN	65  // DCP_POINT_ID_LENGTH + 1 (was 7 in DCP05)
+	// Format for sprintf into point_id buffers: "%-64.64s"
+	#define DCP_XSTR(x) #x
+	#define DCP_STR(x) DCP_XSTR(x)
+	#define DCP_POINT_ID_FMT "%" "-" DCP_STR(DCP_POINT_ID_LENGTH) "." DCP_STR(DCP_POINT_ID_LENGTH) "s"
 	#define POINT_STATUS_BUFF_LEN	10
 	#define MEASURER_BUFF_LEN	11
 	#define INSTRUMENT_BUFF_LEN	31
@@ -353,13 +359,14 @@ namespace DCP
 	#define TEMP_AIR_BUFF_LEN	6
 	#define TEMP_OBJ_BUFF_LEN	6
 	#define MATERIAL_BUFF_LEN	11
-	#define PLANE_ID_BUFF_LEN 7
-	#define LINE_ID_BUFF_LEN 7
-	#define CIRCLE_ID_BUFF_LEN 7
+	#define PLANE_ID_BUFF_LEN 65   // match POINT_ID_BUFF_LEN for plane point IDs
+	#define LINE_ID_BUFF_LEN 65   // match POINT_ID_BUFF_LEN for line point IDs
+	#define CIRCLE_ID_BUFF_LEN 65 // match POINT_ID_BUFF_LEN for circle point IDs
 
 	#define XYZ_VALUE_BUFF_LEN	10
 	#define NOTE_BUFF_LEN	7
 	#define FILENAME_BUFF_LEN	20
+	#define DCP_JOB_ID_MAX_LEN	64  // max job/file name length (DCP06; was 8 in DCP05)
 	#define POINTS_COUNT_BUFF_LEN	10
 	#define FILE_SIZE_BUFF_LEN	20
 	#define FILE_DATE_BUFF_LEN	12

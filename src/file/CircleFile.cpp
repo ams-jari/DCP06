@@ -306,8 +306,8 @@ void DCP::CircleFileController::OnF2Pressed()
 		
 		DCP::InputTextModel* pModel = new InputTextModel;
 		pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_NEW_FILENAME_TOK);
-		pModel->m_StrTitle = GetTitle();
-		pModel->m_iTextLength = 8;
+			pModel->m_StrTitle = GetTitle();
+		pModel->m_iTextLength = DCP_JOB_ID_MAX_LEN;
 		pModel->m_StrText = L" ";
 
 		if ( nullptr == pModel) //lint !e774 Boolean within 'if' always evaluates to False 
