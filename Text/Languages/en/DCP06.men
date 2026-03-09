@@ -21,7 +21,7 @@
       <Text>DCP06</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>1</Number>
@@ -29,7 +29,7 @@
       <Text>DCP06</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>2</Number>
@@ -37,7 +37,7 @@
       <Text>COmbo</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>3</Number>
@@ -45,7 +45,7 @@
       <Text>Initialization</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>4</Number>
@@ -53,7 +53,7 @@
       <Text>Orientation</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>5</Number>
@@ -61,7 +61,7 @@
       <Text>File</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>6</Number>
@@ -69,7 +69,7 @@
       <Text>Measurement</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>7</Number>
@@ -77,7 +77,7 @@
       <Text>Calculation</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>8</Number>
@@ -85,7 +85,7 @@
       <Text>Application</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>9</Number>
@@ -93,7 +93,7 @@
       <Text>MAIN MENU</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>10</Number>
@@ -101,7 +101,7 @@
       <Text>INITIALIZATION</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>11</Number>
@@ -109,7 +109,7 @@
       <Text>Target (TARGT)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>12</Number>
@@ -117,7 +117,7 @@
       <Text>User    (USER)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>13</Number>
@@ -125,7 +125,7 @@
       <Text>Units   (UNIT)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>14</Number>
@@ -133,7 +133,7 @@
       <Text>Atm.correct.(PPM)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>15</Number>
@@ -141,7 +141,7 @@
       <Text>I&amp;II Face Measurement</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>16</Number>
@@ -149,7 +149,7 @@
       <Text>Design values in use</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>17</Number>
@@ -157,7 +157,7 @@
       <Text>Overwrite info</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>18</Number>
@@ -165,7 +165,7 @@
       <Text>Tool info</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>19</Number>
@@ -173,7 +173,7 @@
       <Text>Auto Increment</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>20</Number>
@@ -181,7 +181,7 @@
       <Text>Average count</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>21</Number>
@@ -189,7 +189,7 @@
       <Text>TARG</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>22</Number>
@@ -197,7 +197,7 @@
       <Text>USER</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>23</Number>
@@ -205,7 +205,7 @@
       <Text>UNIT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>24</Number>
@@ -213,7 +213,7 @@
       <Text>PPM</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>25</Number>
@@ -221,7 +221,7 @@
       <Text>INITIALIZATION\UNIT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>26</Number>
@@ -229,7 +229,7 @@
       <Text>INITIALIZATION\USER</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>27</Number>
@@ -237,7 +237,7 @@
       <Text>321 Alignment</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>28</Number>
@@ -245,7 +245,7 @@
       <Text>Best Fit Alignment</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>29</Number>
@@ -253,7 +253,7 @@
       <Text>Change Station            (c..</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>30</Number>
@@ -261,7 +261,7 @@
       <Text>User defined           (user..</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>31</Number>
@@ -269,7 +269,7 @@
       <Text>ORIENTATION</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>32</Number>
@@ -277,7 +277,7 @@
       <Text>Decimals</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>33</Number>
@@ -285,7 +285,7 @@
       <Text>Decimals</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>34</Number>
@@ -293,7 +293,7 @@
       <Text>inch</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>35</Number>
@@ -301,7 +301,7 @@
       <Text>feet</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>36</Number>
@@ -309,7 +309,7 @@
       <Text>CONT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>37</Number>
@@ -317,7 +317,7 @@
       <Text>ORIENTATION\321</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>38</Number>
@@ -325,7 +325,7 @@
       <Text>Plane                (PLANE)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>39</Number>
@@ -333,7 +333,7 @@
       <Text>Line                     (LI..</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>40</Number>
@@ -341,7 +341,7 @@
       <Text>Point Offset     (OFFSV)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>41</Number>
@@ -349,7 +349,7 @@
       <Text>Point Measure(MEASV)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>42</Number>
@@ -357,7 +357,7 @@
       <Text>Rotate Plane   (ROTAT)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>43</Number>
@@ -365,7 +365,7 @@
       <Text>Calculation         (CALC)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>44</Number>
@@ -373,7 +373,7 @@
       <Text>Rotate Line      (ROTLI)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>45</Number>
@@ -381,7 +381,7 @@
       <Text>ORIENTATION\321\PLANE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>46</Number>
@@ -389,7 +389,7 @@
       <Text>Plane</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>47</Number>
@@ -397,7 +397,7 @@
       <Text>Select XY, ZX or YZ -plane</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>48</Number>
@@ -405,7 +405,7 @@
       <Text>Define plane:</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>49</Number>
@@ -413,7 +413,7 @@
       <Text>-horizontal          (HORIZ)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>50</Number>
@@ -421,7 +421,7 @@
       <Text>-measure points,3...20(MEAS)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>51</Number>
@@ -429,7 +429,7 @@
       <Text>Line</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>52</Number>
@@ -437,7 +437,7 @@
       <Text>Select X, Y or Z -line.</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>53</Number>
@@ -445,7 +445,7 @@
       <Text>Define line:</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>54</Number>
@@ -453,7 +453,7 @@
       <Text>-measure points,2..20(MEAS)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>55</Number>
@@ -461,7 +461,7 @@
       <Text>ORIENTATION\321\LINE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>56</Number>
@@ -469,7 +469,7 @@
       <Text>No</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>57</Number>
@@ -477,7 +477,7 @@
       <Text>Yes</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>58</Number>
@@ -485,7 +485,7 @@
       <Text>All</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>59</Number>
@@ -493,7 +493,7 @@
       <Text>Dist</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>60</Number>
@@ -501,7 +501,7 @@
       <Text>All(M)</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>61</Number>
@@ -509,7 +509,7 @@
       <Text>Dist(M)</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>62</Number>
@@ -517,7 +517,7 @@
       <Text>Left</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>63</Number>
@@ -525,7 +525,7 @@
       <Text>Right</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>64</Number>
@@ -533,7 +533,7 @@
       <Text>ORIENTATION\321\PLANE\MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>65</Number>
@@ -541,7 +541,7 @@
       <Text>ALL</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>66</Number>
@@ -549,7 +549,7 @@
       <Text>NEXT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>67</Number>
@@ -557,7 +557,7 @@
       <Text>PREV</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>68</Number>
@@ -565,7 +565,7 @@
       <Text>ADD</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>69</Number>
@@ -573,7 +573,7 @@
       <Text>DEL</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>70</Number>
@@ -581,7 +581,7 @@
       <Text>INIT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>71</Number>
@@ -589,7 +589,7 @@
       <Text>SPECI</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>72</Number>
@@ -597,7 +597,7 @@
       <Text>PID</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>73</Number>
@@ -605,7 +605,7 @@
       <Text>I&lt;&gt;II</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>74</Number>
@@ -613,7 +613,7 @@
       <Text>SPECIAL FUNCTIONS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>75</Number>
@@ -621,7 +621,7 @@
       <Text>Hidden Point</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>76</Number>
@@ -629,7 +629,7 @@
       <Text>X or Y or Z</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>77</Number>
@@ -637,7 +637,7 @@
       <Text>Circle</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>78</Number>
@@ -645,7 +645,7 @@
       <Text>Separate Recording</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>79</Number>
@@ -653,7 +653,7 @@
       <Text>Home Points</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>80</Number>
@@ -661,15 +661,15 @@
       <Text>Point No</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>81</Number>
       <Name>P_DCP_POINT_ID_SK</Name>
-      <Text>Point ID(PID)</Text>
+      <Text>Point ID</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>82</Number>
@@ -677,7 +677,7 @@
       <Text>x</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>83</Number>
@@ -685,7 +685,7 @@
       <Text>y</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>84</Number>
@@ -693,7 +693,7 @@
       <Text>z</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>85</Number>
@@ -701,7 +701,7 @@
       <Text>File                        ..</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>86</Number>
@@ -709,7 +709,7 @@
       <Text>OR insert points (POINT)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>87</Number>
@@ -717,7 +717,7 @@
       <Text>Select object points in OCS</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>88</Number>
@@ -725,7 +725,7 @@
       <Text>Measure points in SCS</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>89</Number>
@@ -733,7 +733,7 @@
       <Text>Points                   (ME..</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>90</Number>
@@ -741,7 +741,7 @@
       <Text>Calculation            (CALC)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>91</Number>
@@ -749,7 +749,7 @@
       <Text>FILE</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>92</Number>
@@ -757,7 +757,7 @@
       <Text>POINT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>93</Number>
@@ -765,7 +765,7 @@
       <Text>MEAS</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>94</Number>
@@ -773,7 +773,7 @@
       <Text>CALC</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>95</Number>
@@ -781,7 +781,7 @@
       <Text>RMS</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>96</Number>
@@ -789,7 +789,7 @@
       <Text>RESID</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>97</Number>
@@ -797,7 +797,7 @@
       <Text>File</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>98</Number>
@@ -805,7 +805,7 @@
       <Text>Points</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>99</Number>
@@ -813,7 +813,7 @@
       <Text>Date</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>100</Number>
@@ -821,7 +821,7 @@
       <Text>Define transfer points</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>101</Number>
@@ -829,7 +829,7 @@
       <Text>-Select file (FILE)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>102</Number>
@@ -837,7 +837,7 @@
       <Text>-OR Select pts.   (POINT)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>103</Number>
@@ -845,7 +845,7 @@
       <Text>-OR Measure pts.(MEAS)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>104</Number>
@@ -853,7 +853,7 @@
       <Text>CHANGE STATION\POS1</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>105</Number>
@@ -861,7 +861,7 @@
       <Text>POS2</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>106</Number>
@@ -869,7 +869,7 @@
       <Text>CALCULATION</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>107</Number>
@@ -877,7 +877,7 @@
       <Text>Distance</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>108</Number>
@@ -885,7 +885,7 @@
       <Text>Angle</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>109</Number>
@@ -893,7 +893,7 @@
       <Text>APPLICATION</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>110</Number>
@@ -901,7 +901,7 @@
       <Text>Line setting</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>111</Number>
@@ -909,7 +909,7 @@
       <Text>3D Roller Alignment</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>112</Number>
@@ -917,7 +917,7 @@
       <Text>X or Y or Z</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>113</Number>
@@ -925,7 +925,7 @@
       <Text>X</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>114</Number>
@@ -933,7 +933,7 @@
       <Text>Y</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>115</Number>
@@ -941,7 +941,7 @@
       <Text>Z</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>116</Number>
@@ -949,7 +949,7 @@
       <Text>TOOL</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>117</Number>
@@ -957,7 +957,7 @@
       <Text>HIDDEN POINT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>118</Number>
@@ -965,7 +965,7 @@
       <Text>CLEAR</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>119</Number>
@@ -973,7 +973,7 @@
       <Text>CONF</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>120</Number>
@@ -981,7 +981,7 @@
       <Text>Point Dist</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>121</Number>
@@ -989,7 +989,7 @@
       <Text>Dist1</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>122</Number>
@@ -997,7 +997,7 @@
       <Text>Dist2</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>123</Number>
@@ -1005,7 +1005,7 @@
       <Text>Dist3</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>124</Number>
@@ -1013,7 +1013,7 @@
       <Text>Dist4</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>125</Number>
@@ -1021,7 +1021,7 @@
       <Text>Dist5</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>126</Number>
@@ -1029,7 +1029,7 @@
       <Text>HIDDEN POINT \ CONF</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>127</Number>
@@ -1037,7 +1037,7 @@
       <Text>REC</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>128</Number>
@@ -1045,7 +1045,7 @@
       <Text>SEPARATE RECORDING</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>129</Number>
@@ -1053,7 +1053,7 @@
       <Text>DIST</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>130</Number>
@@ -1061,7 +1061,7 @@
       <Text>TOOL</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>131</Number>
@@ -1069,7 +1069,7 @@
       <Text>TID</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>132</Number>
@@ -1077,7 +1077,7 @@
       <Text>3D-MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>133</Number>
@@ -1085,7 +1085,7 @@
       <Text>AIM</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>134</Number>
@@ -1093,7 +1093,7 @@
       <Text>FILE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>135</Number>
@@ -1101,7 +1101,7 @@
       <Text>Job File</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>136</Number>
@@ -1109,7 +1109,7 @@
       <Text>DIST-File</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>137</Number>
@@ -1117,7 +1117,7 @@
       <Text>ANGLE-File</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>138</Number>
@@ -1125,7 +1125,7 @@
       <Text>DIST-FILE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>139</Number>
@@ -1133,7 +1133,7 @@
       <Text>OPEN</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>140</Number>
@@ -1141,7 +1141,7 @@
       <Text>NEW</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>141</Number>
@@ -1149,7 +1149,7 @@
       <Text>CLOSE</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>142</Number>
@@ -1157,7 +1157,7 @@
       <Text>VIEW</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>143</Number>
@@ -1165,7 +1165,7 @@
       <Text>DIST-file</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>144</Number>
@@ -1173,7 +1173,7 @@
       <Text>No of points</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>145</Number>
@@ -1181,7 +1181,7 @@
       <Text>Size</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>146</Number>
@@ -1189,7 +1189,7 @@
       <Text>Date</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>147</Number>
@@ -1197,7 +1197,7 @@
       <Text>Time</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>148</Number>
@@ -1205,7 +1205,7 @@
       <Text>Free space</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>149</Number>
@@ -1213,7 +1213,7 @@
       <Text>ANGLE-file</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>150</Number>
@@ -1221,7 +1221,7 @@
       <Text>ANGLE-FILE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>151</Number>
@@ -1229,7 +1229,7 @@
       <Text>JOB FILE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>152</Number>
@@ -1237,7 +1237,7 @@
       <Text>COPY</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>153</Number>
@@ -1245,7 +1245,7 @@
       <Text>SWAP</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>154</Number>
@@ -1253,7 +1253,7 @@
       <Text>SAVE</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>155</Number>
@@ -1261,7 +1261,7 @@
       <Text>Job File</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>156</Number>
@@ -1269,7 +1269,7 @@
       <Text>3D ROLLER ALIGNMENT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>157</Number>
@@ -1277,7 +1277,7 @@
       <Text>DSP</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>158</Number>
@@ -1285,7 +1285,7 @@
       <Text>LINE SETTING</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>159</Number>
@@ -1293,7 +1293,7 @@
       <Text>SET</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>160</Number>
@@ -1301,7 +1301,7 @@
       <Text>LINE SETTING \ SET</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>161</Number>
@@ -1309,7 +1309,7 @@
       <Text>0</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>162</Number>
@@ -1317,7 +1317,7 @@
       <Text>90</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>163</Number>
@@ -1325,7 +1325,7 @@
       <Text>180</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>164</Number>
@@ -1333,7 +1333,7 @@
       <Text>270</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>165</Number>
@@ -1341,7 +1341,7 @@
       <Text>SPECIAL \ HOME POINTS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>166</Number>
@@ -1349,7 +1349,7 @@
       <Text>CIRCLE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>167</Number>
@@ -1357,7 +1357,7 @@
       <Text>CIRCL</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>168</Number>
@@ -1365,7 +1365,7 @@
       <Text>PLANE</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>169</Number>
@@ -1373,7 +1373,7 @@
       <Text>Best Fit Align</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>170</Number>
@@ -1381,7 +1381,7 @@
       <Text>CALCULATION \ DIST</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>171</Number>
@@ -1389,7 +1389,7 @@
       <Text>JOB</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>172</Number>
@@ -1397,7 +1397,7 @@
       <Text>DISTF</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>173</Number>
@@ -1405,7 +1405,7 @@
       <Text>REF</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>174</Number>
@@ -1413,7 +1413,7 @@
       <Text>CALCULATION \ ANGLE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>175</Number>
@@ -1421,7 +1421,7 @@
       <Text>ANGF</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>176</Number>
@@ -1429,7 +1429,7 @@
       <Text>ORIENTATION\POM\POINT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>177</Number>
@@ -1437,15 +1437,15 @@
       <Text>PICK</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>178</Number>
       <Name>P_DCP_3DFILE_SK</Name>
-      <Text>Job File(JOB)</Text>
+      <Text>Job File</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>179</Number>
@@ -1453,7 +1453,7 @@
       <Text>X Design</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>180</Number>
@@ -1461,7 +1461,7 @@
       <Text>Y Design</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>181</Number>
@@ -1469,7 +1469,7 @@
       <Text>Z Design</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>182</Number>
@@ -1477,7 +1477,7 @@
       <Text>X Dev/Act</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>183</Number>
@@ -1485,7 +1485,7 @@
       <Text>Y Dev/Act</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>184</Number>
@@ -1493,7 +1493,7 @@
       <Text>Z Dev/Act</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>185</Number>
@@ -1501,7 +1501,7 @@
       <Text>A*/D*</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>186</Number>
@@ -1509,7 +1509,7 @@
       <Text>A</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>187</Number>
@@ -1517,7 +1517,7 @@
       <Text>a</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>188</Number>
@@ -1525,7 +1525,7 @@
       <Text>D</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>189</Number>
@@ -1533,7 +1533,7 @@
       <Text>d</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>190</Number>
@@ -1541,7 +1541,7 @@
       <Text>Selected</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>191</Number>
@@ -1549,7 +1549,7 @@
       <Text>Actual/Design</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>192</Number>
@@ -1557,7 +1557,7 @@
       <Text>PointId</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>193</Number>
@@ -1565,7 +1565,7 @@
       <Text>SELECT POINT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>194</Number>
@@ -1573,7 +1573,7 @@
       <Text>Do you want to delete file %..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>195</Number>
@@ -1581,7 +1581,7 @@
       <Text>Enter new filename</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>196</Number>
@@ -1589,7 +1589,7 @@
       <Text>Copy file to name</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>197</Number>
@@ -1597,7 +1597,7 @@
       <Text>Do you want to swap the whol..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>198</Number>
@@ -1605,7 +1605,7 @@
       <Text>xy</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>199</Number>
@@ -1613,7 +1613,7 @@
       <Text>zx</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>200</Number>
@@ -1621,7 +1621,7 @@
       <Text>yz</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>201</Number>
@@ -1629,7 +1629,7 @@
       <Text>XY</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>202</Number>
@@ -1637,7 +1637,7 @@
       <Text>ZX</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>203</Number>
@@ -1645,7 +1645,7 @@
       <Text>YZ</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>204</Number>
@@ -1653,7 +1653,7 @@
       <Text>HORIZ</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>205</Number>
@@ -1661,7 +1661,7 @@
       <Text>LINE</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>206</Number>
@@ -1669,7 +1669,7 @@
       <Text>OFFSV</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>207</Number>
@@ -1677,7 +1677,7 @@
       <Text>MEASV</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>208</Number>
@@ -1685,7 +1685,7 @@
       <Text>ROTAT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>209</Number>
@@ -1693,7 +1693,7 @@
       <Text>ROTLI</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>210</Number>
@@ -1701,7 +1701,7 @@
       <Text>Delete all %s values?</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>211</Number>
@@ -1709,7 +1709,7 @@
       <Text>321</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>212</Number>
@@ -1717,7 +1717,7 @@
       <Text>Do you want to delete existi..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>213</Number>
@@ -1725,7 +1725,7 @@
       <Text>Do you want to delete existi..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>214</Number>
@@ -1733,7 +1733,7 @@
       <Text>Do you want to delete active..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>215</Number>
@@ -1741,7 +1741,7 @@
       <Text>Enter point ID</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>216</Number>
@@ -1749,7 +1749,7 @@
       <Text>Circle</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>217</Number>
@@ -1757,7 +1757,7 @@
       <Text>Do you want to delete existi..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>218</Number>
@@ -1765,7 +1765,7 @@
       <Text>HOME POINTS \ MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>219</Number>
@@ -1773,7 +1773,7 @@
       <Text>Status</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>220</Number>
@@ -1781,7 +1781,7 @@
       <Text>ORIENTATION\DOM\POINT\OFFSV</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>221</Number>
@@ -1789,7 +1789,7 @@
       <Text>ORIENTATION\DOM\POINT\MEASV</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>222</Number>
@@ -1797,7 +1797,7 @@
       <Text>OFFSV</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>223</Number>
@@ -1805,7 +1805,7 @@
       <Text>ORIENTATION\DOM\ROTATATE PLANE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>224</Number>
@@ -1813,7 +1813,7 @@
       <Text>Rotation of the plane around..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>225</Number>
@@ -1821,7 +1821,7 @@
       <Text>X-axis</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>226</Number>
@@ -1829,7 +1829,7 @@
       <Text>Y-axis</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>227</Number>
@@ -1837,7 +1837,7 @@
       <Text>Z-axis</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>228</Number>
@@ -1845,7 +1845,7 @@
       <Text>Rotation centre is the offse..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>229</Number>
@@ -1853,7 +1853,7 @@
       <Text>ORIENTATION\DOM\ROTATE LINE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>230</Number>
@@ -1861,7 +1861,7 @@
       <Text>Rotation of the line parelle..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>231</Number>
@@ -1869,7 +1869,7 @@
       <Text>Rotation center is the offse..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>232</Number>
@@ -1877,7 +1877,7 @@
       <Text>BF</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>233</Number>
@@ -1885,7 +1885,7 @@
       <Text>Can't add point!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>234</Number>
@@ -1893,7 +1893,7 @@
       <Text>Please, aim to the point.</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>235</Number>
@@ -1901,7 +1901,7 @@
       <Text>The measured values are iden..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>236</Number>
@@ -1909,7 +1909,7 @@
       <Text>At least 2 points must be de..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>237</Number>
@@ -1917,7 +1917,7 @@
       <Text>x</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>238</Number>
@@ -1925,7 +1925,7 @@
       <Text>y</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>239</Number>
@@ -1933,7 +1933,7 @@
       <Text>z</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>240</Number>
@@ -1941,7 +1941,7 @@
       <Text>HZ</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>241</Number>
@@ -1949,7 +1949,7 @@
       <Text>Define 1st point!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>242</Number>
@@ -1957,7 +1957,7 @@
       <Text>At least 3 points must be de..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>243</Number>
@@ -1965,7 +1965,7 @@
       <Text>Can't calculate!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>244</Number>
@@ -1973,7 +1973,7 @@
       <Text>Aborted!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>245</Number>
@@ -1981,7 +1981,7 @@
       <Text>DIST-file(DISTF)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>246</Number>
@@ -1989,7 +1989,7 @@
       <Text>Ref type(REF)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>247</Number>
@@ -1997,7 +1997,7 @@
       <Text>Trg Type(TARG)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>248</Number>
@@ -2005,7 +2005,7 @@
       <Text>distance ID</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>249</Number>
@@ -2013,7 +2013,7 @@
       <Text>Dist</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>250</Number>
@@ -2021,7 +2021,7 @@
       <Text>Note</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>251</Number>
@@ -2029,7 +2029,7 @@
       <Text>ANGLE-file(ANGF)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>252</Number>
@@ -2037,7 +2037,7 @@
       <Text>angle ID</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>253</Number>
@@ -2045,7 +2045,7 @@
       <Text>angle</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>254</Number>
@@ -2053,7 +2053,7 @@
       <Text>Automatch</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>255</Number>
@@ -2061,7 +2061,7 @@
       <Text>General  Initialization     ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>256</Number>
@@ -2069,7 +2069,7 @@
       <Text>General  User      (name)   ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>257</Number>
@@ -2077,7 +2077,7 @@
       <Text>General  Units     (mm/inch/..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>258</Number>
@@ -2085,7 +2085,7 @@
       <Text>Do you want to exit program?</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>259</Number>
@@ -2093,7 +2093,7 @@
       <Text>Orientation\Userdef\Rotate P..</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>260</Number>
@@ -2101,7 +2101,7 @@
       <Text>Define reference plane!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>261</Number>
@@ -2109,7 +2109,7 @@
       <Text>Define referenece line!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>262</Number>
@@ -2117,7 +2117,7 @@
       <Text>Define referenece point!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>263</Number>
@@ -2125,7 +2125,7 @@
       <Text>Calculation completed!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>264</Number>
@@ -2133,7 +2133,7 @@
       <Text>Can't open the file %s</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>265</Number>
@@ -2141,7 +2141,7 @@
       <Text>Record length is not valid!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>266</Number>
@@ -2149,7 +2149,7 @@
       <Text>Do you want to delete existi..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>267</Number>
@@ -2157,7 +2157,7 @@
       <Text>Points are not defined!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>268</Number>
@@ -2165,7 +2165,7 @@
       <Text>No.</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>269</Number>
@@ -2173,7 +2173,7 @@
       <Text>Owerwrite active point %s ?</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>270</Number>
@@ -2181,7 +2181,7 @@
       <Text>File %s already exists. Do y..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>271</Number>
@@ -2189,7 +2189,7 @@
       <Text>Can't delete file!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>272</Number>
@@ -2197,7 +2197,7 @@
       <Text>Creating job file Ok!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>273</Number>
@@ -2205,7 +2205,7 @@
       <Text>Point</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>274</Number>
@@ -2213,7 +2213,7 @@
       <Text>Ref ID</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>275</Number>
@@ -2221,7 +2221,7 @@
       <Text>Target ID</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>276</Number>
@@ -2229,7 +2229,7 @@
       <Text>Tool ID(TID)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>277</Number>
@@ -2237,7 +2237,7 @@
       <Text>Constant</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>278</Number>
@@ -2245,7 +2245,7 @@
       <Text>Translation X</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>279</Number>
@@ -2253,7 +2253,7 @@
       <Text>Translation Y</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>280</Number>
@@ -2261,7 +2261,7 @@
       <Text>Translation Z</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>281</Number>
@@ -2269,7 +2269,7 @@
       <Text>Tool/Total X</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>282</Number>
@@ -2277,7 +2277,7 @@
       <Text>Tool/Total Y</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>283</Number>
@@ -2285,7 +2285,7 @@
       <Text>Tool/Total Z</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>284</Number>
@@ -2293,7 +2293,7 @@
       <Text>Tool ID</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>285</Number>
@@ -2301,7 +2301,7 @@
       <Text>x</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>286</Number>
@@ -2309,7 +2309,7 @@
       <Text>y</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>287</Number>
@@ -2317,7 +2317,7 @@
       <Text>z</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>288</Number>
@@ -2325,7 +2325,7 @@
       <Text>The file cannot be copied on..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>289</Number>
@@ -2333,7 +2333,7 @@
       <Text>Copying OK</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>290</Number>
@@ -2341,7 +2341,7 @@
       <Text>Not enough free disk space!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>291</Number>
@@ -2349,7 +2349,7 @@
       <Text>Swap Ok</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>292</Number>
@@ -2357,7 +2357,7 @@
       <Text>Data manipulation(edit, swap..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>293</Number>
@@ -2365,7 +2365,7 @@
       <Text>Job file must be open!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>294</Number>
@@ -2373,7 +2373,7 @@
       <Text>Do you want to convert %s fi..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>295</Number>
@@ -2381,7 +2381,7 @@
       <Text>Error converting *.adf file ..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>296</Number>
@@ -2389,7 +2389,7 @@
       <Text>HOME</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>297</Number>
@@ -2397,7 +2397,7 @@
       <Text>END</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>298</Number>
@@ -2405,7 +2405,7 @@
       <Text>JOB FILE\VIEW</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>299</Number>
@@ -2413,7 +2413,7 @@
       <Text>Cannot delete point %s !</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>300</Number>
@@ -2421,7 +2421,7 @@
       <Text>Point %s already exists!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>301</Number>
@@ -2429,7 +2429,7 @@
       <Text>Automatch failed, no design ..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>302</Number>
@@ -2437,7 +2437,7 @@
       <Text>Tool</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>303</Number>
@@ -2445,7 +2445,7 @@
       <Text>Average</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>304</Number>
@@ -2453,7 +2453,7 @@
       <Text>ORIENTATION\DOM\LINE\MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>305</Number>
@@ -2461,7 +2461,7 @@
       <Text>General  Use arrow keys to s..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>306</Number>
@@ -2469,7 +2469,7 @@
       <Text>General   Numerical keys 1-6..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>307</Number>
@@ -2477,7 +2477,7 @@
       <Text>General   Select plane with ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>308</Number>
@@ -2485,7 +2485,7 @@
       <Text>General   MEAS for measureme..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>309</Number>
@@ -2493,7 +2493,7 @@
       <Text>General   The following file..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>310</Number>
@@ -2501,7 +2501,7 @@
       <Text>General  Orientation by dire..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>311</Number>
@@ -2509,7 +2509,7 @@
       <Text>A&lt;&gt;D</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>312</Number>
@@ -2517,7 +2517,7 @@
       <Text>Change Station</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>313</Number>
@@ -2525,7 +2525,7 @@
       <Text>Please change instrument pos..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>314</Number>
@@ -2533,7 +2533,7 @@
       <Text>CHANGE STATION\POS2\MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>315</Number>
@@ -2541,7 +2541,7 @@
       <Text>REJEC</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>316</Number>
@@ -2549,7 +2549,7 @@
       <Text>Deviation</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>317</Number>
@@ -2557,7 +2557,7 @@
       <Text>Can't reject point!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>318</Number>
@@ -2565,7 +2565,7 @@
       <Text>DEV OF LINE. RMS:%.*f Points..</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>319</Number>
@@ -2573,7 +2573,7 @@
       <Text>DEV OF PLANE. RMS:%.*f Point..</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>320</Number>
@@ -2581,7 +2581,7 @@
       <Text>RESIDUALS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>321</Number>
@@ -2589,7 +2589,7 @@
       <Text>Horizontal(360º dec)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>322</Number>
@@ -2597,7 +2597,7 @@
       <Text>Vertical     (360º dec)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>323</Number>
@@ -2605,7 +2605,7 @@
       <Text>Set horizontal angle (F1-F4)..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>324</Number>
@@ -2613,7 +2613,7 @@
       <Text>Line must be defined in 321!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>325</Number>
@@ -2621,7 +2621,7 @@
       <Text>HZ-plane is not defined!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>326</Number>
@@ -2629,7 +2629,7 @@
       <Text>d-actual</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>327</Number>
@@ -2637,7 +2637,7 @@
       <Text>d-design</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>328</Number>
@@ -2645,7 +2645,7 @@
       <Text>d-dev</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>329</Number>
@@ -2653,7 +2653,7 @@
       <Text>t</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>330</Number>
@@ -2661,7 +2661,7 @@
       <Text>SELECT 2 POINTS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>331</Number>
@@ -2669,7 +2669,7 @@
       <Text>SELECT POINTS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>332</Number>
@@ -2677,7 +2677,7 @@
       <Text>2 points must be defined!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>333</Number>
@@ -2685,7 +2685,7 @@
       <Text>\ CALC\ 2 POINTS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>334</Number>
@@ -2693,7 +2693,7 @@
       <Text>General   CALC 2 POINTS for ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>335</Number>
@@ -2701,7 +2701,7 @@
       <Text>General    Points (2..20) wi..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>336</Number>
@@ -2709,7 +2709,7 @@
       <Text>General  Measurement of 3D  ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>337</Number>
@@ -2717,7 +2717,7 @@
       <Text>General    Points (1..20) wi..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>338</Number>
@@ -2725,7 +2725,7 @@
       <Text>Define circle plane</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>339</Number>
@@ -2733,7 +2733,7 @@
       <Text>Plane   (PLANE)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>340</Number>
@@ -2741,7 +2741,7 @@
       <Text>Tool-radius</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>341</Number>
@@ -2749,7 +2749,7 @@
       <Text>Measure circle points</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>342</Number>
@@ -2757,7 +2757,7 @@
       <Text>Circle points(CIRCL)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>343</Number>
@@ -2765,7 +2765,7 @@
       <Text>General  Centre point and di..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>344</Number>
@@ -2773,7 +2773,7 @@
       <Text>C-PNT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>345</Number>
@@ -2781,7 +2781,7 @@
       <Text>Cannot use XY, YZ or ZX -pla..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>346</Number>
@@ -2789,7 +2789,7 @@
       <Text>circle p</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>347</Number>
@@ -2797,7 +2797,7 @@
       <Text>Measured</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>348</Number>
@@ -2805,7 +2805,7 @@
       <Text>Define circle plane!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>349</Number>
@@ -2813,7 +2813,7 @@
       <Text>Circle must be defined at le..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>350</Number>
@@ -2821,7 +2821,7 @@
       <Text>Points are on the same line!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>351</Number>
@@ -2829,7 +2829,7 @@
       <Text>The circle plane must be def..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>352</Number>
@@ -2837,7 +2837,7 @@
       <Text>CIRCLE\MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>353</Number>
@@ -2845,7 +2845,7 @@
       <Text>Radius</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>354</Number>
@@ -2853,7 +2853,7 @@
       <Text>Diameter</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>355</Number>
@@ -2861,7 +2861,7 @@
       <Text>RMS</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>356</Number>
@@ -2869,7 +2869,7 @@
       <Text>CIRCLE\PLANE\MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>357</Number>
@@ -2877,7 +2877,7 @@
       <Text>Max points are selected!</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>358</Number>
@@ -2885,7 +2885,7 @@
       <Text>INFO:</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>359</Number>
@@ -2893,7 +2893,7 @@
       <Text>OK</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>360</Number>
@@ -2901,7 +2901,7 @@
       <Text>INFO</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>361</Number>
@@ -2909,7 +2909,7 @@
       <Text>Do you want to delete active..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>362</Number>
@@ -2917,7 +2917,7 @@
       <Text>SELECT TOOL</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>363</Number>
@@ -2925,7 +2925,7 @@
       <Text>SCS</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>364</Number>
@@ -2933,7 +2933,7 @@
       <Text>OCS</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>365</Number>
@@ -2941,7 +2941,7 @@
       <Text>Home points are used to   pi..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>366</Number>
@@ -2949,7 +2949,7 @@
       <Text>General  Home points are use..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>367</Number>
@@ -2957,7 +2957,7 @@
       <Text>Enter line ID</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>368</Number>
@@ -2965,7 +2965,7 @@
       <Text>Enter plane ID</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>369</Number>
@@ -2973,7 +2973,7 @@
       <Text>Dist ID %s already exists!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>370</Number>
@@ -2981,7 +2981,7 @@
       <Text>Error writing to file!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>371</Number>
@@ -2989,7 +2989,7 @@
       <Text>General    Points can be pic..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>372</Number>
@@ -2997,7 +2997,7 @@
       <Text>Dist -file must be open!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>373</Number>
@@ -3005,7 +3005,7 @@
       <Text>Angle-file must be open!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>374</Number>
@@ -3013,7 +3013,7 @@
       <Text>General   Based on job file p..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>375</Number>
@@ -3021,7 +3021,7 @@
       <Text>General   Based on job file p..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>376</Number>
@@ -3029,7 +3029,7 @@
       <Text>3D ROLLER ALIGNMENT\FRONT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>377</Number>
@@ -3037,7 +3037,7 @@
       <Text>3D ROLLER ALIGNMENT\BACK</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>378</Number>
@@ -3045,7 +3045,7 @@
       <Text>3D ROLLER ALIGNMENT\F-B</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>379</Number>
@@ -3053,7 +3053,7 @@
       <Text>3D ROLLER ALIGNMENT\SINGLE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>380</Number>
@@ -3061,7 +3061,7 @@
       <Text>X actual back</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>381</Number>
@@ -3069,7 +3069,7 @@
       <Text>Y actual back</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>382</Number>
@@ -3077,7 +3077,7 @@
       <Text>Z actual back</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>383</Number>
@@ -3085,7 +3085,7 @@
       <Text>X actual f-b</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>384</Number>
@@ -3093,7 +3093,7 @@
       <Text>Y actual f-b</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>385</Number>
@@ -3101,7 +3101,7 @@
       <Text>Z actual f-b</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>386</Number>
@@ -3109,7 +3109,7 @@
       <Text>X design back</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>387</Number>
@@ -3117,7 +3117,7 @@
       <Text>Y design back</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>388</Number>
@@ -3125,7 +3125,7 @@
       <Text>Z design back</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>389</Number>
@@ -3133,7 +3133,7 @@
       <Text>X design f-b</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>390</Number>
@@ -3141,7 +3141,7 @@
       <Text>Y design f-b</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>391</Number>
@@ -3149,7 +3149,7 @@
       <Text>Z design f-b</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>392</Number>
@@ -3157,7 +3157,7 @@
       <Text>mm</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>393</Number>
@@ -3165,7 +3165,7 @@
       <Text>Left/Righthand</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>394</Number>
@@ -3173,7 +3173,7 @@
       <Text>General   Application proced..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>395</Number>
@@ -3181,7 +3181,7 @@
       <Text>General   The calculations a..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>396</Number>
@@ -3189,7 +3189,7 @@
       <Text>General  Select direction an..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>397</Number>
@@ -3197,7 +3197,7 @@
       <Text>General    Front-Back -point..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>398</Number>
@@ -3205,7 +3205,7 @@
       <Text>General   JOB FILE\VIEW allow..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>399</Number>
@@ -3213,7 +3213,7 @@
       <Text>General    Tools can be defi..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>400</Number>
@@ -3221,7 +3221,7 @@
       <Text>General   Available file typ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>401</Number>
@@ -3229,7 +3229,7 @@
       <Text>TOOL\ADD TOOL</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>402</Number>
@@ -3237,7 +3237,7 @@
       <Text>General    Routine uses 3..2..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>403</Number>
@@ -3245,7 +3245,7 @@
       <Text>MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>404</Number>
@@ -3253,7 +3253,7 @@
       <Text>General  Orientation by poin..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>405</Number>
@@ -3261,7 +3261,7 @@
       <Text>General   Available file typ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>406</Number>
@@ -3269,7 +3269,7 @@
       <Text>General    Hidden points are..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>407</Number>
@@ -3277,7 +3277,7 @@
       <Text>General   Configuration of a..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>408</Number>
@@ -3285,7 +3285,7 @@
       <Text>General    Line Setting prov..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>409</Number>
@@ -3293,7 +3293,7 @@
       <Text>General    Line Setting/Set ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>410</Number>
@@ -3301,7 +3301,7 @@
       <Text>General  The x,y,z values of..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>411</Number>
@@ -3309,7 +3309,7 @@
       <Text>General  The x,y,z values (i..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>412</Number>
@@ -3317,7 +3317,7 @@
       <Text>General    The deviation of ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>413</Number>
@@ -3325,7 +3325,7 @@
       <Text>General    The deviation of ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>414</Number>
@@ -3333,7 +3333,7 @@
       <Text>General    The deviation of ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>415</Number>
@@ -3341,7 +3341,7 @@
       <Text>General   The selected plane..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>416</Number>
@@ -3349,7 +3349,7 @@
       <Text>General   Angles and distanc..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>417</Number>
@@ -3357,7 +3357,7 @@
       <Text>General    TOOL allows the u..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>418</Number>
@@ -3365,7 +3365,7 @@
       <Text>General    Each coordinate v..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>419</Number>
@@ -3373,7 +3373,7 @@
       <Text>General   Available x,y,z fi..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>420</Number>
@@ -3381,7 +3381,7 @@
       <Text>DEV. OF CIRCLE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>421</Number>
@@ -3389,7 +3389,7 @@
       <Text>General   The selected plane..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>422</Number>
@@ -3397,7 +3397,7 @@
       <Text>General    Functions and rou..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>423</Number>
@@ -3405,7 +3405,7 @@
       <Text>Select coordinate system</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>424</Number>
@@ -3413,7 +3413,7 @@
       <Text>SCS(F1)</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>425</Number>
@@ -3421,7 +3421,7 @@
       <Text>OCS(F3)</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>426</Number>
@@ -3429,7 +3429,7 @@
       <Text>General   Home points can be..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>427</Number>
@@ -3437,7 +3437,7 @@
       <Text>SCS</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>428</Number>
@@ -3445,7 +3445,7 @@
       <Text>OCS</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>429</Number>
@@ -3453,7 +3453,7 @@
       <Text>EDIT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>430</Number>
@@ -3461,7 +3461,7 @@
       <Text>actual</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>431</Number>
@@ -3469,7 +3469,7 @@
       <Text>design</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>432</Number>
@@ -3477,7 +3477,7 @@
       <Text>dev</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>433</Number>
@@ -3485,7 +3485,7 @@
       <Text>The nearest point is</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>434</Number>
@@ -3493,7 +3493,7 @@
       <Text>AUTOMATCH</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>435</Number>
@@ -3501,7 +3501,7 @@
       <Text>General    ABORT(F1),     CO..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>436</Number>
@@ -3509,7 +3509,7 @@
       <Text>ABORT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>437</Number>
@@ -3517,7 +3517,7 @@
       <Text>CHANGE STATION\POS1\POINTS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>438</Number>
@@ -3525,7 +3525,7 @@
       <Text>Please change instrument pos..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>439</Number>
@@ -3533,7 +3533,7 @@
       <Text>Please measure transfer poin..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>440</Number>
@@ -3541,7 +3541,7 @@
       <Text>Orientation lost. Restart Ch..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>441</Number>
@@ -3549,7 +3549,7 @@
       <Text>Press MEAS-key in BF-display..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>442</Number>
@@ -3557,7 +3557,7 @@
       <Text>Press POS2-Key in Change Sta..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>443</Number>
@@ -3565,7 +3565,7 @@
       <Text>Wrong EDM mode, change it to..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>444</Number>
@@ -3573,7 +3573,7 @@
       <Text>Last point, use ADD-point!</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>445</Number>
@@ -3581,7 +3581,7 @@
       <Text>General   Saved distances in..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>446</Number>
@@ -3589,7 +3589,7 @@
       <Text>General   Saved angles in a ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>447</Number>
@@ -3597,7 +3597,7 @@
       <Text>General   Angle ID, referenc..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>448</Number>
@@ -3605,7 +3605,7 @@
       <Text>General   Distance ID, refer..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>449</Number>
@@ -3613,7 +3613,7 @@
       <Text>Distance saved!</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>450</Number>
@@ -3621,7 +3621,7 @@
       <Text>Angle saved!</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>451</Number>
@@ -3629,7 +3629,7 @@
       <Text>CALC \ DIST\  VIEW</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>452</Number>
@@ -3637,7 +3637,7 @@
       <Text>CALC \ ANGLE \ VIEW</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>453</Number>
@@ -3645,7 +3645,7 @@
       <Text>CALC \ DIST \ EDIT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>454</Number>
@@ -3653,7 +3653,7 @@
       <Text>CALC \ ANGLE \ EDIT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>455</Number>
@@ -3661,7 +3661,7 @@
       <Text>3D Shaft Alignment</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>456</Number>
@@ -3669,7 +3669,7 @@
       <Text>3D SHAFT ALIGNMENT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>457</Number>
@@ -3677,7 +3677,7 @@
       <Text>SHAFT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>458</Number>
@@ -3685,7 +3685,7 @@
       <Text>Select X or Y or Z line.</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>459</Number>
@@ -3693,7 +3693,7 @@
       <Text>Or Measure (MEAS).</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>460</Number>
@@ -3701,7 +3701,7 @@
       <Text>The line is ref. line.</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>461</Number>
@@ -3709,7 +3709,7 @@
       <Text>Measured</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>462</Number>
@@ -3717,7 +3717,7 @@
       <Text></Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>463</Number>
@@ -3725,7 +3725,7 @@
       <Text>SHAFT ALIGNMENT / LINE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>464</Number>
@@ -3733,7 +3733,7 @@
       <Text>SHAFT ALIGNMENT / LINE / MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>465</Number>
@@ -3741,7 +3741,7 @@
       <Text>Measure shaft points</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>466</Number>
@@ -3749,7 +3749,7 @@
       <Text>Shaft points (SHAFT)</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>467</Number>
@@ -3757,7 +3757,7 @@
       <Text>Please, select other than '...</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>468</Number>
@@ -3765,7 +3765,7 @@
       <Text>Tool radius   Radius of the ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>469</Number>
@@ -3773,7 +3773,7 @@
       <Text>SHAFT ALIGNMENT / CIRCLE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>470</Number>
@@ -3781,7 +3781,7 @@
       <Text>SHAFT ALIGNMENT / CIRCLE / M..</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>471</Number>
@@ -3789,7 +3789,7 @@
       <Text>LICENSE CODE</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>472</Number>
@@ -3797,7 +3797,7 @@
       <Text>DEMO</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>473</Number>
@@ -3805,7 +3805,7 @@
       <Text>Enter the license code to  a..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>474</Number>
@@ -3813,7 +3813,7 @@
       <Text>Not available in DEMO mode!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>475</Number>
@@ -3821,7 +3821,7 @@
       <Text>INFO</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>476</Number>
@@ -3829,7 +3829,7 @@
       <Text>ERROR! The lisence key was n..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>477</Number>
@@ -3837,7 +3837,7 @@
       <Text>CIRCLE / SAVE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>478</Number>
@@ -3845,7 +3845,7 @@
       <Text></Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>479</Number>
@@ -3853,7 +3853,7 @@
       <Text>Circle Id</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>480</Number>
@@ -3861,7 +3861,7 @@
       <Text>General   Available file typ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>481</Number>
@@ -3869,7 +3869,7 @@
       <Text>CIRCLE / FILE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>482</Number>
@@ -3877,7 +3877,7 @@
       <Text>CIRCLE -File</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>483</Number>
@@ -3885,7 +3885,7 @@
       <Text>Circle saved!</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>484</Number>
@@ -3893,7 +3893,7 @@
       <Text>Enter circle id!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>485</Number>
@@ -3901,7 +3901,7 @@
       <Text>Select circle file!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>486</Number>
@@ -3909,7 +3909,7 @@
       <Text>General   Available file typ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>487</Number>
@@ -3917,7 +3917,7 @@
       <Text>SHAFT ALIGNMENT / FILE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>488</Number>
@@ -3925,7 +3925,7 @@
       <Text>SHAFT ALIGNMENT -File</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>489</Number>
@@ -3933,7 +3933,7 @@
       <Text>General   The 3D shaft align..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>490</Number>
@@ -3941,7 +3941,7 @@
       <Text>SHAFT ALIGNMENT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>491</Number>
@@ -3949,7 +3949,7 @@
       <Text>Circle</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>492</Number>
@@ -3957,7 +3957,7 @@
       <Text>DEV OF SHAFT</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>493</Number>
@@ -3965,7 +3965,7 @@
       <Text></Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>494</Number>
@@ -3973,7 +3973,7 @@
       <Text>SHAFT ALIGNMENT / SAVE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>495</Number>
@@ -3981,7 +3981,7 @@
       <Text>Id</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>496</Number>
@@ -3989,7 +3989,7 @@
       <Text></Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>497</Number>
@@ -3997,7 +3997,7 @@
       <Text>Saved!</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>498</Number>
@@ -4005,7 +4005,7 @@
       <Text>Select file!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>499</Number>
@@ -4013,7 +4013,7 @@
       <Text>Enter Id!</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>500</Number>
@@ -4021,7 +4021,7 @@
       <Text>Measure Circle !</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>501</Number>
@@ -4029,7 +4029,7 @@
       <Text>Log -file</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>502</Number>
@@ -4037,7 +4037,7 @@
       <Text>CALCULATION \ CIRCLE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>503</Number>
@@ -4045,7 +4045,7 @@
       <Text>Circle -file</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>504</Number>
@@ -4053,7 +4053,7 @@
       <Text>General   Based on job file p..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>505</Number>
@@ -4061,7 +4061,7 @@
       <Text>Cx</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>506</Number>
@@ -4069,7 +4069,7 @@
       <Text>Cy</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>507</Number>
@@ -4077,7 +4077,7 @@
       <Text>Cz</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>508</Number>
@@ -4085,7 +4085,7 @@
       <Text>CIRCL</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>509</Number>
@@ -4093,7 +4093,7 @@
       <Text>C-FIL</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>510</Number>
@@ -4101,7 +4101,7 @@
       <Text>Center point</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>511</Number>
@@ -4109,7 +4109,7 @@
       <Text>Can't save more than 3 point..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>512</Number>
@@ -4117,7 +4117,7 @@
       <Text>Distance measured !</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>513</Number>
@@ -4125,7 +4125,7 @@
       <Text>CHANGE STATION\POS1\MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>514</Number>
@@ -4133,7 +4133,7 @@
       <Text>General   The residuals of e..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>515</Number>
@@ -4141,7 +4141,7 @@
       <Text>SHAFT -file</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>516</Number>
@@ -4149,7 +4149,7 @@
       <Text>General  The x,y,z values of..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>517</Number>
@@ -4157,7 +4157,7 @@
       <Text>General    One point with Ac..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>518</Number>
@@ -4165,7 +4165,7 @@
       <Text>General    Actual or Design ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>519</Number>
@@ -4173,7 +4173,7 @@
       <Text>General   Tool may be select..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>520</Number>
@@ -4181,7 +4181,7 @@
       <Text>General    Files may be be s..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>521</Number>
@@ -4189,7 +4189,7 @@
       <Text>Select file</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>522</Number>
@@ -4197,7 +4197,7 @@
       <Text>Save tool sett.</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>523</Number>
@@ -4205,7 +4205,7 @@
       <Text>ORIENTATION\USERDEF\CONFIG</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>524</Number>
@@ -4213,7 +4213,7 @@
       <Text>ORIENTATION\USERDEF\PLANE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>525</Number>
@@ -4221,7 +4221,7 @@
       <Text>ORIENTATION\USERDEF\LINE</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>526</Number>
@@ -4229,7 +4229,7 @@
       <Text>ORIENTATION\USERDEF\MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>527</Number>
@@ -4237,7 +4237,7 @@
       <Text>ORIENTATION\USERDEF\POINT\ME..</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>528</Number>
@@ -4245,7 +4245,7 @@
       <Text>ORIENTATION\USERDEF\POINT\OF..</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>529</Number>
@@ -4253,7 +4253,7 @@
       <Text>USERDEF is not defined.  Ple..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>530</Number>
@@ -4261,7 +4261,7 @@
       <Text>USERDEF is defined.  Please ..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>531</Number>
@@ -4269,7 +4269,7 @@
       <Text>ORIENTATION\USERDEF</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>532</Number>
@@ -4277,7 +4277,7 @@
       <Text>ORIENTATION\USERDEF\ROTATE L..</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>533</Number>
@@ -4285,7 +4285,7 @@
       <Text>ORIENTATION\USERDEF\ROTATE P..</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>534</Number>
@@ -4293,7 +4293,7 @@
       <Text>Line points</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>535</Number>
@@ -4301,7 +4301,7 @@
       <Text>Plane points</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>536</Number>
@@ -4309,7 +4309,7 @@
       <Text>Do you want to delete points..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>537</Number>
@@ -4317,7 +4317,7 @@
       <Text>General Orientation by direc..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>538</Number>
@@ -4325,7 +4325,7 @@
       <Text>General  Select direction an..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>539</Number>
@@ -4333,7 +4333,7 @@
       <Text>General   Select plane with ..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>540</Number>
@@ -4341,7 +4341,7 @@
       <Text>General   Userdef -configura..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>541</Number>
@@ -4349,7 +4349,7 @@
       <Text>General   Userdef -configura..</Text>
       <Type>Help</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>542</Number>
@@ -4357,7 +4357,7 @@
       <Text>USERDEF</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>543</Number>
@@ -4365,7 +4365,7 @@
       <Text>CAM</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>544</Number>
@@ -4373,7 +4373,7 @@
       <Text>X actual</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>545</Number>
@@ -4381,7 +4381,7 @@
       <Text>Y actual</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>546</Number>
@@ -4389,7 +4389,7 @@
       <Text>Z actual</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>547</Number>
@@ -4397,7 +4397,7 @@
       <Text>X dev</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>548</Number>
@@ -4405,7 +4405,7 @@
       <Text>Y dev</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>549</Number>
@@ -4413,7 +4413,7 @@
       <Text>Z dev</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>550</Number>
@@ -4421,7 +4421,7 @@
       <Text>Boundary</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>551</Number>
@@ -4429,7 +4429,7 @@
       <Text>Grid Width</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>552</Number>
@@ -4437,7 +4437,7 @@
       <Text>Grid Height</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>553</Number>
@@ -4445,7 +4445,7 @@
       <Text>Scanning</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>554</Number>
@@ -4453,7 +4453,7 @@
       <Text>The scanning area contains t..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>555</Number>
@@ -4461,7 +4461,7 @@
       <Text>SCAN -File</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>556</Number>
@@ -4469,7 +4469,7 @@
       <Text>SCANNING</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>557</Number>
@@ -4477,7 +4477,7 @@
       <Text>Scanning points  created.</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>558</Number>
@@ -4485,7 +4485,7 @@
       <Text>Scan Boundary Measurement</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>559</Number>
@@ -4493,7 +4493,7 @@
       <Text>SCAN</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>560</Number>
@@ -4501,7 +4501,7 @@
       <Text>Do you want to delete the sc..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>561</Number>
@@ -4509,7 +4509,7 @@
       <Text>Scan finished!</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>562</Number>
@@ -4517,7 +4517,7 @@
       <Text>BOUND</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>563</Number>
@@ -4525,7 +4525,7 @@
       <Text>Current Station</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>564</Number>
@@ -4533,7 +4533,7 @@
       <Text>Use Horizontal Plane</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>565</Number>
@@ -4541,7 +4541,7 @@
       <Text>Re-measure Reference Pts (PN..</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>566</Number>
@@ -4549,7 +4549,7 @@
       <Text>Create New Station      (NEW..</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>567</Number>
@@ -4557,7 +4557,7 @@
       <Text>Delete all values           ..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>568</Number>
@@ -4565,7 +4565,7 @@
       <Text>SELPT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>569</Number>
@@ -4573,7 +4573,7 @@
       <Text>MEAPT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>570</Number>
@@ -4581,7 +4581,7 @@
       <Text>PNTS</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>571</Number>
@@ -4589,7 +4589,7 @@
       <Text>NEWST</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>572</Number>
@@ -4597,7 +4597,7 @@
       <Text>Do you want to create a new ..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>573</Number>
@@ -4605,7 +4605,7 @@
       <Text>STAx</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>574</Number>
@@ -4613,7 +4613,7 @@
       <Text>Adf -file is not open. Do yo..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>575</Number>
@@ -4621,7 +4621,7 @@
       <Text>Simple Scanning</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>576</Number>
@@ -4629,7 +4629,7 @@
       <Text>Point Cloud Scanning</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>577</Number>
@@ -4637,7 +4637,7 @@
       <Text>START</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>578</Number>
@@ -4645,7 +4645,7 @@
       <Text>Point Cloud Scanning</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>579</Number>
@@ -4653,7 +4653,7 @@
       <Text>Available scans</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>580</Number>
@@ -4661,7 +4661,7 @@
       <Text>EXPORT</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>581</Number>
@@ -4669,7 +4669,7 @@
       <Text>Not defined</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>582</Number>
@@ -4677,7 +4677,7 @@
       <Text>Defined</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>583</Number>
@@ -4685,7 +4685,7 @@
       <Text>Scanned</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>584</Number>
@@ -4693,7 +4693,7 @@
       <Text>-</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>585</Number>
@@ -4701,7 +4701,7 @@
       <Text>Line Fitting</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>586</Number>
@@ -4709,7 +4709,7 @@
       <Text>LINE FITTING</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>587</Number>
@@ -4717,7 +4717,7 @@
       <Text>Used height</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>588</Number>
@@ -4725,7 +4725,7 @@
       <Text>First point</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>589</Number>
@@ -4733,7 +4733,7 @@
       <Text>Last point</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>590</Number>
@@ -4741,7 +4741,7 @@
       <Text>Interpolation</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>591</Number>
@@ -4749,7 +4749,7 @@
       <Text>Shift line</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>592</Number>
@@ -4757,7 +4757,7 @@
       <Text>Right</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>593</Number>
@@ -4765,7 +4765,7 @@
       <Text>Left</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>594</Number>
@@ -4773,7 +4773,7 @@
       <Text>Up</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>595</Number>
@@ -4781,7 +4781,7 @@
       <Text>Down</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>596</Number>
@@ -4789,7 +4789,7 @@
       <Text>Rotate line</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>597</Number>
@@ -4797,7 +4797,7 @@
       <Text>Horizontal</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>598</Number>
@@ -4805,7 +4805,7 @@
       <Text>Vertical</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>599</Number>
@@ -4813,7 +4813,7 @@
       <Text>Manual</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>600</Number>
@@ -4821,7 +4821,7 @@
       <Text>No</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>601</Number>
@@ -4829,7 +4829,7 @@
       <Text>No</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>602</Number>
@@ -4837,7 +4837,7 @@
       <Text>Height</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>603</Number>
@@ -4845,7 +4845,7 @@
       <Text>Value</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>604</Number>
@@ -4853,7 +4853,7 @@
       <Text>Angle</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>605</Number>
@@ -4861,7 +4861,7 @@
       <Text>POINTS</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>606</Number>
@@ -4869,7 +4869,7 @@
       <Text>LINE FITTING/LINE MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>607</Number>
@@ -4877,7 +4877,7 @@
       <Text>Do you want to delete existi..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>608</Number>
@@ -4885,7 +4885,7 @@
       <Text>Height:</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>609</Number>
@@ -4893,7 +4893,7 @@
       <Text>3D Dist. from line:</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>610</Number>
@@ -4901,7 +4901,7 @@
       <Text>Dist. along the line:</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>611</Number>
@@ -4909,7 +4909,7 @@
       <Text>Line Offset:</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>612</Number>
@@ -4917,7 +4917,7 @@
       <Text>LINE FITTING/POINTS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>613</Number>
@@ -4925,7 +4925,7 @@
       <Text>Mid Point</Text>
       <Type>Line</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>614</Number>
@@ -4933,7 +4933,7 @@
       <Text>Ref. Line</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>615</Number>
@@ -4941,7 +4941,7 @@
       <Text>Depth</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>616</Number>
@@ -4949,7 +4949,7 @@
       <Text>MID POINT MEAS</Text>
       <Type>Title</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>617</Number>
@@ -4957,7 +4957,7 @@
       <Text>Used depth</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>618</Number>
@@ -4965,7 +4965,7 @@
       <Text>Delete all points           ..</Text>
       <Type>Message</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>619</Number>
@@ -4973,7 +4973,7 @@
       <Text>CURR</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>620</Number>
@@ -4981,7 +4981,7 @@
       <Text>Forward</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>621</Number>
@@ -4989,7 +4989,7 @@
       <Text>Backward</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>622</Number>
@@ -4997,7 +4997,7 @@
       <Text>Left/Right</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>623</Number>
@@ -5005,7 +5005,7 @@
       <Text>Depth</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>624</Number>
@@ -5013,7 +5013,7 @@
       <Text>Data memory device</Text>
       <Type>Prompt</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>625</Number>
@@ -5021,7 +5021,7 @@
       <Text>SD card</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>626</Number>
@@ -5029,7 +5029,7 @@
       <Text>USB stick</Text>
       <Type>Value</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
     <Token>
       <Number>627</Number>
@@ -5037,7 +5037,7 @@
       <Text>REG</Text>
       <Type>Key</Type>
       <Comment>-</Comment>
-      <EditDate>2026-03-09T20:36:25</EditDate>
+      <EditDate>2026-03-09T21:47:54</EditDate>
     </Token>
   </Tokens>
 </Language>

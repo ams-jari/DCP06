@@ -32,6 +32,7 @@
 // ================================================================================================
 
 #include <dcp06/core/Types.hpp>
+#include <dcp06/core/Defs.hpp>
 #include <GUI_ComboLineCtrl.hpp>
 #include <GUI_StandardDialog.hpp>
 #include <GUI_TextCtrl.hpp>
@@ -179,7 +180,7 @@ namespace DCP
 			double cy;
 			double cz;
 			double diameter;
-			char pid[10];
+			char pid[POINT_ID_BUFF_LEN];
     };
 
 };

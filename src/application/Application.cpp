@@ -26,9 +26,10 @@
 
 #include "dcp06/core/CS35.hpp"
 
-#include "stdafx.h"  
+#include "stdafx.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctime>
 #include <ABL_AppSystemInfo.hpp>
 #include "GUI_AppFileInfo.hpp"
 
@@ -1684,19 +1685,41 @@ void DCP::InfoDialog::RefreshControls()
 				sMsg.Format(L"   Demo license. Expires in %d days\n ", days);
 		}     
 //#endif    
-#if defined TS16   
-		sMsg += L"	      DCP05 (TSxx)\n ";
+#if defined TS60
+		sMsg += L"	      DCP06 (TS60)\n ";
+#elif defined TS16
+		sMsg += L"	      DCP06 (TSxx)\n ";
 #elif defined CS35
-		sMsg += L"	      DCP05 (CS35)\n ";
+		sMsg += L"	      DCP06 (CS35)\n ";
 #elif defined CS20
-		sMsg += L"	      DCP05 (CS20)\n ";
-#else		 
-		sMsg += L"	      DCP05 (MS60)\n ";
-#endif   
-		  
+		sMsg += L"	      DCP06 (CS20)\n ";
+#elif defined MS60
+		sMsg += L"	      DCP06 (MS60)\n ";
+#else
+		sMsg += L"	      DCP06 (TS60)\n ";  // default for simulator
+#endif
+
 		sMsg += L"    Dimensional Control Program\n ";
-		//sMsg += L"       Version 2.00 22.11.2016 ";
-		sMsg += L"      Version 10.00 24.02.2026 ";
+		{
+			time_t t = time(0);
+			struct tm buf;
+#ifdef _WIN32
+			if (localtime_s(&buf, &t) == 0)
+#else
+			if (localtime_r(&t, &buf))
+#endif
+			{
+				char dateBuf[16];
+				snprintf(dateBuf, sizeof(dateBuf), "%02d.%02d.%04d",
+					buf.tm_mday, buf.tm_mon + 1, buf.tm_year + 1900);
+				sMsg += L"      Version 10.00 ";
+				sMsg += dateBuf;
+			}
+			else
+			{
+				sMsg += L"      Version 10.00 ";
+			}
+		}
 		sMsg += L"\n"; 
 		sMsg +=L"          Copyright @A.M.S.\n";
 		sMsg +=L" Accuracy Management Services Ltd\n";

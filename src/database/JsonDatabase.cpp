@@ -450,7 +450,7 @@ std::vector<DCP_SHARED_PTR<PointData> > JsonDatabase::getAllPointsInJob() const 
     for (std::map<std::string, DCP_SHARED_PTR<PointData> >::const_iterator it = m_currentJob->points.begin();
          it != m_currentJob->points.end(); ++it) {
         if (!it->second.get()) continue;
-        if (!pointHasActualValues(*it->second) && !pointHasDesignValues(*it->second)) continue;
+        // Include all points (including new ones with no actual/design yet) so they appear in the list
         sorted.push_back(std::make_pair(pointIdSortKey(it->first), it->second));
     }
     std::sort(sorted.begin(), sorted.end(), SortByPointId());
@@ -510,7 +510,12 @@ short JsonDatabase::getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxP
 }
 
 static void fmtDouble(double v, char* buf) {
-    if (buf) DCP_ISNAN(v) ? sprintf(buf, "%9.9s", " ") : sprintf(buf, "%9.3f", v);
+    if (buf) {
+        if (DCP_ISNAN(v))
+            buf[0] = '\0';  // empty string for "no value yet"
+        else
+            sprintf(buf, "%9.3f", v);
+    }
 }
 
 bool JsonDatabase::getPointByIndex(int index1Based, bool useActual, char* pid,
@@ -521,8 +526,7 @@ bool JsonDatabase::getPointByIndex(int index1Based, bool useActual, char* pid,
     const DCP_SHARED_PTR<PointData>& pt = pts[index1Based - 1];
     if (!pt) return false;
     if (pid) {
-        std::string id = pt->id.size() <= 6 ? pt->id : pt->id.substr(0, 6);
-        sprintf(pid, "%-6.6s", id.c_str());
+        snprintf(pid, POINT_ID_BUFF_LEN, DCP_POINT_ID_FMT, pt->id.c_str());
     }
     if (xact) fmtDouble(pt->x_mea, xact); if (xdes) fmtDouble(pt->x_dsg, xdes);
     if (yact) fmtDouble(pt->y_mea, yact); if (ydes) fmtDouble(pt->y_dsg, ydes);

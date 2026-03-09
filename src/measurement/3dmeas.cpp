@@ -574,16 +574,15 @@ void DCP::Meas3DDialog::OnValueChanged(int unNotifyCode,  int ulParam2)
 		{
 			StringC sPid;
 			if(m_pPointId->GetStringInputCtrl()->IsEmpty())
-				sprintf(m_pDataModel->pid_ptr,"%-6.6s","");	
+				sprintf(m_pDataModel->pid_ptr, DCP_POINT_ID_FMT, "");
 			else
 			{
 				sPid = m_pPointId->GetStringInputCtrl()->GetString();
 				// convert to ascii
-				char temp[20];
-				//UTL::UnicodeToAscii(temp, sPid);
-				BSS::UTI::BSS_UTI_WCharToAscii(sPid, temp);
+				char temp[POINT_ID_BUFF_LEN];
+				BSS::UTI::BSS_UTI_WCharToAscii(sPid, temp, POINT_ID_BUFF_LEN);
 				common.strbtrim(temp);
-				sprintf(m_pDataModel->pid_ptr,"%-6.6s",temp);
+				sprintf(m_pDataModel->pid_ptr, DCP_POINT_ID_FMT, temp);
 				m_pDataModel->save_point();
 				RefreshControls();
 			}
@@ -966,7 +965,7 @@ void DCP::Meas3DController::OnF1Pressed()
 
 			DCP::MeasXYZModel* pModel = new MeasXYZModel;
 			pModel->tooli = 1;
-			sprintf(pModel->sPointId,"%6.6s",m_pDataModel->pid_ptr);
+			sprintf(pModel->sPointId, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 			m_pCommon->strbtrim(pModel->sPointId);
 
 			if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
@@ -1249,7 +1248,7 @@ void DCP::Meas3DController::OnF4Pressed()
 				}
 			}
 			ShaftLineModel *pModel = new ShaftLineModel();
-			sprintf(pModel->pid,"%6.6s", m_pDataModel->pid_ptr);
+			sprintf(pModel->pid, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 			//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetModel()->active_coodinate_system);		
 			if(GetController(SHAFT_ALIGMENT_LINE_CONTROLLER) == nullptr)
@@ -1996,7 +1995,7 @@ void DCP::Meas3DController::ShowSelectPointDlg()
 void DCP::Meas3DController::ShowHiddenPointDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
-	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
+	sprintf(pModel->m_pPointBuff[0].point_id, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	if(GetController(HIDDENPOINT_CONTROLLER) == nullptr)
 	{
@@ -2012,7 +2011,7 @@ void DCP::Meas3DController::ShowHiddenPointDlg()
 void DCP::Meas3DController::ShowXorYorZDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
-	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
+	sprintf(pModel->m_pPointBuff[0].point_id, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 	if(GetController(XYZ_CONTROLLER) == nullptr)
 	{
 		(void)AddController( XYZ_CONTROLLER, new DCP::XYZController(m_pDlg->GetModel()) );
@@ -2042,7 +2041,7 @@ void DCP::Meas3DController::ShowSeparateRecDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
 
-	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
+	sprintf(pModel->m_pPointBuff[0].point_id, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
 	if(GetController(SEPARATE_RECORDING_CONTROLLER) == nullptr)
@@ -2073,7 +2072,7 @@ void DCP::Meas3DController::ShowMidPointDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
 
-	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
+	sprintf(pModel->m_pPointBuff[0].point_id, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
 	if(GetController(MID_POINT_CONTROLLER) == nullptr)
@@ -2313,9 +2312,9 @@ void DCP::Meas3DModel::save_point()
 			if (pointId.empty()) return;
 			DCP::Database::PointData data;
 			bool exists = jdb->getPoint(pointId, data);
-			data.x_mea = m_pCommon->strblank(xmea_ptr) ? 0.0 : atof(xmea_ptr);
-			data.y_mea = m_pCommon->strblank(ymea_ptr) ? 0.0 : atof(ymea_ptr);
-			data.z_mea = m_pCommon->strblank(zmea_ptr) ? 0.0 : atof(zmea_ptr);
+			data.x_mea = m_pCommon->strblank(xmea_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(xmea_ptr);
+			data.y_mea = m_pCommon->strblank(ymea_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(ymea_ptr);
+			data.z_mea = m_pCommon->strblank(zmea_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(zmea_ptr);
 			data.x_dsg = m_pCommon->strblank(xdes_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(xdes_ptr);
 			data.y_dsg = m_pCommon->strblank(ydes_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(ydes_ptr);
 			data.z_dsg = m_pCommon->strblank(zdes_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(zdes_ptr);
