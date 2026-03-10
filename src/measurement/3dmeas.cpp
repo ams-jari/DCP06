@@ -736,7 +736,7 @@ void DCP::Meas3DController::show_function_keys()
 		
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK);
@@ -802,14 +802,13 @@ void DCP::Meas3DController::show_function_keys()
 			FKDef vDef;
 			//vDef.nAppId = AT_DCP06;
 			vDef.poOwner = this;
-			vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
+			vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 			SetFunctionKey( FK1, vDef );
 
-			if(m_pDlg->GetModel()->isATR)
-			{
-				vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
-				SetFunctionKey( FK2, vDef );
-			}
+			// DIST removed in DCP06; XXXX placeholder until valid button added
+			vDef.strLable = L"XXXX";
+			SetFunctionKey( FK2, vDef );
+			DisableFunctionKey(FK2);
 
 			vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_TOK);
 			SetFunctionKey( FK3, vDef );
