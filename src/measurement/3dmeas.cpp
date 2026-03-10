@@ -185,9 +185,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	m_pFile->SetText(StringC(AT_DCP06,P_DCP_3DFILE_SK_TOK));
 	m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pFile->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
-	//m_pFile->GetStringInputCtrl()-
-	//m_pFile->GetStringInputCtrl()->GetCtrlState(GUI::BaseCtrlC::
-	//m_pFile->GetStringInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
+	// SetAlign not supported on Captivate GUI::EditStringCtrlC
 	//AddCtrl(m_pFile);
 	
 	m_pPointId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -268,7 +266,6 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	m_pXDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pXDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pXDev->SetEmptyAllowed(true);
-	
 
 	m_pYDev = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pYDev->SetId(eYDev);
@@ -283,7 +280,7 @@ void DCP::Meas3DDialog::OnInitDialog(void)
 	m_pZDev->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pZDev->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pZDev->SetEmptyAllowed(true);
-	
+
 	pCol2->AddCtrl(m_pFile);
 	//emptyTextCtrl1->SetText("1");
 	//pCol2->AddCtrl(emptyTextCtrl1);
@@ -1011,7 +1008,28 @@ void DCP::Meas3DController::OnF2Pressed()
 			if (jdb && jdb->isJobLoaded())
 			{
 				int n = jdb->getJobPointsCount();
-				sprintf(buffer, "P%d", n + 1);
+				// Suggest next ID by incrementing current point (e.g. test_point_1 -> test_point_2)
+				if (m_pDataModel->bPid[0] != '\0')
+				{
+					strncpy(buffer, m_pDataModel->bPid, POINT_ID_BUFF_LEN - 1);
+					buffer[POINT_ID_BUFF_LEN - 1] = '\0';
+					if (m_pCommon) m_pCommon->strbtrim(buffer);
+					char* p = strchr(buffer, '(');
+					if (p) { *p = '\0'; if (m_pCommon) m_pCommon->strbtrim(buffer); }
+					// Increment trailing number (works with long IDs like test_point_1)
+					size_t len = strlen(buffer);
+					int i = (int)len - 1;
+					while (i >= 0 && buffer[i] >= '0' && buffer[i] <= '9') i--;
+					if (i < (int)len - 1)
+					{
+						int num = atoi(buffer + i + 1);
+						sprintf(buffer + i + 1, "%d", num + 1);
+					}
+					else
+						sprintf(buffer, "P%d", n + 1);
+				}
+				else
+					sprintf(buffer, "P%d", n + 1);
 				DCP::InputTextModel* pModel = new InputTextModel;
 				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_POINT_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
@@ -1085,25 +1103,9 @@ void DCP::Meas3DController::OnF2Pressed()
 	}
 	else
 	{
-		if(m_pCommon->check_edm_mode())
-		{
-			DisableFunctionKey(FK1);
-			DisableFunctionKey(FK2);
-			DisableFunctionKey(FK3);
-			DisableFunctionKey(FK4);
-			DisableFunctionKey(FK5);
-			DisableFunctionKey(FK6);
-
-			// DIST
-			DCP::MeasDistModel* pModel = new MeasDistModel;
-
-			if(GetController(MEAS_DIST_CONTROLLER) == nullptr)
-			{
-				(void)AddController( MEAS_DIST_CONTROLLER, new DCP::MeasDistController(m_pDlg->GetModel()));
-			}
-			(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
-			SetActiveController(MEAS_DIST_CONTROLLER, true);
-		}
+		// F2 = POINT: toggle point menu
+		m_bPointMenu = true;
+		show_function_keys();
 	}
 
 } 
@@ -1167,8 +1169,47 @@ void DCP::Meas3DController::OnF3Pressed()
 	}
 	else
 	{
-		m_bPointMenu = true;
-		show_function_keys();
+		// F3 = AIM (when not in point menu)
+		m_pDataModel->set_xyz_des_ptr();
+		if(!m_bShaft)
+		{
+			if(!m_pDlg->GetModel()->m_nDesignValues)
+				return;
+			if(m_pCommon->strblank(m_pDataModel->xdes_ptr) || m_pCommon->strblank(m_pDataModel->ydes_ptr) || m_pCommon->strblank(m_pDataModel->zdes_ptr))
+				return;
+			if(GetController(AIM_CONTROLLER) == nullptr)
+			{
+				(void)AddController( AIM_CONTROLLER, new DCP::AimController(	atof(m_pDataModel->xdes_ptr),
+																				atof(m_pDataModel->ydes_ptr),
+																				atof(m_pDataModel->zdes_ptr),
+																				m_pDlg->GetModel()->active_coodinate_system) );
+			}
+			(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetModel());
+			SetActiveController(AIM_CONTROLLER, true);
+		}
+		else
+		{
+			char pid[10];
+			sprintf(pid,"%-s",m_pDataModel->pid_ptr);
+			m_pCommon->strbtrim(pid);
+			short iLen = (short) strlen(pid);
+			if(iLen > 0 && (pid[iLen-1] == 'd' || pid[iLen-1] == 'D'))
+			{
+				StringC sMsg;
+				sMsg.LoadTxt(AT_DCP06, M_DCP_CANNOT_SHAFT_POINT_TOK);
+				msgbox->ShowMessageOk(sMsg);
+				return;
+			}
+			DCP::ShaftLineModel* pModel = new ShaftLineModel;
+			sprintf(pModel->pid, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
+			m_pCommon->strbtrim(pModel->pid);
+			if(GetController(SHAFT_ALIGMENT_LINE_CONTROLLER) == nullptr)
+			{
+				(void)AddController( SHAFT_ALIGMENT_LINE_CONTROLLER, new DCP::ShaftLineController(m_pDlg->GetModel()));
+			}
+			(void)GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->SetModel(pModel);
+			SetActiveController(SHAFT_ALIGMENT_LINE_CONTROLLER, true);
+		}
 	}
 }
 
@@ -1212,63 +1253,21 @@ void DCP::Meas3DController::OnF4Pressed()
 	}
 	else
 	{	
-		// AIM
-		if(!m_bShaft)
+		// F4 = LIST (point list)
+		if (m_pDlg == nullptr)
 		{
-			m_pDataModel->set_xyz_des_ptr();
-			if(!m_pDlg->GetModel()->m_nDesignValues)	
-				return;
-
-			if(m_pCommon->strblank(m_pDataModel->xdes_ptr) ||m_pCommon->strblank(m_pDataModel->ydes_ptr) ||m_pCommon->strblank(m_pDataModel->zdes_ptr))
-				return;
-			
-			//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetModel()->active_coodinate_system);		
-			if(GetController(AIM_CONTROLLER) == nullptr)
-			{
-				(void)AddController( AIM_CONTROLLER, new DCP::AimController(	atof(m_pDataModel->xdes_ptr),
-																					atof(m_pDataModel->ydes_ptr),
-																					atof(m_pDataModel->zdes_ptr),
-																					m_pDlg->GetModel()->active_coodinate_system) );
-			}
-
-			(void)GetController( AIM_CONTROLLER )->SetModel(m_pDlg->GetModel());
-			SetActiveController(AIM_CONTROLLER, true);
+			USER_APP_VERIFY( false );
+			return;
 		}
-
-		// SHAFT
+		if(m_pDataModel->m_bJobOpen || m_pDataModel->m_pFileFunc->IsOpen())
+			ShowSelectPointDlg();
 		else
 		{
-			char pid[10];
-			sprintf(pid,"%-s",m_pDataModel->pid_ptr);
-			m_pCommon->strbtrim(pid);
-			short iLen = (short) strlen(pid);
-			if(iLen > 0)
-			{
-				if(pid[iLen-1] == 'd' || pid[iLen-1] == 'D')
-				{
-					StringC sMsg;
-					sMsg.LoadTxt(AT_DCP06, M_DCP_CANNOT_SHAFT_POINT_TOK);
-					msgbox->ShowMessageOk(sMsg);
-					return;
-				}
-			}
-			ShaftLineModel *pModel = new ShaftLineModel();
-			sprintf(pModel->pid, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
-
-			//set_aim(atof(m_pDataModel->xdes_ptr),atof(m_pDataModel->ydes_ptr),atof(m_pDataModel->zdes_ptr), m_pDlg->GetModel()->active_coodinate_system);		
-			if(GetController(SHAFT_ALIGMENT_LINE_CONTROLLER) == nullptr)
-			{
-				(void)AddController( SHAFT_ALIGMENT_LINE_CONTROLLER, new DCP::ShaftLineController(m_pDlg->GetModel()));
-			}
-
-			(void)GetController( SHAFT_ALIGMENT_LINE_CONTROLLER )->SetModel(pModel);
-			SetActiveController(SHAFT_ALIGMENT_LINE_CONTROLLER, true);
-
+			msg.LoadTxt(AT_DCP06,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
+			msgbox->ShowMessageOk(msg);
 		}
 	}
 }
-
-
 
 // ================================================================================================
 // Description: F5
@@ -1302,18 +1301,13 @@ void DCP::Meas3DController::OnF5Pressed()
 	}
 	else
 	{
-		if (m_pDlg == nullptr)
-	    {
-		    USER_APP_VERIFY( false );
-			return;
-		}
-		if(m_pDataModel->m_bJobOpen || m_pDataModel->m_pFileFunc->IsOpen())
-			ShowSelectPointDlg();
-		else
+		// F5 = SPECI (special menu)
+		if(GetController(SPECIAL_MENU_CONTROLLER) == nullptr)
 		{
-			msg.LoadTxt(AT_DCP06,  M_DCP_3DFILE_ISNOT_OPEN_TOK);
-			msgbox->ShowMessageOk(msg);
+			(void)AddController( SPECIAL_MENU_CONTROLLER, new DCP::SpecialMenuController (m_pDlg->GetModel()));
 		}
+		(void)GetController( SPECIAL_MENU_CONTROLLER )->SetModel( m_pDlg->GetModel());
+		SetActiveController(SPECIAL_MENU_CONTROLLER, true);
 	}
 }
 
@@ -1648,6 +1642,8 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 						char buf[32]; sprintf(buf, "P%d", nPts + 1);
 						jdb->addPoint(buf, DCP::Database::PointData());
 						m_pDlg->GetModel()->m_currentPointIndex = nPts + 1;
+						if (!m_pDlg->GetModel()->m_currentJobId.empty())
+							jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);
 					}
 					m_pDataModel->DSP_MODE = SINGLE;
 					m_pDlg->RefreshControls();
@@ -1797,6 +1793,8 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 					int n = jdb->getJobPointsCount();
 					m_pDlg->GetModel()->m_currentPointIndex = n;
 					m_pDlg->RefreshControls();
+					if (!m_pDlg->GetModel()->m_currentJobId.empty())
+						jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);
 				}
 			}
 			else
@@ -2327,6 +2325,9 @@ void DCP::Meas3DModel::save_point()
 			if (exists) jdb->updatePoint(pointId, data);
 			else jdb->addPoint(pointId, data);
 			file_updated = 1;
+			// Persist to disk immediately (like DCP9 auto-save)
+			if (!m_pModel->m_currentJobId.empty())
+				jdb->saveJob(m_pModel->m_currentJobId);
 		}
 		return;
 	}
