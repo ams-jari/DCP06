@@ -555,8 +555,16 @@ void DCP::Meas3DDialog::RefreshControls()
 			m_pYDev->GetStringInputCtrl()->SetString(StringC(m_pDataModel->bYdif));
 			m_pZDev->GetStringInputCtrl()->SetString(StringC(m_pDataModel->bZdif));
 		}
-		
-		m_pPointId->GetStringInputCtrl()->SetString(StringC(m_pDataModel->bPid));
+
+		// Point ID: only point ID (strip any " ( job_name )" suffix)
+		{
+			char displayPid[POINT_ID_BUFF_LEN];
+			strncpy(displayPid, m_pDataModel->bPid, POINT_ID_BUFF_LEN - 1);
+			displayPid[POINT_ID_BUFF_LEN - 1] = '\0';
+			char* p = strchr(displayPid, '(');
+			if (p) { *p = '\0'; m_pCommon->strbtrim(displayPid); }
+			m_pPointId->GetStringInputCtrl()->SetString(StringC(displayPid));
+		}
 	}
 }
 
@@ -799,29 +807,27 @@ void DCP::Meas3DController::show_function_keys()
 		}
 		else
 		{
+			// Main bar: MEAS, POINT, AIM, LIST (point list), SPECI, CONT
 			FKDef vDef;
-			//vDef.nAppId = AT_DCP06;
 			vDef.poOwner = this;
 			vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 			SetFunctionKey( FK1, vDef );
 
-			// DIST removed in DCP06; XXXX placeholder until valid button added
-			vDef.strLable = L"XXXX";
-			SetFunctionKey( FK2, vDef );
-			DisableFunctionKey(FK2);
-
 			vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_TOK);
-			SetFunctionKey( FK3, vDef );
-			
+			SetFunctionKey( FK2, vDef );
+
 			if(!m_bShaft)
 				vDef.strLable = StringC(AT_DCP06,K_DCP_AIM_TOK);
 			else
 				vDef.strLable = StringC(AT_DCP06,K_DCP_SHAFT_TOK);
+			SetFunctionKey( FK3, vDef );
+
+			vDef.strLable = L"LIST";  // Point list (was PID)
 			SetFunctionKey( FK4, vDef );
 
-			vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_ID_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_SPECIAL_TOK);
 			SetFunctionKey( FK5, vDef );
-		
+
 			vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 			SetFunctionKey( FK6, vDef );
 			
