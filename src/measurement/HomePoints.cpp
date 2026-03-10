@@ -123,10 +123,11 @@ void DCP::HomePointsDialog::OnDialogActivated()
 	//BeginDraw();
 	StringC sPointNo;
 	/*
+	char point_no_str[20];
 	for(short i=0; i < MAX_HOME_POINTS; i++)
 	{
-		sprintf(temp,"%d",i+1);
-		sPointNo = temp;
+		sprintf(point_no_str,"%d",i+1);
+		sPointNo = point_no_str;
 
 		USER_APP_VERIFY(poMultiColCtrl->AddRow((short) i));
 		USER_APP_VERIFY(poMultiColCtrl->SetCellStr(CI_PointNo, (short) i, sPointNo));
@@ -522,7 +523,7 @@ void DCP::HomePointsController::OnActiveControllerClosed( int lCtrlID, int lExit
 			m_pCommon->strbtrim(buffer);
 
 			short active_point = m_pDlg->get_selected_id()+1;
-			sprintf(m_pDataModel->home_points[active_point-1].point_id,"%s",buffer);
+			snprintf(m_pDataModel->home_points[active_point-1].point_id, sizeof(m_pDataModel->home_points[active_point-1].point_id), DCP_POINT_ID_FMT, buffer);
 			m_pDlg->RefreshControls();
 	}
 

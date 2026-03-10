@@ -157,9 +157,9 @@ void DCP::DistFileDialog::RefreshControls()
 		}
 
 			unsigned int uiFreeSpace = m_pDataModel->pCommon->get_free_space();
-			char temp[100];
-			sprintf(temp,"%lu",uiFreeSpace);
-			m_pFreeSpace->GetStringInputCtrl()->SetString(StringC(temp));
+			char free_space_str[100];
+			sprintf(free_space_str,"%lu",uiFreeSpace);
+			m_pFreeSpace->GetStringInputCtrl()->SetString(StringC(free_space_str));
 	}
 }
 
@@ -545,18 +545,18 @@ bool DCP::CdfFileFunc::setFile(StringC filename)
 	
 	//bool bRet =	CPI::SensorC::GetInstance()->GetPath(CPI::devicePcCard, CPI::ftUserAscii, m_cPath);
 	
-	char temp[CPI::LEN_PATH_MAX];
+	char full_path[CPI::LEN_PATH_MAX];
 	char temp_name[CPI::LEN_PATH_MAX];	
 	
 	sprintf(temp_name,"%s",filename_temp);
-	temp[0] = '\0';
-	strcat(temp, m_cPath);
-	strcat(temp, temp_name);
+	full_path[0] = '\0';
+	strcat(full_path, m_cPath);
+	strcat(full_path, temp_name);
 
-	if(!strstr(temp,".cdf")/* || !strstr(temp,".CDF")*/)
-		strcat(temp,".cdf");
+	if(!strstr(full_path,".cdf")/* || !strstr(full_path,".CDF")*/)
+		strcat(full_path,".cdf");
 
-	char* pSearch = &temp[0];
+	char* pSearch = &full_path[0];
 
 	if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)   
 	//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    
@@ -690,11 +690,11 @@ int Result;
 		//CPI::FileIteratorC FileIterator;
 		boost::filesystem::path  FileInfo;
 
-		char temp[CPI::LEN_PATH_MAX];
-		temp[0] = '\0';
-		strcat(temp, m_cPath);
-		strcat(temp, m_cFileName);
-		char* pSearch = &temp[0];
+		char full_path[CPI::LEN_PATH_MAX];
+		full_path[0] = '\0';
+		strcat(full_path, m_cPath);
+		strcat(full_path, m_cFileName);
+		char* pSearch = &full_path[0];
 		
 		if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)   
 		//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    
@@ -778,7 +778,7 @@ short DCP::CdfFileFunc::close_cdf_file()
 void DCP::CdfFileFunc::add_header(short Ind)
 {
 char linebuff[255];
-char temp[100];
+char name_buf[100];
 int year, day, month;
 S_HEADER_INFO header_info;
 int no;
@@ -804,18 +804,18 @@ int no;
 		sprintf(header_info.date,"%02d/%02d/%4d", day, month, year);
 	
 		// USER
-		m_pCommon->GetUserName(temp);
-		m_pCommon->strbtrim(temp);
-		sprintf(header_info.measurer,"%-10.10s", temp);
+		m_pCommon->GetUserName(name_buf);
+		m_pCommon->strbtrim(name_buf);
+		sprintf(header_info.measurer,"%-10.10s", name_buf);
 		
 		// LAITTEEN SARJANUMERO
 		m_pCommon->GetInstrumentNo(&no);
 		sprintf(header_info.instrument_id,"%-lu", no);
 		
 		// LAITE
-		m_pCommon->GetInstrumentName(temp);
-		m_pCommon->strbtrim(temp);
-		sprintf(header_info.instrument,"%-30.30s", temp);
+		m_pCommon->GetInstrumentName(name_buf);
+		m_pCommon->strbtrim(name_buf);
+		sprintf(header_info.instrument,"%-30.30s", name_buf);
 			
 		sprintf(header_info.tempair,"%-5.5s", " ");
 		sprintf(header_info.tempobj,"%-5.5s", " ");
@@ -890,7 +890,7 @@ char buff[CPI::LEN_PATH_MAX];
 char temp_pno[10];
 StringC msg;		
 MsgBox msgbox;
-char temp[CPI::LEN_PATH_MAX];
+char temp_file_path[CPI::LEN_PATH_MAX];
 
 		if(points <=1)
 		{	
@@ -973,10 +973,10 @@ char temp[CPI::LEN_PATH_MAX];
 				//remove1(fstruct->name);
 				remove1(m_cFileName);
 				sprintf(buff,"%s%s",m_cPath, m_cFileName);
-				sprintf(temp,"%s%s",m_cPath, "temp.tmp");
+				sprintf(temp_file_path,"%s%s",m_cPath, "temp.tmp");
 				// VIVA
-				//CPI::FileUtilitiesC::RenameFile(StringC(temp), StringC(buff));
-				boost::filesystem::rename(temp, buff);
+				//CPI::FileUtilitiesC::RenameFile(StringC(temp_file_path), StringC(buff));
+				boost::filesystem::rename(temp_file_path, buff);
 				//rename(temp,buff);
 
 				//sprintf(buff,"a:\\%-s",fstruct->name);
@@ -996,7 +996,7 @@ char temp[CPI::LEN_PATH_MAX];
 // **************************************************************************************
 short DCP::CdfFileFunc::get_next_id(char *did)
 {
-char temp[20];
+char point_id_buf[20];
 int filpos;
 
 		if(opened)
@@ -1013,10 +1013,10 @@ int filpos;
 				fseek(m_pFile,filpos,SEEK_SET);
 
 				fgets(trow,ROW_LENGTH,m_pFile);trow[ROW_LENGTH] = '\0';
-				strncpy(temp,trow+4,6);
-				temp[6] = '\0';
-				m_pCommon->inc_id(temp);
-				sprintf(did,"%-6.6s",temp);
+				strncpy(point_id_buf,trow+4,6);
+				point_id_buf[6] = '\0';
+				m_pCommon->inc_id(point_id_buf);
+				sprintf(did,"%-6.6s",point_id_buf);
 			}
 		}
 		else
@@ -1030,13 +1030,13 @@ int filpos;
 **************************************************************/
 FILE* DCP::CdfFileFunc::fopen2(FILE *pFile , char* fname, const char* mode)
 {
-	char temp[CPI::LEN_PATH_MAX];
-	temp[0] = '\0';
+	char full_path[CPI::LEN_PATH_MAX];
+	full_path[0] = '\0';
 
-	strcat(temp, m_cPath);
-	strcat(temp, fname);
+	strcat(full_path, m_cPath);
+	strcat(full_path, fname);
 	
-	pFile = fopen(temp, mode);	
+	pFile = fopen(full_path, mode);	
 	
 	if(pFile)
 	{
@@ -1045,7 +1045,7 @@ FILE* DCP::CdfFileFunc::fopen2(FILE *pFile , char* fname, const char* mode)
 	MsgBox msgbox;
 	StringC msg;
 	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
-			msg.Format(msg, (const wchar_t*)StringC(temp));
+			msg.Format(msg, (const wchar_t*)StringC(full_path));
 			msgbox.ShowMessageOk(msg);
 
 	return 0;
@@ -1154,7 +1154,7 @@ MsgBox msgbox;
 short DCP::CdfFileFunc::cdf_save_pnt()
 {
 int new_filpos,filpos;
-char temp[100]; 
+char dist_row_buf[100]; 
 
 	if(!opened)
 	{
@@ -1177,7 +1177,7 @@ char temp[100];
 
 	fseek(m_pFile,filpos,SEEK_SET);
 
-	sprintf(temp,"%-3d %-6.6s %-10.10s %-10.10s %-10.10s %-10.10s %-10.10s %-10.10s%c%c",	
+	sprintf(dist_row_buf,"%-3d %-6.6s %-10.10s %-10.10s %-10.10s %-10.10s %-10.10s %-10.10s%c%c",	
 																		active_point,
 																		id,
 																		dist,
@@ -1197,8 +1197,8 @@ char temp[100];
 																		note,	
 																		13,10);
 																		*/		
-		//FIL_Write(CalcDistFile->f, ROW_LENGTH,1,temp,w);
-		fputs(temp,m_pFile);
+		//FIL_Write(CalcDistFile->f, ROW_LENGTH,1,dist_row_buf,w);
+		fputs(dist_row_buf,m_pFile);
 		fflush(m_pFile);
 		file_updated = 1;
 		return 1;
@@ -1321,7 +1321,7 @@ char fname[13];
 short ret;
 StringC msg;
 MsgBox msgbox;
-char temp[CPI::LEN_PATH_MAX];
+char full_path[CPI::LEN_PATH_MAX];
 
 	if(!m_pCommon->check_free_space(30000L))
 			return 1;
@@ -1339,9 +1339,9 @@ char temp[CPI::LEN_PATH_MAX];
 
 		strcat(fname, ".cdf");
 		
-		temp[0] = '\0';
-		strcat(temp,m_cPath);
-		strcat(temp,fname);
+		full_path[0] = '\0';
+		strcat(full_path,m_cPath);
+		strcat(full_path,fname);
 		sprintf(m_cPathAndFileName,"%-s%-s",m_cPath,fname);
 		
 		if(access1(fname) == 1)
@@ -1388,12 +1388,12 @@ int attr = 0;
 
 	//bool bRet =	CPI::SensorC::GetInstance()->GetPath(CPI::devicePcCard, CPI::ftUserAscii, m_cPath);
 	
-	char temp[CPI::LEN_PATH_MAX];
-	temp[0] = '\0';
+	char full_path[CPI::LEN_PATH_MAX];
+	full_path[0] = '\0';
 
-	strcat(temp, m_cPath);
-	strcat(temp, fname);
-	char* pSearch = &temp[0];
+	strcat(full_path, m_cPath);
+	strcat(full_path, fname);
+	char* pSearch = &full_path[0];
 
 	if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)   
 	//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    
@@ -1409,21 +1409,21 @@ int attr = 0;
 short DCP::CdfFileFunc::create_new_calcdistfile(char  *fname)
 {
 short ret=0;
-char temp[100];
+char header_line_buf[100];
 	
 	
 	if(fopen1("wb+"))
 	{
 		//m_pFile = fp;
 
-		sprintf(temp,"%-28s %-33s %-13.13s%c%c","CALCDIST", getFileName()/*fname*/," ",13,10);
-		fputs(temp,m_pFile);//FIL_Write(CalcDistFile_->f,ROW_LENGTH,1,temp, w);
+		sprintf(header_line_buf,"%-28s %-33s %-13.13s%c%c","CALCDIST", getFileName()/*fname*/," ",13,10);
+		fputs(header_line_buf,m_pFile);//FIL_Write(CalcDistFile_->f,ROW_LENGTH,1,temp, w);
 
-		sprintf(temp,"%-76.76s%c%c"," ",13,10);
-		fputs(temp,m_pFile);//FIL_Write(CalcDistFile_->f,ROW_LENGTH,1,temp, w);
+		sprintf(header_line_buf,"%-76.76s%c%c"," ",13,10);
+		fputs(header_line_buf,m_pFile);//FIL_Write(CalcDistFile_->f,ROW_LENGTH,1,temp, w);
 
-		sprintf(temp,"%-3s %-6s %10s %-10s %-10s %-10s %-10s %-10s%c%c","No", "Id", "Dist","RefId","RefType","TrgtId","TrgtType","Note",13,10);
-		fputs(temp,m_pFile);//FIL_Write(CalcDistFile_->f,ROW_LENGTH,1,temp, w);
+		sprintf(header_line_buf,"%-3s %-6s %10s %-10s %-10s %-10s %-10s %-10s%c%c","No", "Id", "Dist","RefId","RefType","TrgtId","TrgtType","Note",13,10);
+		fputs(header_line_buf,m_pFile);//FIL_Write(CalcDistFile_->f,ROW_LENGTH,1,temp, w);
 		ret = 1;
 		fflush(m_pFile);
 	}
@@ -1460,12 +1460,12 @@ short DCP::CdfFileFunc::open_file(short reclen)
 		//CPI::FileIteratorC FileIterator;
 		boost::filesystem::path FileInfo;
 
-		char temp[CPI::LEN_PATH_MAX];
-		temp[0] = '\0';
-		//strcat(temp, m_cPath);
-		//strcat(temp, m_cFileName);
-		strcat(temp, m_cPathAndFileName);
-		char* pSearch = &temp[0];
+		char full_path[CPI::LEN_PATH_MAX];
+		full_path[0] = '\0';
+		//strcat(full_path, m_cPath);
+		//strcat(full_path, m_cFileName);
+		strcat(full_path, m_cPathAndFileName);
+		char* pSearch = &full_path[0];
 
 		if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)
 		//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    

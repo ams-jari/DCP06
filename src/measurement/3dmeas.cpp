@@ -507,7 +507,7 @@ void DCP::Meas3DDialog::RefreshControls()
 		
 		if(m_pDataModel->DSP_MODE != FRONTBACK)
 		{
-			sprintf(m_pDataModel->bPid,"%-s",m_pCommon->strbtrim(m_pDataModel->pid_ptr));
+			snprintf(m_pDataModel->bPid, sizeof(m_pDataModel->bPid), DCP_POINT_ID_FMT, m_pCommon->strbtrim(m_pDataModel->pid_ptr));
 
 			m_pCommon->get_dist_len(m_pDataModel->xmea_ptr,m_pDataModel->xdes_ptr, m_pDataModel->bXdif,11);
 			m_pCommon->get_dist_len(m_pDataModel->ymea_ptr,m_pDataModel->ydes_ptr, m_pDataModel->bYdif,11);
@@ -584,10 +584,10 @@ void DCP::Meas3DDialog::OnValueChanged(int unNotifyCode,  int ulParam2)
 			{
 				sPid = m_pPointId->GetStringInputCtrl()->GetString();
 				// convert to ascii
-				char temp[POINT_ID_BUFF_LEN];
-				BSS::UTI::BSS_UTI_WCharToAscii(sPid, temp, POINT_ID_BUFF_LEN);
-				common.strbtrim(temp);
-				sprintf(m_pDataModel->pid_ptr, DCP_POINT_ID_FMT, temp);
+				char point_id_buf[POINT_ID_BUFF_LEN];
+				BSS::UTI::BSS_UTI_WCharToAscii(sPid, point_id_buf, POINT_ID_BUFF_LEN);
+				common.strbtrim(point_id_buf);
+				sprintf(m_pDataModel->pid_ptr, DCP_POINT_ID_FMT, point_id_buf);
 				m_pDataModel->save_point();
 				RefreshControls();
 			}
@@ -1670,9 +1670,9 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 	else if(lCtrlID == MEAS_XYZ_CONTROLLER)
 	{	/*
 		MsgBox MsgBox;
-		char temp[100];
-		sprintf(temp,"%s (%d)", "Exit code", lExitCode);
-		MsgBox.ShowMessageOk(StringC(temp));
+		char exit_code_str[100];
+		sprintf(exit_code_str,"%s (%d)", "Exit code", lExitCode);
+		MsgBox.ShowMessageOk(StringC(exit_code_str));
 		*/
 	}
 
@@ -1998,7 +1998,7 @@ void DCP::Meas3DController::ShowSelectPointDlg()
 void DCP::Meas3DController::ShowHiddenPointDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
-	sprintf(pModel->m_pPointBuff[0].point_id, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
+	snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	if(GetController(HIDDENPOINT_CONTROLLER) == nullptr)
 	{
@@ -2014,7 +2014,7 @@ void DCP::Meas3DController::ShowHiddenPointDlg()
 void DCP::Meas3DController::ShowXorYorZDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
-	sprintf(pModel->m_pPointBuff[0].point_id, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
+	snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 	if(GetController(XYZ_CONTROLLER) == nullptr)
 	{
 		(void)AddController( XYZ_CONTROLLER, new DCP::XYZController(m_pDlg->GetModel()) );
@@ -2044,7 +2044,7 @@ void DCP::Meas3DController::ShowSeparateRecDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
 
-	sprintf(pModel->m_pPointBuff[0].point_id, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
+	snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
 	if(GetController(SEPARATE_RECORDING_CONTROLLER) == nullptr)
@@ -2075,7 +2075,7 @@ void DCP::Meas3DController::ShowMidPointDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
 
-	sprintf(pModel->m_pPointBuff[0].point_id, DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
+	snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
 	if(GetController(MID_POINT_CONTROLLER) == nullptr)

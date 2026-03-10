@@ -238,16 +238,16 @@ void DCP::BestFitSelectPointsDialog::OnPointIdChanged( int unNotifyCode,  int ul
 		{
 			StringC sPid;
 			if(m_pPointId->GetStringInputCtrl()->IsEmpty())
-				sprintf(GetDataModel()->points[iCurrentPno-1].point_id,"%-6.6s","");	
+				snprintf(GetDataModel()->points[iCurrentPno-1].point_id, sizeof(GetDataModel()->points[iCurrentPno-1].point_id), DCP_POINT_ID_FMT, "");	
 			else
 			{
 				sPid = m_pPointId->GetStringInputCtrl()->GetString();
 				// convert to ascii
-				char temp[20];
-				//UTL::UnicodeToAscii(temp, sPid);
-				BSS::UTI::BSS_UTI_WCharToAscii( sPid, temp );
-				m_pCommon->strbtrim(temp);
-				sprintf(GetDataModel()->points[iCurrentPno-1].point_id,"%-6.6s",temp);
+				char point_id_buf[POINT_ID_BUFF_LEN];
+				//UTL::UnicodeToAscii(point_id_buf, sPid);
+				BSS::UTI::BSS_UTI_WCharToAscii( sPid, point_id_buf );
+				m_pCommon->strbtrim(point_id_buf);
+				snprintf(GetDataModel()->points[iCurrentPno-1].point_id, sizeof(GetDataModel()->points[iCurrentPno-1].point_id), DCP_POINT_ID_FMT, point_id_buf);
 
 			}
 				
@@ -501,7 +501,7 @@ void DCP::BestFitSelectPointsController::OnF4Pressed()
 		for(int i=0; i < m_pDlg->GetDataModel()->m_iPointsCount; i++)
 		{
 			pModel->points[i].no = i+1;
-			sprintf(pModel->points[i].point_id,"%s", m_pDlg->GetDataModel()->points[i].point_id);
+			snprintf(pModel->points[i].point_id, sizeof(pModel->points[i].point_id), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->points[i].point_id);
 			
 			if(m_pDlg->GetDataModel()->points[i].sta)
 				pModel->points[i].point_status[0] = '+';
@@ -537,18 +537,18 @@ void DCP::BestFitSelectPointsController::OnF5Pressed()
 		Common* m_pCommon = new Common(m_pModel);
 
 		// 271011
-		char temp[10];
-		sprintf(temp,"%-s",m_pDlg->GetDataModel()->points[m_pDlg->GetDataModel()->m_iPointsCount-1].point_id);
+		char point_id_buf[POINT_ID_BUFF_LEN];
+		snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->points[m_pDlg->GetDataModel()->m_iPointsCount-1].point_id);
 
-		if(!m_pCommon->strblank(temp))
+		if(!m_pCommon->strblank(point_id_buf))
 		{
-			m_pCommon->inc_id(temp);
+			m_pCommon->inc_id(point_id_buf);
 		}
 		else
 		{
 			if(!m_pCommon->strblank(m_pDlg->GetDataModel()->default_pid))
 			{
-				sprintf(temp,"%s%d",m_pDlg->GetDataModel()->default_pid,m_pDlg->GetDataModel()->m_iPointsCount+1);
+				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", m_pDlg->GetDataModel()->default_pid, m_pDlg->GetDataModel()->m_iPointsCount+1);
 			}
 		}
 		delete m_pCommon;
@@ -556,7 +556,7 @@ void DCP::BestFitSelectPointsController::OnF5Pressed()
 		m_pDlg->GetDataModel()->m_iPointsCount++;
 		m_pDlg->GetDataModel()->iCurrentPoint = m_pDlg->GetDataModel()->m_iPointsCount;
 
-		sprintf(m_pDlg->GetDataModel()->points[m_pDlg->GetDataModel()->m_iPointsCount-1].point_id,"%-s",temp);
+		snprintf(m_pDlg->GetDataModel()->points[m_pDlg->GetDataModel()->m_iPointsCount-1].point_id, sizeof(m_pDlg->GetDataModel()->points[0].point_id), DCP_POINT_ID_FMT, point_id_buf);
 
 		//m_pDlg->GetDataModel()->m_iPointsCount++;
 		//m_pDlg->GetDataModel()->iCurrentPoint = m_pDlg->GetDataModel()->m_iPointsCount;
@@ -773,12 +773,12 @@ void DCP::BestFitSelectPointsController::OnActiveControllerClosed( int lCtrlID, 
 			{
 				if (pModel->nro_table[i][0] != 0)
 				{
-					char bXmea[15], bYmea[15], bZmea[15], bXdes[15], bYdes[15], bZdes[15], pid[7];
+					char bXmea[15], bYmea[15], bZmea[15], bXdes[15], bYdes[15], bZdes[15], pid[POINT_ID_BUFF_LEN];
 					cc++;
 					if (jdb->getPointByIndex((int)pModel->nro_table[i][0], (pModel->nro_table[i][1] != DESIGN),
 						pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, (char*)0))
 					{
-						sprintf(m_pDlg->GetDataModel()->points[cc-1].point_id, "%-6.6s", pid);
+						snprintf(m_pDlg->GetDataModel()->points[cc-1].point_id, sizeof(m_pDlg->GetDataModel()->points[0].point_id), DCP_POINT_ID_FMT, pid);
 						m_pDlg->GetDataModel()->points[cc-1].x = (pModel->nro_table[i][1] == DESIGN) ? atof(bXdes) : atof(bXmea);
 						m_pDlg->GetDataModel()->points[cc-1].y = (pModel->nro_table[i][1] == DESIGN) ? atof(bYdes) : atof(bYmea);
 						m_pDlg->GetDataModel()->points[cc-1].z = (pModel->nro_table[i][1] == DESIGN) ? atof(bZdes) : atof(bZmea);
@@ -800,12 +800,12 @@ void DCP::BestFitSelectPointsController::OnActiveControllerClosed( int lCtrlID, 
 				short sdes, smea;
 				for (short i = 0; i < pModel->m_iMaxPoint; i++)
 				{
-					char bXmea[15], bYmea[15], bZmea[15], bXdes[15], bYdes[15], bZdes[15], pid[7];
+					char bXmea[15], bYmea[15], bZmea[15], bXdes[15], bYdes[15], bZdes[15], pid[POINT_ID_BUFF_LEN];
 					if (pModel->nro_table[i][0] != 0)
 					{
 						cc++;
 						adf.form_pnt1((int)pModel->nro_table[i][0], pid, nullptr, bXmea, bXdes, nullptr, bYmea, bYdes, nullptr, bZmea, bZdes, nullptr);
-						sprintf(m_pDlg->GetDataModel()->points[cc-1].point_id, "%-6.6s", pid);
+						snprintf(m_pDlg->GetDataModel()->points[cc-1].point_id, sizeof(m_pDlg->GetDataModel()->points[0].point_id), DCP_POINT_ID_FMT, pid);
 						m_pDlg->GetDataModel()->points[cc-1].x = (pModel->nro_table[i][1] == DESIGN) ? atof(bXdes) : atof(bXmea);
 						m_pDlg->GetDataModel()->points[cc-1].y = (pModel->nro_table[i][1] == DESIGN) ? atof(bYdes) : atof(bYmea);
 						m_pDlg->GetDataModel()->points[cc-1].z = (pModel->nro_table[i][1] == DESIGN) ? atof(bZdes) : atof(bZmea);

@@ -54,13 +54,13 @@ void ViewAgfDialog::OnInitDialog(void)
 void ViewAgfDialog::RefreshControls()
 {
     if (poMultiColCtrl) {
-        char temp[20];
+        char row_no_str[20];
         poMultiColCtrl->DestroyAll();
         for (short i = 0; i < m_pFileFunc->getPointsCount(); i++) {
-            sprintf(temp, "%d", i + 1);
+            sprintf(row_no_str, "%d", i + 1);
             m_pFileFunc->calcdist_pnt(i + 1);
             USER_APP_VERIFY(poMultiColCtrl->AddRow((short)i));
-            USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short)i, StringC(temp)));
+            USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short)i, StringC(row_no_str)));
             USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_AngleId, (short)i, StringC(m_pFileFunc->id)));
             USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Angle, (short)i, StringC(m_pFileFunc->dist)));
             USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Note, (short)i, StringC(m_pFileFunc->note)));
@@ -147,11 +147,11 @@ void DCP::ViewAgfController::OnActiveControllerClosed(int lCtrlID, int lExitCode
     if (lCtrlID == VIEWAGF_EDIT_CONTROLLER && lExitCode == EC_KEY_CONT) {
         DCP::EditCalculationAngleModel* pModel = (DCP::EditCalculationAngleModel*)GetController(VIEWAGF_EDIT_CONTROLLER)->GetModel();
         Common pCommon(m_pModel);
-        char temp[100];
-        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sDistId, temp, 6); pCommon.strbtrim(temp); sprintf(m_pFileFunc->id, "%-s", temp);
-        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sRefId, temp, 6);  pCommon.strbtrim(temp); sprintf(m_pFileFunc->ref, "%-s", temp);
-        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sTrgtId, temp, 6); pCommon.strbtrim(temp); sprintf(m_pFileFunc->target, "%-s", temp);
-        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sNote, temp, 6);   pCommon.strbtrim(temp); sprintf(m_pFileFunc->note, "%-s", temp);
+        char ascii_buf[100];
+        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sDistId, ascii_buf, 6); pCommon.strbtrim(ascii_buf); sprintf(m_pFileFunc->id, "%-s", ascii_buf);
+        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sRefId, ascii_buf, 6);  pCommon.strbtrim(ascii_buf); sprintf(m_pFileFunc->ref, "%-s", ascii_buf);
+        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sTrgtId, ascii_buf, 6); pCommon.strbtrim(ascii_buf); sprintf(m_pFileFunc->target, "%-s", ascii_buf);
+        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sNote, ascii_buf, 6);   pCommon.strbtrim(ascii_buf); sprintf(m_pFileFunc->note, "%-s", ascii_buf);
         m_pFileFunc->cdf_save_pnt();
     }
     m_pDlg->RefreshControls();
@@ -195,13 +195,13 @@ void ViewCdfDialog::OnInitDialog(void)
 void ViewCdfDialog::RefreshControls()
 {
     if (poMultiColCtrl) {
-        char temp[20];
+        char row_no_str[20];
         poMultiColCtrl->DestroyAll();
         for (short i = 0; i < m_pFileFunc->getPointsCount(); i++) {
-            sprintf(temp, "%d", i + 1);
+            sprintf(row_no_str, "%d", i + 1);
             m_pFileFunc->calcdist_pnt(i + 1);
             USER_APP_VERIFY(poMultiColCtrl->AddRow((short)i));
-            USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short)i, StringC(temp)));
+            USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short)i, StringC(row_no_str)));
             USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_DistId, (short)i, StringC(m_pFileFunc->id)));
             USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Dist, (short)i, StringC(m_pFileFunc->dist)));
             USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Note, (short)i, StringC(m_pFileFunc->note)));
@@ -287,10 +287,10 @@ void DCP::ViewCdfController::OnActiveControllerClosed(int lCtrlID, int lExitCode
     if (lCtrlID == VIEWCDF_EDIT_CONTROLLER && lExitCode == EC_KEY_CONT) {
         DCP::EditCalculationDistModel* pModel = (DCP::EditCalculationDistModel*)GetController(VIEWCDF_EDIT_CONTROLLER)->GetModel();
         Common pCommon(m_pModel);
-        char temp[100];
-        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sDistId, temp, 6); pCommon.strbtrim(temp); sprintf(m_pFileFunc->id, "%-s", temp);
-        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sRefId, temp, 6);  pCommon.strbtrim(temp); sprintf(m_pFileFunc->ref, "%-s", temp);
-        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sNote, temp, 6);   pCommon.strbtrim(temp); sprintf(m_pFileFunc->note, "%-s", temp);
+        char ascii_buf[100];
+        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sDistId, ascii_buf, 6); pCommon.strbtrim(ascii_buf); sprintf(m_pFileFunc->id, "%-s", ascii_buf);
+        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sRefId, ascii_buf, 6);  pCommon.strbtrim(ascii_buf); sprintf(m_pFileFunc->ref, "%-s", ascii_buf);
+        BSS::UTI::BSS_UTI_WCharToAscii(pModel->sNote, ascii_buf, 6);   pCommon.strbtrim(ascii_buf); sprintf(m_pFileFunc->note, "%-s", ascii_buf);
         m_pFileFunc->cdf_save_pnt();
     }
     m_pDlg->RefreshControls();

@@ -269,7 +269,7 @@ void DCP::FileView3DDialog::RefreshControls()
 		m_pFile->GetStringInputCtrl()->SetString(useDb && GetModel() ?
 			StringC(GetModel()->m_currentJobId.c_str()) : StringC(m_pDataModel->m_pAdfFile->getFileName()));
 		
-		char temp[XYZ_MEA_AND_DIFF_BUFF_LEN];
+		char coord_str[XYZ_MEA_AND_DIFF_BUFF_LEN];
 		
 		char pointid_temp[POINT_ID_BUFF_LEN];
 		if (useDb)
@@ -291,7 +291,7 @@ void DCP::FileView3DDialog::RefreshControls()
 		
 		if(!pCommon->strblank(ydes_ptr))
 		{
-			sprintf(temp,"%.*f",GetModel()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->ydes_front));
+			sprintf(coord_str,"%.*f",GetModel()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->ydes_front));
 			//m_pYDsg->GetFloatInputCtrl()->SetString(StringC(temp));
 			m_pYDsg->GetFloatInputCtrl()->SetDouble(atof(ydes_ptr));
 		}
@@ -302,7 +302,7 @@ void DCP::FileView3DDialog::RefreshControls()
 		
 		if(!pCommon->strblank(zdes_ptr))
 		{
-			sprintf(temp,"%.*f",GetModel()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->zdes_front));
+			sprintf(coord_str,"%.*f",GetModel()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->zdes_front));
 			//m_pZDsg->GetFloatInputCtrl()->SetString(StringC(temp));
 			m_pZDsg->GetFloatInputCtrl()->SetDouble(atof(zdes_ptr));
 		}

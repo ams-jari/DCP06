@@ -983,7 +983,7 @@ bool DCP::PlaneScanModel::add_line_points(ScanFileFunc* m_pScanFile, struct line
 		{
 			sprintf(pointIdBuffer,"%-s%d",first_pointid, points_count + 1);
 
-			sprintf(des_points[points_count].point_id, "%-s", pointIdBuffer);
+			snprintf(des_points[points_count].point_id, sizeof(des_points[points_count].point_id), DCP_POINT_ID_FMT, pointIdBuffer);
 			des_points[points_count].x = line1->px + (j * resolutionWidth) * line1->ux;
 			des_points[points_count].y = line1->py + (j * resolutionWidth) * line1->uy;
 			des_points[points_count].z = line1->pz + (j * resolutionWidth) * line1->uz;
@@ -1024,7 +1024,7 @@ bool DCP::PlaneScanModel::add_line_points(ScanFileFunc* m_pScanFile, struct line
 					{
 						sprintf(pointIdBuffer,"%-s%d",first_pointid, points_count + 1);
 
-						sprintf(des_points[points_count].point_id,"%-s", pointIdBuffer);
+						snprintf(des_points[points_count].point_id, sizeof(des_points[points_count].point_id), DCP_POINT_ID_FMT, pointIdBuffer);
 						des_points[points_count].x = line1->px + (j * resolutionWidth + (te)) * line1->ux ;
 						des_points[points_count].y = line1->py + (j * resolutionWidth + (te)) * line1->uy ;
 						des_points[points_count].z =  line1->pz + (j * resolutionWidth + (te)) * line1->uz ;

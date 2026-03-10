@@ -167,14 +167,14 @@ void DCP::XYZDialog::RefreshControls()
 {
 	if(m_pPointId  && m_pX && m_pY && m_pZ)
 	{	
-		char temp[20];
+		char coord_str[20];
 		m_pPointId->GetStringInputCtrl()->SetString(GetDataModel()->m_pPointBuff[0].point_id);
 		
 		//X
 		if(GetDataModel()->m_pPointBuff[0].xsta)
 		{
-			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].x); 
-			m_pX->GetStringInputCtrl()->SetString(temp);
+			sprintf(coord_str,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].x); 
+			m_pX->GetStringInputCtrl()->SetString(coord_str);
 		}
 		else
 			m_pX->GetStringInputCtrl()->SetString(L" ");
@@ -183,8 +183,8 @@ void DCP::XYZDialog::RefreshControls()
 		m_pY->GetStringInputCtrl()->SetString(L" ");
 		if(GetDataModel()->m_pPointBuff[0].ysta)
 		{
-			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].y); 
-			m_pY->GetStringInputCtrl()->SetString(temp);
+			sprintf(coord_str,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].y); 
+			m_pY->GetStringInputCtrl()->SetString(coord_str);
 		}
 		else
 			m_pY->GetStringInputCtrl()->SetString(L" ");
@@ -192,8 +192,8 @@ void DCP::XYZDialog::RefreshControls()
 		// Z
 		if(GetDataModel()->m_pPointBuff[0].zsta)
 		{
-			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].z); 
-			m_pZ->GetStringInputCtrl()->SetString(temp);
+			sprintf(coord_str,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].z); 
+			m_pZ->GetStringInputCtrl()->SetString(coord_str);
 		}
 		else
 			m_pZ->GetStringInputCtrl()->SetString(L" ");
@@ -437,7 +437,7 @@ void DCP::XYZController::OnF1Pressed()
 
 		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 
-		sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
+		snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 
 
@@ -489,7 +489,7 @@ void DCP::XYZController::OnF2Pressed()
 
 	DCP::MeasXYZModel* pModel = new MeasXYZModel;
 	
-	sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
+	snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 	m_pCommon->strbtrim(pModel->sPointId);
 
 	if(GetController(MEAS_X_CONTROLLER) == nullptr)
@@ -540,7 +540,7 @@ void DCP::XYZController::OnF3Pressed()
 
 	DCP::MeasXYZModel* pModel = new MeasXYZModel;
 	
-	sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
+	snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 	m_pCommon->strbtrim(pModel->sPointId);
 
 	if(GetController(MEAS_Y_CONTROLLER) == nullptr)
@@ -592,7 +592,7 @@ void DCP::XYZController::OnF4Pressed()
 
 
 	DCP::MeasXYZModel* pModel = new MeasXYZModel;
-	sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
+	snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 	m_pCommon->strbtrim(pModel->sPointId);
 
 	if(GetController(MEAS_Z_CONTROLLER) == nullptr)
@@ -637,7 +637,7 @@ void DCP::XYZController::OnF5Pressed()
 			}
 		}
 		DCP::MeasXYZModel* pModel = new MeasXYZModel;
-		sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
+		snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->m_pPointBuff[0].point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 
 		if(GetController(MEAS_Z_CONTROLLER) == nullptr)

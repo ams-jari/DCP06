@@ -903,7 +903,7 @@ DCP::Log::Log(char* sMsg):m_pFile(0)
 {
 	#ifdef AMS_DEBUG
 	char m_cPath[CPI::LEN_PATH_MAX];
-	char temp[CPI::LEN_PATH_MAX];
+	char log_line_buf[CPI::LEN_PATH_MAX];
 
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(CPI::deviceSdCard/*CPI::deviceSdCard*//*devicePcCard*/, CPI::ftUserAscii, m_cPath);
 	strcat(m_cPath,"ams.log");
@@ -915,8 +915,8 @@ DCP::Log::Log(char* sMsg):m_pFile(0)
 	if(m_pFile)
 	{
 		fseek(m_pFile,0,SEEK_END);
-		sprintf(temp,"%s%c%c",sMsg,13,10);
-		fputs(temp, m_pFile);
+		sprintf(log_line_buf,"%s%c%c",sMsg,13,10);
+		fputs(log_line_buf, m_pFile);
 		fflush(m_pFile);
 		fclose(m_pFile);
 	}
@@ -927,7 +927,7 @@ DCP::Log::Log(char* sMsg, int ret):m_pFile(0)
 {
 	#ifdef AMS_DEBUG
 	char m_cPath[CPI::LEN_PATH_MAX];
-	char temp[CPI::LEN_PATH_MAX];
+	char log_line_buf[CPI::LEN_PATH_MAX];
 
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(CPI::deviceSdCard/*CPI::deviceSdCard*//*devicePcCard*/, CPI::ftUserAscii, m_cPath);
 	strcat(m_cPath,"ams.log");
@@ -939,8 +939,8 @@ DCP::Log::Log(char* sMsg, int ret):m_pFile(0)
 	if(m_pFile)
 	{
 		fseek(m_pFile,0,SEEK_END);
-		sprintf(temp,"%s (%d)%c%c",sMsg, ret, 13,10);	
-		fputs(temp, m_pFile);
+		sprintf(log_line_buf,"%s (%d)%c%c",sMsg, ret, 13,10);	
+		fputs(log_line_buf, m_pFile);
 		fflush(m_pFile);
 		fclose(m_pFile);
 	}
@@ -951,7 +951,7 @@ DCP::Log::Log(char* sMsg, int ctrl, int exit_code):m_pFile(0)
 {
 	#ifdef AMS_DEBUG
 	char m_cPath[CPI::LEN_PATH_MAX];
-	char temp[CPI::LEN_PATH_MAX];
+	char log_line_buf[CPI::LEN_PATH_MAX];
 
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(CPI::deviceSdCard/*CPI::deviceSdCard*//*devicePcCard*/, CPI::ftUserAscii, m_cPath);
 	strcat(m_cPath,"ams.log");
@@ -963,8 +963,8 @@ DCP::Log::Log(char* sMsg, int ctrl, int exit_code):m_pFile(0)
 	if(m_pFile)
 	{
 		fseek(m_pFile,0,SEEK_END);
-		sprintf(temp,"%s (ctrl=%d)(exitcode=%d)%c%c",sMsg, ctrl, exit_code, 13,10);	
-		fputs(temp, m_pFile);
+		sprintf(log_line_buf,"%s (ctrl=%d)(exitcode=%d)%c%c",sMsg, ctrl, exit_code, 13,10);	
+		fputs(log_line_buf, m_pFile);
 		fflush(m_pFile);
 		fclose(m_pFile);
 	}
@@ -1451,7 +1451,7 @@ DCP::AmsToolLog::AmsToolLog(char* pFileName, char* pointid, Common* pCommon, Mod
 		m_pFile = fopen(m_cPath,"wb+");
 		if(m_pFile)
 		{
-			sprintf(outputBuffer,"%-6.6s %8.8s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s%c%c", "PID", "TOOL ID" ,
+			sprintf(outputBuffer, DCP_POINT_ID_FMT " %8.8s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s %9.9s%c%c", "PID", "TOOL ID" ,
 																							"TOOL X", "TOOL Y", "TOOL Z",
 																							"TRANS X", "TRANS Y", "TRANS Z",
 																							"TOT X", "TOT Y", "TOT Z",
@@ -1467,7 +1467,7 @@ DCP::AmsToolLog::AmsToolLog(char* pFileName, char* pointid, Common* pCommon, Mod
 		iDec = pModel->m_nDecimals;
 		sprintf(toolname,"%-s",pModel->tool_table[iActiveTool-1].tool_id);
 		pCommon->strbtrim(toolname);
-		sprintf(outputBuffer,"%-6.6s %8.8s %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f%c%c", pointid, toolname,
+		sprintf(outputBuffer, DCP_POINT_ID_FMT " %8.8s %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f %9.*f%c%c", pointid, toolname,
 																							   iDec, pModel->tool_table[iActiveTool-1].x,
 																							   iDec, pModel->tool_table[iActiveTool-1].y,
 																							   iDec, pModel->tool_table[iActiveTool-1].z,

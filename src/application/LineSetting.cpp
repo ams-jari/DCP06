@@ -354,11 +354,11 @@ void DCP::LineSettingController::OnF3Pressed()
 		double dHor = oMeasData.GetHorizontalAngle();
 		double dVer = oMeasData.GetVerticalAngle();
 
-		char temp[200];
-		sprintf(temp,"H:%.4f, V:%.4f", dHor, dVer);
+		char angle_str[200];
+		sprintf(angle_str,"H:%.4f, V:%.4f", dHor, dVer);
 
 		MsgBox msgBox;
-		msgBox.ShowMessageOk(StringC(temp));
+		msgBox.ShowMessageOk(StringC(angle_str));
 
 }
 */

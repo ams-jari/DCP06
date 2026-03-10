@@ -311,22 +311,22 @@ void DCP::CalculationDist2PointsDialog::calc_distances(
 	sPoints += L"-";
 	sPoints += StringC(pid2);
 
-	char temp[100];
+	char coord_line_buf[100];
 	// x
-	sprintf(temp,"%10s %10s %6s", bXmea, bXdes, bXdif);
-	sXline = StringC(temp);
+	sprintf(coord_line_buf,"%10s %10s %6s", bXmea, bXdes, bXdif);
+	sXline = StringC(coord_line_buf);
 	
 	//y
-	sprintf(temp,"%10s %10s %6s", bYmea, bYdes, bYdif);
-	sYline = StringC(temp);
+	sprintf(coord_line_buf,"%10s %10s %6s", bYmea, bYdes, bYdif);
+	sYline = StringC(coord_line_buf);
 
 	//z
-	sprintf(temp,"%10s %10s %6s", bZmea, bZdes, bZdif);
-	sZline = StringC(temp);
+	sprintf(coord_line_buf,"%10s %10s %6s", bZmea, bZdes, bZdif);
+	sZline = StringC(coord_line_buf);
 
 	// total
-	sprintf(temp,"%10s %10s %6s", bDmea, bDdes, bDdif);
-	sTline = StringC(temp);
+	sprintf(coord_line_buf,"%10s %10s %6s", bDmea, bDdes, bDdif);
+	sTline = StringC(coord_line_buf);
 }
 
 // ================================================================================================

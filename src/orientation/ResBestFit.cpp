@@ -257,7 +257,7 @@ void DCP::ResBestFitDialog::RefreshControls()
 	iPno = get_max_res();
 	// 
 	//BeginDraw(); 
-	char temp[20];
+	char cell_text_buf[POINT_ID_BUFF_LEN];
 	StringC sPoint;
 	StringC sNo;
 	StringC sDev;
@@ -272,11 +272,11 @@ void DCP::ResBestFitDialog::RefreshControls()
 	{
 		sta = m_pDataModel->point_RES[i].sta;
 
-		sprintf(temp,"%-s",m_pDataModel->point_OCS[i].point_id);
-		sPoint = temp;
+		snprintf(cell_text_buf, sizeof(cell_text_buf), DCP_POINT_ID_FMT, m_pDataModel->point_OCS[i].point_id);
+		sPoint = cell_text_buf;
 		
-		sprintf(temp,"%-d",i+1);
-		sNo = temp;
+		sprintf(cell_text_buf,"%-d",i+1);
+		sNo = cell_text_buf;
 
 		USER_APP_VERIFY(poMultiColCtrl->AddRow((short) i));
 		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) i, sNo));
@@ -286,14 +286,14 @@ void DCP::ResBestFitDialog::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].x);
-			sX = temp;
+			sprintf(cell_text_buf,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].x);
+			sX = cell_text_buf;
 
-			sprintf(temp,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].y);
-			sY = temp;
+			sprintf(cell_text_buf,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].y);
+			sY = cell_text_buf;
 
-			sprintf(temp,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].z);
-			sZ = temp;
+			sprintf(cell_text_buf,"%+.*f", GetModel()->m_nDecimals, m_pDataModel->point_RES[i].z);
+			sZ = cell_text_buf;
 
 
 		}

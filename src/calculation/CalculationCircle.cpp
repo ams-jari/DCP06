@@ -605,7 +605,7 @@ void DCP::CalculationCircleController::OnActiveControllerClosed( int lCtrlID, in
 				if(pModel->nro_table[i][1] == DESIGN)
 				{
 					des = 1;
-					sprintf(m_pDataModel->pCircleModel->circle_points[0].points[iCount].point_id,"%-6.6s",pid1); // 280508
+					snprintf(m_pDataModel->pCircleModel->circle_points[0].points[iCount].point_id, sizeof(m_pDataModel->pCircleModel->circle_points[0].points[iCount].point_id), DCP_POINT_ID_FMT, pid1); // 280508
 					m_pDataModel->pCircleModel->circle_points[0].points[iCount].x = atof(bXdes1);
 					m_pDataModel->pCircleModel->circle_points[0].points[iCount].y = atof(bYdes1);
 					m_pDataModel->pCircleModel->circle_points[0].points[iCount].z = atof(bZdes1);
@@ -621,7 +621,7 @@ void DCP::CalculationCircleController::OnActiveControllerClosed( int lCtrlID, in
 				else
 				{
 					act = 1;
-					sprintf(m_pDataModel->pCircleModel->circle_points[0].points[iCount].point_id,"%-6.6s",pid1); // 280508
+					snprintf(m_pDataModel->pCircleModel->circle_points[0].points[iCount].point_id, sizeof(m_pDataModel->pCircleModel->circle_points[0].points[iCount].point_id), DCP_POINT_ID_FMT, pid1); // 280508
 					m_pDataModel->pCircleModel->circle_points[0].points[iCount].x = atof(bXmea1);
 					m_pDataModel->pCircleModel->circle_points[0].points[iCount].y = atof(bYmea1);
 					m_pDataModel->pCircleModel->circle_points[0].points[iCount].z = atof(bZmea1);

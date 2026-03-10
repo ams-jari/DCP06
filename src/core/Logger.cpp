@@ -23,12 +23,19 @@ void Logger::init() {
     // Default: DCP06.log in current directory (works for simulator)
     if (s_path[0] == '\0')
         snprintf(s_path, sizeof(s_path), "DCP06.log");
+
+    // Clear log on each DCP06 start - only current run in file
+    FILE* f = fopen(s_path, "w");
+    if (f) fclose(f);
 }
 
 void Logger::setLogPath(const char* path) {
     if (!path || !path[0]) return;
     snprintf(s_path, sizeof(s_path), "%s", path);
     s_inited = true;
+    // Clear log on each DCP06 start
+    FILE* f = fopen(s_path, "w");
+    if (f) fclose(f);
 }
 
 void Logger::ensureInit() {

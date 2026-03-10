@@ -201,7 +201,7 @@ void DCP::ResLineDialog::RefreshControls()
 
 	// 
 	//BeginDraw(); 
-	char temp[20];
+	char cell_text_buf[POINT_ID_BUFF_LEN];
 	StringC sPoint;
 	StringC sNo;
 	StringC sDev;
@@ -211,11 +211,11 @@ void DCP::ResLineDialog::RefreshControls()
 
 	for(i=0; i < iMax; i++)
 	{
-		sprintf(temp,"%-s",GetDataModel()->line_buff[0].points[i].point_id);
-		sPoint = temp;
+		snprintf(cell_text_buf, sizeof(cell_text_buf), DCP_POINT_ID_FMT, GetDataModel()->line_buff[0].points[i].point_id);
+		sPoint = cell_text_buf;
 		
-		sprintf(temp,"%-d",i+1);
-		sNo = temp;
+		sprintf(cell_text_buf,"%-d",i+1);
+		sNo = cell_text_buf;
 
 		USER_APP_VERIFY(poMultiColCtrl->AddRow((short) i));
 		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) i, sNo));
@@ -225,8 +225,8 @@ void DCP::ResLineDialog::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+9.*f", m_pModel->m_nDecimals, calc_pdist(&GetDataModel()->line_buff[0],i));
-			sDev = temp;
+			sprintf(cell_text_buf,"%+9.*f", m_pModel->m_nDecimals, calc_pdist(&GetDataModel()->line_buff[0],i));
+			sDev = cell_text_buf;
 		}
 		else if (sta == 0)
 		{

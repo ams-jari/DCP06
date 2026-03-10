@@ -111,6 +111,7 @@ namespace DCP
 	#define SCAN_DLG					168 
 	#define ADV_SCAN_DLG				169
 	#define LINEFIT_DLG				169
+	#define FORMAT_SELECT_DLG			170
 
 
 		
@@ -217,6 +218,8 @@ namespace DCP
 	#define LINEFIT_MEAS_CONTROLLER					98
 	#define MID_POINT_CONTROLLER					99
 	#define MEAS_MID_POINT_CONTROLLER				100
+	#define FORMAT_SELECT_CONTROLLER				101
+	#define EXPORT_FILENAME_CONTROLLER				102
 
 	#define	DO_MEAS_DIST_CONTROLLER			101	
 
@@ -340,6 +343,9 @@ namespace DCP
 	#define ADF_BF_STA 7
 	#define FILE_TYPE_JOBS 8  // was DCP06_JOBS
 	#define IMPORT_ADF 9
+	#define ONLY_CSV 10
+	#define ONLY_TXT 11
+	#define ONLY_ASC 12
 
 	#define ACTUAL	1
 	#define DESIGN	2

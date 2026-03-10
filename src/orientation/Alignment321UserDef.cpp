@@ -685,7 +685,7 @@ void DCP::Alignment321UserDefController::OnF4Pressed()
 	for(int i = 0; i < MAX_USERDEF_POINTS; i++)
 	{
 		pModel->points[i].no = i+1;
-		sprintf(pModel->points[i].point_id,"%-6.6s",m_pDataModel->userdef_measured_points[i].point_id);
+		snprintf(pModel->points[i].point_id, sizeof(pModel->points[i].point_id), DCP_POINT_ID_FMT, m_pDataModel->userdef_measured_points[i].point_id);
 
 		if(m_pDataModel->userdef_measured_points[i].sta > 0)
 		{
@@ -1295,14 +1295,12 @@ short DCP::Alignment321UserDefModel::get_last_defined_point()
 
 bool DCP::Alignment321UserDefModel::is_point_id_defined()
 {
-	char pid[10];
 	bool ret = false;
 	Common common(m_pModel);
 	
 	for(int i = 0; i < MAX_USERDEF_POINTS; i++)
 	{
-		sprintf(pid,"%-6.6s",userdef_measured_points[i].point_id);
-		if(!common.strblank(pid))
+		if(!common.strblank(userdef_measured_points[i].point_id))
 		{
 			ret = true;
 			break;
@@ -1329,7 +1327,7 @@ short DCP::Alignment321UserDefModel::build_select_point_list()
 		//	mea = true;
 
 		select_point_list[i-1].iId = i;
-		sprintf(select_point_list[i-1].point_id,"%-6.6s",userdef_measured_points[i-1].point_id);
+		snprintf(select_point_list[i-1].point_id, sizeof(select_point_list[i-1].point_id), DCP_POINT_ID_FMT, userdef_measured_points[i-1].point_id);
 		select_point_list[i-1].bActualDefined = mea;
 		select_point_list[i-1].bDesignDefined = false;
 

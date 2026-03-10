@@ -344,6 +344,7 @@ For flows that need a sub-screen (e.g. "Select Point", "Enter Text"):
 
 | Purpose | File |
 |---------|------|
+| **Captivate layout quirks** | `Docs/Captivate_GUI_Design_Notes.md` |
 | Dialog/Controller IDs | `include/dcp06/core/Defs.hpp` |
 | Text tokens (generated) | `Text/DCP06_TOK.HPP` |
 | Text token source | `Text/Languages/en/DCP06.men` |

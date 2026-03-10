@@ -1236,7 +1236,7 @@ char sPath[CPI::LEN_PATH_MAX];
 		{
 			if(m_pLineFitModel->line_buff[0].points[i].sta != 0)
 			{
-				sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f%c%c", i+1, m_pLineFitModel->line_ocs[0].points[i].point_id, 
+				sprintf(lineBuffer,"%-2d." DCP_POINT_ID_FMT " X:%9.*f  Y:%9.*f  Z:%9.*f%c%c", i+1, m_pLineFitModel->line_ocs[0].points[i].point_id, 
 							m_pModel->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].x,
 							m_pModel->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].y,
 							m_pModel->m_nDecimals, m_pLineFitModel->line_ocs[0].points[i].z,
@@ -1366,7 +1366,7 @@ char sPath[CPI::LEN_PATH_MAX];
 			{
 				if(m_pLineFitModel->selectedRefLine == REF_LINE_HORIZONTAL)
 				{
-					sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Height:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
+					sprintf(lineBuffer,"%-2d." DCP_POINT_ID_FMT " X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Height:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
 								i+1, m_pLineFitModel->points_buff[i].point_id, 
 								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].xdes,
 								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].ydes,
@@ -1385,7 +1385,7 @@ char sPath[CPI::LEN_PATH_MAX];
 				}
 				else
 				{
-						sprintf(lineBuffer,"%-2d.%-6.6s X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Depth:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
+						sprintf(lineBuffer,"%-2d." DCP_POINT_ID_FMT " X:%9.*f  Y:%9.*f  Z:%9.*f Calculated point in line: X:%9.*f  Y:%9.*f  Z:%9.*f Depth:%9.*f  Dist along the line:%9.*f  Line offset:%9.*f 3D Dist. from the line:%9.*f%c%c", 
 								i+1, m_pLineFitModel->points_buff[i].point_id, 
 								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].xdes,
 								m_pModel->m_nDecimals, m_pLineFitModel->points_buff[i].ydes,

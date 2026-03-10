@@ -32,6 +32,8 @@
 // ================================================================================================
 
 #include <dcp06/core/Types.hpp>
+#include <vector>
+#include <string>
 #include <GUI_ComboLineCtrl.hpp>
 #include <GUI_StandardDialog.hpp>
 #include <GUI_TextCtrl.hpp>
@@ -138,11 +140,11 @@ namespace DCP
 
 
 	protected:
-			
 			GUI::ListMultiColCtrlC* poMultiColCtrl;
 	private:
 			short m_iFileType;
 			Model* m_pModel;
+			std::vector<std::string> m_filePaths;  // Full paths for CSV/TXT/ASC import
 	};
 
     class SelectFileModel : public GUI::ModelC

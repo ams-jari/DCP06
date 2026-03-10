@@ -424,7 +424,7 @@ void DCP::OffsetVController::OnF5Pressed()
 
 	DCP::OffsetVModel* pModel = new DCP::OffsetVModel();
 	// copy point id
-	sprintf(m_pDlg->GetDataModel()->ref_point_buff.point_id,"%s",m_pDlg->GetDataModel()->ovalues_buff.point_id);
+	snprintf(m_pDlg->GetDataModel()->ref_point_buff.point_id, sizeof(m_pDlg->GetDataModel()->ref_point_buff.point_id), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->ovalues_buff.point_id);
 	
 	memcpy(&pModel->ovalues_buff,&m_pDlg->GetDataModel()->ovalues_buff,sizeof(S_POINT_BUFF));
 	memcpy(&pModel->ref_point_buff,&m_pDlg->GetDataModel()->ref_point_buff,sizeof(S_POINT_BUFF));
@@ -502,7 +502,7 @@ void DCP::OffsetVController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 		if(adf.setFile(pModel->sSelectedFile))
 		{	
 			char bXmea[15], bYmea[15], bZmea[15];
-			char bXdes[15], bYdes[15], bZdes[15],pid[7];//,fname[13];
+			char bXdes[15], bYdes[15], bZdes[15],pid[POINT_ID_BUFF_LEN];//,fname[13];
 			
 			adf.form_pnt1((int) iSelected, pid, nullptr, bXmea, bXdes, nullptr, bYmea, bYdes, nullptr, bZmea, bZdes, nullptr);
 			//if(pModel->iActual_or_design == DESIGN)
@@ -510,7 +510,7 @@ void DCP::OffsetVController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 			{
 					if(!common.strblank(bXdes) && !common.strblank(bYdes) && !common.strblank(bZdes))
 					{
-						sprintf(m_pDlg->GetDataModel()->ovalues_buff.point_id,"%-6.6s",pid);
+						snprintf(m_pDlg->GetDataModel()->ovalues_buff.point_id, sizeof(m_pDlg->GetDataModel()->ovalues_buff.point_id), DCP_POINT_ID_FMT, pid);
 						m_pDlg->GetDataModel()->ovalues_buff.x = atof(bXdes);
 						m_pDlg->GetDataModel()->ovalues_buff.y = atof(bYdes);
 						m_pDlg->GetDataModel()->ovalues_buff.z = atof(bZdes);
@@ -522,7 +522,7 @@ void DCP::OffsetVController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 			{
 					if(!common.strblank(bXmea) && !common.strblank(bYmea) && !common.strblank(bZmea))
 					{
-						sprintf(m_pDlg->GetDataModel()->ovalues_buff.point_id,"%-6.6s",pid);
+						snprintf(m_pDlg->GetDataModel()->ovalues_buff.point_id, sizeof(m_pDlg->GetDataModel()->ovalues_buff.point_id), DCP_POINT_ID_FMT, pid);
 						m_pDlg->GetDataModel()->ovalues_buff.x = atof(bXmea);
 						m_pDlg->GetDataModel()->ovalues_buff.y = atof(bYmea);
 						m_pDlg->GetDataModel()->ovalues_buff.z = atof(bZmea);

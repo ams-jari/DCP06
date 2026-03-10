@@ -28,6 +28,7 @@
 #include <ABL_AppSystemInfo.hpp>
 #include <dcp06/core/Common.hpp>
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include "calc.h"
 #include <math.h>
@@ -266,7 +267,7 @@ void DCP::Common::delete_point(S_POINT_BUFF *points)
 	points[0].zdes = 0.0;
 	points[0].diameter = 0.0;
 	points[0].cds= 0;
-	sprintf(points[0].point_id,"%6.6s","");
+	snprintf(points[0].point_id, sizeof(points[0].point_id), DCP_POINT_ID_FMT, "");
 	strbtrim(points[0].point_id);
 	*/
 }
@@ -573,22 +574,22 @@ short DCP::Common::GetInstrumentName(char* intrument_name)
 *************************************************************************/
 void DCP::Common::get_dist_(char *act, char *des, char *dist)
 {
-char temp[20];
+char diff_str[20];
 
 	if(!strblank(act) && !strblank(des))
 	{
-		sprintf(temp,"%8.*f", m_pModel->m_nDecimals, atof(act) - atof(des));
-		if(strlen(temp) > 8 || act[0] =='*' || des[0] =='*')
+		sprintf(diff_str,"%8.*f", m_pModel->m_nDecimals, atof(act) - atof(des));
+		if(strlen(diff_str) > 8 || act[0] =='*' || des[0] =='*')
 		{
-			sprintf(temp,"%8.8s", "*******");
+			sprintf(diff_str,"%8.8s", "*******");
 		}
 	}
 	else
 	{
-		sprintf(temp,"%8.8s","");
+		sprintf(diff_str,"%8.8s","");
 	}
 
-	sprintf(dist,"%-8.8s",temp);
+	sprintf(dist,"%-8.8s",diff_str);
 }
 
 /************************************************************************
@@ -763,13 +764,13 @@ void DCP::Common::to_xyz(double dis, double hor, double ver, double *x, double *
 double x_new, y_new, z_new;
 double dist,theta,fii;
 struct ams_vector xyz;
-struct sphvect temp;
+struct sphvect sph_vec;
 double point1[4], point2[4];
 //double Ovalues[4];
 //short table;
 
 	xyz.x = 0.0; xyz.y = 0.0; xyz.z = 0.0;
-	temp.r = 0.0; temp.theta = 0.0; temp.fii = 0.0;
+	sph_vec.r = 0.0; sph_vec.theta = 0.0; sph_vec.fii = 0.0;
 	x_new = y_new = z_new = 0.0;
 
 	hor = hor * DPR;
@@ -792,11 +793,11 @@ double point1[4], point2[4];
 	theta = degtorad(theta);
 	fii = degtorad(fii);
 		
-		temp.r = dist;
-		temp.theta = theta;
-		temp.fii = fii;
+		sph_vec.r = dist;
+		sph_vec.theta = theta;
+		sph_vec.fii = fii;
 
-		sphcart(&temp, &xyz); /* To xyz */
+		sphcart(&sph_vec, &xyz); /* To xyz */
 
 		// save scs values
 		if(x_scs != 0 && y_scs != 0 && z_scs != 0)
@@ -918,12 +919,12 @@ void DCP::Common::to_AMS_xyz(double x_in, double y_in, double z_in, double *x_ou
 double x_new, y_new, z_new;
 //double dist,theta,fii;
 //struct ams_vector xyz;
-//struct sphvect temp;
+//struct sphvect sph_vec;
 double point1[4], point2[4];
 
 	/*
 	xyz.x = 0.0; xyz.y = 0.0; xyz.z = 0.0;
-	temp.r = 0.0; temp.theta = 0.0; temp.fii = 0.0;
+	sph_vec.r = 0.0; sph_vec.theta = 0.0; sph_vec.fii = 0.0;
 	x_new = y_new = z_new = 0.0;
 
 	hor = hor * DPR;
@@ -946,11 +947,11 @@ double point1[4], point2[4];
 	theta = degtorad(theta);
 	fii = degtorad(fii);
 		
-		temp.r = dist;
-		temp.theta = theta;
-		temp.fii = fii;
+		sph_vec.r = dist;
+		sph_vec.theta = theta;
+		sph_vec.fii = fii;
 
-		sphcart(&temp, &xyz); // To xyz 
+		sphcart(&sph_vec, &xyz); // To xyz 
 
 		// save scs values
 		if(x_scs != 0 && y_scs != 0 && z_scs != 0)
@@ -1204,48 +1205,48 @@ short  DCP::Common::defined_points_count_in_plane(S_PLANE_BUFF *plane,short *las
 *************************************************************************/
 void DCP::Common::get_dist_len1(char *act, char *des, char *dist, short len)
 {
-char temp[20];
+char diff_str[20];
 short i;
 
 	if(!strblank(act) && !strblank(des))
 	{
-		sprintf(temp,"%*.*f", len, m_pModel->m_nDecimals, fabs(atof(act) - atof(des)));
-		if(strlen(temp) > (unsigned) len || act[0] =='*' || des[0] =='*')
+		sprintf(diff_str,"%*.*f", len, m_pModel->m_nDecimals, fabs(atof(act) - atof(des)));
+		if(strlen(diff_str) > (unsigned) len || act[0] =='*' || des[0] =='*')
 		{
 			for(i=1;i<=len;i++)
-				temp[i-1] = '*';
+				diff_str[i-1] = '*';
 		}
 	}
 	else
 	{
-		sprintf(temp,"%*.*s",len,len,"");
+		sprintf(diff_str,"%*.*s",len,len,"");
 	}
 
-	sprintf(dist,"%-*.*s",len,len,temp);
+	sprintf(dist,"%-*.*s",len,len,diff_str);
 }
 
 /************************************************************************
 *************************************************************************/
 void DCP::Common::get_dist_len(char *act, char *des, char *dist, short len)
 {
-char temp[20];
+char diff_str[20];
 short i;
 
 	if(!strblank(act) && !strblank(des))
 	{
-		sprintf(temp,"%*.*f", len, m_pModel->m_nDecimals, atof(act) - atof(des));
-		if(strlen(temp) > (unsigned) len || act[0] =='*' || des[0] =='*')
+		sprintf(diff_str,"%*.*f", len, m_pModel->m_nDecimals, atof(act) - atof(des));
+		if(strlen(diff_str) > (unsigned) len || act[0] =='*' || des[0] =='*')
 		{
 			for(i=1;i<=len;i++)
-				temp[i-1] = '*';
+				diff_str[i-1] = '*';
 		}
 	}
 	else
 	{
-		sprintf(temp,"%*.*s",len,len,"");
+		sprintf(diff_str,"%*.*s",len,len,"");
 	}
 
-	sprintf(dist,"%-*.*s",len,len,temp);
+	sprintf(dist,"%-*.*s",len,len,diff_str);
 }
 
 // ************************************************************************
@@ -1325,11 +1326,11 @@ short ret=0,i;
 *************************************************************************/
 void DCP::Common::inc_id(char *id)
 {
-char apu[10],apu2[10],numstr[10];
+char apu[POINT_ID_BUFF_LEN],apu2[10],numstr[10];
 short last,first,i,j,length,pit;
 // int ret;
 
-	 sprintf(apu,"%-6.6s",id);
+	 snprintf(apu, sizeof(apu), DCP_POINT_ID_FMT, id);
 	 strbtrim(apu);
 
 	 pit = (short) strlen(apu);
@@ -1393,12 +1394,12 @@ short last,first,i,j,length,pit;
 	sprintf(numstr,"%-d",atoi(apu2)+1);
 	length = (short) strlen(numstr);
 
-	if((length + first-1 + pit-last ) <= 6)
+	if((length + first-1 + pit-last ) <= (short)DCP_POINT_ID_LENGTH)
 	{
 		sprintf(id,"%*s", first-1, apu);
 		sprintf(id+first-1,"%*s", length, numstr);
 		sprintf(id+first-1+length,"%s",apu+last);
-     	 id[6] = '\0';
+     	 id[POINT_ID_BUFF_LEN - 1] = '\0';
 	}
 	else
 	{
@@ -1423,14 +1424,21 @@ short a;
 *************************************************************************/
 bool DCP::Common::check_edm_mode()
 {
+	DCP06_TRACE_ENTER;
 	bool ret = true;
 
 	TPI::MeasConfigC oMeasConfig;
 	SDI::TPSMeasDataC::EDMModeT edm;
 
+	DCP06_LOG_DEBUG("-- %s: calling oMeasConfig.Get", __FUNCTION__);
 	oMeasConfig.Get();
 
+	DCP06_LOG_DEBUG("-- %s: calling GetEDMMode", __FUNCTION__);
 	edm = oMeasConfig.GetEDMMode();
+	{
+		int edmVal = static_cast<int>(edm);
+		DCP06_LOG_DEBUG("-- %s: edm=%d", __FUNCTION__, edmVal);
+	}
 
 	//if(edm == TPI::MeasDataC::EM_Standard || edm == TPI::MeasDataC::EM_Fast ||edm == TPI::MeasDataC::EM_Averaging)
 	if(edm == TPI::MeasDataC::EM_Standard || edm == TPI::MeasDataC::EM_Fast ||edm == TPI::MeasDataC::EM_Averaging || edm == TPI::MeasDataC::EM_Precise)
@@ -1448,10 +1456,14 @@ bool DCP::Common::check_edm_mode()
 	}
 
 	//check also compensator
+	DCP06_LOG_DEBUG("-- %s: calling TBL::CheckCompensator", __FUNCTION__);
 	bool ret1 =TBL::CheckCompensator();
+	DCP06_LOG_DEBUG("-- %s: CheckCompensator=%d ret=%d", __FUNCTION__, ret1 ? 1 : 0, ret ? 1 : 0);
 	if(!ret1)
 		ret = false;
 
+	DCP06_LOG_DEBUG("-- %s: return %d", __FUNCTION__, ret ? 1 : 0);
+	DCP06_TRACE_EXIT;
 	return ret;	
 }
 

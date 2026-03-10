@@ -45,6 +45,7 @@
 #include <UTL_StringFunctions.hpp>
 
 #include <boost/filesystem.hpp>
+#include <ctime>
 
 #include <dcp06/core/MsgBox.hpp>
 
@@ -191,6 +192,15 @@ void SelectFileDialog::OnDialogActivated()
 		strcat(strPath,"*.sft");
 	else if(m_iFileType == ADF_BF_STA)
 		strcat(strPath,"*.adf");
+	else if(m_iFileType == ONLY_CSV)
+		strcat(strPath,"*.csv");
+	else if(m_iFileType == ONLY_TXT)
+		strcat(strPath,"*.txt");
+	else if(m_iFileType == ONLY_ASC)
+		strcat(strPath,"*.asc");
+
+	if (m_iFileType == ONLY_CSV || m_iFileType == ONLY_TXT || m_iFileType == ONLY_ASC)
+		m_filePaths.clear();
 
 	char tempFileName[256];
 	
@@ -278,18 +288,81 @@ void SelectFileDialog::OnDialogActivated()
 
 		}
 
-		else 
+		else if(m_iFileType == ONLY_CSV && (strstr(tempFileName, ".csv") != nullptr || strstr(tempFileName, ".CSV") != nullptr))
+		{
+			std::time_t t = boost::filesystem::last_write_time(FileInfo, errCode);
+			char modDate[32] = " ";
+			if (!errCode && t != 0) {
+				struct std::tm buf;
+#ifdef _WIN32
+				if (localtime_s(&buf, &t) == 0)
+#else
+				if (localtime_r(&t, &buf))
+#endif
+				{
+					std::strftime(modDate, sizeof(modDate), "%Y-%m-%d %H:%M", &buf);
+				}
+			}
+			std::string fn = FileInfo.filename().string();
+			m_filePaths.push_back(FileInfo.string());
+			USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
+			sprintf(cTemp,"%-3d %-12.12s     %-s",unCount+1,fn.c_str(), modDate);
+			sLine = cTemp;
+			USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_File, (short) unCount, sLine));
+			unCount++;
+		}
+		else if(m_iFileType == ONLY_TXT && (strstr(tempFileName, ".txt") != nullptr || strstr(tempFileName, ".TXT") != nullptr))
+		{
+			std::time_t t = boost::filesystem::last_write_time(FileInfo, errCode);
+			char modDate[32] = " ";
+			if (!errCode && t != 0) {
+				struct std::tm buf;
+#ifdef _WIN32
+				if (localtime_s(&buf, &t) == 0)
+#else
+				if (localtime_r(&t, &buf))
+#endif
+				{
+					std::strftime(modDate, sizeof(modDate), "%Y-%m-%d %H:%M", &buf);
+				}
+			}
+			std::string fn2 = FileInfo.filename().string();
+			m_filePaths.push_back(FileInfo.string());
+			USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
+			sprintf(cTemp,"%-3d %-12.12s     %-s",unCount+1,fn2.c_str(), modDate);
+			sLine = cTemp;
+			USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_File, (short) unCount, sLine));
+			unCount++;
+		}
+		else if(m_iFileType == ONLY_ASC && (strstr(tempFileName, ".asc") != nullptr || strstr(tempFileName, ".ASC") != nullptr))
+		{
+			std::time_t t = boost::filesystem::last_write_time(FileInfo, errCode);
+			char modDate[32] = " ";
+			if (!errCode && t != 0) {
+				struct std::tm buf;
+#ifdef _WIN32
+				if (localtime_s(&buf, &t) == 0)
+#else
+				if (localtime_r(&t, &buf))
+#endif
+				{
+					std::strftime(modDate, sizeof(modDate), "%Y-%m-%d %H:%M", &buf);
+				}
+			}
+			std::string fn3 = FileInfo.filename().string();
+			m_filePaths.push_back(FileInfo.string());
+			USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
+			sprintf(cTemp,"%-3d %-12.12s     %-s",unCount+1,fn3.c_str(), modDate);
+			sLine = cTemp;
+			USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_File, (short) unCount, sLine));
+			unCount++;
+		}
+		else if(m_iFileType == ONLY_ADF || m_iFileType == ALL_FILES || m_iFileType == ADF_BF_STA)
 		{
 			if(strstr(tempFileName, ".adf") != nullptr || strstr(tempFileName, ".ADF") != nullptr )
 			{
-
-				//MsgBox msgbox;
-				//StringC msg;
-				//msgbox.ShowMessageOk(StringC(tempFileName));
-				
 				AdfFileFunc AdfFile(&FileInfo, m_pModel);
 				AdfFile.always_single = 1;
-				
 				USER_APP_VERIFY(poMultiColCtrl->AddRow((short) unCount));
 				sprintf(cTemp,"%-3d %-12.12s %-3.3s %-s",unCount+1,AdfFile.getFileName(),AdfFile.getPointsCountString(), AdfFile.getModDate());
 				sLine = cTemp;
@@ -521,9 +594,15 @@ void SelectFileDialog::OnDialogActivated()
 
 void DCP::SelectFileDialog::UpdateData()
 {
-	StringC sSelected;
 	short iSelected = poMultiColCtrl->GetSelectedId();
-	poMultiColCtrl->GetCellText(CI_File,iSelected, sSelected);
+	if ((m_iFileType == ONLY_CSV || m_iFileType == ONLY_TXT || m_iFileType == ONLY_ASC) &&
+	    iSelected >= 0 && iSelected < (short)m_filePaths.size())
+	{
+		GetDataModel()->m_strSelectedFile = StringC(m_filePaths[iSelected].c_str());
+		return;
+	}
+	StringC sSelected;
+	poMultiColCtrl->GetCellText(CI_File, iSelected, sSelected);
 	StringC sTemp = (m_iFileType == FILE_TYPE_JOBS) ? sSelected.Mid(4, 24) : sSelected.Mid(4, 12);
 	sTemp.Trim();
 	GetDataModel()->m_strSelectedFile = sTemp;

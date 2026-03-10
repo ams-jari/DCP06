@@ -116,6 +116,7 @@ namespace DCP
 			enum eCtrlId
 			{
 				eDefinePlaneInfo=1,
+				eCircleId,
 				ePlane,
 				eToolRadius,
 				eMeasureCirclePoints,
@@ -138,12 +139,14 @@ namespace DCP
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
 			PointBuffModel* GetPointBuffModelModel() const;
+			bool GetCircleIdString(char* buf, size_t bufLen) const;
 			
 	protected:
   			
 			Model * m_pModel;
 			
 			GUI::TextCtrlC*  m_pDefinePlaneInfo;
+			GUI::ComboLineCtrlC* m_pCircleId;
 			GUI::ComboLineCtrlC* m_pPlane;
 			GUI::ComboLineCtrlC* m_pToolRadius;
 			GUI::TextCtrlC*  m_pMeasureCirclePoints;
@@ -172,6 +175,7 @@ namespace DCP
             // Description: Destructor
             virtual ~CircleModel();
 
+			void clear_circle();
 			void delete_circle();
 			short show_circle_points();
 			Model* m_pModel;

@@ -201,12 +201,12 @@ void SelectOnePointDialog::OnDialogActivated()
 	StringC sPoint;
 	short iDef =  GetModel()->m_iDef;
 	//BeginDraw();  NO CAPTIVATE
-	char temp[20],temp_no[10];
+	char point_id_buf[POINT_ID_BUFF_LEN], point_no_buf[10];
 	
 	for(short i=0; i < GetModel()->m_iPointsCount; i++)
 	{
-		sprintf(temp,"%-s",GetModel()->points[i].point_id);
-		sPoint = temp;
+		snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, GetModel()->points[i].point_id);
+		sPoint = point_id_buf;
 		/*	
 		 if(iDef == BOTH)
 		 {
@@ -279,8 +279,8 @@ void SelectOnePointDialog::OnDialogActivated()
 				sActualDesign += L"-";	
 
 		USER_APP_VERIFY(poMultiColCtrl->AddRow((short) i));
-		sprintf(temp_no,"%-d",i+1);
-		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) i, StringC(temp_no)));
+		sprintf(point_no_buf,"%-d",i+1);
+		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) i, StringC(point_no_buf)));
 
 		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Point, (short) i, sPoint));
 

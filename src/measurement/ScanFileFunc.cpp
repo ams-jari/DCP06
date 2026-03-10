@@ -103,7 +103,7 @@ bool DCP::ScanFileFunc::setFile(const char* filename)
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	//CPI::SensorC::GetInstance()->
 	
-	char temp[CPI::LEN_PATH_MAX];
+	char full_path[CPI::LEN_PATH_MAX];
 	char temp_name[CPI::LEN_PATH_MAX];	
 	
 	sprintf(temp_name,"%s",filename);
@@ -112,19 +112,19 @@ bool DCP::ScanFileFunc::setFile(const char* filename)
 	if(m_pCommon->strblank(temp_name))
 		return false;
 	
-	temp[0] = '\0';
-	strcat(temp, m_cPath);
-	strcat(temp,temp_name);
+	full_path[0] = '\0';
+	strcat(full_path, m_cPath);
+	strcat(full_path,temp_name);
 	
-	if(!strstr(temp,"."))
+	if(!strstr(full_path,"."))
 	{
-		strcat(temp,".scn");
+		strcat(full_path,".scn");
 	}
 	/*
-	if(!strstr(temp,".adf"))
-		strcat(temp,".adf");
+	if(!strstr(full_path,".adf"))
+		strcat(full_path,".adf");
 	*/
-	char* pSearch = &temp[0];
+	char* pSearch = &full_path[0];
 
 	if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)
 	//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    
@@ -159,24 +159,24 @@ bool DCP::ScanFileFunc::setFile(StringC filename)
 
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
-	char temp[CPI::LEN_PATH_MAX];
+	char full_path[CPI::LEN_PATH_MAX];
 		char temp_name[CPI::LEN_PATH_MAX];	
 	
 	sprintf(temp_name,"%s",filename_temp);
 	
-	temp[0] = '\0';
-	strcat(temp, m_cPath);
-	strcat(temp, temp_name);
+	full_path[0] = '\0';
+	strcat(full_path, m_cPath);
+	strcat(full_path, temp_name);
 
-	if(!strstr(temp,"."))
+	if(!strstr(full_path,"."))
 	{
-		strcat(temp,".scn");
+		strcat(full_path,".scn");
 	}
 	/*
-	if(!strstr(temp,".adf"))
-		strcat(temp,".adf");
+	if(!strstr(full_path,".adf"))
+		strcat(full_path,".adf");
 	*/
-	char* pSearch = &temp[0];
+	char* pSearch = &full_path[0];
 
 	int rr = m_pCommon->find_first_file(pSearch, &FileInfo);
 	MsgBox msgbox;
@@ -437,13 +437,13 @@ short DCP::ScanFileFunc::fopen1(const char* mode)
 **************************************************************/
 FILE* DCP::ScanFileFunc::fopen2(FILE *pFile , char* fname, const char* mode)
 {
-	char temp[CPI::LEN_PATH_MAX];
-	temp[0] = '\0';
+	char full_path[CPI::LEN_PATH_MAX];
+	full_path[0] = '\0';
 
-	strcat(temp, m_cPath);
-	strcat(temp, fname);
+	strcat(full_path, m_cPath);
+	strcat(full_path, fname);
 	
-	pFile = fopen(temp, mode);	
+	pFile = fopen(full_path, mode);	
 	
 	if(pFile)
 	{
@@ -452,7 +452,7 @@ FILE* DCP::ScanFileFunc::fopen2(FILE *pFile , char* fname, const char* mode)
 	MsgBox msgbox;
 	StringC msg;
 	msg.LoadTxt(AT_DCP06,	M_DCP_FILE_OPEN_ERROR_TOK);
-			msg.Format(msg, (const wchar_t*)StringC(temp));
+			msg.Format(msg, (const wchar_t*)StringC(full_path));
 			msgbox.ShowMessageOk(msg);
 
 	return 0;
@@ -537,12 +537,12 @@ int attr = 0;
 
 	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
 	
-	char temp[CPI::LEN_PATH_MAX];
-	temp[0] = '\0';
+	char full_path[CPI::LEN_PATH_MAX];
+	full_path[0] = '\0';
 
-	strcat(temp, m_cPath);
-	strcat(temp, fname);
-	char* pSearch = &temp[0];
+	strcat(full_path, m_cPath);
+	strcat(full_path, fname);
+	char* pSearch = &full_path[0];
 
 	if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)
 	//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    

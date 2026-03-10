@@ -563,7 +563,7 @@ short DCP::CalcLineFit::CalcPoint(short index,
 
 		results[index].points_distance = dist;
 
-		double temp = 	dest_point.y - p_ocs[1];
+		double y_offset_from_ref = dest_point.y - p_ocs[1];
 		
 		if(selectedRefLine == REF_LINE_HORIZONTAL)
 		{
@@ -584,7 +584,7 @@ short DCP::CalcLineFit::CalcPoint(short index,
 		double offset= calc_point_dist_from_point(&m, &dest_point1);
 		
 		//results[index].line_offset = dest_point.y - p_ocs[1];//p_ocs[1] - dest_point.y;//p_ocs_line[1];
-		results[index].line_offset = temp < 0.0 ? -offset : offset;
+		results[index].line_offset = y_offset_from_ref < 0.0 ? -offset : offset;
 
 		// ja et�isyys 1. pisteest�
 		double dist1;
@@ -757,9 +757,9 @@ ret = false;
 
 			dist_count = common->points_count_in_plane(&align321Model->align321_hz_plane_buff[0]);
 
-			sprintf(align321Model->align321_hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
-			sprintf(align321Model->align321_hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
-			sprintf(align321Model->align321_hz_plane_buff[0].points[2].point_id,"%-6.6s","rp-p3");
+			snprintf(align321Model->align321_hz_plane_buff[0].points[0].point_id, sizeof(align321Model->align321_hz_plane_buff[0].points[0].point_id), DCP_POINT_ID_FMT, "rp-p1");
+			snprintf(align321Model->align321_hz_plane_buff[0].points[1].point_id, sizeof(align321Model->align321_hz_plane_buff[0].points[1].point_id), DCP_POINT_ID_FMT, "rp-p2");
+			snprintf(align321Model->align321_hz_plane_buff[0].points[2].point_id, sizeof(align321Model->align321_hz_plane_buff[0].points[2].point_id), DCP_POINT_ID_FMT, "rp-p3");
 			align321Model->align321_hz_plane = true;
 			ret = true;
 		}

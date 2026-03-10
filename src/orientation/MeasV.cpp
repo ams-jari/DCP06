@@ -424,7 +424,7 @@ void DCP::MeasVController::OnF1Pressed()
 
 		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 
-		sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->ref_point_buff.point_id);
+		snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->ref_point_buff.point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 		
 		if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
@@ -653,7 +653,7 @@ void DCP::MeasVController::OnActiveControllerClosed( int lCtrlID, int lExitCode 
 		{
 			// create model
 			DCP::PointBuffModel* pModel = new PointBuffModel;
-			sprintf(pModel->m_pPointBuff[0].point_id,"%s", m_pDlg->GetDataModel()->ref_point_buff.point_id); 
+			snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->ref_point_buff.point_id); 
 			if(GetController(HIDDENPOINT_CONTROLLER) == nullptr)
 			{
 				(void)AddController( HIDDENPOINT_CONTROLLER, new DCP::HiddenPointController(m_pModel));
@@ -667,7 +667,7 @@ void DCP::MeasVController::OnActiveControllerClosed( int lCtrlID, int lExitCode 
 		{
 			// create model
 			DCP::PointBuffModel* pModel = new PointBuffModel;
-			sprintf(pModel->m_pPointBuff[0].point_id,"%s", m_pDlg->GetDataModel()->ref_point_buff.point_id); 
+			snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->ref_point_buff.point_id); 
 			if(GetController(XYZ_CONTROLLER) == nullptr)
 			{
 				(void)AddController( XYZ_CONTROLLER, new DCP::XYZController(m_pModel));
@@ -715,7 +715,7 @@ void DCP::MeasVController::OnActiveControllerClosed( int lCtrlID, int lExitCode 
 		{
 			DCP::PointBuffModel* pModel = new PointBuffModel;
 
-			sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", "");//m_pDataModel->pid_ptr);
+			snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, "");
 			
 			if(GetController(MID_POINT_CONTROLLER) == nullptr)
 			{

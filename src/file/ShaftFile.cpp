@@ -151,9 +151,9 @@ void DCP::ShaftFileDialog::RefreshControls()
 		}
 
 			unsigned int uiFreeSpace = m_pDataModel->pCommon->get_free_space();
-			char temp[100];
-			sprintf(temp,"%lu",uiFreeSpace);
-			m_pFreeSpace->GetStringInputCtrl()->SetString(StringC(temp));
+			char free_space_str[100];
+			sprintf(free_space_str,"%lu",uiFreeSpace);
+			m_pFreeSpace->GetStringInputCtrl()->SetString(StringC(free_space_str));
 	}
 }
 
@@ -536,18 +536,18 @@ bool DCP::ShaftFileFunc::setFile(StringC filename)
 	
 	//bool bRet =	CPI::SensorC::GetInstance()->GetPath(CPI::devicePcCard, CPI::ftUserAscii, m_cPath);
 	
-	char temp[CPI::LEN_PATH_MAX];
+	char full_path[CPI::LEN_PATH_MAX];
 	char temp_name[CPI::LEN_PATH_MAX];	
 	
 	sprintf(temp_name,"%s",filename_temp);
-	temp[0] = '\0';
-	strcat(temp, m_cPath);
-	strcat(temp, temp_name);
+	full_path[0] = '\0';
+	strcat(full_path, m_cPath);
+	strcat(full_path, temp_name);
 
-	if(!strstr(temp,".sft"))
-		strcat(temp,".sft");
+	if(!strstr(full_path,".sft"))
+		strcat(full_path,".sft");
 
-	char* pSearch = &temp[0];
+	char* pSearch = &full_path[0];
 
 	if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)
 	//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    
@@ -671,11 +671,11 @@ int Result;
 		//CPI::FileIteratorC FileIterator;
 		boost::filesystem::path  FileInfo;
 
-		char temp[CPI::LEN_PATH_MAX];
-		temp[0] = '\0';
-		strcat(temp, m_cPath);
-		strcat(temp, m_cFileName);
-		char* pSearch = &temp[0];
+		char full_path[CPI::LEN_PATH_MAX];
+		full_path[0] = '\0';
+		strcat(full_path, m_cPath);
+		strcat(full_path, m_cFileName);
+		char* pSearch = &full_path[0];
 
 		if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0) 
 		//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    
@@ -767,7 +767,7 @@ bool Result;
 
 short DCP::ShaftFileFunc::save_shaft_to_file(StringC Id, ShaftModel* pModel)
 {
-char temp1[100];
+char line_buf[100];
 StringC msg;
 MsgBox msgbox;
 int iInstNo=0;
@@ -793,73 +793,74 @@ double dist;
 
 	fseek(m_pFile, 0L, SEEK_END);
 
-	char temp[100];
-	//UTL::UnicodeToAscii(temp,Id);
-	BSS::UTI::BSS_UTI_WCharToAscii( Id, temp );
+	char point_id_buf[100];
+	char name_buf[100];
+	//UTL::UnicodeToAscii(point_id_buf,Id);
+	BSS::UTI::BSS_UTI_WCharToAscii( Id, point_id_buf );
 
-	sprintf(temp1,"\nShaftId:%s%c%c", temp,13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"\nShaftId:%s%c%c", point_id_buf,13,10);
+	fputs(line_buf,m_pFile);
 
 	int iYear, iMonth, iDay, iHour, iMin, iSec;
 	m_pCommon->GetDate(&iDay, &iMonth, &iYear);
 	m_pCommon->GetTime(&iHour, &iMin, &iSec);
 
-	sprintf(temp1,"Date/Time:%02d.%02d.%04d %02d:%02d:%02d%c%c", iDay, iMonth, iYear, iHour, iMin, iSec,13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Date/Time:%02d.%02d.%04d %02d:%02d:%02d%c%c", iDay, iMonth, iYear, iHour, iMin, iSec,13,10); 
+	fputs(line_buf,m_pFile);
 
 	
-	m_pCommon->GetUserName(temp);
-	sprintf(temp1,"User:%s%c%c", temp,13,10); 
-	fputs(temp1,m_pFile);
+	m_pCommon->GetUserName(name_buf);
+	sprintf(line_buf,"User:%s%c%c", name_buf,13,10); 
+	fputs(line_buf,m_pFile);
 
-	m_pCommon->GetInstrumentName(temp);
+	m_pCommon->GetInstrumentName(name_buf);
 	m_pCommon->GetInstrumentNo(&iInstNo);
-	sprintf(temp1,"Instrument(type/no):%s %d%c%c", temp,iInstNo,13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Instrument(type/no):%s %d%c%c", name_buf,iInstNo,13,10);
+	fputs(line_buf,m_pFile);
 	/*
 	sprintf(temp1,"Center point(x,y,z):%9.*f %9.*f %9.*f%c%c", m_pModel->m_nDecimals,pModel->shaft_circle_cx, 
 													m_pModel->m_nDecimals,pModel->shaft_circle_cy, 
 													m_pModel->m_nDecimals,pModel->shaft_circle_cz,13,10); 
-	fputs(temp1,m_pFile);
+	fputs(line_buf,m_pFile);
 	*/
-	sprintf(temp1,"Center point:%c%c",13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Center point:%c%c",13,10);
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"  x:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cx,13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"  x:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cx,13,10);
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"  y:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cy,13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"  y:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cy,13,10);
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"  z:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cz,13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"  z:   %9.*f%c%c",m_pModel->m_nDecimals,pModel->shaft_circle_cz,13,10);
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"Radius:%9.*f%c%c", m_pModel->m_nDecimals,pModel->shaft_circle_diameter,13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Radius:%9.*f%c%c", m_pModel->m_nDecimals,pModel->shaft_circle_diameter,13,10); 
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"Normal:%c%c",13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Normal:%c%c",13,10);
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"  i:   %9.*f%c%c",6,pModel->shaft_circle_vi,13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"  i:   %9.*f%c%c",6,pModel->shaft_circle_vi,13,10);
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"  j:   %9.*f%c%c",6,pModel->shaft_circle_vj,13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"  j:   %9.*f%c%c",6,pModel->shaft_circle_vj,13,10);
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"  k:   %9.*f%c%c",6,pModel->shaft_circle_vk,13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"  k:   %9.*f%c%c",6,pModel->shaft_circle_vk,13,10);
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"RMS:   %9.*f%c%c", m_pModel->m_nDecimals,pModel->shaft_circle_rms,13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"RMS:   %9.*f%c%c", m_pModel->m_nDecimals,pModel->shaft_circle_rms,13,10); 
+	fputs(line_buf,m_pFile);
 	
-	sprintf(temp1,"Angle: %9.*f%c%c", m_pModel->m_nDecimals,pModel->angleLines,13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Angle: %9.*f%c%c", m_pModel->m_nDecimals,pModel->angleLines,13,10); 
+	fputs(line_buf,m_pFile);
 	
-	sprintf(temp1,"Distance: %9.*f%c%c", m_pModel->m_nDecimals,pModel->centerOfCircleDist,13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Distance: %9.*f%c%c", m_pModel->m_nDecimals,pModel->centerOfCircleDist,13,10); 
+	fputs(line_buf,m_pFile);
 
-	sprintf(temp1,"Deviations of points%c%c",13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Deviations of points%c%c",13,10); 
+	fputs(line_buf,m_pFile);
 	
 	short sta;
 	short count=0;
@@ -870,15 +871,15 @@ double dist;
 		if(sta == 1 || sta == 2) // measured or design
 		{
 			count++;
-			sprintf(temp1,"%-2d.%-6.6s %+9.*f%c%c", count,pModel->shaft_circle_points[0].points[i].point_id, 
+			sprintf(line_buf,"%-2d." DCP_POINT_ID_FMT " %+9.*f%c%c", count,pModel->shaft_circle_points[0].points[i].point_id, 
 									m_pModel->m_nDecimals, pModel->shaft_circle_points[0].points[i].diameter - pModel->shaft_circle_points[0].diameter,
 									13,10);
-			fputs(temp1,m_pFile);
+			fputs(line_buf,m_pFile);
 		}
 	}
 
-	sprintf(temp1,"Point distances from plane%c%c",13,10); 
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"Point distances from plane%c%c",13,10); 
+	fputs(line_buf,m_pFile);
 	count=0;
 	for(i =0; i < MAX_POINTS_IN_CIRCLE; i++)
 	{
@@ -906,17 +907,17 @@ double dist;
 			/* Calculate distance */
 			dist = calc_point_dist_from_plane(&m, &wplane);
 
-			sprintf(temp1,"%-2d.%-6.6s %+9.*f%c%c", count,pModel->shaft_circle_points[0].points[i].point_id, 
+			sprintf(line_buf,"%-2d." DCP_POINT_ID_FMT " %+9.*f%c%c", count,pModel->shaft_circle_points[0].points[i].point_id, 
 									m_pModel->m_nDecimals,dist,
 									13,10);
-			fputs(temp1,m_pFile);
+			fputs(line_buf,m_pFile);
 			
 		}
 	}
 	
 
-	sprintf(temp1,"%c%c%c%c",13,10,13,10);
-	fputs(temp1,m_pFile);
+	sprintf(line_buf,"%c%c%c%c",13,10,13,10);
+	fputs(line_buf,m_pFile);
 
 	fflush(m_pFile);
 	
@@ -938,7 +939,7 @@ short DCP::ShaftFileFunc::delete_file(void)
 
 	short result=-1;
 	short ret=true;
-	char Temp[13];
+	char filename_buf[13];
 
 	if(!m_pCommon->card_status())//1) != 0)
 		return false;
@@ -952,9 +953,9 @@ short DCP::ShaftFileFunc::delete_file(void)
 	if(msgbox.ShowMessageYesNo(msg))
 	//if(msgbox1(TXT_NIL_TOKEN,M_DELETE_FILE_TOK, (void *) fstruct->name, MB_YESNO) == TRUE)
 	{
-		strcpy(Temp, m_cFileName);
+		strcpy(filename_buf, m_cFileName);
 		close_crl_file();
-		result = remove1(Temp);
+		result = remove1(filename_buf);
 		if(result == -1)
 		{
 			msg.LoadTxt(AT_DCP06,M_DCP_CANNOT_DELETE_FILE_TOK);
@@ -974,7 +975,7 @@ char fname[13];
 short ret;
 StringC msg;
 MsgBox msgbox;
-char temp[CPI::LEN_PATH_MAX];
+char full_path[CPI::LEN_PATH_MAX];
 
 	if(!m_pCommon->check_free_space(30000L))
 			return 1;
@@ -992,9 +993,9 @@ char temp[CPI::LEN_PATH_MAX];
 
 		strcat(fname, ".sft");
 		
-		temp[0] = '\0';
-		strcat(temp,m_cPath);
-		strcat(temp,fname);
+		full_path[0] = '\0';
+		strcat(full_path,m_cPath);
+		strcat(full_path,fname);
 		sprintf(m_cPathAndFileName,"%-s%-s",m_cPath,fname);
 		
 		if(access1(fname) == 1)
@@ -1040,12 +1041,12 @@ int attr = 0;
 
 	//bool bRet =	CPI::SensorC::GetInstance()->GetPath(CPI::devicePcCard, CPI::ftUserAscii, m_cPath);
 	
-	char temp[CPI::LEN_PATH_MAX];
-	temp[0] = '\0';
+	char full_path[CPI::LEN_PATH_MAX];
+	full_path[0] = '\0';
 
-	strcat(temp, m_cPath);
-	strcat(temp, fname);
-	char* pSearch = &temp[0];
+	strcat(full_path, m_cPath);
+	strcat(full_path, fname);
+	char* pSearch = &full_path[0];
 
 	if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)
 	//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    
@@ -1075,12 +1076,12 @@ short DCP::ShaftFileFunc::open_file()
 		//CPI::FileIteratorC FileIterator;
 		boost::filesystem::path  FileInfo;
 
-		char temp[CPI::LEN_PATH_MAX];
-		temp[0] = '\0';
-		strcat(temp, m_cPathAndFileName);
-		//strcat(temp, m_cPath);
-		//strcat(temp, m_cFileName);
-		char* pSearch = &temp[0];
+		char full_path[CPI::LEN_PATH_MAX];
+		full_path[0] = '\0';
+		strcat(full_path, m_cPathAndFileName);
+		//strcat(full_path, m_cPath);
+		//strcat(full_path, m_cFileName);
+		char* pSearch = &full_path[0];
 
 		if(m_pCommon->find_first_file(pSearch, &FileInfo) == 0)
 		//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)    

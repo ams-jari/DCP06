@@ -334,9 +334,9 @@ void DCP::InitializationDialog::RefreshControls()
 		float fPPM = oCorrectionData.GetAtmoshericPPM();
 
 		// TARGET	
-		char temp[100];
-		sprintf(temp,"%+.1f",fRef*1000.0);
-		m_pTextTarget->GetStringInputCtrl()->SetString(temp);
+		char ref_value_str[100];
+		sprintf(ref_value_str,"%+.1f",fRef*1000.0);
+		m_pTextTarget->GetStringInputCtrl()->SetString(ref_value_str);
 
 		// USER	
 		if(!GetModel()->m_sUser.IsEmpty())

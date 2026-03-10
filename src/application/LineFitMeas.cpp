@@ -220,11 +220,11 @@ void DCP::LineFitMeasDialog::RefreshControls()
 		}
 
 		StringC sTemp;
-		char point_id[10];
+		char point_id[POINT_ID_BUFF_LEN];
 		sTemp.Format(L"%d/%d",GetDataModel()->m_iCurrentPoint, GetDataModel()->m_iPointsCount);
 		m_pPointNo->GetStringInputCtrl()->SetString(sTemp);
 		
-		sprintf(point_id,"%-s",GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id);
+		snprintf(point_id, sizeof(point_id), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id);
 		m_pCommon->strbtrim(point_id);
 
 		sTemp = point_id ; //GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id;
@@ -386,23 +386,24 @@ void DCP::LineFitMeasDialog::add_point()
 	if(GetDataModel()->m_iPointsCount < GetDataModel()->m_iMaxPoint)
 	{
 		// 271011
-		char temp[10];
-		sprintf(temp,"%-s",GetDataModel()->point_table[GetDataModel()->m_iPointsCount-1].point_id);
+		char point_id_buf[POINT_ID_BUFF_LEN];
+		snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iPointsCount-1].point_id);
 
-		if(!m_pCommon->strblank(temp))
+		if(!m_pCommon->strblank(point_id_buf))
 		{
-			m_pCommon->inc_id(temp);
+			m_pCommon->inc_id(point_id_buf);
 		}
 		else
 		{
 			if(!m_pCommon->strblank(GetDataModel()->default_pid))
 			{
-				sprintf(temp,"%s%d",GetDataModel()->default_pid,GetDataModel()->m_iPointsCount+1);
+				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount+1);
 			}
 		}
 
 		GetDataModel()->m_iPointsCount++;
 		GetDataModel()->m_iCurrentPoint = GetDataModel()->m_iPointsCount;
+		snprintf(GetDataModel()->point_table[GetDataModel()->m_iPointsCount - 1].point_id, sizeof(GetDataModel()->point_table[0].point_id), DCP_POINT_ID_FMT, point_id_buf);
 		RefreshControls();
 	}
 	else 
@@ -421,12 +422,12 @@ void DCP::LineFitMeasDialog::OnPointIdChanged( int unNotifyCode, int ulParam2)
 	{
 		StringC sPoint;
 		sPoint = m_pPointId->GetStringInputCtrl()->GetString();
-		char cPoint[10];
+		char cPoint[POINT_ID_BUFF_LEN];
 		//UTL::UnicodeToAscii(cPoint,DCP_POINT_ID_LENGTH +1,sPoint);// +1 280508
-		BSS::UTI::BSS_UTI_WCharToAscii(sPoint, cPoint,DCP_POINT_ID_LENGTH +1);
+		BSS::UTI::BSS_UTI_WCharToAscii(sPoint, cPoint, DCP_POINT_ID_LENGTH + 1);
 
 		m_pCommon->strbtrim(cPoint);
-		sprintf(GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id,"%s",cPoint);
+		snprintf(GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id, POINT_ID_BUFF_LEN, DCP_POINT_ID_FMT, cPoint);
 		RefreshControls();
 	}
 }
@@ -636,7 +637,7 @@ void DCP::LineFitMeasController::OnF1Pressed()
 
 		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 		
-		sprintf(pModel->sPointId,"%6.6s",m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
+		snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 		
 		if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
@@ -815,7 +816,7 @@ void DCP::LineFitMeasController::OnSHF5Pressed()
 		for(int i = 0; i < m_pDlg->GetDataModel()->m_iPointsCount;i++)
 		{
 			pModel->points[i].no = i+1;
-			sprintf(pModel->points[i].point_id,"%-6.6s", m_pDlg->GetDataModel()->point_table[i].point_id);
+			snprintf(pModel->points[i].point_id, sizeof(pModel->points[i].point_id), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->point_table[i].point_id);
 			sprintf(pModel->points[i].point_status,"%c", m_pDlg->GetDataModel()->point_table[i].sta != POINT_NOT_DEFINED ? '+': '-');
 		}
 		pModel->m_iCounts = m_pDlg->GetDataModel()->m_iPointsCount;
@@ -913,9 +914,9 @@ void DCP::LineFitMeasController::OnActiveControllerClosed( int lCtrlID, int lExi
 	else if(lCtrlID == MEAS_XYZ_CONTROLLER)
 	{/*
 		MsgBox MsgBox;
-		char temp[100];
-		sprintf(temp,"%s (%d)", "Exit code", lExitCode);
-		MsgBox.ShowMessageOk(StringC(temp));
+		char exit_msg_buf[100];
+		sprintf(exit_msg_buf,"%s (%d)", "Exit code", lExitCode);
+		MsgBox.ShowMessageOk(StringC(exit_msg_buf));
 		*/
 	}
 	// SPECIAL MENU
@@ -977,7 +978,7 @@ void DCP::LineFitMeasController::OnActiveControllerClosed( int lCtrlID, int lExi
 		{
 			DCP::PointBuffModel* pModel = new PointBuffModel;
 
-			sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", "");
+			snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, "");
 			
 			if(GetController(MID_POINT_CONTROLLER) == nullptr)
 			{

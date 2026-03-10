@@ -149,7 +149,7 @@ void DCP::InputTextDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 				/*char temp[20];
 				UTL::UnicodeToAscii(temp, sPid);
 				common.strbtrim(temp);
-				sprintf(m_pMeasModel->pid_ptr,"%-6.6s",temp);
+				snprintf(m_pMeasModel->pid_ptr, sizeof(m_pMeasModel->pid_ptr), DCP_POINT_ID_FMT, temp);
 				m_pMeasModel->save_point();
 				RefreshControls();
 				*/

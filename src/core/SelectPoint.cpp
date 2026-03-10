@@ -107,20 +107,20 @@ void SelectPointDialog::OnDialogActivated()
 	
 	StringC sTitle;
 	sTitle.LoadTxt(AT_DCP06,T_DCP_SELECT_POINT_TOK);
-	char temp[20];
-	sprintf(temp,"(%d)", pModel->m_iCounts);
-	sTitle += 	StringC(temp);
+	char count_str[20];
+	sprintf(count_str,"(%d)", pModel->m_iCounts);
+	sTitle += 	StringC(count_str);
 	SetTitle(sTitle);
 
 	//BeginDraw(); 
 	StringC sPointNo;
 	for(int i=0; i < pModel->m_iCounts; i++)
 	{
-		sprintf(temp,"%d",i+1);
-		sPointNo = temp;
+		sprintf(count_str,"%d",i+1);
+		sPointNo = count_str;
 		USER_APP_VERIFY(poMultiColCtrl->AddRow((short) i + 1));
 
-		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) i + 1, temp));
+		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) i + 1, count_str));
 
 		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Point, (short) i + 1, pModel->points[i].point_id));
 
@@ -140,10 +140,11 @@ void SelectPointDialog::OnDialogActivated()
 	StringC sSelected = L" ";
 	StringC sActualDesign = sActualSelected + L"/" + sDesignSelected;
 	StringC sPoint;
+	char point_id_buf[20];
 		for(short i=0; i < MAX_POINTS_IN_FILE; i++)
 	{
-		sprintf(temp,"point%d",i+1);
-		sPoint = temp;
+		sprintf(point_id_buf,"point%d",i+1);
+		sPoint = point_id_buf;
 
 		USER_APP_VERIFY(poMultiColCtrl->AddRow((short) i));
 		USER_APP_VERIFY(poMultiColCtrl->SetCellStr(CI_Point, (short) i, sPoint));

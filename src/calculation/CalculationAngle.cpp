@@ -314,14 +314,14 @@ void DCP::CalculationAngleDialog::RefreshControls()
 		BSS::UTI::BSS_UTI_WCharToAscii(sRefType, m_pDataModel->cRefType);
 		m_pDataModel->pCommon->strbtrim(m_pDataModel->cRefType);
 		
-		sprintf(m_pDataModel->cRefId,"%-6.6s",m_pDataModel->refpoint.point_id);
+		snprintf(m_pDataModel->cRefId, sizeof(m_pDataModel->cRefId), DCP_POINT_ID_FMT, m_pDataModel->refpoint.point_id);
 		m_pDataModel->pCommon->strbtrim(m_pDataModel->cRefId);
 		
 		//UTL::UnicodeToAscii(m_pDataModel->cTrgtType,sTargetType);
 		BSS::UTI::BSS_UTI_WCharToAscii(sTargetType, m_pDataModel->cTrgtType);
 		m_pDataModel->pCommon->strbtrim(m_pDataModel->cTrgtType);
 
-		sprintf(m_pDataModel->cTrgtId,"%-6.6s",m_pDataModel->trgtpoint.point_id);
+		snprintf(m_pDataModel->cTrgtId, sizeof(m_pDataModel->cTrgtId), DCP_POINT_ID_FMT, m_pDataModel->trgtpoint.point_id);
 		m_pDataModel->pCommon->strbtrim(m_pDataModel->cTrgtId);
 		
 		StringC sTemp = m_pNote->GetStringInputCtrl()->GetString();
@@ -346,7 +346,7 @@ void DCP::CalculationAngleDialog::OnValueChanged(int unNotifyCode, int ulParam2)
 		{
 			StringC sTemp;
 			if(m_pRefId->GetStringInputCtrl()->IsEmpty())
-				sprintf(m_pDataModel->cRefId,"%-6.6s","");	
+				snprintf(m_pDataModel->cRefId, sizeof(m_pDataModel->cRefId), DCP_POINT_ID_FMT, "");	
 			else
 			{
 				sTemp = m_pRefId->GetStringInputCtrl()->GetString();
@@ -354,7 +354,7 @@ void DCP::CalculationAngleDialog::OnValueChanged(int unNotifyCode, int ulParam2)
 				char asciiBuffer[STRING_BUFFER_SMALL];
 				BSS::UTI::BSS_UTI_WCharToAscii(sTemp, asciiBuffer);
 				m_pDataModel->pCommon->strbtrim(asciiBuffer);
-				sprintf(m_pDataModel->cRefId,"%-6.6s",asciiBuffer);
+				snprintf(m_pDataModel->cRefId, sizeof(m_pDataModel->cRefId), DCP_POINT_ID_FMT, asciiBuffer);
 				
 			}
 		}
@@ -362,7 +362,7 @@ void DCP::CalculationAngleDialog::OnValueChanged(int unNotifyCode, int ulParam2)
 		{
 			StringC sTemp;
 			if(m_pTargetId->GetStringInputCtrl()->IsEmpty())
-				sprintf(m_pDataModel->cRefId,"%-6.6s","");	
+				snprintf(m_pDataModel->cTrgtId, sizeof(m_pDataModel->cTrgtId), DCP_POINT_ID_FMT, "");	
 			else
 			{
 				sTemp = m_pTargetId->GetStringInputCtrl()->GetString();
@@ -370,7 +370,7 @@ void DCP::CalculationAngleDialog::OnValueChanged(int unNotifyCode, int ulParam2)
 				char asciiBuffer[STRING_BUFFER_SMALL];
 				BSS::UTI::BSS_UTI_WCharToAscii(sTemp, asciiBuffer);
 				m_pDataModel->pCommon->strbtrim(asciiBuffer);
-				sprintf(m_pDataModel->cTrgtId,"%-6.6s",asciiBuffer);
+				snprintf(m_pDataModel->cTrgtId, sizeof(m_pDataModel->cTrgtId), DCP_POINT_ID_FMT, asciiBuffer);
 				
 			}
 		}
@@ -909,7 +909,7 @@ void DCP::CalculationAngleController::OnActiveControllerClosed( int lCtrlID, int
 		m_pDataModel->pAdfFileFunc->form_pnt(pModel->iSelectedNo);
 
 		m_pDataModel->pCommon->strbtrim(m_pDataModel->pAdfFileFunc->pointid_front);
-		sprintf(m_pDataModel->trgtpoint.point_id,"%6s",m_pDataModel->pAdfFileFunc->pointid_front);
+		snprintf(m_pDataModel->trgtpoint.point_id, sizeof(m_pDataModel->trgtpoint.point_id), DCP_POINT_ID_FMT, m_pDataModel->pAdfFileFunc->pointid_front);
 
 		// design or design
 		if(pModel->points[pModel->iSelectedNo-1].bActualSelected)

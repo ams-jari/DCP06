@@ -224,9 +224,9 @@ namespace DCP
 			char cDid[15];
 			char cNote[15];
 			char cDist[15];
-			char cRefId[15];
+			char cRefId[POINT_ID_BUFF_LEN];
 			char cRefType[15];
-			char cTrgtId[15];
+			char cTrgtId[POINT_ID_BUFF_LEN];
 			char cTrgtType[15];
 	private:
 			

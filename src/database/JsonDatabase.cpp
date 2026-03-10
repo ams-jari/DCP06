@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cctype>
+#include <cstring>
 #if defined(_MSC_VER) && _MSC_VER < 1600
 #include <float.h>
 #define DCP_ISNAN(x) _isnan(x)
@@ -120,7 +121,6 @@ std::string JsonDatabase::getDataDirectory() const {
 std::string JsonDatabase::getJobWorkingPath(const std::string& jobId) const {
     if (m_dataDirectory.empty() || jobId.empty()) return "";
     boost::filesystem::path p(m_dataDirectory);
-    p /= ".work";
     boost::system::error_code ec;
     if (!boost::filesystem::exists(p, ec))
         boost::filesystem::create_directories(p, ec);
@@ -278,7 +278,49 @@ Json::Value JsonDatabase::jobDataToJson(const JobData& data) {
             pointsJson[it->first] = pointDataToJson(*it->second);
     }
     j["points"] = pointsJson;
+    Json::Value circlesJson;
+    for (std::map<std::string, DCP_SHARED_PTR<CircleData> >::const_iterator it = data.circlesData.begin();
+         it != data.circlesData.end(); ++it) {
+        if (it->second.get())
+            circlesJson[it->first] = circleDataToJson(*it->second);
+    }
+    j["circles_data"] = circlesJson;
     return j;
+}
+
+Json::Value JsonDatabase::circleDataToJson(const CircleData& data) {
+    Json::Value j;
+    j["type"] = data.type;
+    j["id"] = data.id;
+    j["planeType"] = data.planeType;
+    setJsonDouble(j, "center_x", data.center_x);
+    setJsonDouble(j, "center_y", data.center_y);
+    setJsonDouble(j, "center_z", data.center_z);
+    setJsonDouble(j, "normal_x", data.normal_x);
+    setJsonDouble(j, "normal_y", data.normal_y);
+    setJsonDouble(j, "normal_z", data.normal_z);
+    setJsonDouble(j, "diameter", data.diameter);
+    j["toolRadius"] = data.toolRadius;
+    j["calculated"] = data.calculated;
+    j["rms"] = data.rms;
+    return j;
+}
+
+bool JsonDatabase::jsonToCircleData(const Json::Value& j, CircleData& data) {
+    data.type = getJsonString(j, "type", "circle");
+    data.id = getJsonString(j, "id", "");
+    data.planeType = getJsonString(j, "planeType", "");
+    data.center_x = getJsonDoubleDefault(j, "center_x", 0.0);
+    data.center_y = getJsonDoubleDefault(j, "center_y", 0.0);
+    data.center_z = getJsonDoubleDefault(j, "center_z", 0.0);
+    data.normal_x = getJsonDoubleDefault(j, "normal_x", 0.0);
+    data.normal_y = getJsonDoubleDefault(j, "normal_y", 0.0);
+    data.normal_z = getJsonDoubleDefault(j, "normal_z", 0.0);
+    data.diameter = getJsonDoubleDefault(j, "diameter", 0.0);
+    data.toolRadius = getJsonDoubleDefault(j, "toolRadius", 0.0);
+    data.calculated = getJsonBoolDefault(j, "calculated", false);
+    data.rms = getJsonDoubleDefault(j, "rms", 0.0);
+    return true;
 }
 
 bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
@@ -310,6 +352,17 @@ bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
             DCP_SHARED_PTR<PointData> pt(new PointData());
             if (jsonToPointData(pts[key], *pt))
                 data.points[key] = pt;
+        }
+    }
+    data.circlesData.clear();
+    if (j.isMember("circles_data") && j["circles_data"].isObject()) {
+        const Json::Value& circs = j["circles_data"];
+        Json::Value::Members members = circs.getMemberNames();
+        for (Json::Value::Members::const_iterator it = members.begin(); it != members.end(); ++it) {
+            const std::string& key = *it;
+            DCP_SHARED_PTR<CircleData> cd(new CircleData());
+            if (jsonToCircleData(circs[key], *cd))
+                data.circlesData[key] = cd;
         }
     }
     return true;
@@ -433,6 +486,47 @@ bool JsonDatabase::getPoint(const std::string& pointId, PointData& data) const {
     return true;
 }
 
+bool JsonDatabase::addCircle(const std::string& circleId, const CircleData& data) {
+    if (!m_currentJob.get()) return false;
+    DCP_SHARED_PTR<CircleData> cd(new CircleData(data));
+    cd->id = circleId;
+    if (cd->measTime.empty()) cd->measTime = getCurrentIsoTime();
+    m_currentJob->circlesData[circleId] = cd;
+    return true;
+}
+
+bool JsonDatabase::updateCircle(const std::string& circleId, const CircleData& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<CircleData> >::iterator it = m_currentJob->circlesData.find(circleId);
+    if (it == m_currentJob->circlesData.end()) return false;
+    *it->second = data;
+    it->second->id = circleId;
+    return true;
+}
+
+bool JsonDatabase::deleteCircle(const std::string& circleId) {
+    if (!m_currentJob.get()) return false;
+    return m_currentJob->circlesData.erase(circleId) > 0;
+}
+
+bool JsonDatabase::getCircle(const std::string& circleId, CircleData& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<CircleData> >::const_iterator it = m_currentJob->circlesData.find(circleId);
+    if (it == m_currentJob->circlesData.end() || !it->second) return false;
+    data = *it->second;
+    return true;
+}
+
+std::vector<std::string> JsonDatabase::getCircleIdsInJob() const {
+    std::vector<std::string> out;
+    if (!m_currentJob.get()) return out;
+    for (std::map<std::string, DCP_SHARED_PTR<CircleData> >::const_iterator it = m_currentJob->circlesData.begin();
+         it != m_currentJob->circlesData.end(); ++it)
+        out.push_back(it->first);
+    std::sort(out.begin(), out.end());
+    return out;
+}
+
 std::vector<DCP_SHARED_PTR<PointData> > JsonDatabase::getAllPoints() const {
     std::vector<DCP_SHARED_PTR<PointData> > out;
     if (!m_currentJob.get()) return out;
@@ -468,8 +562,8 @@ short JsonDatabase::getPointListAsSelectPoints(S_SELECT_POINTS* pList, short iMa
         bool mea = pointHasActualValues(*pt);
         bool des = pointHasDesignValues(*pt);
         pList[iCount].iId = static_cast<short>(i + 1);
-        std::string id = pt->id.size() <= 6 ? pt->id : pt->id.substr(0, 6);
-        sprintf(pList[iCount].point_id, "%-6.6s", id.c_str());
+        std::string id = pt->id.size() <= (size_t)DCP_POINT_ID_LENGTH ? pt->id : pt->id.substr(0, DCP_POINT_ID_LENGTH);
+        snprintf(pList[iCount].point_id, sizeof(pList[iCount].point_id), DCP_POINT_ID_FMT, id.c_str());
         pList[iCount].bActualDefined = mea;
         pList[iCount].bDesignDefined = des;
         pList[iCount].bPointSelected = false;
@@ -499,8 +593,8 @@ short JsonDatabase::getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxP
         const DCP_SHARED_PTR<PointData>& pt = pts[i];
         if (!pt) continue;
         pList[iCount].no = static_cast<short>(i + 1);
-        std::string id = pt->id.size() <= 6 ? pt->id : pt->id.substr(0, 6);
-        sprintf(pList[iCount].point_id, "%-6.6s", id.c_str());
+        std::string id = pt->id.size() <= (size_t)DCP_POINT_ID_LENGTH ? pt->id : pt->id.substr(0, DCP_POINT_ID_LENGTH);
+        snprintf(pList[iCount].point_id, sizeof(pList[iCount].point_id), DCP_POINT_ID_FMT, id.c_str());
         bool mea = pointHasActualValues(*pt);
         bool des = pointHasDesignValues(*pt);
         sprintf(pList[iCount].point_status, "%s/%s", mea ? "A" : "-", des ? "D" : "-");
@@ -612,6 +706,139 @@ bool JsonDatabase::swapMeasDesign() {
 static std::string subStr(const std::string& line, size_t pos, size_t len) {
     if (pos + len > line.size()) return "";
     return trim(line.substr(pos, len));
+}
+
+/// Split line by separator. For "," split by comma; for " " or tab split by whitespace (DCP9-aligned).
+static void splitLine(const std::string& line, const std::string& separator, std::vector<std::string>& fields) {
+    fields.clear();
+    if (separator == ",") {
+        std::string::size_type start = 0;
+        for (;;) {
+            std::string::size_type end = line.find(',', start);
+            if (end == std::string::npos) {
+                fields.push_back(trim(line.substr(start)));
+                break;
+            }
+            fields.push_back(trim(line.substr(start, end - start)));
+            start = end + 1;
+        }
+    } else {
+        std::string s = trim(line);
+        std::string::size_type pos = 0;
+        while (pos < s.size()) {
+            std::string::size_type start = s.find_first_not_of(" \t", pos);
+            if (start == std::string::npos) break;
+            std::string::size_type end = s.find_first_of(" \t", start);
+            if (end == std::string::npos)
+                end = s.size();
+            fields.push_back(s.substr(start, end - start));
+            pos = end;
+        }
+    }
+}
+
+bool JsonDatabase::importFromTXT(const std::string& filename, const std::string& separator) {
+    if (!m_currentJob.get()) return false;
+    std::ifstream f(filename.c_str());
+    if (!f.is_open()) return false;
+    std::vector<std::string> allLines;
+    std::string line;
+    while (std::getline(f, line)) {
+        std::string t = trim(line);
+        if (!t.empty()) allLines.push_back(t);
+    }
+    f.close();
+    if (allLines.empty()) return false;
+
+    std::vector<std::string> fields;
+    int typicalColumnCount = 0;
+    int sampleCount = 0;
+    for (size_t i = 0; i < allLines.size() && sampleCount < 3; ++i) {
+        splitLine(allLines[i], separator, fields);
+        if (fields.size() >= 3) {
+            typicalColumnCount += static_cast<int>(fields.size());
+            sampleCount++;
+        }
+    }
+    if (sampleCount > 0)
+        typicalColumnCount /= sampleCount;
+    bool hasDesignColumns = (typicalColumnCount >= 7);
+
+    int pointCount = 0;
+    for (size_t i = 0; i < allLines.size(); ++i) {
+        splitLine(allLines[i], separator, fields);
+        if (fields.size() < 3) continue;
+
+        PointData pt;
+        pt.type = "point";
+        pt.measTime = getCurrentIsoTime();
+
+        std::string idStr = fields[0];
+        if (!idStr.empty() && !std::isalpha(static_cast<unsigned char>(idStr[0])))
+            idStr = "_" + idStr;
+        if (idStr.empty()) {
+            char buf[24];
+            sprintf(buf, "P%d", ++pointCount);
+            pt.id = buf;
+        } else {
+            pt.id = idStr;
+        }
+
+        if (hasDesignColumns && fields.size() >= 7) {
+            pt.x_dsg = parseDouble(fields.size() > 1 ? fields[1] : "");
+            pt.y_dsg = parseDouble(fields.size() > 2 ? fields[2] : "");
+            pt.z_dsg = parseDouble(fields.size() > 3 ? fields[3] : "");
+            pt.x_mea = parseDouble(fields.size() > 4 ? fields[4] : "");
+            pt.y_mea = parseDouble(fields.size() > 5 ? fields[5] : "");
+            pt.z_mea = parseDouble(fields.size() > 6 ? fields[6] : "");
+        } else {
+            pt.x_dsg = pt.y_dsg = pt.z_dsg = std::numeric_limits<double>::quiet_NaN();
+            pt.x_mea = parseDouble(fields.size() > 1 ? fields[1] : "");
+            pt.y_mea = parseDouble(fields.size() > 2 ? fields[2] : "");
+            pt.z_mea = parseDouble(fields.size() > 3 ? fields[3] : "");
+        }
+        if (fields.size() > 7) pt.note = fields[7];
+
+        bool hasActuals = !DCP_ISNAN(pt.x_mea) || !DCP_ISNAN(pt.y_mea) || !DCP_ISNAN(pt.z_mea);
+        bool hasDesign = !DCP_ISNAN(pt.x_dsg) || !DCP_ISNAN(pt.y_dsg) || !DCP_ISNAN(pt.z_dsg);
+        pt.status = hasActuals ? 2 : (hasDesign ? 1 : 0);
+        pt.x_scs = pt.x_mea; pt.y_scs = pt.y_mea; pt.z_scs = pt.z_mea;
+        pt.x_scs0 = pt.x_mea; pt.y_scs0 = pt.y_mea; pt.z_scs0 = pt.z_mea;
+        addPoint(pt.id, pt);
+        pointCount++;
+    }
+    return pointCount > 0;
+}
+
+static void writeTxtDouble(std::ostream& f, double v, const std::string& sep) {
+    if (!DCP_ISNAN(v)) f << v;
+    f << sep;
+}
+
+bool JsonDatabase::exportToTXT(const std::string& filename, const std::string& separator) {
+    if (!m_currentJob.get()) return false;
+    std::ofstream f(filename.c_str());
+    if (!f.is_open()) return false;
+    f << std::fixed << std::setprecision(6);
+    std::vector<std::pair<int, DCP_SHARED_PTR<PointData> > > sorted;
+    for (std::map<std::string, DCP_SHARED_PTR<PointData> >::const_iterator it = m_currentJob->points.begin();
+         it != m_currentJob->points.end(); ++it) {
+        if (it->second) sorted.push_back(std::make_pair(pointIdSortKey(it->first), it->second));
+    }
+    std::sort(sorted.begin(), sorted.end(), SortByPointId());
+    for (size_t i = 0; i < sorted.size(); ++i) {
+        const PointData& p = *sorted[i].second;
+        f << p.id << separator;
+        writeTxtDouble(f, p.x_dsg, separator);
+        writeTxtDouble(f, p.y_dsg, separator);
+        writeTxtDouble(f, p.z_dsg, separator);
+        writeTxtDouble(f, p.x_mea, separator);
+        writeTxtDouble(f, p.y_mea, separator);
+        if (!DCP_ISNAN(p.z_mea)) f << p.z_mea;
+        if (!p.note.empty()) f << separator << p.note;
+        f << "\n";
+    }
+    return true;
 }
 
 bool JsonDatabase::importFromADF(const std::string& filename) {

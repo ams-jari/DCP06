@@ -64,10 +64,11 @@ public:
     bool deleteMidpoint(const std::string&) DCP_OVERRIDE { return false; }
     bool getMidpoint(const std::string&, MidpointData&) DCP_OVERRIDE { return false; }
 
-    bool addCircle(const std::string&, const CircleData&) DCP_OVERRIDE { return false; }
-    bool updateCircle(const std::string&, const CircleData&) DCP_OVERRIDE { return false; }
-    bool deleteCircle(const std::string&) DCP_OVERRIDE { return false; }
-    bool getCircle(const std::string&, CircleData&) DCP_OVERRIDE { return false; }
+    bool addCircle(const std::string& circleId, const CircleData& data) DCP_OVERRIDE;
+    bool updateCircle(const std::string& circleId, const CircleData& data) DCP_OVERRIDE;
+    bool deleteCircle(const std::string& circleId) DCP_OVERRIDE;
+    bool getCircle(const std::string& circleId, CircleData& data) DCP_OVERRIDE;
+    std::vector<std::string> getCircleIdsInJob() const;
 
     bool addSurfaceScan(const std::string&, const SurfaceScanData&, const std::vector<ScanPoint3D>&) DCP_OVERRIDE { return false; }
     bool updateSurfaceScan(const std::string&, const SurfaceScanData&, const std::vector<ScanPoint3D>&) DCP_OVERRIDE { return false; }
@@ -102,8 +103,8 @@ public:
 
     bool importFromADF(const std::string& filename) DCP_OVERRIDE;
     bool exportToADF(const std::string& filename) DCP_OVERRIDE;
-    bool importFromTXT(const std::string&, const std::string& = ",") DCP_OVERRIDE { return false; }
-    bool exportToTXT(const std::string&, const std::string& = ",") DCP_OVERRIDE { return false; }
+    bool importFromTXT(const std::string& filename, const std::string& separator = ",") DCP_OVERRIDE;
+    bool exportToTXT(const std::string& filename, const std::string& separator = ",") DCP_OVERRIDE;
     bool importFromXLS(const std::string&) DCP_OVERRIDE { return false; }
     bool exportToXLS(const std::string&) DCP_OVERRIDE { return false; }
     bool importFromPRD(const std::string&) DCP_OVERRIDE { return false; }
@@ -115,6 +116,8 @@ private:
     bool readJsonFromFile(const std::string& filePath, Json::Value& j);
     Json::Value pointDataToJson(const PointData& data);
     bool jsonToPointData(const Json::Value& j, PointData& data);
+    Json::Value circleDataToJson(const CircleData& data);
+    bool jsonToCircleData(const Json::Value& j, CircleData& data);
     Json::Value jobDataToJson(const JobData& data);
     bool jsonToJobData(const Json::Value& j, JobData& data);
     static double parseDouble(const std::string& s);

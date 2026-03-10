@@ -160,7 +160,7 @@ S_PLANE_BUFF temp_plane_buffer[1];
 		m_pCircle_points_in_plane[0].points[i].y = 0.0;
 		m_pCircle_points_in_plane[0].points[i].z = 0.0;
 		m_pCircle_points_in_plane[0].points[i].diameter = 0.0;
-		sprintf(m_pCircle_points_in_plane[0].points[i].point_id,"%-6.6s", "");
+		snprintf(m_pCircle_points_in_plane[0].points[i].point_id, sizeof(m_pCircle_points_in_plane[0].points[i].point_id), DCP_POINT_ID_FMT, "");
 	}
 
 	ret1 = convert_points_to_plane(&m_pCircle_points[0], &m_pCircle_points_in_plane[0],count1); // APUTAULUKKOON
@@ -519,7 +519,7 @@ short count1;
 		circle_points_in_plane[0].points[i].y = circle_points[0].points[i].y;
 		circle_points_in_plane[0].points[i].z = circle_points[0].points[i].z;
 		circle_points_in_plane[0].points[i].sta = circle_points[0].points[i].sta;
-		sprintf(circle_points_in_plane[0].points[i].point_id,"%-6.6s",circle_points[0].points[i].point_id);
+		snprintf(circle_points_in_plane[0].points[i].point_id, sizeof(circle_points_in_plane[0].points[i].point_id), DCP_POINT_ID_FMT, circle_points[0].points[i].point_id);
 	}
 
 	if(m_iPlaneType == XY_PLANE)

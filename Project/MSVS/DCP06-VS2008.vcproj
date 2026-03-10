@@ -461,6 +461,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\file\FormatSelect.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\measurement\HiddenPoint.cpp"
 				>
 			</File>

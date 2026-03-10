@@ -26,6 +26,7 @@
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
+#include <dcp06/core/Logger.hpp>
 #include <dcp06/init/Initialization.hpp>
 #include <dcp06/core/Measure.hpp>
 #include <dcp06/core/SpecialMenu.hpp>
@@ -105,6 +106,7 @@ DCP::MeasureDialog::~MeasureDialog()
 
 void DCP::MeasureDialog::OnInitDialog(void)
 {
+	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
 
 	// Add fields to dialog
@@ -172,20 +174,31 @@ void DCP::MeasureDialog::OnInitDialog(void)
 	
 
 	//SetHelpTok(H_DCP_MEAS_TOK,0);
+	DCP06_TRACE_EXIT;
 }
 
 void DCP::MeasureDialog::OnDialogActivated()
 {
+	DCP06_TRACE_ENTER;
 	// get last defined point
+	DCP::MeasureModel* pData = GetDataModel();
+	DCP06_LOG_DEBUG("-- %s: pData=%d", __FUNCTION__, pData ? 1 : 0);
+	if (!pData)
+	{
+		DCP06_LOG_DEBUG("-- %s: GetDataModel null in OnDialogActivated, abort", __FUNCTION__);
+		return;
+	}
 	Common common(m_pModel);
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 
-	GetDataModel()->m_iPointsCount = common.get_last_defined_point(&GetDataModel()->point_table[0],GetDataModel()->m_iMaxPoint);
+	pData->m_iPointsCount = common.get_last_defined_point(&pData->point_table[0], pData->m_iMaxPoint);
 
-	if(GetDataModel()->m_iPointsCount  < GetDataModel()->m_iMinPoint)
-		GetDataModel()->m_iPointsCount = GetDataModel()->m_iMinPoint;
+	if(pData->m_iPointsCount  < pData->m_iMinPoint)
+		pData->m_iPointsCount = pData->m_iMinPoint;
 
+	DCP06_LOG_DEBUG("-- %s: calling RefreshControls", __FUNCTION__);
 	RefreshControls();
+	DCP06_TRACE_EXIT;
 }
 
 //void DCP::MeasureDialog::OnTimer(void)
@@ -202,23 +215,42 @@ void DCP::MeasureDialog::UpdateData()
 // Description: refresh all controls
 void DCP::MeasureDialog::RefreshControls()
 {
+	DCP06_TRACE_ENTER;
 	if(m_pPointNo && m_pPointId && m_pX && m_pY && m_pZ)
 	{
-		
+		// Safety: clamp m_iCurrentPoint to valid range (avoids crash on F5 CIRCL)
+		DCP::MeasureModel* pData = GetDataModel();
+		DCP06_LOG_DEBUG("-- %s: pData=%d", __FUNCTION__, pData ? 1 : 0);
+		if (!pData)
+		{
+			DCP06_LOG_DEBUG("-- %s: GetDataModel returned null, abort", __FUNCTION__);
+			return;
+		}
+		if (pData->m_iCurrentPoint < 1) pData->m_iCurrentPoint = 1;
+		if (pData->m_iPointsCount < 1) pData->m_iPointsCount = 1;
+		if (pData->m_iCurrentPoint > pData->m_iPointsCount) pData->m_iCurrentPoint = pData->m_iPointsCount;
+
+		DCP06_LOG_DEBUG("-- %s: cur=%d pts=%d max=%d", __FUNCTION__, pData->m_iCurrentPoint, pData->m_iPointsCount, pData->m_iMaxPoint);
+
 		StringC sTemp;
-		char point_id[10];
+		char point_id[POINT_ID_BUFF_LEN];
+		DCP06_LOG_DEBUG("-- %s: before Format point no", __FUNCTION__);
 		sTemp.Format(L"%d/%d",GetDataModel()->m_iCurrentPoint, GetDataModel()->m_iPointsCount);
+		DCP06_LOG_DEBUG("-- %s: before SetString point no", __FUNCTION__);
 		m_pPointNo->GetStringInputCtrl()->SetString(sTemp);
 		
-		sprintf(point_id,"%-s",GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id);
+		DCP06_LOG_DEBUG("-- %s: before sprintf point_id", __FUNCTION__);
+		snprintf(point_id, sizeof(point_id), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id);
 		m_pCommon->strbtrim(point_id);
 
 		sTemp = point_id ; //GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id;
 		//sTemp.Format(L"%-s",temp_point_table[GetDataModel()->m_iCurrentPoint-1].point_id);
 		if(sTemp.IsEmpty()) 
 			sTemp = L" ";
+		DCP06_LOG_DEBUG("-- %s: before SetString point id", __FUNCTION__);
 		m_pPointId->GetStringInputCtrl()->SetString(sTemp);
 
+		DCP06_LOG_DEBUG("-- %s: before SetCtrlState", __FUNCTION__);
 		if(!GetDataModel()->disable_point_editing)
 		{
 			m_pPointId->GetStringInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadWrite);
@@ -229,8 +261,10 @@ void DCP::MeasureDialog::RefreshControls()
 			m_pPointId->GetStringInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 		}
 
+		DCP06_LOG_DEBUG("-- %s: before sta check idx=%d", __FUNCTION__, GetDataModel()->m_iCurrentPoint - 1);
 		if(GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].sta != POINT_NOT_DEFINED)
 		{
+			DCP06_LOG_DEBUG("-- %s: point defined, formatting XYZ", __FUNCTION__);
 			int decimals = m_pModel->m_nDecimals;
 			sTemp.Format(L"%.*f",decimals,GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].x);
 			m_pX->GetStringInputCtrl()->SetString(sTemp);
@@ -243,26 +277,34 @@ void DCP::MeasureDialog::RefreshControls()
 		}
 		else
 		{
+			DCP06_LOG_DEBUG("-- %s: point not defined, setting blank XYZ", __FUNCTION__);
 			m_pX->GetStringInputCtrl()->SetString(L" ");
 			m_pY->GetStringInputCtrl()->SetString(L" ");
 			m_pZ->GetStringInputCtrl()->SetString(L" ");
 		}
 
 	}
+	DCP06_TRACE_EXIT;
 }
 // Description: only accept DCP06 Model objects
 bool DCP::MeasureDialog::SetModel( GUI::ModelC* pModel )
 {
+	DCP06_TRACE_ENTER;
     // Verify type
     DCP::MeasureModel* pDcpModel = dynamic_cast< DCP::MeasureModel* >( pModel );
+	DCP06_LOG_DEBUG("-- %s: pModel=%d pDcpModel=%d", __FUNCTION__, pModel ? 1 : 0, pDcpModel ? 1 : 0);
 
     // Call base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     if ( pDcpModel != nullptr && /*GUI::*/ModelHandlerC::SetModel( pDcpModel ))
     {
+		DCP06_LOG_DEBUG("-- %s: calling RefreshControls", __FUNCTION__);
         RefreshControls();
+		DCP06_LOG_DEBUG("-- %s: RefreshControls done", __FUNCTION__);
+		DCP06_TRACE_EXIT;
         return true;
     }
+	DCP06_LOG_DEBUG("-- %s: SetModel failed", __FUNCTION__);
     USER_APP_VERIFY( false );
     return false;
 }
@@ -357,23 +399,24 @@ void DCP::MeasureDialog::add_point()
 	if(GetDataModel()->m_iPointsCount < GetDataModel()->m_iMaxPoint)
 	{
 		// 271011
-		char temp[10];
-		sprintf(temp,"%-s",GetDataModel()->point_table[GetDataModel()->m_iPointsCount-1].point_id);
+		char point_id_buf[POINT_ID_BUFF_LEN];
+		snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iPointsCount-1].point_id);
 
-		if(!m_pCommon->strblank(temp))
+		if(!m_pCommon->strblank(point_id_buf))
 		{
-			m_pCommon->inc_id(temp);
+			m_pCommon->inc_id(point_id_buf);
 		}
 		else
 		{
 			if(!m_pCommon->strblank(GetDataModel()->default_pid))
 			{
-				sprintf(temp,"%s%d",GetDataModel()->default_pid,GetDataModel()->m_iPointsCount+1);
+				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount+1);
 			}
 		}
 
 		GetDataModel()->m_iPointsCount++;
 		GetDataModel()->m_iCurrentPoint = GetDataModel()->m_iPointsCount;
+		snprintf(GetDataModel()->point_table[GetDataModel()->m_iPointsCount - 1].point_id, sizeof(GetDataModel()->point_table[0].point_id), DCP_POINT_ID_FMT, point_id_buf);
 		RefreshControls();
 	}
 	else 
@@ -392,12 +435,12 @@ void DCP::MeasureDialog::OnPointIdChanged( int unNotifyCode, int ulParam2)
 	{
 		StringC sPoint;
 		sPoint = m_pPointId->GetStringInputCtrl()->GetString();
-		char cPoint[10];
+		char cPoint[POINT_ID_BUFF_LEN];
 		//UTL::UnicodeToAscii(cPoint,DCP_POINT_ID_LENGTH +1,sPoint);// +1 280508
-		BSS::UTI::BSS_UTI_WCharToAscii(sPoint, cPoint,DCP_POINT_ID_LENGTH +1);
+		BSS::UTI::BSS_UTI_WCharToAscii(sPoint, cPoint, DCP_POINT_ID_LENGTH + 1);
 
 		m_pCommon->strbtrim(cPoint);
-		sprintf(GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id,"%s",cPoint);
+		snprintf(GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id, POINT_ID_BUFF_LEN, DCP_POINT_ID_FMT, cPoint);
 		RefreshControls();
 	}
 }
@@ -414,6 +457,7 @@ void DCP::MeasureDialog::OnPointIdChanged( int unNotifyCode, int ulParam2)
 DCP::MeasureController::MeasureController(DCP::Model *pModel)
     : m_pDlg( nullptr ),m_pModel(pModel), m_pCommon(0),poVideoDlg(0),m_bCamera(false)
 {
+	DCP06_TRACE_ENTER;
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
     // is a token from the text database 'DCP05.men'
@@ -435,6 +479,7 @@ DCP::MeasureController::MeasureController(DCP::Model *pModel)
     // removed namespaces for eVC compability (WinCE Compiler)
     //USER_APP_VERIFY(/*GUI::*/ModelHandlerC::SetModel(poSurveyModel));
     ///*TBL::*/MeasurementC::SetSurveyModel(poSurveyModel);
+	DCP06_TRACE_EXIT;
 
 } //lint !e818 Pointer parameter could be declared as pointing to const
 
@@ -536,13 +581,18 @@ DCP::MeasureModel* DCP::MeasureDialog::GetDataModel() const
 // Description: Route model to everybody else
 bool DCP::MeasureController::SetModel( GUI::ModelC* pModel )
 {
-	
+	DCP06_TRACE_ENTER;
+	DCP06_LOG_DEBUG("-- %s: m_pDlg=%d pModel=%d", __FUNCTION__, m_pDlg ? 1 : 0, pModel ? 1 : 0);
     // Set it to base class
     // Removed namespace for eVC compability (WinCE Compiler) 
     (void)/*GUI::*/ControllerC::SetModel( pModel );
 
     // Set it to hello world dialog
-     return m_pDlg->SetModel( pModel );
+	DCP06_LOG_DEBUG("-- %s: calling m_pDlg->SetModel", __FUNCTION__);
+     bool ok = m_pDlg->SetModel( pModel );
+	DCP06_LOG_DEBUG("-- %s: m_pDlg->SetModel returned %d", __FUNCTION__, ok);
+	DCP06_TRACE_EXIT;
+   return ok;
 	
   // Verify type
     // Call base class
@@ -597,7 +647,7 @@ void DCP::MeasureController::OnF1Pressed()
 
 		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 		
-		sprintf(pModel->sPointId,DCP_POINT_ID_FMT,m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
+		snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 		
 		if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
@@ -776,7 +826,7 @@ void DCP::MeasureController::OnSHF5Pressed()
 		for(int i = 0; i < m_pDlg->GetDataModel()->m_iPointsCount;i++)
 		{
 			pModel->points[i].no = i+1;
-			sprintf(pModel->points[i].point_id,DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->point_table[i].point_id);
+			snprintf(pModel->points[i].point_id, sizeof(pModel->points[i].point_id), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->point_table[i].point_id);
 			sprintf(pModel->points[i].point_status,"%c", m_pDlg->GetDataModel()->point_table[i].sta != POINT_NOT_DEFINED ? '+': '-');
 		}
 		pModel->m_iCounts = m_pDlg->GetDataModel()->m_iPointsCount;
@@ -870,9 +920,9 @@ void DCP::MeasureController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 	else if(lCtrlID == MEAS_XYZ_CONTROLLER)
 	{/*
 		MsgBox MsgBox;
-		char temp[100];
-		sprintf(temp,"%s (%d)", "Exit code", lExitCode);
-		MsgBox.ShowMessageOk(StringC(temp));
+		char exit_code_str[100];
+		sprintf(exit_code_str,"%s (%d)", "Exit code", lExitCode);
+		MsgBox.ShowMessageOk(StringC(exit_code_str));
 		*/
 	}
 	// SPECIAL MENU
@@ -900,7 +950,7 @@ void DCP::MeasureController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 			// create model
 			DCP::PointBuffModel* pModel = new PointBuffModel;
 			
-			sprintf(pModel->m_pPointBuff[0].point_id,"%s", m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
+			snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint-1].point_id);
 
 
 			if(GetController(XYZ_CONTROLLER) == nullptr)
@@ -953,7 +1003,7 @@ void DCP::MeasureController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 		{
 			DCP::PointBuffModel* pModel = new PointBuffModel;
 
-			sprintf(pModel->m_pPointBuff[0].point_id,DCP_POINT_ID_FMT, "");
+			snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, "");
 
 			//pModel->m_pPointBuff[0].xsta = pMeasModel->
 			if(GetController(MID_POINT_CONTROLLER) == nullptr)

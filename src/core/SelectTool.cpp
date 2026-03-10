@@ -97,9 +97,9 @@ void SelectToolDialog::OnDialogActivated()
 	
 	StringC sTitle;
 	sTitle.LoadTxt(AT_DCP06,T_DCP_SELECT_TOOL_TOK);
-	char temp[20];
-	sprintf(temp,"(%d)", pModel->m_iCounts);
-	sTitle += 	StringC(temp);
+	char count_str[20];
+	sprintf(count_str,"(%d)", pModel->m_iCounts);
+	sTitle += 	StringC(count_str);
 	SetTitle(sTitle);
 	//poMultiColCtrl->AddCol(sTitle,CI_No);
 

@@ -200,6 +200,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\file\DistFile.cpp" />
     <ClCompile Include="..\..\src\calculation\CalculationEdit.cpp" />
     <ClCompile Include="..\..\src\file\File.cpp" />
+    <ClCompile Include="..\..\src\file\FormatSelect.cpp" />
     <ClCompile Include="..\..\src\measurement\HiddenPoint.cpp" />
     <ClCompile Include="..\..\src\measurement\HiddenPointConf.cpp" />
     <ClCompile Include="..\..\src\measurement\HomePoints.cpp" />

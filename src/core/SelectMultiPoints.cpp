@@ -230,7 +230,7 @@ void SelectMultiPointsDialog::OnDialogActivated()
 
 	short iDef =  GetDataModel()->m_iDef;
 	//BeginDraw(); 
-	char temp[20];
+	char point_id_buf[POINT_ID_BUFF_LEN];
 	
 	for(short i=0; i < GetDataModel()->m_iPointsCount; i++)
 	{
@@ -271,8 +271,8 @@ void SelectMultiPointsDialog::OnDialogActivated()
 		//wchar_t cTemp[80];
 
 		sPointNo.Format(L"%-3d", i+1);
-		sprintf(temp,"%-6.6s",m_pCommon->strbtrim(GetDataModel()->sel_points[i].point_id));
-		sPoint = StringC(temp);
+		snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, m_pCommon->strbtrim(GetDataModel()->sel_points[i].point_id));
+		sPoint = StringC(point_id_buf);
 		sLine = sPointNo + StringC(L" ") + sPoint + StringC(L" ") + sActualDesign + sSelected;
 		
 		//sTemp.Format(L"%-3d %-6.6s %s%s",i+1,(const wchar_t*)StringC(sPoint), (const wchar_t*)StringC(sActualDesign),(const wchar_t*)(StringC(sSelected)));

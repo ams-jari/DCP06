@@ -217,7 +217,7 @@ void DCP::DemoLicense::get_code_demo(int demoNumber, char *sCode)
 {
 int nro=1L;
 char *p, *p1,*p2;
-char temp[20];
+char serial_buf[20];
 int i,len;
 short temp2[20];
 
@@ -236,37 +236,38 @@ unsigned int code = 0L;
  
 	const char* cInstrumentNumber = oInstrumentInfo.GetInstrumentSerialNum();
 	snro = atol(cInstrumentNumber);
-	sprintf(temp,"%-lu",snro);
+	sprintf(serial_buf,"%-lu",snro);
 
 #elif defined(CS20)
 	MsgBox msgBox;
 
 	StringC ss1 = L"";
 	RcT ret= CPI::SensorC::GetInstance()->GetSerialNumber(ss1);
-	sprintf(temp,"%d",ret);
+	char value_buf[20];
+	sprintf(value_buf,"%d",ret);
 
 	char ttt[20];
 	BSS::UTI::BSS_UTI_WCharToAscii(ss1, ttt);
 	//snro = atol(ttt);
  
-	sprintf(temp,"%-s",ttt);
+	sprintf(serial_buf,"%-s",ttt);
 
-	//msgBox.ShowMessageOk(StringC(ssName), StringC(temp));
+	//msgBox.ShowMessageOk(StringC(ssName), StringC(value_buf));
  
 #elif defined(CS35)
 	DCP::CS35 cs35;
-	cs35.get_serialnumber(temp);
+	cs35.get_serialnumber(serial_buf);
 #endif
 
 	//snro = 235063;
    	 //sprintf(temp,"%-lu",snro);
-	 len = (int) strlen(temp);
-	 temp[len] = '\0';
+	 len = (int) strlen(serial_buf);
+	 serial_buf[len] = '\0';
 	 
 	 sCode[0] = '\0';
      code = 0L;
 
-	 p = temp;
+	 p = serial_buf;
 	 if(demoNumber == 1)
 	 {
 		 p1 = PROG_ID_DEMO1;

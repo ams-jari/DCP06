@@ -268,7 +268,7 @@ void DCP::ResShaftDialog::RefreshControls()
 
 	// 
 	//BeginDraw(); 
-	char temp[100];
+	char cell_text_buf[100];
 	StringC sPoint;
 	StringC sNo;
 	StringC sDev;
@@ -276,28 +276,28 @@ void DCP::ResShaftDialog::RefreshControls()
 
 	poMultiColCtrl->DestroyAll();
 
-	sprintf(temp,"%9.*f",m_pModel->m_nDecimals, m_pShaftModel->centerOfCircleDist); 
+	sprintf(cell_text_buf,"%9.*f",m_pModel->m_nDecimals, m_pShaftModel->centerOfCircleDist); 
 
 	USER_APP_VERIFY(poMultiColCtrl->AddRow((short) 0));
 	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) 0, L"Distance (to ref line)"));
-	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) 0, StringC(temp)));
+	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) 0, StringC(cell_text_buf)));
 	//USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) 0, L"Dis"));
 
-	sprintf(temp,"%9.*f",m_pModel->m_nDecimals, m_pShaftModel->angleLines); 
+	sprintf(cell_text_buf,"%9.*f",m_pModel->m_nDecimals, m_pShaftModel->angleLines); 
 
 	USER_APP_VERIFY(poMultiColCtrl->AddRow((short) 1));
 	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) 1, L"Angle (to ref line)"));
-	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) 1, StringC(temp)));
+	USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) 1, StringC(cell_text_buf)));
 	//USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_Deviation, (short) 1, L"Ang"));
 
 
 	for(i=0; i < iMax; i++)
 	{
-		sprintf(temp,"%-10.10s Deviation:",m_pShaftModel->shaft_circle_points->points[i].point_id);
-		sPoint = temp;
+		snprintf(cell_text_buf, sizeof(cell_text_buf), "%.*s Deviation:", (int)(POINT_ID_BUFF_LEN - 1), m_pShaftModel->shaft_circle_points->points[i].point_id);
+		sPoint = cell_text_buf;
 		
-		sprintf(temp,"%-d",i+1);
-		sNo = temp;
+		sprintf(cell_text_buf,"%-d",i+1);
+		sNo = cell_text_buf;
 
 		USER_APP_VERIFY(poMultiColCtrl->AddRow((short) i +3));
 		USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_No, (short) i+3, sNo));
@@ -307,8 +307,8 @@ void DCP::ResShaftDialog::RefreshControls()
 
 		if(sta == 1 || sta == 2) // measured or design
 		{
-			sprintf(temp,"%+9.*f", m_pModel->m_nDecimals, calc_pdist(i));
-			sDev = temp;
+			sprintf(cell_text_buf,"%+9.*f", m_pModel->m_nDecimals, calc_pdist(i));
+			sDev = cell_text_buf;
 		}
 		else if (sta == 0)
 		{

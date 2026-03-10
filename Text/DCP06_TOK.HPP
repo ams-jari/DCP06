@@ -544,7 +544,7 @@ const RSC::TxtC::TOKEN
       M_DCP_SELECT_SHAFT_FILE_TOK          = 498,  // "Select file!"                                              
       M_DCP_ENTER_SHAFT_ID_TOK             = 499,  // "Enter Id!"                                                 
       M_DCP_DEFINE_SHAFT_CIRCLE_TOK        = 500,  // "Measure Circle !"                                          
-      P_DCP_AMS_LOG_TOK                    = 501,  // "Log -file"                                                 
+      P_DCP_AMS_LOG_TOK                    = 501,  // "DCP06 log"                                                 
       T_DCP_CALC_CIRCLE_TOK                = 502,  // "CALCULATION \ CIRCLE"                                      
       P_DCP_CIRCLE_FILE_TOK                = 503,  // "Circle -file"                                              
       H_DCP_CALC_CIRCLE_TOK                = 504,  // "General   Based on job file p.."                            

@@ -187,15 +187,15 @@ void DCP::SeparateRecDialog::RefreshControls()
 			GetDataModel()->m_pPointBuff[0].y = dY;
 			GetDataModel()->m_pPointBuff[0].z = dZ;
 			
-			char temp[100];
-			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].x); 
-			m_pX->GetStringInputCtrl()->SetString(temp);
+			char coord_str[100];
+			sprintf(coord_str,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].x); 
+			m_pX->GetStringInputCtrl()->SetString(coord_str);
 
-			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].y); 
-			m_pY->GetStringInputCtrl()->SetString(temp);
+			sprintf(coord_str,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].y); 
+			m_pY->GetStringInputCtrl()->SetString(coord_str);
 
-			sprintf(temp,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].z); 
-			m_pZ->GetStringInputCtrl()->SetString(temp);
+			sprintf(coord_str,"%9.*f",m_pModel->m_nDecimals,GetDataModel()->m_pPointBuff[0].z); 
+			m_pZ->GetStringInputCtrl()->SetString(coord_str);
 		}
 	}
 }

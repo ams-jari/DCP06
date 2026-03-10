@@ -1219,7 +1219,7 @@ void DCP::ChangeStationController::OnF4Pressed()
 	{
 		if(pModel->point_table2[i].sta != 0)
 		{
-			sprintf(pModel->point_table[i].point_id,"%-6.6s",pModel->point_table2[i].point_id);
+			snprintf(pModel->point_table[i].point_id, sizeof(pModel->point_table[i].point_id), DCP_POINT_ID_FMT, pModel->point_table2[i].point_id);
 		}
 	}
 	// load measurement display
@@ -1366,7 +1366,7 @@ void DCP::ChangeStationController::OnF5Pressed()
 	{
 		if(pModel->point_table2[i].sta != 0)
 		{
-			sprintf(pModel->point_table[i].point_id,"%-6.6s",pModel->point_table2[i].point_id);
+			snprintf(pModel->point_table[i].point_id, sizeof(pModel->point_table[i].point_id), DCP_POINT_ID_FMT, pModel->point_table2[i].point_id);
 		}
 	}
 	// load measurement display
@@ -1526,13 +1526,13 @@ void DCP::ChangeStationController::OnActiveControllerClosed( int lCtrlID, int lE
 			m_pDataModel->calculated = false; 
 
 			char bXmea[15], bYmea[15], bZmea[15];
-			char bXdes[15], bYdes[15], bZdes[15],pid[7];//,fname[13];
+			char bXdes[15], bYdes[15], bZdes[15],pid[POINT_ID_BUFF_LEN];//,fname[13];
 
 			for(int i = 1; i <= adf.getPointsCount(); i++)
 			{
 				adf.select_pnt1((long) i, pid, nullptr, bXmea, bXdes, nullptr, bYmea, bYdes, nullptr, bZmea, bZdes, nullptr);
 				 
-				sprintf(m_pDataModel->point_OCS[i-1].point_id,"%-6.6s",pid);
+				snprintf(m_pDataModel->point_OCS[i-1].point_id, sizeof(m_pDataModel->point_OCS[i-1].point_id), DCP_POINT_ID_FMT, pid);
 				strcpy(m_pDataModel->point_DCS[i-1].point_id, m_pDataModel->point_OCS[i-1].point_id);
 
 				m_pDataModel->point_OCS[i-1].x = atof(bXmea);
@@ -1585,7 +1585,7 @@ void DCP::ChangeStationController::OnActiveControllerClosed( int lCtrlID, int lE
 			{
 				//if(pModel->point_table2[i].sta != 0)
 				//{
-					sprintf(m_pDataModel->point_DCS[i].point_id,"%-6s",m_pDataModel->point_OCS[i].point_id);
+					snprintf(m_pDataModel->point_DCS[i].point_id, sizeof(m_pDataModel->point_DCS[i].point_id), DCP_POINT_ID_FMT, m_pDataModel->point_OCS[i].point_id);
 				//}
 			}
 

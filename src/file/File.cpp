@@ -38,7 +38,9 @@
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/core/InputText.hpp>
 #include <dcp06/core/MsgBox.hpp>
+#include <dcp06/file/FormatSelect.hpp>
 #include <dcp06/measurement/3dFileView.hpp>
+#include <boost/filesystem.hpp>
 
 #include <GUI_MessageDialog.hpp>
 #include <ABL_MsgDef.hpp>
@@ -306,9 +308,9 @@ void DCP::FileDialog::RefreshControls()
 		}
 
 			unsigned int uiFreeSpace = m_pCommon ? m_pCommon->get_free_space() : 0;
-			char temp[100];
-			sprintf(temp,"%lu",(unsigned long)uiFreeSpace);
-			m_pFreeSpace->GetStringInputCtrl()->SetString(StringC(temp));
+			char free_space_str[100];
+			sprintf(free_space_str,"%lu",(unsigned long)uiFreeSpace);
+			m_pFreeSpace->GetStringInputCtrl()->SetString(StringC(free_space_str));
 
 	}
 	DCP06_TRACE_EXIT;
@@ -365,7 +367,7 @@ DCP::Model* DCP::FileDialog::GetModel() const
 // ******************************************************************************
 
 DCP::FileController::FileController(DCP::Model* pModel)
-    : m_pDlg( nullptr ),m_pModel(pModel)
+    : m_pDlg( nullptr ),m_pModel(pModel), m_pendingExportFormat(-1)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -463,50 +465,34 @@ bool DCP::FileController::SetModel( GUI::ModelC* pModel )
 }
 
 
-// Import from ADF (legacy file -> DB)
+// Import from file (ADF, CSV, TXT, ASC) - format selection first
 // *********************************************************************************************
 void DCP::FileController::OnSHF1Pressed()
 {
 	DCP06_TRACE_ENTER;
 	if (m_pDlg == nullptr) { USER_APP_VERIFY(false); DCP06_TRACE_EXIT; return; }
-	DCP::SelectFileModel* pModel = new SelectFileModel;
-	if (GetController(SELECT_FILE_CONTROLLER) == nullptr)
-	{
-		StringC sTitle = GetTitle();
-		(void)AddController(SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle, m_pModel));
-	}
-	(void)GetController(SELECT_FILE_CONTROLLER)->SetModel(pModel);
-	SetActiveController(SELECT_FILE_CONTROLLER, true);
+	DCP::FormatSelectModel* pFmtModel = new FormatSelectModel;
+	pFmtModel->m_bForImport = true;
+	if (GetController(FORMAT_SELECT_CONTROLLER) == nullptr)
+		(void)AddController(FORMAT_SELECT_CONTROLLER, new DCP::FormatSelectController(L"Import format", true));
+	(void)GetController(FORMAT_SELECT_CONTROLLER)->SetModel(pFmtModel);
+	SetActiveController(FORMAT_SELECT_CONTROLLER, true);
 	DCP06_TRACE_EXIT;
 }
 
-// Export to ADF (DB -> file when user requests; ADF only for import/export)
+// Export to file (ADF, CSV, TXT, ASC) - format selection first
 // *********************************************************************************************
 void DCP::FileController::OnSHF4Pressed()
 {
 	DCP06_TRACE_ENTER;
 	if (m_pModel->m_currentJobId.empty())
 		{ DCP06_TRACE_EXIT; return; }
-	DCP::Database::IDatabase* db = m_pModel->GetDatabase();
-#if !DCP_USE_JSON_DATABASE
-	(void)db;
-	DCP06_TRACE_EXIT; return;
-#else
-	DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
-	if (!jdb) { DCP06_TRACE_EXIT; return; }
-	// DB-primary: export current job to ADF file (no working ADF; export directly)
-	std::string workPath = jdb->getJobWorkingPath(m_pModel->m_currentJobId);
-	if (workPath.empty()) { DCP06_TRACE_EXIT; return; }
-	std::string exportPath = workPath;
-	size_t dot = exportPath.rfind('.');
-	if (dot != std::string::npos)
-		exportPath = exportPath.substr(0, dot) + "_export.adf";
-	else
-		exportPath += "_export.adf";
-	db->exportToADF(exportPath);
-	m_pDlg->RefreshControls();
-	DCP06_TRACE_POINT("exported to %s", exportPath.c_str());
-#endif
+	DCP::FormatSelectModel* pFmtModel = new FormatSelectModel;
+	pFmtModel->m_bForImport = false;
+	if (GetController(FORMAT_SELECT_CONTROLLER) == nullptr)
+		(void)AddController(FORMAT_SELECT_CONTROLLER, new DCP::FormatSelectController(L"Export format", false));
+	(void)GetController(FORMAT_SELECT_CONTROLLER)->SetModel(pFmtModel);
+	SetActiveController(FORMAT_SELECT_CONTROLLER, true);
 	DCP06_TRACE_EXIT;
 }
 
@@ -713,6 +699,101 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	DCP06_TRACE_ENTER;
 	DCP06_TRACE_POINT("ctrl=%d exit=%d", lCtrlID, lExitCode);
+
+	// FormatSelect closed: open SelectFile (import) or do Export
+	if (lCtrlID == FORMAT_SELECT_CONTROLLER && lExitCode == EC_KEY_CONT)
+	{
+		DCP::FormatSelectController* fmtCtrl = dynamic_cast<DCP::FormatSelectController*>(GetController(FORMAT_SELECT_CONTROLLER));
+		DCP::FormatSelectModel* pFmtModel = fmtCtrl ? (DCP::FormatSelectModel*)fmtCtrl->GetModel() : 0;
+		if (pFmtModel && pFmtModel->m_bForImport)
+		{
+			short fmt = fmtCtrl->GetFormat();
+			DCP::SelectFileModel* pModel = new SelectFileModel;
+			StringC sTitle = GetTitle();
+			if (GetController(SELECT_FILE_CONTROLLER) == nullptr)
+				(void)AddController(SELECT_FILE_CONTROLLER, new DCP::SelectFileController(fmt, sTitle, m_pModel));
+			else
+			{
+				// Recreate controller with new format
+				DestroyController(SELECT_FILE_CONTROLLER);
+				(void)AddController(SELECT_FILE_CONTROLLER, new DCP::SelectFileController(fmt, sTitle, m_pModel));
+			}
+			(void)GetController(SELECT_FILE_CONTROLLER)->SetModel(pModel);
+			SetActiveController(SELECT_FILE_CONTROLLER, true);
+		}
+		else if (pFmtModel && !pFmtModel->m_bForImport)
+		{
+			short fmt = fmtCtrl->GetFormat();
+			m_pendingExportFormat = fmt;
+			DCP::InputTextModel* pExpModel = new InputTextModel;
+			pExpModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_NEW_FILENAME_TOK);
+			pExpModel->m_StrTitle = GetTitle();
+			pExpModel->m_iTextLength = static_cast<short>(DCP_JOB_ID_MAX_LEN + 8);  // allow extension
+			pExpModel->m_StrText = StringC(m_pModel->m_currentJobId.c_str());
+			if (GetController(EXPORT_FILENAME_CONTROLLER) == nullptr)
+				(void)AddController(EXPORT_FILENAME_CONTROLLER, new DCP::InputTextController(m_pModel));
+			(void)GetController(EXPORT_FILENAME_CONTROLLER)->SetModel(pExpModel);
+			SetActiveController(EXPORT_FILENAME_CONTROLLER, true);
+		}
+		m_pDlg->RefreshControls();
+		DCP06_TRACE_EXIT;
+		return;
+	}
+
+	// Export filename entered
+	if (lCtrlID == EXPORT_FILENAME_CONTROLLER && lExitCode == EC_KEY_CONT && m_pendingExportFormat >= 0)
+	{
+		DCP::InputTextModel* pModel = (DCP::InputTextModel*)GetController(EXPORT_FILENAME_CONTROLLER)->GetModel();
+		StringC strName = pModel ? pModel->m_StrText : StringC(L"");
+		strName.Trim();
+		if (!strName.IsEmpty())
+		{
+			char fname[CPI::LEN_PATH_MAX];
+			fname[0] = '\0';
+			BSS::UTI::BSS_UTI_WCharToAscii(strName, fname);
+			std::string base(fname);
+			size_t dot = base.rfind('.');
+			if (dot != std::string::npos)
+				base = base.substr(0, dot);
+			if (!base.empty())
+			{
+				DCP::Database::IDatabase* db = m_pModel->GetDatabase();
+#if DCP_USE_JSON_DATABASE
+				if (db)
+				{
+					std::string dataDir = db->getDataDirectory();
+					if (!dataDir.empty())
+					{
+						boost::filesystem::path p(dataDir);
+						p /= base;
+						if (m_pendingExportFormat == ONLY_ADF)
+							p += ".adf";
+						else if (m_pendingExportFormat == ONLY_CSV)
+							p += ".csv";
+						else if (m_pendingExportFormat == ONLY_TXT)
+							p += ".txt";
+						else
+							p += ".asc";
+						std::string exportPath = p.string();
+						if (m_pendingExportFormat == ONLY_ADF)
+							db->exportToADF(exportPath);
+						else if (m_pendingExportFormat == ONLY_CSV)
+							db->exportToTXT(exportPath, ",");
+						else
+							db->exportToTXT(exportPath, " ");
+					}
+				}
+#endif
+			}
+		}
+		m_pendingExportFormat = -1;
+		m_pDlg->RefreshControls();
+		DCP06_TRACE_EXIT;
+		return;
+	}
+	if (lCtrlID == EXPORT_FILENAME_CONTROLLER)
+		m_pendingExportFormat = -1;  // Clear if user cancelled
+
 	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		DCP::SelectFileController* selCtrl = dynamic_cast<DCP::SelectFileController*>(GetController(SELECT_FILE_CONTROLLER));
@@ -740,7 +821,7 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 		}
 		else
 		{
-			// Import from ADF: create job from legacy file (ADF only for import; no working ADF)
+			// Import from file (ADF, CSV, TXT, ASC)
 			char pathBuf[CPI::LEN_PATH_MAX];
 			pathBuf[0] = '\0';
 			BSS::UTI::BSS_UTI_WCharToAscii(strSelected, pathBuf);
@@ -757,17 +838,25 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 				if (jobId.empty()) jobId = "imported";
 
 				DCP::Database::IDatabase* db = m_pModel->GetDatabase();
+				short fileType = selCtrl ? selCtrl->GetFileType() : ONLY_ADF;
 				if (db)
 				{
 					db->createJob(jobId);
-					if (db->importFromADF(path))
+					bool ok = false;
+					if (fileType == ONLY_ADF)
+						ok = db->importFromADF(path);
+					else if (fileType == ONLY_CSV)
+						ok = db->importFromTXT(path, ",");
+					else if (fileType == ONLY_TXT || fileType == ONLY_ASC)
+						ok = db->importFromTXT(path, " ");
+					if (ok)
 					{
 						db->saveJob(jobId);
 						if (db->loadJob(jobId))
 						{
 							m_pModel->m_currentJobId = jobId;
 							m_pModel->ADFFileName = StringC(jobId.c_str());
-							DCP06_LOG_INFO("FileController: imported ADF to job %s", jobId.c_str());
+							DCP06_LOG_INFO("FileController: imported to job %s", jobId.c_str());
 						}
 					}
 				}

@@ -102,6 +102,7 @@ namespace DCP
 			FileModel* m_pDataModel;
 			StringC sFileToCreate;
 			Model* m_pModel;
+			short m_pendingExportFormat;  // ONLY_ADF/CSV/TXT/ASC when awaiting export filename
     };
 
 

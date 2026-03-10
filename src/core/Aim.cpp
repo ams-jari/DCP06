@@ -132,8 +132,8 @@ void DCP::AimController::Run(void)
 
 		// test
 		MsgBox msgbox;
-		char temp[100];
-		sprintf(temp,"X:%.2f Y:%.2f Z%.2f",m_dX, m_dY, m_dZ);
+		char coord_str[100];
+		sprintf(coord_str,"X:%.2f Y:%.2f Z%.2f",m_dX, m_dY, m_dZ);
 		//msgbox.ShowMessageOk(StringC(temp));
 		
 		if(m_pModel->active_tool > 0)
@@ -278,8 +278,8 @@ short DCP::AimController::set_aim()
 		// AIM
 		
 		// test
-		char temp[100];
-		sprintf(temp,"H:%.4f V:%.4f", theta1, fii1);
+		char angle_str[100];
+		sprintf(angle_str,"H:%.4f V:%.4f", theta1, fii1);
 		MsgBox msgbox;
 		//msgbox.ShowMessageOk(StringC(temp));
 

@@ -405,17 +405,17 @@ short dist_count,ret;
 			/*
 			if(GetDataModel()->display == A321_DLG)
 			{*/
-				sprintf(GetDataModel()->planeModel->hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
-				sprintf(GetDataModel()->planeModel->hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
-				sprintf(GetDataModel()->planeModel->hz_plane_buff[0].points[2].point_id,"%-6.6s","rp-p3");
+				snprintf(GetDataModel()->planeModel->hz_plane_buff[0].points[0].point_id, sizeof(GetDataModel()->planeModel->hz_plane_buff[0].points[0].point_id), DCP_POINT_ID_FMT, "rp-p1");
+				snprintf(GetDataModel()->planeModel->hz_plane_buff[0].points[1].point_id, sizeof(GetDataModel()->planeModel->hz_plane_buff[0].points[1].point_id), DCP_POINT_ID_FMT, "rp-p2");
+				snprintf(GetDataModel()->planeModel->hz_plane_buff[0].points[2].point_id, sizeof(GetDataModel()->planeModel->hz_plane_buff[0].points[2].point_id), DCP_POINT_ID_FMT, "rp-p3");
 				GetDataModel()->planeModel->hz_plane = true;
 			/*
 			}
 			if(GetDataModel()->display == A321_USERDEF_DLG)
 			{
-							sprintf(&GetModel()->hz_plane_buff[0].points[0].point_id,"%-6.6s","rp-p1");
-				sprintf(&GetModel()->hz_plane_buff[0].points[1].point_id,"%-6.6s","rp-p2");
-				sprintf(&GetModel()->hz_plane_buff[0].points[2].point_id,"%-6.6s","rp-p3");
+							snprintf(GetModel()->hz_plane_buff[0].points[0].point_id, sizeof(GetModel()->hz_plane_buff[0].points[0].point_id), DCP_POINT_ID_FMT, "rp-p1");
+				snprintf(GetModel()->hz_plane_buff[0].points[1].point_id, sizeof(GetModel()->hz_plane_buff[0].points[1].point_id), DCP_POINT_ID_FMT, "rp-p2");
+				snprintf(GetModel()->hz_plane_buff[0].points[2].point_id, sizeof(GetModel()->hz_plane_buff[0].points[2].point_id), DCP_POINT_ID_FMT, "rp-p3");
 				GetModel()->hz_plane = true;
 			}
 			*/

@@ -450,16 +450,16 @@ void DCP::Fbs3DDialog::OnValueChanged(int unNotifyCode,  int ulParam2)
 		{
 			StringC sPid;
 			if(m_pPointId->GetStringInputCtrl()->IsEmpty())
-				sprintf(m_pDataModel->pid_ptr,"%-6.6s","");	
+				snprintf(m_pDataModel->pid_ptr, sizeof(m_pDataModel->pid_ptr), DCP_POINT_ID_FMT, "");	
 			else
 			{
 				sPid = m_pPointId->GetStringInputCtrl()->GetString();
 				// convert to ascii
-				char temp[20];
-				//UTL::UnicodeToAscii(temp, sPid);
-				BSS::UTI::BSS_UTI_WCharToAscii(sPid, temp);
-				common.strbtrim(temp);
-				sprintf(m_pDataModel->pid_ptr,"%-6.6s",temp);
+				char point_id_buf[20];
+				//UTL::UnicodeToAscii(point_id_buf, sPid);
+				BSS::UTI::BSS_UTI_WCharToAscii(sPid, point_id_buf);
+				common.strbtrim(point_id_buf);
+				snprintf(m_pDataModel->pid_ptr, sizeof(m_pDataModel->pid_ptr), DCP_POINT_ID_FMT, point_id_buf);
 				m_pDataModel->save_point();
 				RefreshControls();
 			}
@@ -514,7 +514,7 @@ void DCP::Fbs3DDialog::RefreshControls()
 		// SHOW VALUES
 		m_pCommon->empty_xyz_buffers(m_pDataModel->bXdif,m_pDataModel->bYdif,m_pDataModel->bZdif,9);
 		sprintf(m_pDataModel->bFid,"%-8.8s","");
-		sprintf(m_pDataModel->bPid,"%-6.6s","");
+		snprintf(m_pDataModel->bPid, sizeof(m_pDataModel->bPid), DCP_POINT_ID_FMT, "");
 		
 		if(m_pDataModel->pFileFunc->IsOpen())
 		{
@@ -655,7 +655,7 @@ void DCP::Fbs3DDialog::RefreshControls()
 			// m_pZActDev->SetAutoColon(false);
 			// m_pZActDev->SetColonPosition(9 * 11);
 
-			sprintf(m_pDataModel->bPid,"%-s",m_pCommon->strbtrim(m_pDataModel->pid_ptr));
+			snprintf(m_pDataModel->bPid, sizeof(m_pDataModel->bPid), DCP_POINT_ID_FMT, m_pCommon->strbtrim(m_pDataModel->pid_ptr));
 
 			m_pCommon->get_dist_len(m_pDataModel->xmea_ptr,m_pDataModel->xdes_ptr, m_pDataModel->bXdif,11);
 			m_pCommon->get_dist_len(m_pDataModel->ymea_ptr,m_pDataModel->ydes_ptr, m_pDataModel->bYdif,11);
@@ -865,35 +865,35 @@ void DCP::Fbs3DDialog::RefreshControls()
 			}
 
 								
-			char temp[100];
+			char diff_str[100];
 			// Xdiff
-			sprintf(temp,"%10.10s", m_pDataModel->bXdif);
-			//m_pXActDev->GetStringInputCtrl()->SetString(StringC(temp));
+			sprintf(diff_str,"%10.10s", m_pDataModel->bXdif);
+			//m_pXActDev->GetStringInputCtrl()->SetString(StringC(diff_str));
 
 			//m_pXActDev->SetString(1,StringC(L""));
-			//m_pXActDev->SetString(2,StringC(temp));
+			//m_pXActDev->SetString(2,StringC(diff_str));
 			m_pXDev->GetStringInputCtrl()->SetString(StringC(L" "));
-			m_pXAct->GetStringInputCtrl()->SetString(StringC(temp));
+			m_pXAct->GetStringInputCtrl()->SetString(StringC(diff_str));
 
 
 			// Ydiff
-			sprintf(temp,"%10.10s", m_pDataModel->bYdif);
-			//m_pYActDev->GetStringInputCtrl()->SetString(StringC(temp));
+			sprintf(diff_str,"%10.10s", m_pDataModel->bYdif);
+			//m_pYActDev->GetStringInputCtrl()->SetString(StringC(diff_str));
 			//m_pYActDev->SetString(1,StringC(L""));
-			//m_pYActDev->SetString(2,StringC(temp));
+			//m_pYActDev->SetString(2,StringC(diff_str));
 
 			m_pYDev->GetStringInputCtrl()->SetString(StringC(L" "));
-			m_pYAct->GetStringInputCtrl()->SetString(StringC(temp));
+			m_pYAct->GetStringInputCtrl()->SetString(StringC(diff_str));
 
 
 			// Zdiff
-			sprintf(temp,"%10.10s", m_pDataModel->bZdif);
-			//m_pZActDev->GetStringInputCtrl()->SetString(StringC(temp));
+			sprintf(diff_str,"%10.10s", m_pDataModel->bZdif);
+			//m_pZActDev->GetStringInputCtrl()->SetString(StringC(diff_str));
 			//m_pZActDev->SetString(1,StringC(L""));
-			//m_pZActDev->SetString(2,StringC(temp));
+			//m_pZActDev->SetString(2,StringC(diff_str));
 
 			m_pZDev->GetStringInputCtrl()->SetString(StringC(L" "));
-			m_pZAct->GetStringInputCtrl()->SetString(StringC(temp));
+			m_pZAct->GetStringInputCtrl()->SetString(StringC(diff_str));
 
 
 			// Xdsg
@@ -928,7 +928,7 @@ void DCP::Fbs3DDialog::RefreshControls()
 			{
 				m_pZDsg->GetFloatInputCtrl()->SetEmpty();
 			}
-			sprintf(m_pDataModel->bPid,"%-s",m_pCommon->strbtrim(m_pDataModel->pid_ptr));
+			snprintf(m_pDataModel->bPid, sizeof(m_pDataModel->bPid), DCP_POINT_ID_FMT, m_pCommon->strbtrim(m_pDataModel->pid_ptr));
 		}
 		// Point id
 		m_pPointId->GetStringInputCtrl()->SetString(StringC(m_pDataModel->bPid));
@@ -1346,7 +1346,7 @@ void DCP::Fbs3DController::OnF1Pressed()
 			DCP::MeasXYZModel* pModel = new MeasXYZModel;
 			pModel->tooli = 1;
 			
-			sprintf(pModel->sPointId,"%6.6s",m_pDataModel->pid_ptr);
+			snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 			
 			if(GetController(MEAS_XYZ_CONTROLLER) == nullptr)
 			{
@@ -2355,7 +2355,7 @@ void DCP::Fbs3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode 
 void DCP::Fbs3DController::ShowHiddenPointDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
-	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
+	snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	if(GetController(HIDDENPOINT_CONTROLLER) == nullptr)
 	{
@@ -2371,7 +2371,7 @@ void DCP::Fbs3DController::ShowHiddenPointDlg()
 void DCP::Fbs3DController::ShowXorYorZDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
-	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
+	snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 	if(GetController(XYZ_CONTROLLER) == nullptr)
 	{
 		(void)AddController( XYZ_CONTROLLER, new DCP::XYZController(m_pDlg->GetModel()) );
@@ -2401,7 +2401,7 @@ void DCP::Fbs3DController::ShowSeparateRecDlg()
 {
 	DCP::PointBuffModel* pModel = new PointBuffModel;
 
-	sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
+	snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
 	if(GetController(SEPARATE_RECORDING_CONTROLLER) == nullptr)
@@ -2432,7 +2432,7 @@ void DCP::Fbs3DController::ShowMidPointDlg()
 {
 		DCP::PointBuffModel* pModel = new PointBuffModel;
 
-		sprintf(pModel->m_pPointBuff[0].point_id,"%6.6s", m_pDataModel->pid_ptr);
+		snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 		//pModel->m_pPointBuff[0].xsta = pMeasModel->
 		if(GetController(MID_POINT_CONTROLLER) == nullptr)

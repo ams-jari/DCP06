@@ -235,7 +235,7 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 			if (CPI::SensorC::GetInstance()->GetPath(FILE_STORAGE1, CPI::ftUserAscii, dbPath))
 			{
 				std::string dir(dbPath);
-				dir += "/DCP06/jobs";
+				dir += "/DCP06";
 				m_pDatabase->setDataDirectory(dir);
 				// DCP06.log in same base path for simulator debugging
 				std::string logPath = std::string(dbPath) + "/DCP06/DCP06.log";
@@ -1299,10 +1299,10 @@ void DCP::ConfigController::save_line(CPI::CFG::ArchiveC* poArchive, S_LINE_BUFF
 void DCP::ConfigController::save_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BUFF* pPoint)
 {	
 	//short temp_short;
-	char temp[POINT_ID_BUFF_LEN + 1];
+	char point_id_buf[POINT_ID_BUFF_LEN + 1];
 	
-	sprintf(temp,"%-*.*s",POINT_ID_BUFF_LEN-1,POINT_ID_BUFF_LEN-1, pPoint->point_id);
-	*poArchive <<	temp;
+	sprintf(point_id_buf,"%-*.*s",POINT_ID_BUFF_LEN-1,POINT_ID_BUFF_LEN-1, pPoint->point_id);
+	*poArchive <<	point_id_buf;
 	
 	//*poArchive <<	pPoint->point_id;
 	*poArchive <<	 pPoint->x;
@@ -1347,10 +1347,10 @@ void DCP::ConfigController::save_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BU
 void DCP::ConfigController::load_point(CPI::CFG::ArchiveC* poArchive, S_POINT_BUFF* pPoint)
 {	
 //short temp_short;
-	char temp[POINT_ID_BUFF_LEN + 1];
-	*poArchive >>	temp;
+	char point_id_buf[POINT_ID_BUFF_LEN + 1];
+	*poArchive >>	point_id_buf;
 	
-	sprintf(pPoint->point_id,"%*.*s", POINT_ID_BUFF_LEN-1,POINT_ID_BUFF_LEN-1,temp);
+	sprintf(pPoint->point_id,"%*.*s", POINT_ID_BUFF_LEN-1,POINT_ID_BUFF_LEN-1,point_id_buf);
 	//*poArchive >>	pPoint->point_id;
 	*poArchive >>	pPoint->x;
 	*poArchive >>	pPoint->y;
