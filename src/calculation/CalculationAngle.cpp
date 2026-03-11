@@ -39,6 +39,8 @@
 #include <dcp06/core/SelectOnePoint.hpp>
 
 #include <dcp06/calculation/CalculationView.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/core/MsgBox.hpp>
 
 #include <GUI_Types.hpp>
 #include <GUI_Desktop.hpp>
@@ -518,19 +520,22 @@ void DCP::CalculationAngleController::OnF1Pressed()
     }
 
   
-	if(m_pDataModel->dspMode == CalculationAngleModel::eNormal)
+	if (m_pDataModel->dspMode == CalculationAngleModel::eNormal)
 	{
-		// SELECT FILE
-		DCP::SelectFileModel* pModel = new SelectFileModel;
-		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (!jdb || !jdb->isJobLoaded() || m_pModel->m_currentJobId.empty())
 		{
-			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle,m_pModel ) );
+			MsgBox msgBox;
+			StringC msg;
+			msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
+			msgBox.ShowMessageOk(msg);
+			return;
 		}
-		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
-		SetActiveController(SELECT_FILE_CONTROLLER, true);
-
-
+		m_pDataModel->sSelected3DFile = StringC(m_pModel->m_currentJobId.c_str());
+		m_pDataModel->iPointCount3dfile = jdb->getPointListAsSelectPoints(&m_pDataModel->point_list[0], MAX_POINTS_IN_FILE, ACTUAL);
+		m_pDataModel->dspMode = CalculationAngleModel::ePointSelected;
+		change_function_keys();
+		m_pDataModel->active_reftype = POINT;
 	}
 	else if (m_pDataModel->dspMode == CalculationAngleModel::eRef)
 	{
@@ -884,17 +889,7 @@ void DCP::CalculationAngleController::OnActiveDialogClosed( int /*lDlgID*/, int 
 // ================================================================================================
 void DCP::CalculationAngleController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
-	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
-	{
-		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
-		m_pDataModel->sSelected3DFile = pModel->m_strSelectedFile;
-		m_pDataModel->pAdfFileFunc->setFile(m_pDataModel->sSelected3DFile);
-
-		// and get point list
-		m_pDataModel->iPointCount3dfile = m_pDataModel->pAdfFileFunc->GetPointList(&m_pDataModel->point_list[0], MAX_POINTS_IN_FILE, ACTUAL);
-	}
-	
-	if(lCtrlID == ANGLE_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == ANGLE_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		m_pDataModel->sSelectedAngleFile = m_pDlg->GetModel()->sCalcAngleFile;	
 		m_pDataModel->pAgfFileFunc->setFile(m_pDataModel->sSelectedAngleFile);
@@ -902,75 +897,57 @@ void DCP::CalculationAngleController::OnActiveControllerClosed( int lCtrlID, int
 
 
 	// TARGET POINT
-	if(lCtrlID == SELECT_TARGET_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_TARGET_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*) GetController( SELECT_TARGET_POINT_CONTROLLER )->GetModel();		
-		
-		m_pDataModel->pAdfFileFunc->form_pnt(pModel->iSelectedNo);
-
-		m_pDataModel->pCommon->strbtrim(m_pDataModel->pAdfFileFunc->pointid_front);
-		snprintf(m_pDataModel->trgtpoint.point_id, sizeof(m_pDataModel->trgtpoint.point_id), DCP_POINT_ID_FMT, m_pDataModel->pAdfFileFunc->pointid_front);
-
-		// design or design
-		if(pModel->points[pModel->iSelectedNo-1].bActualSelected)
+		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*)GetController(SELECT_TARGET_POINT_CONTROLLER)->GetModel();
+		bool useActual = (pModel->points[pModel->iSelectedNo-1].bActualSelected) != 0;
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (jdb && jdb->isJobLoaded())
 		{
-			m_pDataModel->trgtpoint.x = atof(m_pDataModel->pAdfFileFunc->xmea_front);
-			m_pDataModel->trgtpoint.y = atof(m_pDataModel->pAdfFileFunc->ymea_front);
-			m_pDataModel->trgtpoint.z = atof(m_pDataModel->pAdfFileFunc->zmea_front);
-
-			if( !m_pDataModel->pCommon->strblank(m_pDataModel->pAdfFileFunc->xmea_front) && 
-				!m_pDataModel->pCommon->strblank(m_pDataModel->pAdfFileFunc->ymea_front) && 
-				!m_pDataModel->pCommon->strblank(m_pDataModel->pAdfFileFunc->zmea_front))
+			char pid[POINT_ID_BUFF_LEN], bXmea[DCP_COORD_STR_BUFF_LEN], bXdes[DCP_COORD_STR_BUFF_LEN];
+			char bYmea[DCP_COORD_STR_BUFF_LEN], bYdes[DCP_COORD_STR_BUFF_LEN];
+			char bZmea[DCP_COORD_STR_BUFF_LEN], bZdes[DCP_COORD_STR_BUFF_LEN];
+			if (jdb->getPointByIndex(pModel->iSelectedNo, useActual, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
 			{
-				m_pDataModel->trgtpoint.sta = 1;
-			}
-			else
-			{
-				m_pDataModel->trgtpoint.sta = 0;
-			}
-		}
-		else
-		{
-			m_pDataModel->trgtpoint.x = atof(m_pDataModel->pAdfFileFunc->xdes_front);
-			m_pDataModel->trgtpoint.y = atof(m_pDataModel->pAdfFileFunc->ydes_front);
-			m_pDataModel->trgtpoint.z = atof(m_pDataModel->pAdfFileFunc->zdes_front);
-
-			if( !m_pDataModel->pCommon->strblank(m_pDataModel->pAdfFileFunc->xdes_front) && 
-				!m_pDataModel->pCommon->strblank(m_pDataModel->pAdfFileFunc->ydes_front) && 
-				!m_pDataModel->pCommon->strblank(m_pDataModel->pAdfFileFunc->zdes_front))
-			{
-				m_pDataModel->trgtpoint.sta = 1;
-			}
-			else
-			{
-				m_pDataModel->trgtpoint.sta = 0;
+				snprintf(m_pDataModel->trgtpoint.point_id, sizeof(m_pDataModel->trgtpoint.point_id), DCP_POINT_ID_FMT, pid);
+				m_pDataModel->trgtpoint.x = atof(useActual ? bXmea : bXdes);
+				m_pDataModel->trgtpoint.y = atof(useActual ? bYmea : bYdes);
+				m_pDataModel->trgtpoint.z = atof(useActual ? bZmea : bZdes);
+				m_pDataModel->trgtpoint.sta = (!m_pDataModel->pCommon->strblank(useActual ? bXmea : bXdes) &&
+					!m_pDataModel->pCommon->strblank(useActual ? bYmea : bYdes) &&
+					!m_pDataModel->pCommon->strblank(useActual ? bZmea : bZdes)) ? 1 : 0;
 			}
 		}
 		m_pDataModel->all_defined();
 	}
 
 	// REF LINE
-	if(lCtrlID == SELECT_MULTIPOINTS_REF_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_MULTIPOINTS_REF_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_REF_LINE_CONTROLLER )->GetModel();		
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*)GetController(SELECT_MULTIPOINTS_REF_LINE_CONTROLLER)->GetModel();
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (!jdb || !jdb->isJobLoaded()) {
+			MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
+			return;
+		}
 		Common common(m_pModel);
-		
-		//delete old values
 		memset(&m_pDataModel->rline_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_LINE);
 		short iPno=0;
 		short des = 0;
 		short act = 0;
-		char bXmea1[15], bYmea1[15], bZmea1[15];
-		char bXdes1[15], bYdes1[15], bZdes1[15],pid1[7];
+		char bXmea1[DCP_COORD_STR_BUFF_LEN], bYmea1[DCP_COORD_STR_BUFF_LEN], bZmea1[DCP_COORD_STR_BUFF_LEN];
+		char bXdes1[DCP_COORD_STR_BUFF_LEN], bYdes1[DCP_COORD_STR_BUFF_LEN], bZdes1[DCP_COORD_STR_BUFF_LEN];
+		char pid1[POINT_ID_BUFF_LEN];
 		short iCount =0;
 		for(short i=0; i < MAX_POINTS_IN_LINE; i++)
 		{
 			iPno = pModel->nro_table[i][0];
-			if(iPno != 0)
+			if (iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
-				
-				if(pModel->nro_table[i][1] == DESIGN)
+				bool useDesign = (pModel->nro_table[i][1] == DESIGN);
+				if (!jdb->getPointByIndex((int)iPno, !useDesign, pid1, bXmea1, bXdes1, bYmea1, bYdes1, bZmea1, bZdes1, 0))
+					continue;
+				if (pModel->nro_table[i][1] == DESIGN)
 				{
 					des = 1;
 					m_pDataModel->rline_buff[0].points[iCount].x = atof(bXdes1);
@@ -1014,27 +991,32 @@ void DCP::CalculationAngleController::OnActiveControllerClosed( int lCtrlID, int
 		SetActiveController(CALC_LINE_CONTROLLER, true);
 	}
 	// TARGET LINE
-	if(lCtrlID == SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER )->GetModel();		
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*)GetController(SELECT_MULTIPOINTS_TARGET_LINE_CONTROLLER)->GetModel();
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (!jdb || !jdb->isJobLoaded()) {
+			MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
+			return;
+		}
 		Common common(m_pDlg->GetModel());
-		
-		//delete old values
 		memset(&m_pDataModel->trgt_line_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_LINE);
 		short iPno=0;
 		short des = 0;
 		short act = 0;
-		char bXmea1[15], bYmea1[15], bZmea1[15];
-		char bXdes1[15], bYdes1[15], bZdes1[15],pid1[7];
+		char bXmea1[DCP_COORD_STR_BUFF_LEN], bYmea1[DCP_COORD_STR_BUFF_LEN], bZmea1[DCP_COORD_STR_BUFF_LEN];
+		char bXdes1[DCP_COORD_STR_BUFF_LEN], bYdes1[DCP_COORD_STR_BUFF_LEN], bZdes1[DCP_COORD_STR_BUFF_LEN];
+		char pid1[POINT_ID_BUFF_LEN];
 		short iCount =0;
 		for(short i=0; i < MAX_POINTS_IN_LINE; i++)
 		{
 			iPno = pModel->nro_table[i][0];
-			if(iPno != 0)
+			if (iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
-				
-				if(pModel->nro_table[i][1] == DESIGN)
+				bool useDesign = (pModel->nro_table[i][1] == DESIGN);
+				if (!jdb->getPointByIndex((int)iPno, !useDesign, pid1, bXmea1, bXdes1, bYmea1, bYdes1, bZmea1, bZdes1, 0))
+					continue;
+				if (pModel->nro_table[i][1] == DESIGN)
 				{
 					des = 1;
 					m_pDataModel->trgt_line_buff[0].points[iCount].x = atof(bXdes1);
@@ -1079,27 +1061,32 @@ void DCP::CalculationAngleController::OnActiveControllerClosed( int lCtrlID, int
 	}
 	
 	// REF PLANE
-	if(lCtrlID == SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER )->GetModel();		
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*)GetController(SELECT_MULTIPOINTS_REF_PLANE_CONTROLLER)->GetModel();
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (!jdb || !jdb->isJobLoaded()) {
+			MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
+			return;
+		}
 		Common common(m_pDlg->GetModel());
-		
-		//delete old values
 		memset(&m_pDataModel->rplane_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
 		short iPno=0;
 		short des = 0;
 		short act = 0;
-		char bXmea1[15], bYmea1[15], bZmea1[15];
-		char bXdes1[15], bYdes1[15], bZdes1[15],pid1[7];
+		char bXmea1[DCP_COORD_STR_BUFF_LEN], bYmea1[DCP_COORD_STR_BUFF_LEN], bZmea1[DCP_COORD_STR_BUFF_LEN];
+		char bXdes1[DCP_COORD_STR_BUFF_LEN], bYdes1[DCP_COORD_STR_BUFF_LEN], bZdes1[DCP_COORD_STR_BUFF_LEN];
+		char pid1[POINT_ID_BUFF_LEN];
 		short iCount =0;
 		for(short i=0; i < MAX_POINTS_IN_PLANE; i++)
 		{
 			iPno = pModel->nro_table[i][0];
-			if(iPno != 0)
+			if (iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
-				
-				if(pModel->nro_table[i][1] == DESIGN)
+				bool useDesign = (pModel->nro_table[i][1] == DESIGN);
+				if (!jdb->getPointByIndex((int)iPno, !useDesign, pid1, bXmea1, bXdes1, bYmea1, bYdes1, bZmea1, bZdes1, 0))
+					continue;
+				if (pModel->nro_table[i][1] == DESIGN)
 				{
 					des = 1;
 					m_pDataModel->rplane_buff[0].points[iCount].x = atof(bXdes1);
@@ -1144,27 +1131,32 @@ void DCP::CalculationAngleController::OnActiveControllerClosed( int lCtrlID, int
 	}
 	
 	// TARGET PLANE
-	if(lCtrlID == SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER )->GetModel();		
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*)GetController(SELECT_MULTIPOINTS_TARGET_PLANE_CONTROLLER)->GetModel();
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (!jdb || !jdb->isJobLoaded()) {
+			MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
+			return;
+		}
 		Common common(m_pDlg->GetModel());
-		
-		//delete old values
 		memset(&m_pDataModel->rplane_buff[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
 		short iPno=0;
 		short des = 0;
 		short act = 0;
-		char bXmea1[15], bYmea1[15], bZmea1[15];
-		char bXdes1[15], bYdes1[15], bZdes1[15],pid1[7];
+		char bXmea1[DCP_COORD_STR_BUFF_LEN], bYmea1[DCP_COORD_STR_BUFF_LEN], bZmea1[DCP_COORD_STR_BUFF_LEN];
+		char bXdes1[DCP_COORD_STR_BUFF_LEN], bYdes1[DCP_COORD_STR_BUFF_LEN], bZdes1[DCP_COORD_STR_BUFF_LEN];
+		char pid1[POINT_ID_BUFF_LEN];
 		short iCount =0;
 		for(short i=0; i < MAX_POINTS_IN_PLANE; i++)
 		{
 			iPno = pModel->nro_table[i][0];
-			if(iPno != 0)
+			if (iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
-				
-				if(pModel->nro_table[i][1] == DESIGN)
+				bool useDesign = (pModel->nro_table[i][1] == DESIGN);
+				if (!jdb->getPointByIndex((int)iPno, !useDesign, pid1, bXmea1, bXdes1, bYmea1, bYdes1, bZmea1, bZdes1, 0))
+					continue;
+				if (pModel->nro_table[i][1] == DESIGN)
 				{
 					des = 1;
 					m_pDataModel->trgt_plane_buff[0].points[iCount].x = atof(bXdes1);

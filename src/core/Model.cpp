@@ -31,14 +31,7 @@
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/core/Logger.hpp>
 #include <dcp06/core/MsgBox.hpp>
-#ifndef DCP_USE_JSON_DATABASE
-#define DCP_USE_JSON_DATABASE 1
-#endif
-#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
-#else
-#include <dcp06/database/StubDatabase.hpp>
-#endif
 
 #include <stdio.h>
 #include <UTL_StringFunctions.hpp>
@@ -226,11 +219,7 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 			SerialNumber = L" ";
 
 			// Database (DCP9: 321, BestFit, Cylinder, ChangeStation)
-#if DCP_USE_JSON_DATABASE
 			m_pDatabase = DCP_UNIQUE_PTR<Database::JsonDatabase>(new Database::JsonDatabase());
-#else
-			m_pDatabase = DCP_UNIQUE_PTR<Database::IDatabase>(new Database::StubDatabase());
-#endif
 			char dbPath[CPI::LEN_PATH_MAX];
 			if (CPI::SensorC::GetInstance()->GetPath(FILE_STORAGE1, CPI::ftUserAscii, dbPath))
 			{

@@ -2,27 +2,12 @@
 //
 // Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
-// Component: 
+// Component: 321 Alignment (main orientation method)
 //
-// $Workfile: HEW_HelloWorldGUI.cpp $
-//
-// Summary  : 
-//
-// ------------------------------------------------------------------------------------------------
-//
-// Copyright (c) AMS. Based on Leica Captivate plugin framework.
+// Summary  : 321 alignment dialog and controller. Plane + Line + Reference point.
+//            Database storage when job is loaded (DCP9 reference).
 //
 // ================================================================================================
-
-
-// $Author: Hlar $
-// $Date: 6.07.04 8:55 $
-// $Revision: 1 $
-// $Modtime: 5.07.04 14:55 $
-
-/* $ History: $
-*/
-// $NoKeywords: $
 
 #include "stdafx.h"
 #include <dcp06/core/Model.hpp>
@@ -38,33 +23,22 @@
 #include <dcp06/orientation/RotateLine.hpp>
 #include <dcp06/core/PointBuffModel.hpp>
 #include <dcp06/calculation/Calculation321.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 
 #include <GUI_Desktop.hpp>
 #include <GUI_Application.hpp>
 #include <GUI_MessageDialog.hpp>
 #include <ABL_MsgDef.hpp>
-//#include <ABL_util.hpp>
-// Detect memory leaks
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 // ================================================================================================
-// ========================================  Declarations  ========================================
-// ================================================================================================
-// OBS_IMPLEMENT_EXECUTE(DCP::UnitDialog);
-
-// ================================================================================================
-// =====================================  Static Functions  =======================================
+// Alignment321Dialog
 // ================================================================================================
 
-
-// ================================================================================================
-// ======================================  Member Functions  ======================================
-// ================================================================================================
-
-// Unit
-//-------------------------------------------------------------------------------------------------
 DCP::Alignment321Dialog::Alignment321Dialog(DCP::Alignment321Model* pAlign321Model):m_pPlane(0),m_pLine(0),m_pPointOffs(0),m_pPointMeas(0),
 								m_pRotPlane(0),m_pCalc(0),m_pRotLine(0),m_pDataModel(pAlign321Model)
 {
@@ -94,20 +68,12 @@ void DCP::Alignment321Dialog::OnInitDialog(void)
 {
 	DCP06_TRACE_ENTER;
 	GUI::BaseDialogC::OnInitDialog();
-	short iColonPos = 9 * 22;
-	//SetColonPosLong( GUI::StandardDialogC::CP_20 );
 
 	m_pPlane = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPlane->SetId(ePlane);
 	m_pPlane->SetText(StringC(AT_DCP06,P_DCP_REF_PLANE_SK_TOK));
-
-	//m_pPlane->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
 	void(m_pPlane->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPlane->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
-	//m_pPlane->SetAutoColon(false);
-	//m_pPlane->SetColonPosition(iColonPos);
-	//m_pPlane->SetTextWidth(9*50); CAPTIVATE
-
 	AddCtrl(m_pPlane);
 
 	m_pLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -115,21 +81,13 @@ void DCP::Alignment321Dialog::OnInitDialog(void)
 	m_pLine->SetText(StringC(AT_DCP06,P_DCP_REF_LINE_SK_TOK));
 	void(m_pLine->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pLine->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
-	//m_pLine->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
-	//m_pLine->SetAutoColon(false);
-	//m_pLine->SetColonPosition(iColonPos);
-	//m_pLine->SetTextWidth(9*50); CAPTIVATE
 	AddCtrl(m_pLine);
-	
+
 	m_pPointOffs = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointOffs->SetId(ePointOffs);
 	m_pPointOffs->SetText(StringC(AT_DCP06,P_DCP_REF_PNT_OFFSV_TOK));
 	void(m_pPointOffs->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPointOffs->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
-	//m_pPointOffs->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
-	//m_pPointOffs->SetAutoColon(false);
-	//m_pPointOffs->SetColonPosition(iColonPos);
-	//m_pPointOffs->SetTextWidth(9*50); CAPTIVATE
 	AddCtrl(m_pPointOffs);
 
 	m_pPointMeas = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -137,10 +95,6 @@ void DCP::Alignment321Dialog::OnInitDialog(void)
 	m_pPointMeas->SetText(StringC(AT_DCP06,P_DCP_REF_PNT_MEASV_TOK));
 	void(m_pPointMeas->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pPointMeas->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
-	//m_pPointMeas->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
-	//m_pPointMeas->SetAutoColon(false);
-	//m_pPointMeas->SetColonPosition(iColonPos);
-	//m_pPointMeas->SetTextWidth(9*50); CAPTIVATE
 	AddCtrl(m_pPointMeas);
 
 	m_pRotPlane = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -148,21 +102,13 @@ void DCP::Alignment321Dialog::OnInitDialog(void)
 	m_pRotPlane->SetText(StringC(AT_DCP06,P_DCP_REF_ROTATE_PLANE_TOK));
 	void(m_pRotPlane->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pRotPlane->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
-	// m_pRotPlane->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
-	//m_pRotPlane->SetAutoColon(false);
-	//m_pRotPlane->SetColonPosition(iColonPos);
-	//m_pRotPlane->SetTextWidth(9*50); CAPTIVATE
 	AddCtrl(m_pRotPlane);
-	
+
 	m_pRotLine = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pRotLine->SetId(eRotLine);
 	m_pRotLine->SetText(StringC(AT_DCP06,P_DCP_REF_ROTATE_LINE_TOK));
 	void(m_pRotLine->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pRotLine->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
-	// m_pRotLine->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
-	//m_pRotLine->SetAutoColon(false);
-	//m_pRotLine->SetColonPosition(iColonPos);
-	//m_pRotLine->SetTextWidth(9*50); CAPTIVATE
 	AddCtrl(m_pRotLine);
 
 	m_pCalc = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
@@ -170,15 +116,8 @@ void DCP::Alignment321Dialog::OnInitDialog(void)
 	m_pCalc->SetText(StringC(AT_DCP06,P_DCP_DOM_CALC_TOK));
 	void(m_pCalc->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly));
 	void(m_pCalc->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable));
-	// m_pCalc->GetStringInputCtrl()->SetAlign(AlignmentT::AL_LEFT); CAPTIVATE
-	//m_pCalc->SetAutoColon(false);
-	//m_pCalc->SetColonPosition(iColonPos);
-	//m_pCalc->SetTextWidth(9*50); CAPTIVATE
 	AddCtrl(m_pCalc);
 
-	//SetHelpTok(H_DCP_DOM_TOK,0);
-
-	//m_pComboBoxObserver.Attach(m_pUnit->GetSubject());
 	DCP06_TRACE_EXIT;
 }
 
@@ -187,8 +126,8 @@ void DCP::Alignment321Dialog::OnDialogActivated()
 {
 	DCP06_TRACE_ENTER;
 	m_pDataModel->old_active_coodinate_system = GetModel()->active_coodinate_system;
-	memcpy(m_pDataModel->matrix,GetModel()->ocsd_matrix, sizeof(double) * 16);
-	memcpy(m_pDataModel->inv_matrix,GetModel()->ocsd_inv_matrix, sizeof(double) * 16);
+	memcpy(m_pDataModel->matrix, GetModel()->ocsd_matrix, sizeof(double) * DCP_MATRIX4X4_ELEMENTS);
+	memcpy(m_pDataModel->inv_matrix, GetModel()->ocsd_inv_matrix, sizeof(double) * DCP_MATRIX4X4_ELEMENTS);
 
 	m_pDataModel->align321_active_plane	= GetModel()->align321_active_plane;
 	m_pDataModel->align321_active_line	= GetModel()->align321_active_line;
@@ -326,8 +265,8 @@ void DCP::Alignment321Dialog::RefreshControls()
 void DCP::Alignment321Dialog::UpdateData()
 {
 	DCP06_TRACE_ENTER;
-		memcpy(GetModel()->ocsd_matrix, m_pDataModel->matrix,sizeof(double) * 16);
-		memcpy(GetModel()->ocsd_inv_matrix, m_pDataModel->inv_matrix, sizeof(double) * 16);
+	memcpy(GetModel()->ocsd_matrix, m_pDataModel->matrix, sizeof(double) * DCP_MATRIX4X4_ELEMENTS);
+	memcpy(GetModel()->ocsd_inv_matrix, m_pDataModel->inv_matrix, sizeof(double) * DCP_MATRIX4X4_ELEMENTS);
 		GetModel()->align321_active_plane	= m_pDataModel->align321_active_plane;
 		GetModel()->align321_active_line	= m_pDataModel->align321_active_line; 
 		GetModel()->align321_hz_plane		= m_pDataModel->align321_hz_plane;
@@ -340,10 +279,8 @@ void DCP::Alignment321Dialog::UpdateData()
 		memcpy(&GetModel()->align321_rot_plane_buff, &m_pDataModel->align321_rot_plane_buff, sizeof(S_POINT_BUFF));
 		memcpy(&GetModel()->align321_rot_line_buff, &m_pDataModel->align321_rot_line_buff, sizeof(S_POINT_BUFF));
 		GetModel()->ocsd_defined = m_pDataModel->ocsd_defined;
-		if(m_pDataModel->ocsd_defined == true)
+		if (m_pDataModel->ocsd_defined == true)
 			GetModel()->active_coodinate_system = OCSD;
-		//else
-		//	GetModel()->active_coodinate_system = DCS;
 		GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_A321);
 		GetModel()->poConfigController->StoreConfigData();
 
@@ -371,15 +308,11 @@ bool DCP::Alignment321Dialog::SetModel( GUI::ModelC* pModel )
 }
 
 
-// Description: DCP06 model
-//-------------------------------------------------------------------------------------------------
 DCP::Model* DCP::Alignment321Dialog::GetModel() const
 {
-    return (DCP::Model*) ModelHandlerC::GetModel(); //lint !e1774 Could use dynamic_cast to 
-                                                //downcast polymorphic type
+	return (DCP::Model*)ModelHandlerC::GetModel();
 }
 
-//-------------------------------------------------------------------------------------------------
 void DCP::Alignment321Dialog::delete_align321()
 {
 		StringC strDomText;
@@ -417,16 +350,14 @@ void DCP::Alignment321Dialog::delete_align321()
 // ====================================  Controller  ===================================
 // ================================================================================================
 
-//-------------------------------------------------------------------------------------------------
-// UnitController
-// 
+// ================================================================================================
+// Alignment321Controller
+// ================================================================================================
+
 DCP::Alignment321Controller::Alignment321Controller()
-    : m_pDlg( nullptr )
+	: m_pDlg(nullptr)
 {
-	// Set title token
-    // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
-    // is a token from the text database 'DCP05.men'
-    SetTitle(StringC( AT_DCP06, T_DCP_DOM_TOK /*C_DCP_APPLICATION_NAME_TOK */));
+	SetTitle(StringC(AT_DCP06, T_DCP_DOM_TOK));
 
 	// create model
 	m_pDataModel = new Alignment321Model;
@@ -634,6 +565,36 @@ void DCP::Alignment321Controller::OnF5Pressed()
 		memcpy(&m_pDlg->GetModel()->align321_ref_point_buff, &m_pDataModel->align321_ref_point_buff, sizeof(S_POINT_BUFF));
 		memcpy(&m_pDlg->GetModel()->align321_rot_plane_buff, &m_pDataModel->align321_rot_plane_buff, sizeof(S_POINT_BUFF));
 		memcpy(&m_pDlg->GetModel()->align321_rot_line_buff, &m_pDataModel->align321_rot_line_buff, sizeof(S_POINT_BUFF));
+		DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+		if (jdb && jdb->isJobLoaded() && !m_pDlg->GetModel()->m_currentJobId.empty())
+		{
+			DCP::Database::Alignment321Data a321;
+			a321.type = "321";
+			a321.id = "321_1";
+			a321.calculated = true;
+			S_PLANE_BUFF* pPl = m_pDataModel->align321_hz_plane ? &m_pDataModel->align321_hz_plane_buff[0] : &m_pDataModel->align321_plane_buff[0];
+			a321.plane.px = pPl->px; a321.plane.py = pPl->py; a321.plane.pz = pPl->pz;
+			a321.plane.nx = pPl->nx; a321.plane.ny = pPl->ny; a321.plane.nz = pPl->nz;
+			a321.plane.calculated = (pPl->calc != 0);
+			a321.line.px = m_pDataModel->align321_line_buff[0].px;
+			a321.line.py = m_pDataModel->align321_line_buff[0].py;
+			a321.line.pz = m_pDataModel->align321_line_buff[0].pz;
+			a321.line.ux = m_pDataModel->align321_line_buff[0].ux;
+			a321.line.uy = m_pDataModel->align321_line_buff[0].uy;
+			a321.line.uz = m_pDataModel->align321_line_buff[0].uz;
+			a321.line.calculated = (m_pDataModel->align321_line_buff[0].calc != 0);
+			a321.reference_point.x_mea = m_pDataModel->align321_ref_point_buff.x;
+			a321.reference_point.y_mea = m_pDataModel->align321_ref_point_buff.y;
+			a321.reference_point.z_mea = m_pDataModel->align321_ref_point_buff.z;
+			a321.matrix.a00 = m_pDataModel->matrix[0][0]; a321.matrix.a01 = m_pDataModel->matrix[0][1];
+			a321.matrix.a02 = m_pDataModel->matrix[0][2]; a321.matrix.a03 = m_pDataModel->matrix[0][3];
+			a321.matrix.a10 = m_pDataModel->matrix[1][0]; a321.matrix.a11 = m_pDataModel->matrix[1][1];
+			a321.matrix.a12 = m_pDataModel->matrix[1][2]; a321.matrix.a13 = m_pDataModel->matrix[1][3];
+			a321.matrix.a20 = m_pDataModel->matrix[2][0]; a321.matrix.a21 = m_pDataModel->matrix[2][1];
+			a321.matrix.a22 = m_pDataModel->matrix[2][2]; a321.matrix.a23 = m_pDataModel->matrix[2][3];
+			if (!jdb->update321Alignment("321_1", a321))
+				jdb->add321Alignment("321_1", a321);
+		}
 		Close(EC_KEY_CONT);
 	}
 }
@@ -743,29 +704,15 @@ void DCP::Alignment321Controller::OnActiveControllerClosed( int lCtrlID, int lEx
 
 
 	}
-	if(lCtrlID == DEFINE_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == DEFINE_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::DefineLineModel* pModel = (DCP::DefineLineModel*) GetController( DEFINE_LINE_CONTROLLER )->GetModel();		
-		// copy values into dommodel
-		m_pDataModel->align321_active_line	= pModel->active_line; 
+		DCP::DefineLineModel* pModel = (DCP::DefineLineModel*)GetController(DEFINE_LINE_CONTROLLER)->GetModel();
+		m_pDataModel->align321_active_line = pModel->active_line;
 		memcpy(&m_pDataModel->align321_line_buff[0], &pModel->line_buff[0], sizeof(S_LINE_BUFF));
-
 		m_pDataModel->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsd_defined = false;
-		
 	}
-	/*
-	if(lCtrlID == DEFINE_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
-	{
-		DCP::DefineLineModel* pModel = (DCP::DefineLineModel*) GetController( DEFINE_LINE_CONTROLLER )->GetModel();		
-		// copy values into dommodel
-		//m_pDataModel->align321_active_plane	= pModel->active_plane;
-		m_pDataModel->align321_active_line	= pModel->active_line; 
-		//m_pDataModel->align321_hz_plane		= pModel->hz_plane;
-		memcpy(&m_pDataModel->align321_line_buff[0], &pModel->line_buff[0], sizeof(S_LINE_BUFF));
-	}
-	*/
-	if(lCtrlID == OFFSV_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == OFFSV_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
 		DCP::OffsetVModel* pModel = (DCP::OffsetVModel*) GetController( OFFSV_CONTROLLER )->GetModel();		
 		// copy values into dommodel
@@ -806,44 +753,18 @@ void DCP::Alignment321Controller::OnActiveControllerClosed( int lCtrlID, int lEx
 				
 		memcpy(&m_pDataModel->align321_rot_line_buff, &pModel->point_buff, sizeof(S_POINT_BUFF));
 	}
-	//m_pDlg->Show();
-	//m_pDlg->RefreshControls();
-	DestroyController( lCtrlID );
+	DestroyController(lCtrlID);
 	m_pDlg->RefreshControls();
-	
-	//
 }
 
+// ================================================================================================
+// Alignment321Model
+// ================================================================================================
 
-
-// ===========================================================================================
-// DOMModel
-// ===========================================================================================
-
-// Instantiate template classes
 DCP::Alignment321Model::Alignment321Model()
 {
-	// copy from DCP05Model
 }
 
-/*
-// Instantiate template classes
-DCP::Alignment321Model::Alignment321Model(Alignment321Model *pModel)
-{
-	align321_active_plane	= pModel->align321_active_plane;
-	align321_active_line	= pModel->align321_active_line; 
-	align321_hz_plane		= pModel->align321_hz_plane;
-	memcpy(&align321_plane_buff[0], &pModel->align321_plane_buff[0], sizeof(S_PLANE_BUFF));
-	memcpy(&align321_hz_plane_buff[0], &pModel->align321_hz_plane_buff[0], sizeof(S_PLANE_BUFF));
-	memcpy(&align321_line_buff[0], &pModel->align321_line_buff[0], sizeof(S_LINE_BUFF));
-	memcpy(&align321_ovalues_buff, &pModel->align321_ovalues_buff, sizeof(S_POINT_BUFF));
-	memcpy(&align321_ovalues_tool_buff, &pModel->align321_ovalues_tool_buff, sizeof(S_POINT_BUFF));
-	memcpy(&align321_ref_point_buff, &pModel->align321_ref_point_buff, sizeof(S_POINT_BUFF));
-	memcpy(&align321_rot_plane_buff, &pModel->align321_rot_plane_buff, sizeof(S_POINT_BUFF));
-	memcpy(&align321_rot_line_buff, &pModel->align321_rot_line_buff, sizeof(S_POINT_BUFF));
-
-} 
-*/
 DCP::Alignment321Model::~Alignment321Model()
 {
 }

@@ -38,6 +38,8 @@
 #include <dcp06/file/SelectFile.hpp>
 #include <dcp06/calculation/CalculationView.hpp>
 #include <dcp06/calculation/CalculationCircleCore.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/core/MsgBox.hpp>
 
 #include <GUI_Types.hpp>
 #include <GUI_Desktop.hpp>
@@ -244,12 +246,8 @@ void DCP::CalculationCircleDialog::RefreshControls()
 	if(m_p3DFile && /* m_pCircleFile && m_pCircleId  && */ m_pDiameter && m_pRadius && m_pRMS && m_pCx && m_pCy && m_pCz)
 	{
 		
-		// update 3dfile name
-		StringC sFile;
-
-		if(m_pDataModel->pAdfFileFunc->IsOpen())
-			sFile = m_pDataModel->sSelected3DFile;
-
+		// update 3dfile name (DB: job loaded = sSelected3DFile set from m_currentJobId)
+		StringC sFile = m_pDataModel->sSelected3DFile;
 		sFile.RTrim();
 		m_p3DFile->GetStringInputCtrl()->SetString(m_pDataModel->sSelected3DFile);
 
@@ -446,22 +444,22 @@ bool DCP::CalculationCircleController::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 void DCP::CalculationCircleController::OnF1Pressed()
 {
-    if (m_pDlg == nullptr)
-    {
-        USER_APP_VERIFY( false );
-        return;
-    }
-	// SELECT FILE
-	DCP::SelectFileModel* pModel = new SelectFileModel;
-	if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
+	if (m_pDlg == nullptr)
 	{
-		StringC sTitle = GetTitle();	
-		(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle,m_pModel) );
+		USER_APP_VERIFY(false);
+		return;
 	}
-	(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
-	SetActiveController(SELECT_FILE_CONTROLLER, true);
-
-	
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	if (!jdb || !jdb->isJobLoaded() || m_pModel->m_currentJobId.empty())
+	{
+		MsgBox msgBox;
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
+		msgBox.ShowMessageOk(msg);
+		return;
+	}
+	m_pDataModel->sSelected3DFile = StringC(m_pModel->m_currentJobId.c_str());
+	m_pDataModel->iPointCount3dfile = jdb->getPointListAsSelectPoints(&m_pDataModel->point_list[0], MAX_POINTS_IN_FILE, ACTUAL);
 	m_pDlg->RefreshControls();
 }
 
@@ -567,42 +565,34 @@ void DCP::CalculationCircleController::OnActiveDialogClosed( int /*lDlgID*/, int
 // ================================================================================================
 // Description: React on close of controller
 // ================================================================================================
-void DCP::CalculationCircleController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
+void DCP::CalculationCircleController::OnActiveControllerClosed(int lCtrlID, int lExitCode)
 {
-	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_MULTIPOINTS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		
-		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
-		m_pDataModel->sSelected3DFile = pModel->m_strSelectedFile;
-		m_pDataModel->pAdfFileFunc->setFile(m_pDataModel->sSelected3DFile);
-
-		// and get point list
-		m_pDataModel->iPointCount3dfile = m_pDataModel->pAdfFileFunc->GetPointList(&m_pDataModel->point_list[0], MAX_POINTS_IN_FILE, ACTUAL);
-		
-	}
-
-		// REF PLANE
-	if(lCtrlID == SELECT_MULTIPOINTS_CONTROLLER && lExitCode == EC_KEY_CONT)
-	{
-		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();		
+		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*)GetController(SELECT_MULTIPOINTS_CONTROLLER)->GetModel();
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (!jdb || !jdb->isJobLoaded()) {
+			MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
+			return;
+		}
 		Common common(m_pModel);
-		
-		//delete old values
 		memset(&m_pDataModel->pCircleModel->circle_points[0],0,sizeof(S_CIRCLE_BUFF));
 		short iPno=0;
 		short des = 0;
 		short act = 0;
-		char bXmea1[15], bYmea1[15], bZmea1[15];
-		char bXdes1[15], bYdes1[15], bZdes1[15],pid1[7];
+		char bXmea1[DCP_COORD_STR_BUFF_LEN], bYmea1[DCP_COORD_STR_BUFF_LEN], bZmea1[DCP_COORD_STR_BUFF_LEN];
+		char bXdes1[DCP_COORD_STR_BUFF_LEN], bYdes1[DCP_COORD_STR_BUFF_LEN], bZdes1[DCP_COORD_STR_BUFF_LEN];
+		char pid1[POINT_ID_BUFF_LEN];
 		short iCount =0;
 		for(short i=0; i < MAX_POINTS_IN_PLANE; i++)
 		{
 			iPno = pModel->nro_table[i][0];
-			if(iPno != 0)
+			if (iPno != 0)
 			{
-				m_pDataModel->pAdfFileFunc->form_pnt1((int) iPno,pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
-				
-				if(pModel->nro_table[i][1] == DESIGN)
+				bool useDesign = (pModel->nro_table[i][1] == DESIGN);
+				if (!jdb->getPointByIndex((int)iPno, !useDesign, pid1, bXmea1, bXdes1, bYmea1, bYdes1, bZmea1, bZdes1, 0))
+					continue;
+				if (pModel->nro_table[i][1] == DESIGN)
 				{
 					des = 1;
 					snprintf(m_pDataModel->pCircleModel->circle_points[0].points[iCount].point_id, sizeof(m_pDataModel->pCircleModel->circle_points[0].points[iCount].point_id), DCP_POINT_ID_FMT, pid1); // 280508
@@ -668,13 +658,9 @@ void DCP::CalculationCircleController::OnActiveControllerClosed( int lCtrlID, in
 // ===========================================================================================
 // DefinePlaneModel
 // ===========================================================================================
-DCP::CalculationCircleModel::CalculationCircleModel(Model* pModel):pCircleModel(0),pAdfFileFunc(0)
+DCP::CalculationCircleModel::CalculationCircleModel(Model* pModel):pCircleModel(0)
 {
-	
 	pCircleModel = new CircleModel(pModel);
-	pAdfFileFunc = new AdfFileFunc(pModel);
-	pAdfFileFunc->always_single = 1;
-
 	pCircleModel->PLANE_TYPE = CIRCLE_POINTS_PLANE;
 }
 
@@ -684,10 +670,5 @@ DCP::CalculationCircleModel::~CalculationCircleModel()
 	{
 		delete pCircleModel;
 		pCircleModel = 0;
-	}
-	if(pAdfFileFunc)
-	{
-		delete pAdfFileFunc;
-		pAdfFileFunc = 0;
 	}
 }

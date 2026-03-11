@@ -33,8 +33,9 @@
 
 #include <dcp06/core/Types.hpp>
 #include <dcp06/core/Model.hpp>
-#include <dcp06/file/AdfFileFunc.hpp>
 #include <dcp06/core/Common.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/file/AdfFileFunc.hpp>
 
 #include <GUI_ComboLineCtrl.hpp>
 #include <GUI_StandardDialog.hpp>
@@ -206,7 +207,8 @@ namespace DCP
 			StringC sFile;
 			StringC sTitle;
 			S_SELECT_POINTS points[MAX_POINTS_IN_FILE];
-			AdfFileFunc* pAdfFile;
+			AdfFileFunc* pAdfFile;  // legacy ADF; null when using JsonDatabase
+			DCP::Database::JsonDatabase* pJdb;  // when pAdfFile is null, use this for getPointByIndex
 			short m_iCounts;
     };
 };

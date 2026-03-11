@@ -29,12 +29,7 @@
 #include <dcp06/core/Logger.hpp>
 #include <dcp06/file/File.hpp>
 #include <dcp06/file/SelectFile.hpp>
-#ifndef DCP_USE_JSON_DATABASE
-#define DCP_USE_JSON_DATABASE 1
-#endif
-#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
-#endif
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/core/InputText.hpp>
 #include <dcp06/core/MsgBox.hpp>
@@ -187,11 +182,9 @@ void FileDialog::Swap()
 void FileDialog::Close()
 {
 	DCP06_TRACE_ENTER;
-#if DCP_USE_JSON_DATABASE
-	DCP::Database::IDatabase* db = GetModel() ? GetModel()->GetDatabase() : 0;
-	DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
+	DCP::Database::JsonDatabase* jdb = GetModel() && GetModel()->GetDatabase() ?
+		dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
 	if (jdb) jdb->closeJob();
-#endif
 	GetModel()->m_currentJobId.clear();
 	GetModel()->ADFFileName = L"";
 	sSelectedFile = L" ";
@@ -212,19 +205,14 @@ void FileDialog::Delete()
 		MsgBox MsgBox;
 		if(MsgBox.ShowMessageYesNo(strMsg))
 		{
-#if DCP_USE_JSON_DATABASE
-			DCP::Database::IDatabase* db = GetModel()->GetDatabase();
-			DCP::Database::JsonDatabase* jdb = db ? dynamic_cast<DCP::Database::JsonDatabase*>(db) : 0;
-			if (jdb)
+			DCP::Database::JsonDatabase* jdb = GetModel()->GetDatabase() ?
+				dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
+			if (jdb && jdb->deleteJob(GetModel()->m_currentJobId))
 			{
-				if (db->deleteJob(GetModel()->m_currentJobId))
-				{
-					jdb->closeJob();
-					GetModel()->m_currentJobId.clear();
-					GetModel()->ADFFileName = L"";
-				}
+				jdb->closeJob();
+				GetModel()->m_currentJobId.clear();
+				GetModel()->ADFFileName = L"";
 			}
-#endif
 		}
 	}
 	DCP06_TRACE_EXIT;
@@ -270,19 +258,11 @@ void DCP::FileDialog::RefreshControls()
 	{
 		// DB-primary: job loaded = m_currentJobId not empty; display from JsonDatabase
 		bool jobLoaded = GetModel() && !GetModel()->m_currentJobId.empty();
-#if DCP_USE_JSON_DATABASE
-		DCP::Database::JsonDatabase* jdb = 0;
-		if (jobLoaded && GetModel()->GetDatabase())
-			jdb = dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase());
-#endif
+		DCP::Database::JsonDatabase* jdb = jobLoaded && GetModel()->GetDatabase() ?
+			dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
 
-		if(jobLoaded
-#if DCP_USE_JSON_DATABASE
-			&& jdb
-#endif
-			)
+		if (jobLoaded && jdb)
 		{
-#if DCP_USE_JSON_DATABASE
 			m_pFile->GetStringInputCtrl()->SetString(StringC(jdb->getJobDisplayName().c_str()));
 			char ptBuf[16];
 			sprintf(ptBuf, "%d", jdb->getJobPointsCount());
@@ -290,13 +270,6 @@ void DCP::FileDialog::RefreshControls()
 			m_pSize->GetStringInputCtrl()->SetString(StringC(jdb->getJobFileSizeString().c_str()));
 			m_pDate->GetStringInputCtrl()->SetString(StringC(jdb->getJobModDateString().c_str()));
 			m_pTime->GetStringInputCtrl()->SetString(StringC(jdb->getJobModTimeString().c_str()));
-#else
-			m_pFile->GetStringInputCtrl()->SetString(L" ");
-			m_pNumberOfPoints->GetStringInputCtrl()->SetString(L" ");
-			m_pSize->GetStringInputCtrl()->SetString(L" ");
-			m_pDate->GetStringInputCtrl()->SetString(L" ");
-			m_pTime->GetStringInputCtrl()->SetString(L" ");
-#endif
 		}
 		else
 		{
@@ -322,14 +295,9 @@ void DCP::FileDialog::UpdateData()
 	// DB-primary: ADFFileName holds job display name when job loaded
 	if (GetModel() && !GetModel()->m_currentJobId.empty())
 	{
-#if DCP_USE_JSON_DATABASE
 		DCP::Database::JsonDatabase* jdb = GetModel()->GetDatabase() ?
 			dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
-		if (jdb)
-			GetModel()->ADFFileName = StringC(jdb->getJobDisplayName().c_str());
-		else
-#endif
-			GetModel()->ADFFileName = StringC(GetModel()->m_currentJobId.c_str());
+		GetModel()->ADFFileName = jdb ? StringC(jdb->getJobDisplayName().c_str()) : StringC(GetModel()->m_currentJobId.c_str());
 	}
 	else
 		GetModel()->ADFFileName = L"";
@@ -594,11 +562,9 @@ void DCP::FileController::OnF3Pressed()
 void DCP::FileController::OnF5Pressed()
 {
 	DCP06_TRACE_ENTER;
-#if DCP_USE_JSON_DATABASE
 	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
 		dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
 	if (jdb) jdb->closeJob();
-#endif
 	m_pModel->m_currentJobId.clear();
 	m_pModel->ADFFileName = L"";
 
@@ -614,11 +580,9 @@ void DCP::FileController::OnF4Pressed()
 	if(m_pModel->m_currentJobId.empty())
 		{ DCP06_TRACE_EXIT; return; }
 
-#if DCP_USE_JSON_DATABASE
 	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
 		dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
 	if (jdb) jdb->swapMeasDesign();
-#endif
 	m_pDlg->RefreshControls();
 	DCP06_TRACE_EXIT;
 }
@@ -662,10 +626,8 @@ void DCP::FileController::OnSHF3Pressed()
 	DCP06_TRACE_ENTER;
 	if(m_pModel->m_currentJobId.empty())
 		{ DCP06_TRACE_EXIT; return; }
-#if DCP_USE_JSON_DATABASE
 	DCP::Database::IDatabase* db = m_pModel->GetDatabase();
 	if (db) db->saveJob(m_pModel->m_currentJobId);
-#endif
 	m_pDlg->RefreshControls();
 	DCP06_TRACE_EXIT;
 }
@@ -758,7 +720,6 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 			if (!base.empty())
 			{
 				DCP::Database::IDatabase* db = m_pModel->GetDatabase();
-#if DCP_USE_JSON_DATABASE
 				if (db)
 				{
 					std::string dataDir = db->getDataDirectory();
@@ -783,7 +744,6 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 							db->exportToTXT(exportPath, " ");
 					}
 				}
-#endif
 			}
 		}
 		m_pendingExportFormat = -1;
@@ -810,14 +770,12 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 			BSS::UTI::BSS_UTI_WCharToAscii(strSelected, jobIdBuf);
 			std::string jobId(jobIdBuf);
 			DCP::Database::IDatabase* db = m_pModel->GetDatabase();
-#if DCP_USE_JSON_DATABASE
 			if (db && !jobId.empty() && db->loadJob(jobId))
 			{
 				m_pModel->m_currentJobId = jobId;
 				m_pModel->ADFFileName = StringC(jobId.c_str());
 				DCP06_LOG_INFO("FileController: opened job %s", jobId.c_str());
 			}
-#endif
 		}
 		else
 		{
@@ -912,7 +870,6 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 			if (targetId.empty()) targetId = "copy";
 
 			DCP::Database::IDatabase* db = m_pModel->GetDatabase();
-#if DCP_USE_JSON_DATABASE
 			if (db && !m_pModel->m_currentJobId.empty() && db->copyJob(m_pModel->m_currentJobId, targetId))
 			{
 				if (db->loadJob(targetId))
@@ -921,7 +878,6 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 					m_pModel->ADFFileName = StringC(targetId.c_str());
 				}
 			}
-#endif
 		}
 		
 		else if(lCtrlID == INPUT_FIRST_POINTID_CONTROLLER)
@@ -936,7 +892,6 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 
 			// DB-primary: create job in database (no working ADF)
 			DCP::Database::IDatabase* db = m_pModel->GetDatabase();
-#if DCP_USE_JSON_DATABASE
 			if (db)
 			{
 				std::string jobId(fname);
@@ -957,7 +912,6 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 					m_pModel->ADFFileName = StringC(jobId.c_str());
 				}
 			}
-#endif
 			//m_pDlg->CreateFile(sFileToCreate,pModel->m_StrText);
 			
 

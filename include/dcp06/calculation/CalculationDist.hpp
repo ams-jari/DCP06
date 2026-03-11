@@ -192,7 +192,8 @@ namespace DCP
 			{
 				eNormal = 0,
 				eRef,
-				eTarget
+				eTarget,
+				ePointSelected
 			};
 	
 			eDisplayMode dspMode;

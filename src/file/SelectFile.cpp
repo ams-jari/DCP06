@@ -29,12 +29,7 @@
 #include <dcp06/file/SelectFile.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/file/AdfFileFunc.hpp>
-#ifndef DCP_USE_JSON_DATABASE
-#define DCP_USE_JSON_DATABASE 1
-#endif
-#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
-#endif
 #include <dcp06/file/DistFile.hpp>
 #include <dcp06/file/AngleFile.hpp>
 #include <dcp06/file/CircleFile.hpp>
@@ -159,11 +154,9 @@ void SelectFileDialog::OnDialogActivated()
 	
 	StringC sLine;
 	char cTemp[80];
-	if(m_iFileType == FILE_TYPE_JOBS)
+	if (m_iFileType == FILE_TYPE_JOBS)
 	{
-		DCP::Database::IDatabase* db = m_pModel->GetDatabase();
-#if DCP_USE_JSON_DATABASE
-		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
+		Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
 		if (jdb)
 		{
 			std::vector<std::string> ids = jdb->listJobIds();
@@ -175,7 +168,6 @@ void SelectFileDialog::OnDialogActivated()
 				USER_APP_VERIFY(poMultiColCtrl->SetCellText(CI_File, (short)i, sLine));
 			}
 		}
-#endif
 		return;
 	}
 	if(m_iFileType == ONLY_ADF)

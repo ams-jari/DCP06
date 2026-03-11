@@ -32,8 +32,8 @@
 // ================================================================================================
 
 #include <dcp06/core/Types.hpp>
-#include <dcp06/file/AdfFileFunc.hpp>
 #include <dcp06/core/MsgBox.hpp>
+#include <dcp06/core/Common.hpp>
 
 #include <GUI_ComboLineCtrl.hpp>
 #include <GUI_StandardDialog.hpp>
@@ -237,8 +237,7 @@ namespace DCP
 			
 			void set_dcp05_model(Model *pModel);
 
-			AdfFileFunc* m_pFileFunc;
-			bool m_bJobOpen;  // true when JsonDatabase job is loaded (not ADF)
+			bool m_bJobOpen;  // true when JsonDatabase job is loaded
 
 			char *xmea_ptr,*ymea_ptr,*zmea_ptr;
 			char *xdes_ptr,*ydes_ptr,*zdes_ptr;

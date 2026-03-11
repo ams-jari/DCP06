@@ -534,9 +534,17 @@ void DCP::CalculationDist2PointsController::OnActiveControllerClosed( int lCtrlI
 			char bXmea2[15], bYmea2[15], bZmea2[15];
 			char bXdes2[15], bYdes2[15], bZdes2[15],pid2[7];
 				
-		
-			m_pDlg->GetDataModel()->pAdfFile->form_pnt1((int) p1, pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
-			m_pDlg->GetDataModel()->pAdfFile->form_pnt1((int) p2, pid2, nullptr, bXmea2, bXdes2, nullptr, bYmea2, bYdes2, nullptr, bZmea2, bZdes2, nullptr);
+			DCP::CalculationDist2PointsModel* pDataModel = m_pDlg->GetDataModel();
+			if (pDataModel->pJdb)
+			{
+				pDataModel->pJdb->getPointByIndex((int)p1, true, pid1, bXmea1, bXdes1, bYmea1, bYdes1, bZmea1, bZdes1, nullptr);
+				pDataModel->pJdb->getPointByIndex((int)p2, true, pid2, bXmea2, bXdes2, bYmea2, bYdes2, bZmea2, bZdes2, nullptr);
+			}
+			else if (pDataModel->pAdfFile)
+			{
+				pDataModel->pAdfFile->form_pnt1((int) p1, pid1, nullptr, bXmea1, bXdes1, nullptr, bYmea1, bYdes1, nullptr, bZmea1, bZdes1, nullptr);
+				pDataModel->pAdfFile->form_pnt1((int) p2, pid2, nullptr, bXmea2, bXdes2, nullptr, bYmea2, bYdes2, nullptr, bZmea2, bZdes2, nullptr);
+			}
 			
 			m_pDlg->calc_distances(p1, pid1, bXmea1, bXdes1, bYmea1, bYdes1,bZmea1, bZdes1,
 									p2, pid2, bXmea2, bXdes2, bYmea2, bYdes2,bZmea2, bZdes2);
@@ -557,7 +565,9 @@ void DCP::CalculationDist2PointsController::OnActiveControllerClosed( int lCtrlI
 // ===========================================================================================
 DCP::CalculationDist2PointsModel::CalculationDist2PointsModel()
 {
-	memset(&points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE); 
+	memset(&points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
+	pAdfFile = 0;
+	pJdb = 0;
 }
 
 // ===========================================================================================

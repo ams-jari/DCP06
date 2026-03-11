@@ -285,7 +285,281 @@ Json::Value JsonDatabase::jobDataToJson(const JobData& data) {
             circlesJson[it->first] = circleDataToJson(*it->second);
     }
     j["circles_data"] = circlesJson;
+    Json::Value bestFitJson;
+    for (std::map<std::string, DCP_SHARED_PTR<BestFitAlignmentData> >::const_iterator it = data.bestFitAlignments.begin();
+         it != data.bestFitAlignments.end(); ++it) {
+        if (it->second.get())
+            bestFitJson[it->first] = bestFitAlignmentDataToJson(*it->second);
+    }
+    j["bestfit_alignments"] = bestFitJson;
+    Json::Value changeStationsJson;
+    for (std::map<std::string, DCP_SHARED_PTR<ChangeStationData> >::const_iterator it = data.changeStationsData.begin();
+         it != data.changeStationsData.end(); ++it) {
+        if (it->second.get())
+            changeStationsJson[it->first] = changeStationDataToJson(*it->second);
+    }
+    j["change_stations_data"] = changeStationsJson;
+    Json::Value align321Json;
+    for (std::map<std::string, DCP_SHARED_PTR<Alignment321Data> >::const_iterator it = data.alignments321.begin();
+         it != data.alignments321.end(); ++it) {
+        if (it->second.get())
+            align321Json[it->first] = alignment321DataToJson(*it->second);
+    }
+    j["alignments321"] = align321Json;
     return j;
+}
+
+Json::Value JsonDatabase::changeStationDataToJson(const ChangeStationData& data) {
+    Json::Value j;
+    j["type"] = data.type.empty() ? "change_station" : data.type;
+    j["id"] = data.id;
+    j["chst_hz_plane"] = data.chst_hz_plane;
+    j["rms"] = data.rms;
+    j["matrix"]["a00"] = data.matrix.a00; j["matrix"]["a01"] = data.matrix.a01; j["matrix"]["a02"] = data.matrix.a02; j["matrix"]["a03"] = data.matrix.a03;
+    j["matrix"]["a10"] = data.matrix.a10; j["matrix"]["a11"] = data.matrix.a11; j["matrix"]["a12"] = data.matrix.a12; j["matrix"]["a13"] = data.matrix.a13;
+    j["matrix"]["a20"] = data.matrix.a20; j["matrix"]["a21"] = data.matrix.a21; j["matrix"]["a22"] = data.matrix.a22; j["matrix"]["a23"] = data.matrix.a23;
+    Json::Value ptsPrev;
+    for (std::map<std::string, PointData>::const_iterator it = data.points_prev.begin(); it != data.points_prev.end(); ++it)
+        ptsPrev[it->first] = pointDataToJson(it->second);
+    j["points_prev"] = ptsPrev;
+    Json::Value ptsNew;
+    for (std::map<std::string, PointData>::const_iterator it = data.points_new.begin(); it != data.points_new.end(); ++it)
+        ptsNew[it->first] = pointDataToJson(it->second);
+    j["points_new"] = ptsNew;
+    Json::Value ptsRes;
+    for (std::map<std::string, PointData>::const_iterator it = data.points_residuals.begin(); it != data.points_residuals.end(); ++it)
+        ptsRes[it->first] = pointDataToJson(it->second);
+    j["points_residuals"] = ptsRes;
+    return j;
+}
+
+bool JsonDatabase::jsonToChangeStationData(const Json::Value& j, ChangeStationData& data) {
+    data.type = getJsonString(j, "type", "change_station");
+    data.id = getJsonString(j, "id", "");
+    data.chst_hz_plane = getJsonIntDefault(j, "chst_hz_plane", 0);
+    data.rms = getJsonDoubleDefault(j, "rms", 0.0);
+    if (j.isMember("matrix") && j["matrix"].isObject()) {
+        data.matrix.a00 = getJsonDoubleDefault(j["matrix"], "a00", 1.0); data.matrix.a01 = getJsonDoubleDefault(j["matrix"], "a01", 0.0);
+        data.matrix.a02 = getJsonDoubleDefault(j["matrix"], "a02", 0.0); data.matrix.a03 = getJsonDoubleDefault(j["matrix"], "a03", 0.0);
+        data.matrix.a10 = getJsonDoubleDefault(j["matrix"], "a10", 0.0); data.matrix.a11 = getJsonDoubleDefault(j["matrix"], "a11", 1.0);
+        data.matrix.a12 = getJsonDoubleDefault(j["matrix"], "a12", 0.0); data.matrix.a13 = getJsonDoubleDefault(j["matrix"], "a13", 0.0);
+        data.matrix.a20 = getJsonDoubleDefault(j["matrix"], "a20", 0.0); data.matrix.a21 = getJsonDoubleDefault(j["matrix"], "a21", 0.0);
+        data.matrix.a22 = getJsonDoubleDefault(j["matrix"], "a22", 1.0); data.matrix.a23 = getJsonDoubleDefault(j["matrix"], "a23", 0.0);
+    }
+    data.points_prev.clear();
+    if (j.isMember("points_prev") && j["points_prev"].isObject()) {
+        Json::Value::Members m = j["points_prev"].getMemberNames();
+        for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+            PointData pt;
+            if (jsonToPointData(j["points_prev"][*it], pt)) { pt.id = *it; data.points_prev[*it] = pt; }
+        }
+    }
+    data.points_new.clear();
+    if (j.isMember("points_new") && j["points_new"].isObject()) {
+        Json::Value::Members m = j["points_new"].getMemberNames();
+        for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+            PointData pt;
+            if (jsonToPointData(j["points_new"][*it], pt)) { pt.id = *it; data.points_new[*it] = pt; }
+        }
+    }
+    data.points_residuals.clear();
+    if (j.isMember("points_residuals") && j["points_residuals"].isObject()) {
+        Json::Value::Members m = j["points_residuals"].getMemberNames();
+        for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+            PointData pt;
+            if (jsonToPointData(j["points_residuals"][*it], pt)) { pt.id = *it; data.points_residuals[*it] = pt; }
+        }
+    }
+    return true;
+}
+
+Json::Value JsonDatabase::alignment321DataToJson(const Alignment321Data& data) {
+    Json::Value j;
+    j["type"] = data.type.empty() ? "321" : data.type;
+    j["id"] = data.id;
+    j["calculated"] = data.calculated;
+    setJsonDouble(j, "rms", data.rms);
+    j["meas_time"] = data.measTime;
+    j["measurer"] = data.measurer;
+    j["instrument_id"] = data.instrumentId;
+    Json::Value planeJson;
+    planeJson["px"] = data.plane.px; planeJson["py"] = data.plane.py; planeJson["pz"] = data.plane.pz;
+    planeJson["nx"] = data.plane.nx; planeJson["ny"] = data.plane.ny; planeJson["nz"] = data.plane.nz;
+    planeJson["rms"] = data.plane.rms; planeJson["calculated"] = data.plane.calculated;
+    Json::Value planePts;
+    for (std::map<std::string, PointData>::const_iterator it = data.plane.points.begin(); it != data.plane.points.end(); ++it)
+        planePts[it->first] = pointDataToJson(it->second);
+    planeJson["points"] = planePts;
+    j["plane"] = planeJson;
+    Json::Value lineJson;
+    lineJson["px"] = data.line.px; lineJson["py"] = data.line.py; lineJson["pz"] = data.line.pz;
+    lineJson["ux"] = data.line.ux; lineJson["uy"] = data.line.uy; lineJson["uz"] = data.line.uz;
+    lineJson["rms"] = data.line.rms; lineJson["calculated"] = data.line.calculated;
+    Json::Value linePts;
+    for (std::map<std::string, PointData>::const_iterator it = data.line.points.begin(); it != data.line.points.end(); ++it)
+        linePts[it->first] = pointDataToJson(it->second);
+    lineJson["points"] = linePts;
+    j["line"] = lineJson;
+    j["offset_value"] = pointDataToJson(data.offset_value);
+    j["offset_value_tool"] = pointDataToJson(data.offset_value_tool);
+    j["reference_point"] = pointDataToJson(data.reference_point);
+    j["rotate_plane_buff"] = pointDataToJson(data.rotate_plane_buff);
+    j["rotate_line_buff"] = pointDataToJson(data.rotate_line_buff);
+    Json::Value rotPlane;
+    for (std::map<std::string, Alignment321Data::Angle>::const_iterator it = data.rotate_plane.begin(); it != data.rotate_plane.end(); ++it) {
+        Json::Value ang;
+        ang["value"] = it->second.value;
+        ang["calculated"] = it->second.calculated;
+        rotPlane[it->first] = ang;
+    }
+    j["rotate_plane"] = rotPlane;
+    Json::Value rotLine;
+    rotLine["value"] = data.rotate_line.value;
+    rotLine["calculated"] = data.rotate_line.calculated;
+    j["rotate_line"] = rotLine;
+    j["rotate_plane_order"] = data.rotate_plane_order;
+    j["matrix"]["a00"] = data.matrix.a00; j["matrix"]["a01"] = data.matrix.a01; j["matrix"]["a02"] = data.matrix.a02; j["matrix"]["a03"] = data.matrix.a03;
+    j["matrix"]["a10"] = data.matrix.a10; j["matrix"]["a11"] = data.matrix.a11; j["matrix"]["a12"] = data.matrix.a12; j["matrix"]["a13"] = data.matrix.a13;
+    j["matrix"]["a20"] = data.matrix.a20; j["matrix"]["a21"] = data.matrix.a21; j["matrix"]["a22"] = data.matrix.a22; j["matrix"]["a23"] = data.matrix.a23;
+    return j;
+}
+
+bool JsonDatabase::jsonToAlignment321Data(const Json::Value& j, Alignment321Data& data) {
+    data.type = getJsonString(j, "type", "321");
+    data.id = getJsonString(j, "id", "");
+    data.calculated = getJsonBoolDefault(j, "calculated", false);
+    data.rms = getJsonDoubleDefault(j, "rms", 0.0);
+    data.measTime = getJsonString(j, "meas_time", "");
+    data.measurer = getJsonString(j, "measurer", "");
+    data.instrumentId = getJsonString(j, "instrument_id", "");
+    if (j.isMember("plane") && j["plane"].isObject()) {
+        const Json::Value& p = j["plane"];
+        data.plane.px = getJsonDoubleDefault(p, "px", 0.0); data.plane.py = getJsonDoubleDefault(p, "py", 0.0); data.plane.pz = getJsonDoubleDefault(p, "pz", 0.0);
+        data.plane.nx = getJsonDoubleDefault(p, "nx", 0.0); data.plane.ny = getJsonDoubleDefault(p, "ny", 0.0); data.plane.nz = getJsonDoubleDefault(p, "nz", 0.0);
+        data.plane.rms = getJsonDoubleDefault(p, "rms", 0.0); data.plane.calculated = getJsonBoolDefault(p, "calculated", false);
+        data.plane.points.clear();
+        if (p.isMember("points") && p["points"].isObject()) {
+            Json::Value::Members m = p["points"].getMemberNames();
+            for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+                PointData pt;
+                if (jsonToPointData(p["points"][*it], pt)) { pt.id = *it; data.plane.points[*it] = pt; }
+            }
+        }
+    }
+    if (j.isMember("line") && j["line"].isObject()) {
+        const Json::Value& l = j["line"];
+        data.line.px = getJsonDoubleDefault(l, "px", 0.0); data.line.py = getJsonDoubleDefault(l, "py", 0.0); data.line.pz = getJsonDoubleDefault(l, "pz", 0.0);
+        data.line.ux = getJsonDoubleDefault(l, "ux", 0.0); data.line.uy = getJsonDoubleDefault(l, "uy", 0.0); data.line.uz = getJsonDoubleDefault(l, "uz", 0.0);
+        data.line.rms = getJsonDoubleDefault(l, "rms", 0.0); data.line.calculated = getJsonBoolDefault(l, "calculated", false);
+        data.line.points.clear();
+        if (l.isMember("points") && l["points"].isObject()) {
+            Json::Value::Members m = l["points"].getMemberNames();
+            for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+                PointData pt;
+                if (jsonToPointData(l["points"][*it], pt)) { pt.id = *it; data.line.points[*it] = pt; }
+            }
+        }
+    }
+    if (j.isMember("offset_value")) jsonToPointData(j["offset_value"], data.offset_value);
+    if (j.isMember("offset_value_tool")) jsonToPointData(j["offset_value_tool"], data.offset_value_tool);
+    if (j.isMember("reference_point")) jsonToPointData(j["reference_point"], data.reference_point);
+    if (j.isMember("rotate_plane_buff")) jsonToPointData(j["rotate_plane_buff"], data.rotate_plane_buff);
+    if (j.isMember("rotate_line_buff")) jsonToPointData(j["rotate_line_buff"], data.rotate_line_buff);
+    data.rotate_plane.clear();
+    if (j.isMember("rotate_plane") && j["rotate_plane"].isObject()) {
+        Json::Value::Members m = j["rotate_plane"].getMemberNames();
+        for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+            Alignment321Data::Angle ang;
+            ang.value = getJsonDoubleDefault(j["rotate_plane"][*it], "value", 0.0);
+            ang.calculated = getJsonBoolDefault(j["rotate_plane"][*it], "calculated", false);
+            data.rotate_plane[*it] = ang;
+        }
+    }
+    if (j.isMember("rotate_line") && j["rotate_line"].isObject()) {
+        data.rotate_line.value = getJsonDoubleDefault(j["rotate_line"], "value", 0.0);
+        data.rotate_line.calculated = getJsonBoolDefault(j["rotate_line"], "calculated", false);
+    }
+    data.rotate_plane_order = getJsonIntDefault(j, "rotate_plane_order", 0);
+    if (j.isMember("matrix") && j["matrix"].isObject()) {
+        const Json::Value& mat = j["matrix"];
+        data.matrix.a00 = getJsonDoubleDefault(mat, "a00", 1.0); data.matrix.a01 = getJsonDoubleDefault(mat, "a01", 0.0);
+        data.matrix.a02 = getJsonDoubleDefault(mat, "a02", 0.0); data.matrix.a03 = getJsonDoubleDefault(mat, "a03", 0.0);
+        data.matrix.a10 = getJsonDoubleDefault(mat, "a10", 0.0); data.matrix.a11 = getJsonDoubleDefault(mat, "a11", 1.0);
+        data.matrix.a12 = getJsonDoubleDefault(mat, "a12", 0.0); data.matrix.a13 = getJsonDoubleDefault(mat, "a13", 0.0);
+        data.matrix.a20 = getJsonDoubleDefault(mat, "a20", 0.0); data.matrix.a21 = getJsonDoubleDefault(mat, "a21", 0.0);
+        data.matrix.a22 = getJsonDoubleDefault(mat, "a22", 1.0); data.matrix.a23 = getJsonDoubleDefault(mat, "a23", 0.0);
+    }
+    return true;
+}
+
+Json::Value JsonDatabase::bestFitAlignmentDataToJson(const BestFitAlignmentData& data) {
+    Json::Value j;
+    j["type"] = data.type.empty() ? "bestfit" : data.type;
+    j["id"] = data.id;
+    j["bestFitAlignmentType"] = data.bestFitAlignmentType;
+    setJsonDouble(j, "position_x", data.position_x); setJsonDouble(j, "position_y", data.position_y); setJsonDouble(j, "position_z", data.position_z);
+    setJsonDouble(j, "orientation_x", data.orientation_x); setJsonDouble(j, "orientation_y", data.orientation_y); setJsonDouble(j, "orientation_z", data.orientation_z);
+    setJsonDouble(j, "tolerance", data.tolerance); setJsonDouble(j, "maxDeviation", data.maxDeviation);
+    j["rms"] = data.rms; j["calculated"] = data.calculated;
+    j["matrix"]["a00"] = data.matrix.a00; j["matrix"]["a01"] = data.matrix.a01; j["matrix"]["a02"] = data.matrix.a02; j["matrix"]["a03"] = data.matrix.a03;
+    j["matrix"]["a10"] = data.matrix.a10; j["matrix"]["a11"] = data.matrix.a11; j["matrix"]["a12"] = data.matrix.a12; j["matrix"]["a13"] = data.matrix.a13;
+    j["matrix"]["a20"] = data.matrix.a20; j["matrix"]["a21"] = data.matrix.a21; j["matrix"]["a22"] = data.matrix.a22; j["matrix"]["a23"] = data.matrix.a23;
+    Json::Value ptsOcs;
+    for (std::map<std::string, PointData>::const_iterator it = data.points_ocs.begin(); it != data.points_ocs.end(); ++it)
+        ptsOcs[it->first] = pointDataToJson(it->second);
+    j["points_ocs"] = ptsOcs;
+    Json::Value ptsScs;
+    for (std::map<std::string, PointData>::const_iterator it = data.points_scs.begin(); it != data.points_scs.end(); ++it)
+        ptsScs[it->first] = pointDataToJson(it->second);
+    j["points_scs"] = ptsScs;
+    Json::Value ptsRes;
+    for (std::map<std::string, PointData>::const_iterator it = data.points_residuals.begin(); it != data.points_residuals.end(); ++it)
+        ptsRes[it->first] = pointDataToJson(it->second);
+    j["points_residuals"] = ptsRes;
+    return j;
+}
+
+bool JsonDatabase::jsonToBestFitAlignmentData(const Json::Value& j, BestFitAlignmentData& data) {
+    data.type = getJsonString(j, "type", "bestfit");
+    data.id = getJsonString(j, "id", "");
+    data.bestFitAlignmentType = getJsonString(j, "bestFitAlignmentType", "");
+    data.position_x = getJsonDoubleDefault(j, "position_x", 0.0); data.position_y = getJsonDoubleDefault(j, "position_y", 0.0); data.position_z = getJsonDoubleDefault(j, "position_z", 0.0);
+    data.orientation_x = getJsonDoubleDefault(j, "orientation_x", 0.0); data.orientation_y = getJsonDoubleDefault(j, "orientation_y", 0.0); data.orientation_z = getJsonDoubleDefault(j, "orientation_z", 0.0);
+    data.tolerance = getJsonDoubleDefault(j, "tolerance", 0.0); data.maxDeviation = getJsonDoubleDefault(j, "maxDeviation", 0.0);
+    data.rms = getJsonDoubleDefault(j, "rms", 0.0); data.calculated = getJsonBoolDefault(j, "calculated", false);
+    if (j.isMember("matrix") && j["matrix"].isObject()) {
+        data.matrix.a00 = getJsonDoubleDefault(j["matrix"], "a00", 1.0); data.matrix.a01 = getJsonDoubleDefault(j["matrix"], "a01", 0.0);
+        data.matrix.a02 = getJsonDoubleDefault(j["matrix"], "a02", 0.0); data.matrix.a03 = getJsonDoubleDefault(j["matrix"], "a03", 0.0);
+        data.matrix.a10 = getJsonDoubleDefault(j["matrix"], "a10", 0.0); data.matrix.a11 = getJsonDoubleDefault(j["matrix"], "a11", 1.0);
+        data.matrix.a12 = getJsonDoubleDefault(j["matrix"], "a12", 0.0); data.matrix.a13 = getJsonDoubleDefault(j["matrix"], "a13", 0.0);
+        data.matrix.a20 = getJsonDoubleDefault(j["matrix"], "a20", 0.0); data.matrix.a21 = getJsonDoubleDefault(j["matrix"], "a21", 0.0);
+        data.matrix.a22 = getJsonDoubleDefault(j["matrix"], "a22", 1.0); data.matrix.a23 = getJsonDoubleDefault(j["matrix"], "a23", 0.0);
+    }
+    data.points_ocs.clear();
+    if (j.isMember("points_ocs") && j["points_ocs"].isObject()) {
+        Json::Value::Members m = j["points_ocs"].getMemberNames();
+        for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+            PointData pt;
+            if (jsonToPointData(j["points_ocs"][*it], pt)) { pt.id = *it; data.points_ocs[*it] = pt; }
+        }
+    }
+    data.points_scs.clear();
+    if (j.isMember("points_scs") && j["points_scs"].isObject()) {
+        Json::Value::Members m = j["points_scs"].getMemberNames();
+        for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+            PointData pt;
+            if (jsonToPointData(j["points_scs"][*it], pt)) { pt.id = *it; data.points_scs[*it] = pt; }
+        }
+    }
+    data.points_residuals.clear();
+    if (j.isMember("points_residuals") && j["points_residuals"].isObject()) {
+        Json::Value::Members m = j["points_residuals"].getMemberNames();
+        for (Json::Value::Members::const_iterator it = m.begin(); it != m.end(); ++it) {
+            PointData pt;
+            if (jsonToPointData(j["points_residuals"][*it], pt)) { pt.id = *it; data.points_residuals[*it] = pt; }
+        }
+    }
+    return true;
 }
 
 Json::Value JsonDatabase::circleDataToJson(const CircleData& data) {
@@ -363,6 +637,39 @@ bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
             DCP_SHARED_PTR<CircleData> cd(new CircleData());
             if (jsonToCircleData(circs[key], *cd))
                 data.circlesData[key] = cd;
+        }
+    }
+    data.bestFitAlignments.clear();
+    if (j.isMember("bestfit_alignments") && j["bestfit_alignments"].isObject()) {
+        const Json::Value& bf = j["bestfit_alignments"];
+        Json::Value::Members members = bf.getMemberNames();
+        for (Json::Value::Members::const_iterator it = members.begin(); it != members.end(); ++it) {
+            const std::string& key = *it;
+            DCP_SHARED_PTR<BestFitAlignmentData> bfd(new BestFitAlignmentData());
+            if (jsonToBestFitAlignmentData(bf[key], *bfd))
+                data.bestFitAlignments[key] = bfd;
+        }
+    }
+    data.changeStationsData.clear();
+    if (j.isMember("change_stations_data") && j["change_stations_data"].isObject()) {
+        const Json::Value& cs = j["change_stations_data"];
+        Json::Value::Members members = cs.getMemberNames();
+        for (Json::Value::Members::const_iterator it = members.begin(); it != members.end(); ++it) {
+            const std::string& key = *it;
+            DCP_SHARED_PTR<ChangeStationData> csd(new ChangeStationData());
+            if (jsonToChangeStationData(cs[key], *csd))
+                data.changeStationsData[key] = csd;
+        }
+    }
+    data.alignments321.clear();
+    if (j.isMember("alignments321") && j["alignments321"].isObject()) {
+        const Json::Value& a321 = j["alignments321"];
+        Json::Value::Members members = a321.getMemberNames();
+        for (Json::Value::Members::const_iterator it = members.begin(); it != members.end(); ++it) {
+            const std::string& key = *it;
+            DCP_SHARED_PTR<Alignment321Data> a321d(new Alignment321Data());
+            if (jsonToAlignment321Data(a321[key], *a321d))
+                data.alignments321[key] = a321d;
         }
     }
     return true;
@@ -524,6 +831,108 @@ std::vector<std::string> JsonDatabase::getCircleIdsInJob() const {
          it != m_currentJob->circlesData.end(); ++it)
         out.push_back(it->first);
     std::sort(out.begin(), out.end());
+    return out;
+}
+
+bool JsonDatabase::addBestFitAlignment(const std::string& bestFitAlignmentId, const BestFitAlignmentData& data) {
+    if (!m_currentJob.get()) return false;
+    DCP_SHARED_PTR<BestFitAlignmentData> bfd(new BestFitAlignmentData(data));
+    bfd->id = bestFitAlignmentId;
+    if (bfd->measTime.empty()) bfd->measTime = getCurrentIsoTime();
+    m_currentJob->bestFitAlignments[bestFitAlignmentId] = bfd;
+    return true;
+}
+
+bool JsonDatabase::updateBestFitAlignment(const std::string& bestFitAlignmentId, const BestFitAlignmentData& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<BestFitAlignmentData> >::iterator it = m_currentJob->bestFitAlignments.find(bestFitAlignmentId);
+    if (it == m_currentJob->bestFitAlignments.end()) return false;
+    *it->second = data;
+    it->second->id = bestFitAlignmentId;
+    return true;
+}
+
+bool JsonDatabase::deleteBestFitAlignment(const std::string& bestFitAlignmentId) {
+    if (!m_currentJob.get()) return false;
+    return m_currentJob->bestFitAlignments.erase(bestFitAlignmentId) > 0;
+}
+
+bool JsonDatabase::getBestFitAlignment(const std::string& bestFitAlignmentId, BestFitAlignmentData& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<BestFitAlignmentData> >::const_iterator it = m_currentJob->bestFitAlignments.find(bestFitAlignmentId);
+    if (it == m_currentJob->bestFitAlignments.end() || !it->second) return false;
+    data = *it->second;
+    return true;
+}
+
+bool JsonDatabase::addChangeStation(const std::string& changeStationId, const ChangeStationData& data) {
+    if (!m_currentJob.get()) return false;
+    DCP_SHARED_PTR<ChangeStationData> csd(new ChangeStationData(data));
+    csd->id = changeStationId;
+    if (csd->measTime.empty()) csd->measTime = getCurrentIsoTime();
+    m_currentJob->changeStationsData[changeStationId] = csd;
+    return true;
+}
+
+bool JsonDatabase::updateChangeStation(const std::string& changeStationId, const ChangeStationData& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<ChangeStationData> >::iterator it = m_currentJob->changeStationsData.find(changeStationId);
+    if (it == m_currentJob->changeStationsData.end()) return false;
+    *it->second = data;
+    it->second->id = changeStationId;
+    return true;
+}
+
+bool JsonDatabase::deleteChangeStation(const std::string& changeStationId) {
+    if (!m_currentJob.get()) return false;
+    return m_currentJob->changeStationsData.erase(changeStationId) > 0;
+}
+
+bool JsonDatabase::getChangeStation(const std::string& changeStationId, ChangeStationData& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<ChangeStationData> >::const_iterator it = m_currentJob->changeStationsData.find(changeStationId);
+    if (it == m_currentJob->changeStationsData.end() || !it->second) return false;
+    data = *it->second;
+    return true;
+}
+
+bool JsonDatabase::add321Alignment(const std::string& alignment321Id, const Alignment321Data& data) {
+    if (!m_currentJob.get()) return false;
+    DCP_SHARED_PTR<Alignment321Data> a321(new Alignment321Data(data));
+    a321->id = alignment321Id;
+    if (a321->measTime.empty()) a321->measTime = getCurrentIsoTime();
+    m_currentJob->alignments321[alignment321Id] = a321;
+    return true;
+}
+
+bool JsonDatabase::update321Alignment(const std::string& alignment321Id, const Alignment321Data& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<Alignment321Data> >::iterator it = m_currentJob->alignments321.find(alignment321Id);
+    if (it == m_currentJob->alignments321.end()) return false;
+    *it->second = data;
+    it->second->id = alignment321Id;
+    return true;
+}
+
+bool JsonDatabase::delete321Alignment(const std::string& alignment321Id) {
+    if (!m_currentJob.get()) return false;
+    return m_currentJob->alignments321.erase(alignment321Id) > 0;
+}
+
+bool JsonDatabase::get321Alignment(const std::string& alignment321Id, Alignment321Data& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<Alignment321Data> >::const_iterator it = m_currentJob->alignments321.find(alignment321Id);
+    if (it == m_currentJob->alignments321.end() || !it->second) return false;
+    data = *it->second;
+    return true;
+}
+
+std::vector<std::string> JsonDatabase::getAllAlignment321Ids() const {
+    std::vector<std::string> out;
+    if (!m_currentJob.get()) return out;
+    for (std::map<std::string, DCP_SHARED_PTR<Alignment321Data> >::const_iterator it = m_currentJob->alignments321.begin();
+         it != m_currentJob->alignments321.end(); ++it)
+        out.push_back(it->first);
     return out;
 }
 

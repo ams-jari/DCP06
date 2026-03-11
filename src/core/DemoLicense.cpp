@@ -107,7 +107,7 @@ DCP::DemoLicense::~DemoLicense()
 int DCP::DemoLicense::find_keycode(char* keycode)
 {
 	int ret = 0;
-	char tempCode[21];
+	char tempCode[LICENSE_CODE_BUFF_LEN];
 	tempCode[0] = '\0';
 
 	for(int i=1; i <= 5; i++)
@@ -128,7 +128,7 @@ bool DCP::DemoLicense::is_license_ok(char* keycode, DateTime startDate)
 	if(keycode[0] == '\0')
 		return false;
 
-	char tempCode[21];
+	char tempCode[LICENSE_CODE_BUFF_LEN];
 	tempCode[0] = '\0';
 
 	if(startDate == 0.0) // first demo 
@@ -152,7 +152,7 @@ bool DCP::DemoLicense::is_license_ok(char* keycode, DateTime startDate)
 	{
 		// check previous code
 		
-		char oldCode[21];
+		char oldCode[LICENSE_CODE_BUFF_LEN];
 		oldCode[0] = '\0';
 
 		get_code_demo(demoNumber -1, oldCode);
@@ -176,7 +176,7 @@ int DCP::DemoLicense::get_available_days(char* keycode, DateTime startDate)
 {
 	int days  = 0;
 
-	char tempCode[21];
+	char tempCode[LICENSE_CODE_BUFF_LEN];
 	tempCode[0] = '\0';
 	
 	if(keycode[0] == '\0')
@@ -217,9 +217,9 @@ void DCP::DemoLicense::get_code_demo(int demoNumber, char *sCode)
 {
 int nro=1L;
 char *p, *p1,*p2;
-char serial_buf[20];
+char serial_buf[SERIAL_NUMBER_BUFF_LEN];
 int i,len;
-short temp2[20];
+short hashValues[SERIAL_NUMBER_BUFF_LEN];
 
 unsigned int code = 0L;
 
@@ -243,14 +243,14 @@ unsigned int code = 0L;
 
 	StringC ss1 = L"";
 	RcT ret= CPI::SensorC::GetInstance()->GetSerialNumber(ss1);
-	char value_buf[20];
+	char value_buf[SERIAL_NUMBER_BUFF_LEN];
 	sprintf(value_buf,"%d",ret);
 
-	char ttt[20];
-	BSS::UTI::BSS_UTI_WCharToAscii(ss1, ttt);
+	char ascii_buf[SERIAL_NUMBER_BUFF_LEN];
+	BSS::UTI::BSS_UTI_WCharToAscii(ss1, ascii_buf);
 	//snro = atol(ttt);
  
-	sprintf(serial_buf,"%-s",ttt);
+	sprintf(serial_buf,"%-s",ascii_buf);
 
 	//msgBox.ShowMessageOk(StringC(ssName), StringC(value_buf));
  
@@ -303,12 +303,12 @@ unsigned int code = 0L;
     for(i=0;i<len;i++)
     {
         if(*p != *p1)
-        temp2[i] =(short)( ((*p*i*4) ^ (*p1) + (*p+i) ^ (*p2-1) + *p1 * *p2)); //*1.7);
+        hashValues[i] =(short)( ((*p*i*4) ^ (*p1) + (*p+i) ^ (*p2-1) + *p1 * *p2)); //*1.7);
 		p++;
 		p1++;
 		p2++;
 
-		nro = nro*temp2[i]+i;
+		nro = nro*hashValues[i]+i;
 
 		if(*p1 == '\0')
 		{

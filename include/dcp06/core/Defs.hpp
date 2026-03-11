@@ -327,6 +327,9 @@ namespace DCP
 	// Best Fit point limits (legacy POM)
 	#define MAX_BESTFIT_POINTS		20
 	#define MIN_BESTFIT_POINTS		3
+	#define DCP_BFT_FILENAME_BUFF_LEN    100
+	#define DCP_BESTFIT_XYZ_BUFF_LEN     100
+	#define DCP_BESTFIT_NOTE_BUFF_LEN    15
 
 	#define MAX_MID_POINTS 20
 	// userdef
@@ -370,6 +373,7 @@ namespace DCP
 	#define CIRCLE_ID_BUFF_LEN 65 // match POINT_ID_BUFF_LEN for circle point IDs
 
 	#define XYZ_VALUE_BUFF_LEN	10
+	#define DCP_COORD_STR_BUFF_LEN  15   // formatted coord strings (bXmea, bXdes, etc.)
 	#define NOTE_BUFF_LEN	7
 	#define FILENAME_BUFF_LEN	20
 	#define DCP_JOB_ID_MAX_LEN	64  // max job/file name length (DCP06; was 8 in DCP05)
@@ -414,7 +418,14 @@ namespace DCP
 	#define MAX_POINTS_IN_PLANE 20
 	#define MAX_POINTS_IN_HIDDENPOINT_BAR 5
 	#define MAX_POINTS_IN_LINE  20 
-	#define MAX_POINTS_IN_CIRCLE 20 // oli 30 4.11.97
+	#define MAX_POINTS_IN_CIRCLE 20
+
+	// 4x4 transformation matrix (321 alignment, Best Fit, Change Station, etc.)
+	#define DCP_MATRIX4X4_DIM        4
+	#define DCP_MATRIX4X4_ELEMENTS   (DCP_MATRIX4X4_DIM * DCP_MATRIX4X4_DIM)
+
+	// Dialog layout: colon position = 9 * DCP_DIALOG_COLON_POS_MULTIPLIER
+	#define DCP_DIALOG_COLON_POS_MULTIPLIER  22
 
 	// ACTIVE COORDINATE SYSTEM
 
@@ -553,6 +564,13 @@ namespace DCP
 	// String/buffer sizes for formatting and display
 	#define STRING_BUFFER_SMALL      20
 	#define STRING_BUFFER_MEDIUM    100
+
+	// License code buffer: 20 chars + null
+	#define LICENSE_CODE_LENGTH      20
+	#define LICENSE_CODE_BUFF_LEN    (LICENSE_CODE_LENGTH + 1)
+
+	// Instrument serial number buffer (for license generation)
+	#define SERIAL_NUMBER_BUFF_LEN   20
 	#define STRING_BUFFER_LARGE     512
 	#define STRING_BUFFER_PATH      1024
 

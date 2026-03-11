@@ -753,7 +753,6 @@ void DCP::CircleController::OnF6Pressed()
 			sprintf(m_pDataModel->circle_points[0].id, "%-s", cid);
 	}
 
-#if DCP_USE_JSON_DATABASE
 	// Store circle to database when calculated and job is open (DCP9-style auto-save)
 	if (m_pDataModel->circle_points[0].calc && m_iDisplay != SHAFT_DLG && m_pModel)
 	{
@@ -787,7 +786,6 @@ void DCP::CircleController::OnF6Pressed()
 			jdb->saveJob(m_pModel->m_currentJobId);
 		}
 	}
-#endif
 
     // Remove the following statement if you don't want an exit
     // to the main menu

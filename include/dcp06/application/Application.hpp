@@ -84,7 +84,7 @@ namespace DCP
 			
 			StringC get_code(char *code);
 
-			char m_pCode[21];
+			char m_pCode[LICENSE_CODE_BUFF_LEN];
 			//void get_code_demo(int demoNumber, char *code);
 			//bool check_demo_mode(char* code);
 

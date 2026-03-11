@@ -32,7 +32,6 @@
 // ================================================================================================
 
 #include <dcp06/core/Types.hpp>
-#include <dcp06/file/AdfFileFunc.hpp>
 #include <dcp06/file/CircleFile.hpp>
 #include <dcp06/measurement/Circle.hpp>
 #include <dcp06/core/Common.hpp>
@@ -173,7 +172,6 @@ namespace DCP
 			CircleModel *pCircleModel;
 			StringC sSelected3DFile;
 			StringC sSelectedCircleFile;
-			AdfFileFunc* pAdfFileFunc;
 			short iPointCount3dfile;
 			S_SELECT_POINTS point_list[MAX_POINTS_IN_FILE];
 

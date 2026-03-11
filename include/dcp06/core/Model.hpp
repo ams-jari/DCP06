@@ -302,7 +302,7 @@ namespace DCP
 			bool isATR;
 			bool isScanning;
 
-			char sKeyCode[21];
+			char sKeyCode[LICENSE_CODE_BUFF_LEN];
 			bool bDemoMode;
 			short iStartCount;
 
@@ -321,13 +321,13 @@ namespace DCP
 			DateTime startDate;
 			DateTime lastStartedDate;
 			bool fullDemoMode;
-			char sKeyCodeDemo1[21];
-			char sKeyCodeDemo2[21];
-			char sKeyCodeDemo3[21];
-			char sKeyCodeDemo4[21];
-			char sKeyCodeDemo5[21];
+			char sKeyCodeDemo1[LICENSE_CODE_BUFF_LEN];
+			char sKeyCodeDemo2[LICENSE_CODE_BUFF_LEN];
+			char sKeyCodeDemo3[LICENSE_CODE_BUFF_LEN];
+			char sKeyCodeDemo4[LICENSE_CODE_BUFF_LEN];
+			char sKeyCodeDemo5[LICENSE_CODE_BUFF_LEN];
 
-			char sEnteredKeyCode[21];
+			char sEnteredKeyCode[LICENSE_CODE_BUFF_LEN];
 
 			StringC SerialNumber;
 

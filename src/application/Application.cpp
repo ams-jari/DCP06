@@ -339,7 +339,7 @@ void DCP::Application::OnActiveDialogClosed(int lDlgID, int lExitCode)
 	DCP06_TRACE_POINT("dlg=%d exit=%d", lDlgID, lExitCode);
 	if(lDlgID == INFO_DLG)
 	{
-		char keyCodeBuffer[21];
+		char keyCodeBuffer[LICENSE_CODE_BUFF_LEN];
 		keyCodeBuffer[0] = '\0';
 
 		DestroyDialog(lDlgID);
@@ -416,7 +416,7 @@ void DCP::Application::OnActiveDialogClosed(int lDlgID, int lExitCode)
 
 		DateTime oDateTime = GUI::GetActualTime();
 
-		char keyCodeBuffer[21];
+		char keyCodeBuffer[LICENSE_CODE_BUFF_LEN];
 		keyCodeBuffer[0] = '\0';
 		
 		get_code(keyCodeBuffer);
@@ -426,7 +426,7 @@ void DCP::Application::OnActiveDialogClosed(int lDlgID, int lExitCode)
 		{	
 			sprintf(poConfigController->GetModel()->sKeyCode,"%s", poConfigController->GetModel()->sEnteredKeyCode);
 			poConfigController->GetModel()->startDate = 0.0; // reset demo start date
-			memset(poConfigController->GetModel()->sKeyCodeDemo1, '\0', 10);
+			memset(poConfigController->GetModel()->sKeyCodeDemo1, '\0', LICENSE_CODE_BUFF_LEN);
 			
 			poConfigController->GetModel()->SetConfigKey(CNF_KEY_DEMO_LICENSES);
 			poConfigController->StoreConfigData();
@@ -856,7 +856,7 @@ void DCP::Controller::OnActiveDialogClosed( int lDlgID, int lExitCode )
 			{	
 				sprintf(pDcpModel->sKeyCode,"%s", pDcpModel->sEnteredKeyCode);
 				pDcpModel->startDate = 0.0; // reset demo start date
-				memset(pDcpModel->sKeyCodeDemo1, '\0', 10);
+				memset(pDcpModel->sKeyCodeDemo1, '\0', LICENSE_CODE_BUFF_LEN);
 				
 				pDcpModel->SetConfigKey(CNF_KEY_DEMO_LICENSES);
 				pDcpModel->poConfigController->StoreConfigData();
@@ -1577,8 +1577,8 @@ void DCP::LicenseDialog::OnF1Pressed()
 	{
 		StringC sNo = m_pText->GetStringInputCtrl()->GetString();
 
-		char asciiBuffer[21];
-		BSS::UTI::BSS_UTI_WCharToAscii(sNo, asciiBuffer,20);
+		char asciiBuffer[LICENSE_CODE_BUFF_LEN];
+		BSS::UTI::BSS_UTI_WCharToAscii(sNo, asciiBuffer, LICENSE_CODE_LENGTH);
 		sprintf(m_pModel->sEnteredKeyCode,"%s", asciiBuffer); // was sKeyCode...
 
 		//m_pModel->lKeyCode = (unsigned int) atol((const char*) temp);

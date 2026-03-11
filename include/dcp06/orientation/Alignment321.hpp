@@ -2,54 +2,31 @@
 //
 // Project  : DCP06 - Onboard 3D measurement (Leica Captivate plugin)
 //
-// Component: 
+// Component: 321 Alignment (main orientation method)
 //
-// $Workfile: HEW_DCP05GUI.hpp $
-//
-// Summary  : 
-//
-// ------------------------------------------------------------------------------------------------
-//
-// Copyright (c) AMS. Based on Leica Captivate plugin framework.
+// Summary  : 321 alignment dialog, controller, and model. Plane + Line + Reference point.
+//            DCP9 Alignment321Bridge reference for database usage.
 //
 // ================================================================================================
 
-
-// $Author: Hlar $
-// $Date: 6.07.04 8:55 $
-// $Revision: 1 $
-// $Modtime: 5.07.04 14:55 $
-
-/* $ History: $
-*/
-// $NoKeywords: $
-
-#ifndef DCP_DOMDLG_HPP
-#define DCP_DOMDLG_HPP
-
-// ================================================================================================
-// ==========================================  Includes   =========================================
-// ================================================================================================
+#ifndef DCP_ALIGNMENT321_HPP
+#define DCP_ALIGNMENT321_HPP
 
 #include <dcp06/core/Types.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <GUI_ComboLineCtrl.hpp>
 #include <GUI_StandardDialog.hpp>
 #include <GUI_TextCtrl.hpp>
-
 #include <GUI_AppBase.hpp>
 
-// Description: The Hello World application
-//
 namespace DCP
 {
 
-    // Forward declaration
-    class Model;
+	class Model;
 	class Alignment321Model;
 	class Alignment321Dialog;
 
-    // Description: Tabbed controller for the Hello World application
+	// 321 alignment controller
     class Alignment321Controller : public GUI::ControllerC
     {
         public:
@@ -148,9 +125,7 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pRotLine;
 			//OBS_DECLARE_EXECUTE(Alignment321Dialog);
 
-			// Description: add all controls
 			Alignment321Model* m_pDataModel;
-            
 
 	private:
 			StringC sXLineText;
@@ -160,13 +135,9 @@ namespace DCP
 			StringC sZXPlaneText;
 			StringC sYZPlaneText;
 			StringC sHZText;
-			
-			//short /*DCP_COORDINATE_SYSTEM*/ m_eOldCoordinateSystem;
-			//OBS::ObserverC m_pComboBoxObserver;
-			//virtual void OnComboBoxChanged(int unNotifyCode, int ulParam2);
 	};
-		
-   class Alignment321Model : public GUI::ModelC
+
+	class Alignment321Model : public GUI::ModelC
     {
         public:
 
@@ -201,7 +172,7 @@ namespace DCP
 	
 };
 
-#endif // DCP_BASEGUI_HPP
+#endif // DCP_ALIGNMENT321_HPP
 
 
 

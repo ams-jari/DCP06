@@ -41,6 +41,7 @@
 #include <dcp06/core/SelectPoint.hpp>
 #include <dcp06/core/SelectOnePoint.hpp>
 #include <dcp06/file/SelectFile.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
 
 #include <GUI_Types.hpp>
 
@@ -327,90 +328,69 @@ bool DCP::OffsetVController::SetModel( GUI::ModelC* pModel )
 	
 }
 
-// 3DFile
+// 3DFile - use current job and DB point selection (no ADF)
 void DCP::OffsetVController::OnF1Pressed()
 {
-		if (m_pDlg == nullptr)
-	    {
-		    USER_APP_VERIFY( false );
-			return;
-		}
-
-		DCP::SelectFileModel* pModel = new SelectFileModel;
-
-		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
-		{
-			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle, m_pModel) );
-		}
-		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
-		SetActiveController(SELECT_FILE_CONTROLLER, true);
+	if (m_pDlg == nullptr)
+	{
+		USER_APP_VERIFY(false);
+		return;
+	}
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	if (!jdb || !jdb->isJobLoaded() || m_pModel->m_currentJobId.empty())
+	{
+		MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
+		return;
+	}
+	m_pDlg->SelectFile(StringC(m_pModel->m_currentJobId.c_str()));
+	DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
+	short iCount = jdb->getPointListAsSelectPoints(&pModel->points[0], MAX_SELECT_POINTS, DESIGN);
+	if (iCount > 0)
+	{
+		pModel->m_iPointsCount = iCount;
+		pModel->sSelectedFile = StringC(m_pModel->m_currentJobId.c_str());
+		pModel->m_iDef = DESIGN;
+		if (GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
+			(void)AddController(SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
+		(void)GetController(SELECT_ONE_POINT_CONTROLLER)->SetModel(pModel);
+		SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
+	}
+	else
+	{
+		MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_NO_POINTS_TOK); msgBox.ShowMessageOk(msg);
+	}
 }
 
-// PID
+// PID - use current job and DB point selection (no ADF)
 void DCP::OffsetVController::OnF2Pressed()
 {
-		if (m_pDlg == nullptr)
-	    {
-		    USER_APP_VERIFY( false );
-			return;
-		}
-
-		// get adf file name
-
-		AdfFileFunc adf(m_pModel);
-		adf.always_single = 1;
-
-		StringC sSelectedFile = m_pDlg->getfileName();
-		
-		if(adf.setFile(sSelectedFile))
-		{
-			
-			// and select point from file
-			DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
-
-			int iCount = adf.GetPointList(&pModel->points[0],MAX_SELECT_POINTS, DESIGN);
-			if(iCount)
-			{
-				pModel->m_iPointsCount = iCount;
-				pModel->sSelectedFile = sSelectedFile;
-				pModel->m_iDef = DESIGN;
-				
-				if(GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
-				{
-					(void)AddController( SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
-				}
-				(void)GetController( SELECT_ONE_POINT_CONTROLLER )->SetModel(pModel);
-				SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
-			}
-			
-		}
-		// select file
-		else
-		{
-			DCP::SelectFileModel* pModel = new SelectFileModel;
-
-			if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
-			{
-				StringC sTitle = GetTitle();	
-				(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ONLY_ADF, sTitle, m_pModel) );
-			}
-			(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
-			SetActiveController(SELECT_FILE_CONTROLLER, true);
-		}
-
-/*		DCP::SelectPointModel* pModel = new SelectPointModel;
-
-		if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
-		{
-			(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
-		}
-
-		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
-
-		(void)GetController( SELECT_POINT_CONTROLLER )->SetModel(pModel);
-		SetActiveController(SELECT_POINT_CONTROLLER, true);
-*/
+	if (m_pDlg == nullptr)
+	{
+		USER_APP_VERIFY(false);
+		return;
+	}
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	if (!jdb || !jdb->isJobLoaded() || m_pModel->m_currentJobId.empty())
+	{
+		MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
+		return;
+	}
+	DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
+	short iCount = jdb->getPointListAsSelectPoints(&pModel->points[0], MAX_SELECT_POINTS, DESIGN);
+	if (iCount > 0)
+	{
+		pModel->m_iPointsCount = iCount;
+		pModel->sSelectedFile = StringC(m_pModel->m_currentJobId.c_str());
+		pModel->m_iDef = DESIGN;
+		if (GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
+			(void)AddController(SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
+		(void)GetController(SELECT_ONE_POINT_CONTROLLER)->SetModel(pModel);
+		SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
+	}
+	else
+	{
+		MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_NO_POINTS_TOK); msgBox.ShowMessageOk(msg);
+	}
 }
 
 // MEASV
@@ -489,83 +469,42 @@ void DCP::OffsetVController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 		if(m_pDlg->GetDataModel()->ref_point_buff.sta != 0)
 			(void)Close(EC_KEY_CONT);
 	}
-	if(lCtrlID == SELECT_ONE_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_ONE_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-
-		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*) GetController( SELECT_ONE_POINT_CONTROLLER )->GetModel();		
-		// copy values into dommodel
+		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*)GetController(SELECT_ONE_POINT_CONTROLLER)->GetModel();
 		int iSelected = pModel->iSelectedNo;
-		
-		AdfFileFunc adf(m_pModel);
-		adf.always_single = 1;
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
 		Common common(m_pModel);
-		if(adf.setFile(pModel->sSelectedFile))
-		{	
+		if (jdb && jdb->isJobLoaded() && iSelected > 0)
+		{
 			char bXmea[15], bYmea[15], bZmea[15];
-			char bXdes[15], bYdes[15], bZdes[15],pid[POINT_ID_BUFF_LEN];//,fname[13];
-			
-			adf.form_pnt1((int) iSelected, pid, nullptr, bXmea, bXdes, nullptr, bYmea, bYdes, nullptr, bZmea, bZdes, nullptr);
-			//if(pModel->iActual_or_design == DESIGN)
-			if(pModel->points[iSelected-1].bDesignSelected)
+			char bXdes[15], bYdes[15], bZdes[15], pid[POINT_ID_BUFF_LEN];
+			bool useDesign = (pModel->points[iSelected - 1].bDesignSelected);
+			if (jdb->getPointByIndex(iSelected, !useDesign, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
 			{
-					if(!common.strblank(bXdes) && !common.strblank(bYdes) && !common.strblank(bZdes))
+				if (useDesign)
+				{
+					if (!common.strblank(bXdes) && !common.strblank(bYdes) && !common.strblank(bZdes))
 					{
 						snprintf(m_pDlg->GetDataModel()->ovalues_buff.point_id, sizeof(m_pDlg->GetDataModel()->ovalues_buff.point_id), DCP_POINT_ID_FMT, pid);
 						m_pDlg->GetDataModel()->ovalues_buff.x = atof(bXdes);
 						m_pDlg->GetDataModel()->ovalues_buff.y = atof(bYdes);
 						m_pDlg->GetDataModel()->ovalues_buff.z = atof(bZdes);
 						m_pDlg->GetDataModel()->ovalues_buff.sta = 1;
-
 					}
-			}
-			else
-			{
-					if(!common.strblank(bXmea) && !common.strblank(bYmea) && !common.strblank(bZmea))
+				}
+				else
+				{
+					if (!common.strblank(bXmea) && !common.strblank(bYmea) && !common.strblank(bZmea))
 					{
 						snprintf(m_pDlg->GetDataModel()->ovalues_buff.point_id, sizeof(m_pDlg->GetDataModel()->ovalues_buff.point_id), DCP_POINT_ID_FMT, pid);
 						m_pDlg->GetDataModel()->ovalues_buff.x = atof(bXmea);
 						m_pDlg->GetDataModel()->ovalues_buff.y = atof(bYmea);
 						m_pDlg->GetDataModel()->ovalues_buff.z = atof(bZmea);
 						m_pDlg->GetDataModel()->ovalues_buff.sta = 1;
-
 					}
-			}
-			
-		}
-		// Remove the following statement if you don't want an exit
-		// to the main menu
-		//(void)Close(EC_KEY_CONT);
-	}
-
-	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
-	{
-		DCP::SelectFileModel* pModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();		
-		StringC strSelectedFile = pModel->m_strSelectedFile;
-		m_pDlg->SelectFile(strSelectedFile);
-		
-		AdfFileFunc adf(m_pModel);
-		adf.always_single = 1;
-		if(adf.setFile(strSelectedFile))
-		{
-			
-			// and select point from file
-			DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
-
-			int iCount = adf.GetPointList(&pModel->points[0],MAX_SELECT_POINTS, DESIGN);
-			if(iCount)
-			{
-				pModel->m_iPointsCount = iCount;
-				pModel->sSelectedFile = strSelectedFile;
-				pModel->m_iDef = DESIGN;
-				
-				if(GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
-				{
-					(void)AddController( SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
 				}
-				(void)GetController( SELECT_ONE_POINT_CONTROLLER )->SetModel(pModel);
-				SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
 			}
-			
 		}
 	}
 

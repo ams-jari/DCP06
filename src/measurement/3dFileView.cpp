@@ -31,12 +31,7 @@
 #include <dcp06/measurement/3dFileView.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/file/File.hpp>
-#ifndef DCP_USE_JSON_DATABASE
-#define DCP_USE_JSON_DATABASE 1
-#endif
-#if DCP_USE_JSON_DATABASE
 #include <dcp06/database/JsonDatabase.hpp>
-#endif
 #include <dcp06/core/SelectPoint.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/core/InputText.hpp>
@@ -201,16 +196,13 @@ void DCP::FileView3DDialog::OnInitDialog(void)
 void DCP::FileView3DDialog::OnDialogActivated()
 {
 	DCP06_TRACE_ENTER;
-#if DCP_USE_JSON_DATABASE
-	DCP::Database::IDatabase* db = GetModel() ? GetModel()->GetDatabase() : 0;
-	bool useDb = db && dynamic_cast<DCP::Database::JsonDatabase*>(db) && !GetModel()->m_currentJobId.empty();
+	DCP::Database::JsonDatabase* jdb = GetModel() && GetModel()->GetDatabase() ?
+		dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
+	bool useDb = jdb && jdb->isJobLoaded() && !GetModel()->m_currentJobId.empty();
 	if (!useDb)
-#endif
 		m_pDataModel->m_pAdfFile->always_single = 1;
 	pCommon = new Common(GetModel());
-#if DCP_USE_JSON_DATABASE
 	if (useDb) GetModel()->m_currentPointIndex = 1;
-#endif
 	RefreshControls();
 	DCP06_TRACE_EXIT;
 }
@@ -236,11 +228,9 @@ void DCP::FileView3DDialog::RefreshControls()
 		char* xdes_ptr = xdes_buf, *ydes_ptr = ydes_buf, *zdes_ptr = zdes_buf;
 		char* xmea_ptr = xmea_buf, *ymea_ptr = ymea_buf, *zmea_ptr = zmea_buf;
 		char pointid_buf[32];
-		bool useDb = false;
-#if DCP_USE_JSON_DATABASE
 		DCP::Database::JsonDatabase* jdb = GetModel() && GetModel()->GetDatabase() ?
 			dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
-		useDb = jdb && jdb->isJobLoaded() && !GetModel()->m_currentJobId.empty();
+		bool useDb = jdb && jdb->isJobLoaded() && !GetModel()->m_currentJobId.empty();
 		if (useDb)
 		{
 			pointid_buf[0] = xdes_buf[0] = ydes_buf[0] = zdes_buf[0] = xmea_buf[0] = ymea_buf[0] = zmea_buf[0] = '\0';
@@ -250,15 +240,11 @@ void DCP::FileView3DDialog::RefreshControls()
 				// buffers filled
 			}
 		}
-#endif
 		if (!useDb)
 		{
-			xdes_ptr = m_pDataModel->m_pAdfFile->xdes_front;
-			ydes_ptr = m_pDataModel->m_pAdfFile->ydes_front;
-			zdes_ptr = m_pDataModel->m_pAdfFile->zdes_front;
-			xmea_ptr = m_pDataModel->m_pAdfFile->xmea_front;
-			ymea_ptr = m_pDataModel->m_pAdfFile->ymea_front;
-			zmea_ptr = m_pDataModel->m_pAdfFile->zmea_front;
+			xdes_buf[0] = ydes_buf[0] = zdes_buf[0] = xmea_buf[0] = ymea_buf[0] = zmea_buf[0] = pointid_buf[0] = '\0';
+			xdes_ptr = xdes_buf; ydes_ptr = ydes_buf; zdes_ptr = zdes_buf;
+			xmea_ptr = xmea_buf; ymea_ptr = ymea_buf; zmea_ptr = zmea_buf;
 		}
 
 		char temp_act[100];
@@ -267,15 +253,12 @@ void DCP::FileView3DDialog::RefreshControls()
 		char z_diff[XYZ_VALUE_BUFF_LEN];
 
 		m_pFile->GetStringInputCtrl()->SetString(useDb && GetModel() ?
-			StringC(GetModel()->m_currentJobId.c_str()) : StringC(m_pDataModel->m_pAdfFile->getFileName()));
+			StringC(GetModel()->m_currentJobId.c_str()) : StringC(L""));
 		
 		char coord_str[XYZ_MEA_AND_DIFF_BUFF_LEN];
 		
 		char pointid_temp[POINT_ID_BUFF_LEN];
-		if (useDb)
-			sprintf(pointid_temp,"%s", pointid_buf);
-		else
-			sprintf(pointid_temp,"%s",m_pDataModel->m_pAdfFile->pointid_front);
+		sprintf(pointid_temp,"%s", pointid_buf);
 		pCommon->strbtrim(pointid_temp);
 		m_pPointId->GetStringInputCtrl()->SetString(StringC(pointid_temp));
 
@@ -291,7 +274,7 @@ void DCP::FileView3DDialog::RefreshControls()
 		
 		if(!pCommon->strblank(ydes_ptr))
 		{
-			sprintf(coord_str,"%.*f",GetModel()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->ydes_front));
+			sprintf(coord_str,"%.*f",GetModel()->m_nDecimals,atof(ydes_ptr));
 			//m_pYDsg->GetFloatInputCtrl()->SetString(StringC(temp));
 			m_pYDsg->GetFloatInputCtrl()->SetDouble(atof(ydes_ptr));
 		}
@@ -302,7 +285,7 @@ void DCP::FileView3DDialog::RefreshControls()
 		
 		if(!pCommon->strblank(zdes_ptr))
 		{
-			sprintf(coord_str,"%.*f",GetModel()->m_nDecimals,atof(m_pDataModel->m_pAdfFile->zdes_front));
+			sprintf(coord_str,"%.*f",GetModel()->m_nDecimals,atof(zdes_ptr));
 			//m_pZDsg->GetFloatInputCtrl()->SetString(StringC(temp));
 			m_pZDsg->GetFloatInputCtrl()->SetDouble(atof(zdes_ptr));
 		}
@@ -477,21 +460,16 @@ void DCP::FileView3DController::OnF1Pressed()
 	DCP06_TRACE_ENTER;
 		DCP::SelectPointModel* pModel = new SelectPointModel;
 
-		DCP::Database::IDatabase* db = m_pDlg->GetModel()->GetDatabase();
-		bool useDb = false;
-#if DCP_USE_JSON_DATABASE
-		Database::JsonDatabase* jdb = db ? dynamic_cast<Database::JsonDatabase*>(db) : 0;
-		useDb = jdb && jdb->isJobLoaded() && !m_pDlg->GetModel()->m_currentJobId.empty();
-#endif
-		int iCount = 0;
-#if DCP_USE_JSON_DATABASE
-		if (useDb)
-			iCount = jdb->getPointListAsSelectPoint(&pModel->points[0], MAX_SELECT_POINTS);
-		else
-#endif
-			iCount = m_pDataModel->m_pAdfFile->GetPointList(&pModel->points[0], MAX_SELECT_POINTS);
+		Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+			dynamic_cast<Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+		if (!jdb || !jdb->isJobLoaded())
+		{
+			MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
+			return;
+		}
+		int iCount = jdb->getPointListAsSelectPoint(&pModel->points[0], MAX_SELECT_POINTS);
 		pModel->m_iCounts = iCount;
-		pModel->m_iSelectedId = useDb ? m_pDlg->GetModel()->m_currentPointIndex : m_pDataModel->m_pAdfFile->active_point_front;
+		pModel->m_iSelectedId = m_pDlg->GetModel()->m_currentPointIndex;
 
 		if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
 		{
@@ -512,16 +490,10 @@ void DCP::FileView3DController::OnF1Pressed()
 void DCP::FileView3DController::OnF2Pressed()
 {
 	DCP06_TRACE_ENTER;
-#if DCP_USE_JSON_DATABASE
 	DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel() && m_pDlg->GetModel()->GetDatabase() ?
 		dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 	if (jdb && jdb->isJobLoaded() && !m_pDlg->GetModel()->m_currentJobId.empty())
-	{
 		m_pDlg->GetModel()->m_currentPointIndex = 1;
-	}
-	else
-#endif
-		m_pDataModel->m_pAdfFile->form_pnt(1);
 	m_pDlg->RefreshControls();
 	DCP06_TRACE_EXIT;
 }
@@ -532,16 +504,10 @@ void DCP::FileView3DController::OnF2Pressed()
 void DCP::FileView3DController::OnF3Pressed()
 {
 	DCP06_TRACE_ENTER;
-#if DCP_USE_JSON_DATABASE
 	DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel() && m_pDlg->GetModel()->GetDatabase() ?
 		dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 	if (jdb && jdb->isJobLoaded() && !m_pDlg->GetModel()->m_currentJobId.empty())
-	{
 		m_pDlg->GetModel()->m_currentPointIndex = jdb->getJobPointsCount();
-	}
-	else
-#endif
-		m_pDataModel->m_pAdfFile->form_pnt(m_pDataModel->m_pAdfFile->points);
 	m_pDlg->RefreshControls();
 	DCP06_TRACE_EXIT;
 }
@@ -552,16 +518,10 @@ void DCP::FileView3DController::OnF3Pressed()
 void DCP::FileView3DController::OnF4Pressed()
 {
 	DCP06_TRACE_ENTER;
-#if DCP_USE_JSON_DATABASE
 	DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel() && m_pDlg->GetModel()->GetDatabase() ?
 		dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 	if (jdb && jdb->isJobLoaded() && m_pDlg->GetModel()->m_currentPointIndex > 1)
-	{
 		m_pDlg->GetModel()->m_currentPointIndex--;
-	}
-	else if (!jdb || !jdb->isJobLoaded())
-#endif
-		m_pDataModel->m_pAdfFile->form_prev_pnt();
 	m_pDlg->RefreshControls();
 	DCP06_TRACE_EXIT;
 }
@@ -572,17 +532,11 @@ void DCP::FileView3DController::OnF4Pressed()
 void DCP::FileView3DController::OnF5Pressed()
 {
 	DCP06_TRACE_ENTER;
-#if DCP_USE_JSON_DATABASE
 	DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel() && m_pDlg->GetModel()->GetDatabase() ?
 		dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 	int nPts = jdb ? jdb->getJobPointsCount() : 0;
 	if (jdb && jdb->isJobLoaded() && m_pDlg->GetModel()->m_currentPointIndex < nPts)
-	{
 		m_pDlg->GetModel()->m_currentPointIndex++;
-	}
-	else if (!jdb || !jdb->isJobLoaded())
-#endif
-		m_pDataModel->m_pAdfFile->form_next_pnt();
 	m_pDlg->RefreshControls();
 	DCP06_TRACE_EXIT;
 }
@@ -603,7 +557,6 @@ void DCP::FileView3DController::OnF6Pressed()
 void DCP::FileView3DController::OnSHF2Pressed()
 {
 	DCP06_TRACE_ENTER;
-#if DCP_USE_JSON_DATABASE
 	DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel() && m_pDlg->GetModel()->GetDatabase() ?
 		dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 	if (jdb && jdb->isJobLoaded() && !m_pDlg->GetModel()->m_currentJobId.empty())
@@ -621,12 +574,6 @@ void DCP::FileView3DController::OnSHF2Pressed()
 			if (m_pDlg->GetModel()->m_currentPointIndex > n)
 				m_pDlg->GetModel()->m_currentPointIndex = (n > 0 ? n : 1);
 		}
-	}
-	else
-#endif
-	{
-		short pno = m_pDataModel->m_pAdfFile->active_point_front;
-		m_pDataModel->m_pAdfFile->delete_point_from_adf(pno);
 	}
 	m_pDlg->RefreshControls();
 	DCP06_TRACE_EXIT;
@@ -646,17 +593,13 @@ void DCP::FileView3DController::OnActiveDialogClosed( int lDlgID, int lExitCode 
 void DCP::FileView3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
 	DCP06_TRACE_ENTER;
-	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
-#if DCP_USE_JSON_DATABASE
+		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*)GetController(SELECT_POINT_CONTROLLER)->GetModel();
 		DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel() && m_pDlg->GetModel()->GetDatabase() ?
 			dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 		if (jdb && jdb->isJobLoaded())
 			m_pDlg->GetModel()->m_currentPointIndex = pModel->m_iSelectedId;
-		else
-#endif
-			m_pDataModel->m_pAdfFile->form_pnt(pModel->m_iSelectedId);
 	}
 	m_pDlg->RefreshControls();
 	DestroyController( lCtrlID );

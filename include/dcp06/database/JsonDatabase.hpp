@@ -80,26 +80,27 @@ public:
     bool deleteShaftAlignment(const std::string&) DCP_OVERRIDE { return false; }
     bool getShaftAlignment(const std::string&, ShaftAlignmentData&) DCP_OVERRIDE { return false; }
 
-    bool addChangeStation(const std::string&, const ChangeStationData&) DCP_OVERRIDE { return false; }
-    bool updateChangeStation(const std::string&, const ChangeStationData&) DCP_OVERRIDE { return false; }
-    bool deleteChangeStation(const std::string&) DCP_OVERRIDE { return false; }
-    bool getChangeStation(const std::string&, ChangeStationData&) DCP_OVERRIDE { return false; }
+    bool addChangeStation(const std::string& changeStationId, const ChangeStationData& data) DCP_OVERRIDE;
+    bool updateChangeStation(const std::string& changeStationId, const ChangeStationData& data) DCP_OVERRIDE;
+    bool deleteChangeStation(const std::string& changeStationId) DCP_OVERRIDE;
+    bool getChangeStation(const std::string& changeStationId, ChangeStationData& data) DCP_OVERRIDE;
     bool setActiveChangeStation(const std::string&) DCP_OVERRIDE { return false; }
 
-    bool add321Alignment(const std::string&, const Alignment321Data&) DCP_OVERRIDE { return false; }
-    bool update321Alignment(const std::string&, const Alignment321Data&) DCP_OVERRIDE { return false; }
-    bool delete321Alignment(const std::string&) DCP_OVERRIDE { return false; }
-    bool get321Alignment(const std::string&, Alignment321Data&) DCP_OVERRIDE { return false; }
+    bool add321Alignment(const std::string& alignment321Id, const Alignment321Data& data) DCP_OVERRIDE;
+    bool update321Alignment(const std::string& alignment321Id, const Alignment321Data& data) DCP_OVERRIDE;
+    bool delete321Alignment(const std::string& alignment321Id) DCP_OVERRIDE;
+    bool get321Alignment(const std::string& alignment321Id, Alignment321Data& data) DCP_OVERRIDE;
+    std::vector<std::string> getAllAlignment321Ids() const;
 
     bool addCylinderAlignment(const std::string&, const CylinderAlignmentData&) DCP_OVERRIDE { return false; }
     bool updateCylinderAlignment(const std::string&, const CylinderAlignmentData&) DCP_OVERRIDE { return false; }
     bool deleteCylinderAlignment(const std::string&) DCP_OVERRIDE { return false; }
     bool getCylinderAlignment(const std::string&, CylinderAlignmentData&) DCP_OVERRIDE { return false; }
 
-    bool addBestFitAlignment(const std::string&, const BestFitAlignmentData&) DCP_OVERRIDE { return false; }
-    bool updateBestFitAlignment(const std::string&, const BestFitAlignmentData&) DCP_OVERRIDE { return false; }
-    bool deleteBestFitAlignment(const std::string&) DCP_OVERRIDE { return false; }
-    bool getBestFitAlignment(const std::string&, BestFitAlignmentData&) DCP_OVERRIDE { return false; }
+    bool addBestFitAlignment(const std::string& bestFitAlignmentId, const BestFitAlignmentData& data) DCP_OVERRIDE;
+    bool updateBestFitAlignment(const std::string& bestFitAlignmentId, const BestFitAlignmentData& data) DCP_OVERRIDE;
+    bool deleteBestFitAlignment(const std::string& bestFitAlignmentId) DCP_OVERRIDE;
+    bool getBestFitAlignment(const std::string& bestFitAlignmentId, BestFitAlignmentData& data) DCP_OVERRIDE;
 
     bool importFromADF(const std::string& filename) DCP_OVERRIDE;
     bool exportToADF(const std::string& filename) DCP_OVERRIDE;
@@ -118,6 +119,12 @@ private:
     bool jsonToPointData(const Json::Value& j, PointData& data);
     Json::Value circleDataToJson(const CircleData& data);
     bool jsonToCircleData(const Json::Value& j, CircleData& data);
+    Json::Value bestFitAlignmentDataToJson(const BestFitAlignmentData& data);
+    bool jsonToBestFitAlignmentData(const Json::Value& j, BestFitAlignmentData& data);
+    Json::Value changeStationDataToJson(const ChangeStationData& data);
+    bool jsonToChangeStationData(const Json::Value& j, ChangeStationData& data);
+    Json::Value alignment321DataToJson(const Alignment321Data& data);
+    bool jsonToAlignment321Data(const Json::Value& j, Alignment321Data& data);
     Json::Value jobDataToJson(const JobData& data);
     bool jsonToJobData(const Json::Value& j, JobData& data);
     static double parseDouble(const std::string& s);
