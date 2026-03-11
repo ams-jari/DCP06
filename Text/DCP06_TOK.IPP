@@ -41,7 +41,7 @@ const wchar_t DCP06_TOK_DCP_EN_ApplicationName[] = L"DCP_TEXT";
 const wchar_t DCP06_TOK_DCP_EN_FontName[] = L"Tahoma";
 const char DCP06_TOK_DCP_EN_Language[] = "ENGLISH"; 
 const wchar_t DCP06_TOK_DCP_EN_NativeName[] = {  69, 110, 103, 108, 105, 115, 104, 000 };
-const short DCP06_TOK_DCP_EN_NO = 628;
+const short DCP06_TOK_DCP_EN_NO = 631;
 const short DCP06_TOK_DCP_EN_BASE =  0;
 
 const wchar_t DCP06_TOK_DCP_EN_Module[] = {
@@ -7195,7 +7195,13 @@ const wchar_t DCP06_TOK_DCP_EN_Module[] = {
      000,                                    // 625 = V_DCP_SD_CARD_TOK
       85,  83,  66,  32, 115, 116, 105, 
       99, 107, 000,                          // 626 = V_DCP_USB_STICK_TOK
-      82,  69,  71, 000 } ;                  // 627 = K_DCP_REGISTRATION_TOK
+      82,  69,  71, 000,                     // 627 = K_DCP_REGISTRATION_TOK
+      69, 110, 116, 101, 114,  32,  67, 
+     105, 114,  99, 108, 101,  32,  73, 
+      68, 000,                               // 628 = L_DCP_ENTER_CIRCLE_ID_TOK
+      83,  69,  76,  69,  67,  84,  32, 
+      67,  73,  82,  67,  76,  69, 000,      // 629 = T_DCP_SELECT_CIRCLE_TOK
+      76,  73,  83,  84, 000 } ;             // 630 = K_DCP_LIST_TOK
 
 #endif // #ifndef DCP06_TOK_IEN
 

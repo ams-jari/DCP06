@@ -99,6 +99,7 @@ namespace DCP
 	#define REG_DLG						157
 	#define CIRCLE_SAVE_DLG				158
 	#define CIRCLE_FILE_DLG				159
+	#define SELECT_CIRCLE_DLG			171
 	#define SHAFT_FILE_DLG				160
 	#define SHAFT_SAVE_DLG				161
 	#define RES_SHAFT_DLG				162
@@ -149,6 +150,7 @@ namespace DCP
 	#define SELECT_FILE_CONTROLLER			31
 	#define SELECT_MULTIPOINTS_CONTROLLER	32
 	#define SELECT_POINT_CONTROLLER			33
+	#define SELECT_CIRCLE_CONTROLLER			67
 	#define INPUT_TEXT_CONTROLLER			34
 	#define COPY_FILE_TO_CONTROLLER			35
 	#define OFFSV_CONTROLLER				36
@@ -413,8 +415,16 @@ namespace DCP
 		char point_id[POINT_ID_BUFF_LEN];
 		char point_status[POINT_STATUS_BUFF_LEN];
 	}S_SELECT_POINT;
+
+	typedef struct {
+		short no;
+		char circle_id[CIRCLE_ID_BUFF_LEN];
+		char center[48];   // e.g. "X Y Z" or "-"
+		char diameter[24];  // e.g. "12.345" or "-"
+	}S_SELECT_CIRCLE;
 	
 	#define MAX_SELECT_POINTS 500
+	#define MAX_SELECT_CIRCLES 100
 	#define MAX_POINTS_IN_PLANE 20
 	#define MAX_POINTS_IN_HIDDENPOINT_BAR 5
 	#define MAX_POINTS_IN_LINE  20 

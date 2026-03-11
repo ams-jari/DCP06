@@ -70,6 +70,9 @@ public:
     bool getCircle(const std::string& circleId, CircleData& data) DCP_OVERRIDE;
     std::vector<std::string> getCircleIdsInJob() const;
 
+    /// Fill S_SELECT_CIRCLE from current job for circle selection dialogs. Returns count.
+    short getCircleListAsSelectCircle(S_SELECT_CIRCLE* pList, short iMaxCircles) const;
+
     bool addSurfaceScan(const std::string&, const SurfaceScanData&, const std::vector<ScanPoint3D>&) DCP_OVERRIDE { return false; }
     bool updateSurfaceScan(const std::string&, const SurfaceScanData&, const std::vector<ScanPoint3D>&) DCP_OVERRIDE { return false; }
     bool deleteSurfaceScan(const std::string&) DCP_OVERRIDE { return false; }

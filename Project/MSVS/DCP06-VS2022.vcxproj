@@ -233,6 +233,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\file\SelectFile.cpp" />
     <ClCompile Include="..\..\src\core\SelectMultiPoints.cpp" />
     <ClCompile Include="..\..\src\core\SelectPoint.cpp" />
+    <ClCompile Include="..\..\src\core\SelectCircle.cpp" />
     <ClCompile Include="..\..\src\core\SelectTool.cpp" />
     <ClCompile Include="..\..\src\measurement\SeparateRec.cpp" />
     <ClCompile Include="..\..\src\application\Shaft.cpp" />
@@ -337,6 +338,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClInclude Include="..\..\include\dcp06\core\SelectMultiPoints.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\SelectOnePoint.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\SelectPoint.hpp" />
+    <ClInclude Include="..\..\include\dcp06\core\SelectCircle.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\SelectTool.hpp" />
     <ClInclude Include="..\..\include\dcp06\measurement\SeparateRec.hpp" />
     <ClInclude Include="..\..\include\dcp06\application\Shaft.hpp" />

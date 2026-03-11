@@ -1012,6 +1012,29 @@ short JsonDatabase::getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxP
     return iCount;
 }
 
+short JsonDatabase::getCircleListAsSelectCircle(S_SELECT_CIRCLE* pList, short iMaxCircles) const {
+    if (!m_currentJob.get()) return 0;
+    short iCount = 0;
+    for (std::map<std::string, DCP_SHARED_PTR<CircleData> >::const_iterator it = m_currentJob->circlesData.begin();
+         it != m_currentJob->circlesData.end() && iCount < iMaxCircles; ++it) {
+        if (!it->second) continue;
+        const CircleData& data = *it->second;
+        pList[iCount].no = static_cast<short>(iCount + 1);
+        std::string id = data.id.size() <= (size_t)(CIRCLE_ID_BUFF_LEN - 1) ? data.id : data.id.substr(0, CIRCLE_ID_BUFF_LEN - 1);
+        snprintf(pList[iCount].circle_id, sizeof(pList[iCount].circle_id), "%.*s", (int)(CIRCLE_ID_BUFF_LEN - 1), id.c_str());
+        if (DCP_ISNAN(data.center_x) || DCP_ISNAN(data.center_y) || DCP_ISNAN(data.center_z) || !data.calculated)
+            snprintf(pList[iCount].center, sizeof(pList[iCount].center), "-");
+        else
+            snprintf(pList[iCount].center, sizeof(pList[iCount].center), "%.1f %.1f %.1f", data.center_x, data.center_y, data.center_z);
+        if (DCP_ISNAN(data.diameter) || data.diameter == 0.0)
+            snprintf(pList[iCount].diameter, sizeof(pList[iCount].diameter), "-");
+        else
+            snprintf(pList[iCount].diameter, sizeof(pList[iCount].diameter), "%.3f", data.diameter);
+        iCount++;
+    }
+    return iCount;
+}
+
 static void fmtDouble(double v, char* buf) {
     if (buf) {
         if (DCP_ISNAN(v))

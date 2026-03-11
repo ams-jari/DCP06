@@ -33,6 +33,8 @@
 
 #include <dcp06/core/Types.hpp>
 #include <dcp06/core/PointBuffModel.hpp>
+#include <string>
+#include <vector>
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/core/Common.hpp>
 
@@ -105,6 +107,8 @@ namespace DCP
 			short PLANE_KEYS;
 			void set_function_keys();
 			short m_iDisplay;
+			std::string getNextCircleId() const;
+			void ShowSelectCircleDlg();
 
     };
 
@@ -135,6 +139,7 @@ namespace DCP
 			// Description: update the Hello World model with the new values
             virtual void UpdateData();
 			virtual void RefreshControls();
+			bool LoadCircleFromDb(const std::string& circleId);
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );
@@ -160,6 +165,7 @@ namespace DCP
 			StringC sXY_plane, sZX_plane, sYZ_plane, sCIRCLEPOINTS_plane, sMeasPlane;
 
 			OBS::ObserverC m_pToolRadiusObserver;
+			OBS::ObserverC m_pCircleIdEditObserver;
 			virtual void OnValueChanged( int unNotifyCode, int ulParam2);
 
 			short m_iDisplay;

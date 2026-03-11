@@ -36,6 +36,7 @@
 #include <dcp06/measurement/HiddenPoint.hpp>
 #include <dcp06/measurement/Circle.hpp>
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/core/SelectCircle.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/calculation/CalculationPlane.hpp>
 #include <dcp06/calculation/CalculationCircleCore.hpp>
@@ -43,6 +44,7 @@
 #include <dcp06/database/JsonDatabase.hpp>
 #include <dcp06/database/DatabaseTypes.hpp>
 
+#include <algorithm>
 #include <math.h>
 #include <GUI_Types.hpp>
 #include <GUI_DeskTop.hpp>
@@ -77,7 +79,8 @@ DCP::CircleDialog::CircleDialog(DCP::Model * pModel, CircleModel* pCircleModel, 
 		GUI::ModelHandlerC(),
 		GUI::StandardDialogC(),m_pModel(pModel),m_pDefinePlaneInfo(0),m_pCircleId(0),m_pPlane(0),m_iDisplay(iDisplay),
 		m_pToolRadius(0),m_pMeasureCirclePoints(0),m_pCirclePoints(0),m_pDataModel(pCircleModel),
-		m_pToolRadiusObserver(OBS_METHOD_TO_PARAM0(CircleDialog, OnValueChanged), this)
+		m_pToolRadiusObserver(OBS_METHOD_TO_PARAM0(CircleDialog, OnValueChanged), this),
+		m_pCircleIdEditObserver(OBS_METHOD_TO_PARAM0(CircleDialog, OnValueChanged), this)
 {
 	
 	//SetTxtApplicationId(AT_DCP06);
@@ -111,7 +114,7 @@ void DCP::CircleDialog::OnInitDialog(void)
 	{
 		m_pCircleId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 		m_pCircleId->SetId(eCircleId);
-		m_pCircleId->SetText(StringC(AT_DCP06,P_DCP_CIRCLE_ID_TOK));
+		m_pCircleId->SetText(StringC(AT_DCP06, L_DCP_ENTER_CIRCLE_ID_TOK));
 		m_pCircleId->GetStringInputCtrl()->SetCharsCountMax(DCP_POINT_ID_LENGTH);
 		m_pCircleId->SetEmptyAllowed(true);
 		AddCtrl(m_pCircleId);
@@ -176,7 +179,10 @@ void DCP::CircleDialog::OnInitDialog(void)
 		SetHelpTok(H_DCP_SHAFT_CIRCLE_TOK,0);
 	*/
 	if(m_iDisplay != SHAFT_DLG)
-	m_pToolRadiusObserver.Attach(m_pToolRadius->GetSubject());
+	{
+		m_pToolRadiusObserver.Attach(m_pToolRadius->GetSubject());
+		m_pCircleIdEditObserver.Attach(m_pCircleId->GetSubject());
+	}
 	DCP06_TRACE_EXIT;
 }
 
@@ -245,7 +251,6 @@ void DCP::CircleDialog::UpdateData()
 // ================================================================================================
 void DCP::CircleDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 {
-	// save pointid
 	if(unNotifyCode == GUI::NC_ONEDITMODE_LEFT)
 	{
 		if(ulParam2 == eToolRadius)
@@ -255,13 +260,93 @@ void DCP::CircleDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 			else
 				m_pDataModel->bR = 0.0;
 		}
+		else if(ulParam2 == eCircleId && m_pCircleId && m_pCircleId->GetStringInputCtrl())
+		{
+			// User edited Circle Id - copy to model and upsert to DB (so it appears in LIST)
+			StringC s = m_pCircleId->GetStringInputCtrl()->GetString();
+			if(m_pDataModel->pCommon)
+			{
+				char buf[CIRCLE_ID_BUFF_LEN];
+				m_pDataModel->pCommon->convert_to_ascii(s, buf, (short)sizeof(buf));
+				m_pDataModel->pCommon->strbtrim(buf);
+				snprintf(m_pDataModel->circle_points[0].id, CIRCLE_ID_BUFF_LEN, "%-s", buf[0] ? buf : "Ci1");
+				std::string circleId(buf[0] ? buf : "Ci1");
+				if (m_pModel && !circleId.empty() && m_iDisplay != SHAFT_DLG)
+				{
+					DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
+						dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+					if (jdb && jdb->isJobLoaded() && !m_pModel->m_currentJobId.empty())
+					{
+						DCP::Database::CircleData existing;
+						if (!jdb->getCircle(circleId, existing))
+						{
+							DCP::Database::CircleData cd;
+							cd.type = "circle";
+							cd.id = circleId;
+							cd.calculated = false;
+							jdb->addCircle(circleId, cd);
+							jdb->saveJob(m_pModel->m_currentJobId);
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
 
 // ================================================================================================
-// Description: refresh all controls
+// Description: Load circle from database into dialog/model
 // ================================================================================================
+bool DCP::CircleDialog::LoadCircleFromDb(const std::string& circleId)
+{
+	if(!m_pModel || circleId.empty()) return false;
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
+		dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	if(!jdb) return false;
+
+	DCP::Database::CircleData cd;
+	if(!jdb->getCircle(circleId, cd)) return false;
+
+	// Copy to CircleModel
+	snprintf(m_pDataModel->circle_points[0].id, CIRCLE_ID_BUFF_LEN, "%-s", circleId.c_str());
+	m_pDataModel->cx = cd.center_x;
+	m_pDataModel->cy = cd.center_y;
+	m_pDataModel->cz = cd.center_z;
+	m_pDataModel->vi = cd.normal_x;
+	m_pDataModel->vj = cd.normal_y;
+	m_pDataModel->vk = cd.normal_z;
+	m_pDataModel->diameter = cd.diameter;
+	m_pDataModel->bR = cd.toolRadius;
+	m_pDataModel->rms_diameter = cd.rms;
+	m_pDataModel->circle_points[0].calc = cd.calculated ? 1 : 0;
+	m_pDataModel->circle_points[0].sta = cd.calculated ? 1 : 0;
+
+	// Plane from normal (minimal - just for display)
+	m_pDataModel->PLANE_TYPE = MEAS_PLANE;
+	m_pDataModel->planes[0].calc = 1;
+	m_pDataModel->planes[0].sta = 1;
+	m_pDataModel->planes[0].nx = cd.normal_x;
+	m_pDataModel->planes[0].ny = cd.normal_y;
+	m_pDataModel->planes[0].nz = cd.normal_z;
+
+	// Circle points - load from cd.points if available
+	memset(&m_pDataModel->circle_points[0].points[0], 0, sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
+	int idx = 0;
+	for(std::map<int, DCP::Database::PointData>::const_iterator it = cd.points.begin();
+	    it != cd.points.end() && idx < MAX_POINTS_IN_CIRCLE; ++it, idx++)
+	{
+		const DCP::Database::PointData& pt = it->second;
+		m_pDataModel->circle_points[0].points[idx].x = pt.x_mea;
+		m_pDataModel->circle_points[0].points[idx].y = pt.y_mea;
+		m_pDataModel->circle_points[0].points[idx].z = pt.z_mea;
+		m_pDataModel->circle_points[0].points[idx].sta = 1;
+		snprintf(m_pDataModel->circle_points[0].points[idx].point_id, sizeof(m_pDataModel->circle_points[0].points[idx].point_id), DCP_POINT_ID_FMT, pt.id.c_str());
+	}
+
+	RefreshControls();
+	return true;
+}
 
 void DCP::CircleDialog::RefreshControls()
 {
@@ -271,12 +356,12 @@ void DCP::CircleDialog::RefreshControls()
 	
 		if(m_iDisplay != SHAFT_DLG)
 		{
-			if (m_pCircleId)
+			if(m_pCircleId)
 			{
-				char cid[CIRCLE_ID_BUFF_LEN];
-				sprintf(cid, "%-s", m_pDataModel->circle_points[0].id);
-				if (m_pDataModel->pCommon) m_pDataModel->pCommon->strbtrim(cid);
-				m_pCircleId->GetStringInputCtrl()->SetString(cid[0] ? StringC(cid) : StringC(L"Ci1"));
+				char cidBuf[CIRCLE_ID_BUFF_LEN];
+				snprintf(cidBuf, sizeof(cidBuf), "%-s", m_pDataModel->circle_points[0].id);
+				if(m_pDataModel->pCommon) m_pDataModel->pCommon->strbtrim(cidBuf);
+				m_pCircleId->GetStringInputCtrl()->SetString(StringC(cidBuf[0] ? cidBuf : "Ci1"));
 			}
 			if (m_pDefinePlaneInfo && m_pPlane)
 			{
@@ -353,6 +438,7 @@ bool DCP::CircleDialog::GetCircleIdString(char* buf, size_t bufLen) const
 {
 	if (!m_pCircleId || !m_pDataModel || !m_pDataModel->pCommon || bufLen == 0) return false;
 	StringC s = m_pCircleId->GetStringInputCtrl()->GetString();
+	if(s.IsEmpty()) s = StringC(L"Ci1");
 	m_pDataModel->pCommon->convert_to_ascii(s, buf, (short)bufLen);
 	m_pDataModel->pCommon->strbtrim(buf);
 	return true;
@@ -435,12 +521,12 @@ void DCP::CircleController::set_function_keys()
 
 	if(PLANE_KEYS == 0)
 	{
-		// DCP9-style: NEW, CLOSE, DEL, PLANE, CIRCL, CONT
+		// Point-style: ADD, LIST, DEL, PLANE, CIRCL, CONT
 		FKDef vDef;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06,K_DCP_NEW_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_ADD_TOK);
 		SetFunctionKey( FK1, vDef );
-		vDef.strLable = StringC(AT_DCP06,K_DCP_CLOSE_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_LIST_TOK);
 		SetFunctionKey( FK2, vDef );
 		vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
 		SetFunctionKey( FK3, vDef );
@@ -513,7 +599,81 @@ bool DCP::CircleController::SetModel( GUI::ModelC* pModel )
 }
 
 // ================================================================================================
-// Description: OnF1Pressed NEW (or XY when in plane menu)
+// Description: getNextCircleId - increment based on current: Ci1->Ci2, jari_2->jari_3
+// ================================================================================================
+std::string DCP::CircleController::getNextCircleId() const
+{
+	char cidBuf[CIRCLE_ID_BUFF_LEN];
+	cidBuf[0] = '\0';
+	if(m_pDlg && m_pDlg->GetCircleIdString(cidBuf, sizeof(cidBuf)))
+		m_pDataModel->pCommon->strbtrim(cidBuf);
+	std::string current(cidBuf);
+	if(current.empty()) return "Ci1";
+
+	// Find longest trailing digit sequence
+	size_t numStart = std::string::npos;
+	for(size_t i = current.length(); i > 0; )
+	{
+		--i;
+		if(current[i] >= '0' && current[i] <= '9')
+			numStart = i;
+		else
+			break;
+	}
+
+	if(numStart != std::string::npos && numStart < current.length())
+	{
+		std::string prefix = current.substr(0, numStart);
+		int num = 0;
+		for(size_t i = numStart; i < current.length(); i++)
+			num = num * 10 + (current[i] - '0');
+		num++;
+		char buf[64];
+		snprintf(buf, sizeof(buf), "%s%d", prefix.c_str(), num);
+		return std::string(buf);
+	}
+	// No trailing digits - append _1
+	return current + "_1";
+}
+
+// ================================================================================================
+// Description: ShowSelectCircleDlg - open circle list (like Point LIST)
+// ================================================================================================
+void DCP::CircleController::ShowSelectCircleDlg()
+{
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
+		dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	if (!jdb || !jdb->isJobLoaded()) return;
+
+	DCP::SelectCircleModel* pModel = new DCP::SelectCircleModel;
+	int iCount = jdb->getCircleListAsSelectCircle(&pModel->circles[0], MAX_SELECT_CIRCLES);
+	pModel->m_iCounts = static_cast<short>(iCount);
+
+	// Pre-select current circle if in list
+	char cidBuf[CIRCLE_ID_BUFF_LEN];
+	cidBuf[0] = '\0';
+	if (m_pDlg && m_pDlg->GetCircleIdString(cidBuf, sizeof(cidBuf)))
+		m_pDataModel->pCommon->strbtrim(cidBuf);
+	std::string currentId(cidBuf);
+	int selIdx = 1;
+	for (int i = 0; i < iCount; i++)
+	{
+		if (strcmp(pModel->circles[i].circle_id, currentId.c_str()) == 0)
+		{
+			selIdx = i + 1;
+			break;
+		}
+	}
+	pModel->m_iSelectedId = static_cast<short>(selIdx);
+
+	if (GetController(SELECT_CIRCLE_CONTROLLER) == nullptr)
+		(void)AddController(SELECT_CIRCLE_CONTROLLER, new DCP::SelectCircleController);
+	(void)GetController(SELECT_CIRCLE_CONTROLLER)->SetModel(pModel);
+	SetActiveController(SELECT_CIRCLE_CONTROLLER, true);
+}
+
+// ================================================================================================
+// Description: OnF1Pressed ADD (or XY when in plane menu)
 // ================================================================================================
 void DCP::CircleController::OnF1Pressed()
 {
@@ -524,8 +684,29 @@ void DCP::CircleController::OnF1Pressed()
     }
 	if(PLANE_KEYS == 0)
 	{
-		// NEW: create new circle (clear current without confirmation)
+		// ADD: create new circle (clear current), assign next ID, save to DB (Point-style)
 		m_pDataModel->clear_circle();
+		std::string nextId = getNextCircleId();
+		snprintf(m_pDataModel->circle_points[0].id, CIRCLE_ID_BUFF_LEN, "%-s", nextId.c_str());
+		// Save new circle to DB immediately so it appears in LIST
+		if (m_pModel && m_iDisplay != SHAFT_DLG)
+		{
+			DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
+				dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+			if (jdb && jdb->isJobLoaded() && !m_pModel->m_currentJobId.empty())
+			{
+				DCP::Database::CircleData existing;
+				if (!jdb->getCircle(nextId, existing))
+				{
+					DCP::Database::CircleData cd;
+					cd.type = "circle";
+					cd.id = nextId;
+					cd.calculated = false;
+					jdb->addCircle(nextId, cd);
+					jdb->saveJob(m_pModel->m_currentJobId);
+				}
+			}
+		}
 		m_pDlg->RefreshControls();
 	}
 	else
@@ -545,7 +726,7 @@ void DCP::CircleController::OnF1Pressed()
 }
 
 // ================================================================================================
-// Description: OnF2Pressed CLOSE (or ZX when in plane menu)
+// Description: OnF2Pressed LIST (or ZX when in plane menu)
 // ================================================================================================
 void DCP::CircleController::OnF2Pressed()
 {
@@ -556,9 +737,8 @@ void DCP::CircleController::OnF2Pressed()
     }
 	if(PLANE_KEYS == 0)
 	{
-		// CLOSE: close the current circle (clear it, stay on screen) - DCP9 alignment-style, not exit
-		m_pDataModel->clear_circle();
-		m_pDlg->RefreshControls();
+		// LIST: open Select Circle dialog (like Point LIST)
+		ShowSelectCircleDlg();
 	}
 	else
 	{
@@ -651,6 +831,9 @@ void DCP::CircleController::OnF4Pressed()
 	}
 	else
 	{
+		// F4 = PLANE: toggle to plane selection submenu (XY, ZX, YZ, MEAS, CIRCL)
+		PLANE_KEYS = 1;
+		set_function_keys();
 	}
 	m_pDlg->RefreshControls();
 }
@@ -801,13 +984,48 @@ void DCP::CircleController::OnF6Pressed()
 	}
 }
 // ================================================================================================
-// Description: OnSHF2Pressed DELETE
+// Description: OnSHF2Pressed DELETE - remove from DB and clear
 // ================================================================================================
 void DCP::CircleController::OnSHF2Pressed()
 {
-	m_pDataModel->delete_circle();
+	if(m_iDisplay != SHAFT_DLG && m_pModel)
+	{
+		// Get current circle ID and delete from DB
+		char cidBuf[CIRCLE_ID_BUFF_LEN];
+		cidBuf[0] = '\0';
+		if(m_pDlg->GetCircleIdString(cidBuf, sizeof(cidBuf)))
+		{
+			m_pDataModel->pCommon->strbtrim(cidBuf);
+			std::string circleId(cidBuf);
+			if(!circleId.empty())
+			{
+				StringC msg, strCircleText;
+				strCircleText.LoadTxt(AT_DCP06, L_DCP_CIRCLE_TEXT_TOK);
+				msg.LoadTxt(AT_DCP06, M_DCP_DELETE_ALL_TOK);
+				msg.Format(msg, (const wchar_t*)strCircleText);
+				if(m_pDataModel->pMsgBox->ShowMessageYesNo(msg))
+				{
+					DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
+						dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+					if(jdb && jdb->isJobLoaded() && !m_pModel->m_currentJobId.empty())
+					{
+						jdb->deleteCircle(circleId);
+						jdb->saveJob(m_pModel->m_currentJobId);
+					}
+					m_pDataModel->clear_circle();
+				}
+			}
+			else
+				m_pDataModel->delete_circle();
+		}
+		else
+			m_pDataModel->delete_circle();
+	}
+	else
+		m_pDataModel->delete_circle();
+
 	if(m_iDisplay == SHAFT_DLG)
-		m_pDataModel->PLANE_TYPE =  CIRCLE_POINTS_PLANE;
+		m_pDataModel->PLANE_TYPE = CIRCLE_POINTS_PLANE;
 
 	m_pDlg->RefreshControls();
 }
@@ -928,6 +1146,23 @@ void DCP::CircleController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 	if(lCtrlID == CALC_CIRCLE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{	
 		OnF6Pressed	();
+	}
+
+	// SELECT CIRCLE (LIST)
+	if (lCtrlID == SELECT_CIRCLE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	{
+		DCP::SelectCircleModel* pModel = (DCP::SelectCircleModel*)GetController(SELECT_CIRCLE_CONTROLLER)->GetModel();
+		if (pModel && !pModel->m_strSelectedCircleId.IsEmpty())
+		{
+			char buf[CIRCLE_ID_BUFF_LEN];
+			m_pDataModel->pCommon->convert_to_ascii(pModel->m_strSelectedCircleId, buf, (short)sizeof(buf));
+			m_pDataModel->pCommon->strbtrim(buf);
+			std::string circleId(buf);
+			if (!circleId.empty() && m_pDlg->LoadCircleFromDb(circleId))
+			{
+				snprintf(m_pDataModel->circle_points[0].id, CIRCLE_ID_BUFF_LEN, "%-s", circleId.c_str());
+			}
+		}
 	}
 
 	// CIRCLE PLANE MEAS

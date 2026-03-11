@@ -670,7 +670,10 @@ const RSC::TxtC::TOKEN
       P_DCP_FILE_STORAGE_TOK               = 624,  // "Data memory device" (-)                                    
       V_DCP_SD_CARD_TOK                    = 625,  // "SD card" (-)                                               
       V_DCP_USB_STICK_TOK                  = 626,  // "USB stick" (-)                                             
-      K_DCP_REGISTRATION_TOK               = 627;  // "REG" (-)                                                   
+      K_DCP_REGISTRATION_TOK               = 627,  // "REG" (-)                                                   
+      L_DCP_ENTER_CIRCLE_ID_TOK            = 628,  // "Enter Circle ID"                                            
+      T_DCP_SELECT_CIRCLE_TOK              = 629,  // "SELECT CIRCLE"                                              
+      K_DCP_LIST_TOK                       = 630;  // "LIST"                                                       
 
 #endif
 /* _________________________________________ END of header DCP05_TOK */

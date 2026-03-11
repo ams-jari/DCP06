@@ -593,6 +593,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\core\SelectCircle.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\core\SelectTool.cpp"
 				>
 			</File>
@@ -971,6 +975,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\dcp06\core\SelectPoint.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\dcp06\core\SelectCircle.hpp"
 				>
 			</File>
 			<File
