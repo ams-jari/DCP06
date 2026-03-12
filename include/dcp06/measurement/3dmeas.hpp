@@ -118,6 +118,7 @@ namespace DCP
 			GSV::GeospatialViewDialogC* poVideoDlg;
 
 			bool m_bPointMenu;
+			int m_pendingSubController;  // SPECIAL_MENU exit code to show after OnControllerActivated (0=none)
 
 			void ShowHiddenPointDlg();
 			void ShowXorYorZDlg();
@@ -130,7 +131,7 @@ namespace DCP
 
 			bool m_bShaft;
 			bool m_bCamera;
-	};
+		};
 
 
 	class Meas3DDialog:public GUI::/*Standard*/DialogC, public GUI::ModelHandlerC, public OBS::CommandC

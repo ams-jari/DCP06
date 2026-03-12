@@ -100,6 +100,8 @@ namespace DCP
 	#define CIRCLE_SAVE_DLG				158
 	#define CIRCLE_FILE_DLG				159
 	#define SELECT_CIRCLE_DLG			171
+	#define SELECT_MIDPOINT_DLG			172
+	#define MIDPOINT_DLG				173
 	#define SHAFT_FILE_DLG				160
 	#define SHAFT_SAVE_DLG				161
 	#define RES_SHAFT_DLG				162
@@ -151,6 +153,7 @@ namespace DCP
 	#define SELECT_MULTIPOINTS_CONTROLLER	32
 	#define SELECT_POINT_CONTROLLER			33
 	#define SELECT_CIRCLE_CONTROLLER			67
+	#define SELECT_MIDPOINT_CONTROLLER			103
 	#define INPUT_TEXT_CONTROLLER			34
 	#define COPY_FILE_TO_CONTROLLER			35
 	#define OFFSV_CONTROLLER				36
@@ -423,8 +426,15 @@ namespace DCP
 		char diameter[24];  // e.g. "12.345" or "-"
 	}S_SELECT_CIRCLE;
 	
+	typedef struct {
+		short no;
+		char midpoint_id[POINT_ID_BUFF_LEN];
+		char coords[48];  // "X Y Z" or "-"
+	}S_SELECT_MIDPOINT;
+
 	#define MAX_SELECT_POINTS 500
 	#define MAX_SELECT_CIRCLES 100
+	#define MAX_SELECT_MIDPOINTS 100
 	#define MAX_POINTS_IN_PLANE 20
 	#define MAX_POINTS_IN_HIDDENPOINT_BAR 5
 	#define MAX_POINTS_IN_LINE  20 

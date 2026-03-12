@@ -4,6 +4,8 @@
 // When testing on simulator: no call stack, no debugger - just this log.
 // Enable in release builds for simulator testing.
 //
+// Trace usage: see Docs/DCP06_Logging_Trace_Usage.md (MSVC-safe patterns).
+//
 // Trace levels:
 //   DEBUG   = All possible info: entry, exit, function critical info (most verbose).
 //             Use for initial testing and debugging. DCP06_TRACE_ENTER/EXIT/POINT use this.
@@ -71,4 +73,10 @@ private:
 // These use DEBUG level; set Logger::setLevel(Logger::Debug) for full visibility.
 #define DCP06_TRACE_ENTER    DCP06_LOG_DEBUG(">> %s", __FUNCTION__)
 #define DCP06_TRACE_EXIT     DCP06_LOG_DEBUG("<< %s", __FUNCTION__)
+
+// DCP06_TRACE_POINT: logs "-- function_name: <fmt>" with optional printf-style args.
+// MSVC (VS2008/Win32) does not handle empty ##__VA_ARGS__ correctly - causes C2059 syntax error.
+// SAFE:   DCP06_TRACE_POINT("value=%d", x);         // at least one format arg
+// UNSAFE: DCP06_TRACE_POINT("msg only");            // no extra args -> build error
+// For messages without format args, use: DCP06_LOG_DEBUG("-- %s: msg", __FUNCTION__);
 #define DCP06_TRACE_POINT(fmt, ...) DCP06_LOG_DEBUG("-- %s: " fmt, __FUNCTION__, ##__VA_ARGS__)

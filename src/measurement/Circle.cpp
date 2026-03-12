@@ -521,7 +521,7 @@ void DCP::CircleController::set_function_keys()
 
 	if(PLANE_KEYS == 0)
 	{
-		// Point-style: ADD, LIST, DEL, PLANE, CIRCL, CONT
+		// Point-style: ADD, LIST, DEL, PLANE, MEAS, CONT
 		FKDef vDef;
 		vDef.poOwner = this;
 		vDef.strLable = StringC(AT_DCP06,K_DCP_ADD_TOK);
@@ -532,7 +532,7 @@ void DCP::CircleController::set_function_keys()
 		SetFunctionKey( FK3, vDef );
 		vDef.strLable = StringC(AT_DCP06,K_DCP_PLANE_TOK);
 		SetFunctionKey( FK4, vDef );
-		vDef.strLable = StringC(AT_DCP06,K_DCP_CIRCLE_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK5, vDef );
 		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 		SetFunctionKey( FK6, vDef );

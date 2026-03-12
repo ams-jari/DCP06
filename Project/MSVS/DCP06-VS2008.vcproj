@@ -517,6 +517,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\src\measurement\Midpoint.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\src\core\Logger.cpp"
 				>
 			</File>
@@ -594,6 +598,10 @@
 			</File>
 			<File
 				RelativePath="..\..\src\core\SelectCircle.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\core\SelectMidpoint.cpp"
 				>
 			</File>
 			<File
@@ -902,6 +910,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\include\dcp06\measurement\Midpoint.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\include\dcp06\core\Model.hpp"
 				>
 			</File>
@@ -979,6 +991,10 @@
 			</File>
 			<File
 				RelativePath="..\..\include\dcp06\core\SelectCircle.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\dcp06\core\SelectMidpoint.hpp"
 				>
 			</File>
 			<File

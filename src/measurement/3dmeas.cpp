@@ -651,6 +651,7 @@ DCP::Model* DCP::Meas3DDialog::GetModel() const
 // ================================================================================================
 DCP::Meas3DController::Meas3DController(bool bShaft, DCP::Model* pModel )
     : m_pDlg( nullptr ),m_bPointMenu(false),m_bShaft(bShaft),poVideoDlg(0),m_bCamera(false)
+    , m_pendingSubController(0)
 {
     // Set title token
     // The appropriate application ID has to be set because 'C_DCP_APPLICATION_NAME_TOK'
@@ -704,6 +705,27 @@ DCP::Meas3DController::~Meas3DController()
 // ================================================================================================
 void DCP::Meas3DController::OnControllerActivated(void)
 {
+	// Deferred: when Special Menu closed with a sub-controller (Midpoint, Circle, etc.),
+	// we stored it here. Now that we're active, show it (avoids re-entrancy in OnActiveControllerClosed).
+	if (m_pendingSubController != 0)
+	{
+		DCP06_LOG_DEBUG("-- Meas3DController::OnControllerActivated: pending=%d, calling Show*Dlg", m_pendingSubController);
+		int pending = m_pendingSubController;
+		m_pendingSubController = 0;
+		if (pending == HIDDEN_POINT)
+			ShowHiddenPointDlg();
+		else if (pending == X_OR_Y_OR_Z)
+			ShowXorYorZDlg();
+		else if (pending == CIRCLE)
+			ShowCircleDlg();
+		else if (pending == SEPARATE_REC)
+			ShowSeparateRecDlg();
+		else if (pending == HOME_POINTS)
+			ShowHomePointsDlg();
+		else if (pending == MID_POINT)
+			ShowMidPointDlg();
+		return;
+	}
 	show_function_keys();
 	m_pDataModel->set_dcp05_model(m_pDlg->GetModel());
 	m_pCommon = new Common(m_pDlg->GetModel());
@@ -1432,6 +1454,7 @@ void DCP::Meas3DController::OnActiveDialogClosed( int lDlgID, int lExitCode )
 // ================================================================================================
 void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
+	DCP06_TRACE_POINT("lCtrlID=%d lExitCode=%d (SPECIAL_MENU=%d MID_POINT=%d)", lCtrlID, lExitCode, (int)SPECIAL_MENU_CONTROLLER, (int)MID_POINT);
 	// File
 	if(lCtrlID == FILE_CONTROLLER) // && lExitCode == EC_KEY_CONT)
 	{
@@ -1697,26 +1720,25 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 		m_pDataModel->DSP_MODE = SINGLE;
 		m_pDlg->RefreshControls();
 	}
-	// SPECIAL MENU
+	// SPECIAL MENU: Match 3dfbs exactly - direct Show*Dlg, then RefreshControls + DestroyController.
+	// 3dfbs (Fbs3DController) uses this pattern and it works for Circle, Midpoint, etc.
 	if(lCtrlID == SPECIAL_MENU_CONTROLLER && lExitCode != EC_KEY_ESC )
-	{	
-			if(lExitCode == HIDDEN_POINT)
-				ShowHiddenPointDlg();
-
-			else if(lExitCode == X_OR_Y_OR_Z)
-				ShowXorYorZDlg();
-
-			else if(lExitCode == CIRCLE)
-				ShowCircleDlg();
- 
-			else if(lExitCode == SEPARATE_REC)
-				ShowSeparateRecDlg();
-
-			else if(lExitCode == HOME_POINTS)
-				ShowHomePointsDlg();
-			else if(lExitCode == MID_POINT)
-				ShowMidPointDlg();
-		}
+	{
+		if(lExitCode == HIDDEN_POINT)
+			ShowHiddenPointDlg();
+		else if(lExitCode == X_OR_Y_OR_Z)
+			ShowXorYorZDlg();
+		else if(lExitCode == CIRCLE)
+			ShowCircleDlg();
+		else if(lExitCode == SEPARATE_REC)
+			ShowSeparateRecDlg();
+		else if(lExitCode == HOME_POINTS)
+			ShowHomePointsDlg();
+		else if(lExitCode == MID_POINT)
+			ShowMidPointDlg();
+		else
+			DCP06_TRACE_POINT("unhandled lExitCode=%d", lExitCode);
+	}
 	// Add point
 	if(lCtrlID == INPUT_TEXT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
@@ -1885,8 +1907,9 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 		
 		m_pDataModel->save_point();
 	}
+	// Match 3dfbs: always RefreshControls and DestroyController (same for all controller closes)
 	m_pDlg->RefreshControls();
-	DestroyController( lCtrlID );
+	DestroyController(lCtrlID);
 }
 
 // ================================================================================================
@@ -2020,6 +2043,7 @@ void DCP::Meas3DController::ShowHomePointsDlg()
 // ================================================================================================
 void DCP::Meas3DController::ShowMidPointDlg()
 {
+	DCP06_TRACE_ENTER;
 	if (!m_pDataModel->m_bJobOpen)
 	{
 		MsgBox msgBox; StringC msg; msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK); msgBox.ShowMessageOk(msg);
@@ -2030,12 +2054,17 @@ void DCP::Meas3DController::ShowMidPointDlg()
 	snprintf(pModel->m_pPointBuff[0].point_id, sizeof(pModel->m_pPointBuff[0].point_id), DCP_POINT_ID_FMT, m_pDataModel->pid_ptr);
 
 	//pModel->m_pPointBuff[0].xsta = pMeasModel->
+	DCP06_LOG_DEBUG("-- %s: before AddController/SetModel/SetActiveController", __FUNCTION__);
 	if(GetController(MID_POINT_CONTROLLER) == nullptr)
 	{
 		(void)AddController( MID_POINT_CONTROLLER, new DCP::MidPointController(m_pDlg->GetModel()));
+		DCP06_LOG_DEBUG("-- %s: MidPointController added (was nullptr)", __FUNCTION__);
 	}
 	(void)GetController( MID_POINT_CONTROLLER )->SetModel( pModel);
+	DCP06_LOG_DEBUG("-- %s: SetModel done, calling SetActiveController(99,true)", __FUNCTION__);
 	SetActiveController(MID_POINT_CONTROLLER, true);
+	DCP06_LOG_DEBUG("-- %s: SetActiveController returned, MID_POINT_CONTROLLER activated", __FUNCTION__);
+	DCP06_TRACE_EXIT;
 
 		//DCP::MeasureModel* pModel = new MeasureModel;
 		//pModel->m_iPointsCount = 2;

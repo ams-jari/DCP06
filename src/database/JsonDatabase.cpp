@@ -285,6 +285,13 @@ Json::Value JsonDatabase::jobDataToJson(const JobData& data) {
             circlesJson[it->first] = circleDataToJson(*it->second);
     }
     j["circles_data"] = circlesJson;
+    Json::Value midpointsJson;
+    for (std::map<std::string, DCP_SHARED_PTR<MidpointData> >::const_iterator it = data.midpointsData.begin();
+         it != data.midpointsData.end(); ++it) {
+        if (it->second.get())
+            midpointsJson[it->first] = midpointDataToJson(*it->second);
+    }
+    j["midpoints_data"] = midpointsJson;
     Json::Value bestFitJson;
     for (std::map<std::string, DCP_SHARED_PTR<BestFitAlignmentData> >::const_iterator it = data.bestFitAlignments.begin();
          it != data.bestFitAlignments.end(); ++it) {
@@ -597,6 +604,35 @@ bool JsonDatabase::jsonToCircleData(const Json::Value& j, CircleData& data) {
     return true;
 }
 
+Json::Value JsonDatabase::midpointDataToJson(const MidpointData& data) {
+    Json::Value j;
+    j["type"] = data.type.empty() ? "midpoint" : data.type;
+    j["id"] = data.id;
+    j["measTime"] = data.measTime;
+    setJsonDouble(j, "x", data.x);
+    setJsonDouble(j, "y", data.y);
+    setJsonDouble(j, "z", data.z);
+    setJsonDouble(j, "x_scs0", data.x_scs0);
+    setJsonDouble(j, "y_scs0", data.y_scs0);
+    setJsonDouble(j, "z_scs0", data.z_scs0);
+    j["calculated"] = data.calculated;
+    return j;
+}
+
+bool JsonDatabase::jsonToMidpointData(const Json::Value& j, MidpointData& data) {
+    data.type = getJsonString(j, "type", "midpoint");
+    data.id = getJsonString(j, "id", "");
+    data.measTime = getJsonString(j, "measTime", "");
+    data.x = getJsonDoubleDefault(j, "x", 0.0);
+    data.y = getJsonDoubleDefault(j, "y", 0.0);
+    data.z = getJsonDoubleDefault(j, "z", 0.0);
+    data.x_scs0 = getJsonDoubleDefault(j, "x_scs0", 0.0);
+    data.y_scs0 = getJsonDoubleDefault(j, "y_scs0", 0.0);
+    data.z_scs0 = getJsonDoubleDefault(j, "z_scs0", 0.0);
+    data.calculated = getJsonBoolDefault(j, "calculated", false);
+    return true;
+}
+
 bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
     data.type = getJsonString(j, "type", "job"); data.object_key = getJsonIntDefault(j, "object_key", 1);
     data.id = getJsonString(j, "id", ""); data.date = getJsonString(j, "date", "");
@@ -637,6 +673,17 @@ bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
             DCP_SHARED_PTR<CircleData> cd(new CircleData());
             if (jsonToCircleData(circs[key], *cd))
                 data.circlesData[key] = cd;
+        }
+    }
+    data.midpointsData.clear();
+    if (j.isMember("midpoints_data") && j["midpoints_data"].isObject()) {
+        const Json::Value& mps = j["midpoints_data"];
+        Json::Value::Members members = mps.getMemberNames();
+        for (Json::Value::Members::const_iterator it = members.begin(); it != members.end(); ++it) {
+            const std::string& key = *it;
+            DCP_SHARED_PTR<MidpointData> md(new MidpointData());
+            if (jsonToMidpointData(mps[key], *md))
+                data.midpointsData[key] = md;
         }
     }
     data.bestFitAlignments.clear();
@@ -791,6 +838,66 @@ bool JsonDatabase::getPoint(const std::string& pointId, PointData& data) const {
     if (it == m_currentJob->points.end() || !it->second) return false;
     data = *it->second;
     return true;
+}
+
+bool JsonDatabase::addMidpoint(const std::string& midpointId, const MidpointData& data) {
+    if (!m_currentJob.get()) return false;
+    DCP_SHARED_PTR<MidpointData> md(new MidpointData(data));
+    md->id = midpointId;
+    if (md->measTime.empty()) md->measTime = getCurrentIsoTime();
+    m_currentJob->midpointsData[midpointId] = md;
+    return true;
+}
+
+bool JsonDatabase::updateMidpoint(const std::string& midpointId, const MidpointData& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<MidpointData> >::iterator it = m_currentJob->midpointsData.find(midpointId);
+    if (it == m_currentJob->midpointsData.end()) return false;
+    *it->second = data;
+    it->second->id = midpointId;
+    return true;
+}
+
+bool JsonDatabase::deleteMidpoint(const std::string& midpointId) {
+    if (!m_currentJob.get()) return false;
+    return m_currentJob->midpointsData.erase(midpointId) > 0;
+}
+
+bool JsonDatabase::getMidpoint(const std::string& midpointId, MidpointData& data) {
+    if (!m_currentJob.get()) return false;
+    std::map<std::string, DCP_SHARED_PTR<MidpointData> >::const_iterator it = m_currentJob->midpointsData.find(midpointId);
+    if (it == m_currentJob->midpointsData.end() || !it->second) return false;
+    data = *it->second;
+    return true;
+}
+
+std::vector<std::string> JsonDatabase::getMidpointIdsInJob() const {
+    std::vector<std::string> out;
+    if (!m_currentJob.get()) return out;
+    for (std::map<std::string, DCP_SHARED_PTR<MidpointData> >::const_iterator it = m_currentJob->midpointsData.begin();
+         it != m_currentJob->midpointsData.end(); ++it)
+        out.push_back(it->first);
+    std::sort(out.begin(), out.end());
+    return out;
+}
+
+short JsonDatabase::getMidpointListAsSelectMidpoint(S_SELECT_MIDPOINT* pList, short iMaxMidpoints) const {
+    if (!m_currentJob.get()) return 0;
+    short iCount = 0;
+    for (std::map<std::string, DCP_SHARED_PTR<MidpointData> >::const_iterator it = m_currentJob->midpointsData.begin();
+         it != m_currentJob->midpointsData.end() && iCount < iMaxMidpoints; ++it) {
+        if (!it->second) continue;
+        const MidpointData& data = *it->second;
+        pList[iCount].no = static_cast<short>(iCount + 1);
+        std::string id = data.id.size() <= (size_t)(POINT_ID_BUFF_LEN - 1) ? data.id : data.id.substr(0, POINT_ID_BUFF_LEN - 1);
+        snprintf(pList[iCount].midpoint_id, sizeof(pList[iCount].midpoint_id), "%.*s", (int)(POINT_ID_BUFF_LEN - 1), id.c_str());
+        if (DCP_ISNAN(data.x) || DCP_ISNAN(data.y) || DCP_ISNAN(data.z) || !data.calculated)
+            snprintf(pList[iCount].coords, sizeof(pList[iCount].coords), "-");
+        else
+            snprintf(pList[iCount].coords, sizeof(pList[iCount].coords), "%.1f %.1f %.1f", data.x, data.y, data.z);
+        iCount++;
+    }
+    return iCount;
 }
 
 bool JsonDatabase::addCircle(const std::string& circleId, const CircleData& data) {

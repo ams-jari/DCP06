@@ -673,7 +673,11 @@ const RSC::TxtC::TOKEN
       K_DCP_REGISTRATION_TOK               = 627,  // "REG" (-)                                                   
       L_DCP_ENTER_CIRCLE_ID_TOK            = 628,  // "Enter Circle ID"                                            
       T_DCP_SELECT_CIRCLE_TOK              = 629,  // "SELECT CIRCLE"                                              
-      K_DCP_LIST_TOK                       = 630;  // "LIST"                                                       
+      K_DCP_LIST_TOK                       = 630,  // "LIST"                                                       
+      L_DCP_ENTER_MIDPOINT_ID_TOK          = 631,  // "Enter Midpoint ID"                                         
+      T_DCP_SELECT_MIDPOINT_TOK            = 632,  // "SELECT MIDPOINT"                                            
+      P_DCP_MIDPOINT_ID_TOK                = 633,  // "Midpoint Id"
+      P_DCP_COORDS_TOK                     = 634;  // "Coords"
 
 #endif
 /* _________________________________________ END of header DCP05_TOK */

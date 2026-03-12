@@ -130,7 +130,7 @@ void SpecialMenuDialog::OnSelectionDone(void)
 {
 	DCP06_TRACE_ENTER;
 	short unId = GetSelected();
-	
+	DCP06_TRACE_POINT("selected=%d", (int)unId);
 	OnF1Pressed();
 	DCP06_TRACE_EXIT;
 }
@@ -138,6 +138,7 @@ void SpecialMenuDialog::OnSelectionDone(void)
 void SpecialMenuDialog::OnF1Pressed(void)
 {
 	DCP06_TRACE_ENTER;
+	DCP06_TRACE_POINT("dialog Close(GetSelected())=%d", (int)GetSelected());
 	/*if(m_pModel->bDemoMode)
 	{
 		MsgBox msgBox;
@@ -187,19 +188,29 @@ DCP::SpecialMenuController::~SpecialMenuController()
 {
 }
 
-// Description: Handle change of position values
+// Description: Handle change of position values - close with selected item ID so parent can dispatch
 void DCP::SpecialMenuController::OnF1Pressed()
 {
 	DCP06_TRACE_ENTER;
-    // Remove the following statement if you don't want an exit
-    // to the main menu
-    (void)Close(EC_KEY_CONT);
+    if (m_pDlg)
+    {
+        short sel = m_pDlg->GetSelected();
+        DCP06_TRACE_POINT("controller Close(selected)=%d", (int)sel);
+        (void)Close(sel);
+    }
+    else
+    {
+        DCP06_LOG_DEBUG("-- %s: no dlg, Close(EC_KEY_ESC)", __FUNCTION__);
+        (void)Close(EC_KEY_ESC);
+    }
 	DCP06_TRACE_EXIT;
 }
 
 
 
-// Description: React on close of tabbed dialog
-void DCP::SpecialMenuController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCode*/ )
+// Description: React on close of tabbed dialog - propagate exit code so parent can dispatch (e.g. MID_POINT -> ShowMidPointDlg)
+void DCP::SpecialMenuController::OnActiveDialogClosed( int /*lDlgID*/, int lExitCode )
 {
+	DCP06_TRACE_POINT("dialog closed, propagating Close(%d)", lExitCode);
+	(void)Close(lExitCode);
 }

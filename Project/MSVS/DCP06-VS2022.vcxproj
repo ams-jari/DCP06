@@ -214,6 +214,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\orientation\MeasV.cpp" />
     <ClCompile Include="..\..\src\measurement\MeasXYZ.cpp" />
     <ClCompile Include="..\..\src\measurement\MidPointController.cpp" />
+    <ClCompile Include="..\..\src\measurement\Midpoint.cpp" />
     <ClCompile Include="..\..\src\core\Logger.cpp" />
     <ClCompile Include="..\..\src\core\Model.cpp" />
     <ClCompile Include="..\..\src\core\MsgBox.cpp" />
@@ -234,6 +235,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClCompile Include="..\..\src\core\SelectMultiPoints.cpp" />
     <ClCompile Include="..\..\src\core\SelectPoint.cpp" />
     <ClCompile Include="..\..\src\core\SelectCircle.cpp" />
+    <ClCompile Include="..\..\src\core\SelectMidpoint.cpp" />
     <ClCompile Include="..\..\src\core\SelectTool.cpp" />
     <ClCompile Include="..\..\src\measurement\SeparateRec.cpp" />
     <ClCompile Include="..\..\src\application\Shaft.cpp" />
@@ -319,6 +321,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClInclude Include="..\..\include\dcp06\orientation\MeasV.hpp" />
     <ClInclude Include="..\..\include\dcp06\measurement\MeasXYZ.hpp" />
     <ClInclude Include="..\..\include\dcp06\measurement\MidPointController.hpp" />
+    <ClInclude Include="..\..\include\dcp06\measurement\Midpoint.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\Model.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\MsgBox.hpp" />
     <ClInclude Include="..\..\include\dcp06\orientation\Offsv.hpp" />
@@ -339,6 +342,7 @@ echo === Generate loadable application file (*.dxx)  ===========================
     <ClInclude Include="..\..\include\dcp06\core\SelectOnePoint.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\SelectPoint.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\SelectCircle.hpp" />
+    <ClInclude Include="..\..\include\dcp06\core\SelectMidpoint.hpp" />
     <ClInclude Include="..\..\include\dcp06\core\SelectTool.hpp" />
     <ClInclude Include="..\..\include\dcp06\measurement\SeparateRec.hpp" />
     <ClInclude Include="..\..\include\dcp06\application\Shaft.hpp" />

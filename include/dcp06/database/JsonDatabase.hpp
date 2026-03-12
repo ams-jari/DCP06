@@ -59,10 +59,14 @@ public:
     /// Swap measured/design coords for all points in current job (replaces swap_meas_design)
     bool swapMeasDesign();
 
-    bool addMidpoint(const std::string&, const MidpointData&) DCP_OVERRIDE { return false; }
-    bool updateMidpoint(const std::string&, const MidpointData&) DCP_OVERRIDE { return false; }
-    bool deleteMidpoint(const std::string&) DCP_OVERRIDE { return false; }
-    bool getMidpoint(const std::string&, MidpointData&) DCP_OVERRIDE { return false; }
+    bool addMidpoint(const std::string& midpointId, const MidpointData& data) DCP_OVERRIDE;
+    bool updateMidpoint(const std::string& midpointId, const MidpointData& data) DCP_OVERRIDE;
+    bool deleteMidpoint(const std::string& midpointId) DCP_OVERRIDE;
+    bool getMidpoint(const std::string& midpointId, MidpointData& data) DCP_OVERRIDE;
+    std::vector<std::string> getMidpointIdsInJob() const;
+
+    /// Fill S_SELECT_MIDPOINT from current job for midpoint selection dialogs. Returns count.
+    short getMidpointListAsSelectMidpoint(S_SELECT_MIDPOINT* pList, short iMaxMidpoints) const;
 
     bool addCircle(const std::string& circleId, const CircleData& data) DCP_OVERRIDE;
     bool updateCircle(const std::string& circleId, const CircleData& data) DCP_OVERRIDE;
@@ -122,6 +126,8 @@ private:
     bool jsonToPointData(const Json::Value& j, PointData& data);
     Json::Value circleDataToJson(const CircleData& data);
     bool jsonToCircleData(const Json::Value& j, CircleData& data);
+    Json::Value midpointDataToJson(const MidpointData& data);
+    bool jsonToMidpointData(const Json::Value& j, MidpointData& data);
     Json::Value bestFitAlignmentDataToJson(const BestFitAlignmentData& data);
     bool jsonToBestFitAlignmentData(const Json::Value& j, BestFitAlignmentData& data);
     Json::Value changeStationDataToJson(const ChangeStationData& data);

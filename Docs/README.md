@@ -11,6 +11,8 @@ This folder contains the planning and reference documentation for the DCP06 proj
 | [DCP06_Project_Plan.md](DCP06_Project_Plan.md) | Detailed project plan for DCP06 development |
 | [DCP06_Architecture_Review.md](DCP06_Architecture_Review.md) | Architecture review and Option B restructure |
 | [DCP06_Database_Design.md](DCP06_Database_Design.md) | Database merge from DCP9, shared design, future AMS lib |
+| [DCP06_Logging_Trace_Usage.md](DCP06_Logging_Trace_Usage.md) | How to add debug traces (MSVC-safe patterns) |
+| [DCP06_Debugging_Crash_Dumps.md](DCP06_Debugging_Crash_Dumps.md) | Capturing and analyzing crash dumps |
 
 ## Quick Reference
 

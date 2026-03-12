@@ -34,79 +34,55 @@
 #include <dcp06/core/Types.hpp>
 #include <dcp06/core/Common.hpp>
 #include <dcp06/core/PointBuffModel.hpp>
+#include <dcp06/measurement/Midpoint.hpp>
 #include <GUI_AppBase.hpp>
 #include <TBL_SurveyModel.hpp>
 #include <TBL_Measurement.hpp>
 
-// Description: The Hello World application
-//
 namespace DCP
 {
-    // Forward declaration
-
-
-    // Description: Tabbed controller for the Hello World application
     class MidPointController : public GUI::ControllerC
-	{
-	public:
+    {
+    public:
+        MidPointController(Model *pModel);
+        ~MidPointController();
 
-            // Description: Constructor
-            MidPointController(Model *pModel);
-			~MidPointController();
+        virtual void OnF1Pressed();
+        virtual void OnF2Pressed();
+        virtual void OnF3Pressed();
+        virtual void OnF4Pressed();
+        virtual void OnF5Pressed();
+        virtual void OnF6Pressed();
+        virtual void OnSHF2Pressed();
 
+        virtual bool SetModel(GUI::ModelC* pModel);
+        PointBuffModel* m_pPointBuffModel;
+        PointBuffModel* GetDataModel() const;
 
-            // Description: Handle change of position values
-           // virtual void OnF1Pressed(); 
-			//virtual void OnF2Pressed();
-			//virtual void OnF3Pressed();
-			//virtual void OnF4Pressed();
-			//virtual void OnF5Pressed();
-			//virtual void OnF6Pressed();
-			//virtual void OnSHF1Pressed();
-			//virtual void OnSHF2Pressed();
-			//virtual void OnSHF3Pressed();
-			// Description: Route model to everybody else
+        virtual void OnActiveDialogClosed(int lDlgID, int lExitCode);
+        virtual void OnActiveControllerClosed(int lCtrlID, int lExitCode);
+        virtual void OnControllerActivated(void);
+        virtual void Run(void);
 
-			virtual bool SetModel( GUI::ModelC* pModel );
-			PointBuffModel* m_pPointBuffModel;
-			PointBuffModel* GetDataModel() const;
-		
-            // Description: React on close of tabbed dialog
-            virtual void OnActiveDialogClosed( int lDlgID, int lExitCode );
-			virtual void OnActiveControllerClosed( int lCtrlID, int lExitCode );
-			virtual void OnControllerActivated(void);
-			virtual void Run(void);
-			
-        private:
+    private:
+        MidPointController(const MidPointController&) { USER_APP_VERIFY(false); }
+        MidPointController& operator=(const MidPointController&) {
+            USER_APP_VERIFY(false); return *this;
+        }
 
-            // Description: Copy constructor
-            // Remarks    : not implemented
-            MidPointController( const MidPointController& oMidPointController )
-            {
-                USER_APP_VERIFY( false );
-            }
+        void set_function_keys();
+        std::string getNextMidpointId() const;
+        void ShowSelectMidpointDlg();
+        void RunMeas();
 
-            // Description: Assignment operator
-            // Remarks    : not implemented
-            MidPointController& operator=( const MidPointController& oMidPointController )
-            {
-                USER_APP_VERIFY( false );
-                return *this;
-            }
-
-			Common* m_pCommon;
-			Model* m_pModel;
-			
-			PointBuffModel* m_pPoint;
-			/*short m_iActDes;
-			short m_iAskId;*/
+        Common* m_pCommon;
+        Model* m_pModel;
+        MidpointDialog* m_pDlg;
+        MidpointModel* m_pDataModel;
     };
+}
 
-
-
-};
-
-#endif // DCP_BASEGUI_HPP
+#endif // DCP_CALCMIDPOINT_CONTROLLER_HPP
 
 
 

@@ -41,7 +41,7 @@ const wchar_t DCP06_TOK_DCP_EN_ApplicationName[] = L"DCP_TEXT";
 const wchar_t DCP06_TOK_DCP_EN_FontName[] = L"Tahoma";
 const char DCP06_TOK_DCP_EN_Language[] = "ENGLISH"; 
 const wchar_t DCP06_TOK_DCP_EN_NativeName[] = {  69, 110, 103, 108, 105, 115, 104, 000 };
-const short DCP06_TOK_DCP_EN_NO = 631;
+const short DCP06_TOK_DCP_EN_NO = 634;
 const short DCP06_TOK_DCP_EN_BASE =  0;
 
 const wchar_t DCP06_TOK_DCP_EN_Module[] = {
@@ -7201,7 +7201,15 @@ const wchar_t DCP06_TOK_DCP_EN_Module[] = {
       68, 000,                               // 628 = L_DCP_ENTER_CIRCLE_ID_TOK
       83,  69,  76,  69,  67,  84,  32, 
       67,  73,  82,  67,  76,  69, 000,      // 629 = T_DCP_SELECT_CIRCLE_TOK
-      76,  73,  83,  84, 000 } ;             // 630 = K_DCP_LIST_TOK
+      76,  73,  83,  84, 000,                // 630 = K_DCP_LIST_TOK
+      69, 110, 116, 101, 114,  32,  77,
+      105, 100, 112, 111, 105, 110, 116,  32,  73,
+      68, 000,                               // 631 = L_DCP_ENTER_MIDPOINT_ID_TOK
+      83,  69,  76,  69,  67,  84,  32,  77,
+      73,  68,  80,  79,  73,  78,  84, 000,  // 632 = T_DCP_SELECT_MIDPOINT_TOK
+      77, 105, 100, 112, 111, 105, 110, 116,
+      32,  73, 100, 000,                     // 633 = P_DCP_MIDPOINT_ID_TOK
+      67, 111, 111, 114, 100, 115, 000 } ;   // 634 = P_DCP_COORDS_TOK
 
 #endif // #ifndef DCP06_TOK_IEN
 
