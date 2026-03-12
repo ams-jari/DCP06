@@ -637,8 +637,8 @@ void MenuDialog::OnInitDialog(void)
 	AddItem(L"", L"", StringC(AT_DCP06,L_DCP_APPLICATION_TOK),L"",nullptr,		16);*/
 
 	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Settings_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Settings_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_INITIALIZATION_TOK),L"", nullptr, 11);
-	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Orientation_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Orientation_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_ORIENTATION_TOK),L"",nullptr,12);
 	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"File_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"File_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_FILE_TOK),L"",nullptr,13);
+	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Orientation_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Orientation_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_ORIENTATION_TOK),L"",nullptr,12);
 	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Measurement_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Measurement_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_MEASUREMENT_TOK),L"",nullptr,14);
 	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Calculation_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Calculation_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_CALCULATION_TOK),L"",nullptr,15);
 	AddItem(GUI::GetAppResourceUrl(AT_DCP06,"Application_$SCALEFACTOR$.png"), GUI::GetAppResourceUrl(AT_DCP06,"Application_$SCALEFACTOR$.png"), StringC(AT_DCP06,L_DCP_APPLICATION_TOK),L"",nullptr,16);

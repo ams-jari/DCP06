@@ -231,6 +231,13 @@ void DCP::MidPointController::OnF1Pressed()
     if (!m_pDlg || !m_pDataModel) return;
 
     m_pDataModel->clear_midpoint();
+    // Clear actual values (like Circle does) - new midpoint must start with no existing coordinates
+    memset(&m_pModel->mid_points[0], 0, sizeof(S_POINT_BUFF) * MAX_MID_POINTS);
+    if (GetDataModel())
+    {
+        memset(&GetDataModel()->m_pPointBuff[0], 0, sizeof(S_POINT_BUFF));
+        GetDataModel()->m_pPointBuff[0].sta = POINT_NOT_DEFINED;
+    }
     std::string nextId = getNextMidpointId();
     snprintf(m_pDataModel->midpoint_id, POINT_ID_BUFF_LEN, "%-s", nextId.c_str());
 

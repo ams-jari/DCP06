@@ -278,7 +278,7 @@ const RSC::TxtC::TOKEN
       L_DCP_POM_TEXT_TOK                   = 232,  // "BF" (abbrev for Best Fit)                                                       
       M_DCP_CANNOT_ADD_POINT_TOK           = 233,  // "Can't add point!"                                          
       M_DCP_AIM_TO_POINT_TOK               = 234,  // "Please, aim to the point."                                 
-      M_DCP_SAME_MEASURED_VALUES_TOK       = 235,  // "The measured values are iden.."                            
+      M_DCP_SAME_MEASURED_VALUES_TOK       = 235,  // "Identical values for point %s. Continue?"                            
       M_DCP_IN_MIN_2_POINTS_TOK            = 236,  // "At least 2 points must be de.."                            
       V_DCP_X_LINE_TOK                     = 237,  // "x"                                                         
       V_DCP_Y_LINE_TOK                     = 238,  // "y"                                                         

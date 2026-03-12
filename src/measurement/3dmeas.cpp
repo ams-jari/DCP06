@@ -1002,15 +1002,17 @@ void DCP::Meas3DController::OnF2Pressed()
 			if (jdb && jdb->isJobLoaded())
 			{
 				int n = jdb->getJobPointsCount();
-				// Suggest next ID by incrementing current point (e.g. test_point_1 -> test_point_2)
-				if (m_pDataModel->bPid[0] != '\0')
+				// Suggest next ID by incrementing LAST point in list (avoid duplicate if current != last)
+				char lastPid[POINT_ID_BUFF_LEN]; lastPid[0] = '\0';
+				if (n > 0 && jdb->getPointByIndex(n, true, lastPid, 0, 0, 0, 0, 0, 0, 0) && lastPid[0] != '\0')
 				{
-					strncpy(buffer, m_pDataModel->bPid, POINT_ID_BUFF_LEN - 1);
+					if (m_pCommon) m_pCommon->strbtrim(lastPid);
+					char* p = strchr(lastPid, '(');
+					if (p) { *p = '\0'; if (m_pCommon) m_pCommon->strbtrim(lastPid); }
+					strncpy(buffer, lastPid, POINT_ID_BUFF_LEN - 1);
 					buffer[POINT_ID_BUFF_LEN - 1] = '\0';
 					if (m_pCommon) m_pCommon->strbtrim(buffer);
-					char* p = strchr(buffer, '(');
-					if (p) { *p = '\0'; if (m_pCommon) m_pCommon->strbtrim(buffer); }
-					// Increment trailing number (works with long IDs like test_point_1)
+					// Increment trailing number (works with long IDs like test_point_8 -> test_point_9)
 					size_t len = strlen(buffer);
 					int i = (int)len - 1;
 					while (i >= 0 && buffer[i] >= '0' && buffer[i] <= '9') i--;
