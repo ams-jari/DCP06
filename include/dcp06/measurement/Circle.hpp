@@ -107,8 +107,10 @@ namespace DCP
 			short PLANE_KEYS;
 			void set_function_keys();
 			short m_iDisplay;
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 			std::string getNextCircleId() const;
 			void ShowSelectCircleDlg();
+#endif
 
     };
 
@@ -139,7 +141,9 @@ namespace DCP
 			// Description: update the Hello World model with the new values
             virtual void UpdateData();
 			virtual void RefreshControls();
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 			bool LoadCircleFromDb(const std::string& circleId);
+#endif
 			
   		    // Description: only accept Hello World Model objects
             virtual bool SetModel( GUI::ModelC* pModel );

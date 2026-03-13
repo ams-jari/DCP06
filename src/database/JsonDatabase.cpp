@@ -278,6 +278,7 @@ Json::Value JsonDatabase::jobDataToJson(const JobData& data) {
             pointsJson[it->first] = pointDataToJson(*it->second);
     }
     j["points"] = pointsJson;
+#if defined(DCP06_STORE_CIRCLE_OBJECTS)
     Json::Value circlesJson;
     for (std::map<std::string, DCP_SHARED_PTR<CircleData> >::const_iterator it = data.circlesData.begin();
          it != data.circlesData.end(); ++it) {
@@ -285,6 +286,8 @@ Json::Value JsonDatabase::jobDataToJson(const JobData& data) {
             circlesJson[it->first] = circleDataToJson(*it->second);
     }
     j["circles_data"] = circlesJson;
+#endif
+#if defined(DCP06_STORE_MIDPOINT_OBJECTS)
     Json::Value midpointsJson;
     for (std::map<std::string, DCP_SHARED_PTR<MidpointData> >::const_iterator it = data.midpointsData.begin();
          it != data.midpointsData.end(); ++it) {
@@ -292,6 +295,7 @@ Json::Value JsonDatabase::jobDataToJson(const JobData& data) {
             midpointsJson[it->first] = midpointDataToJson(*it->second);
     }
     j["midpoints_data"] = midpointsJson;
+#endif
     Json::Value bestFitJson;
     for (std::map<std::string, DCP_SHARED_PTR<BestFitAlignmentData> >::const_iterator it = data.bestFitAlignments.begin();
          it != data.bestFitAlignments.end(); ++it) {
@@ -664,6 +668,7 @@ bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
                 data.points[key] = pt;
         }
     }
+#if defined(DCP06_STORE_CIRCLE_OBJECTS)
     data.circlesData.clear();
     if (j.isMember("circles_data") && j["circles_data"].isObject()) {
         const Json::Value& circs = j["circles_data"];
@@ -675,6 +680,8 @@ bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
                 data.circlesData[key] = cd;
         }
     }
+#endif
+#if defined(DCP06_STORE_MIDPOINT_OBJECTS)
     data.midpointsData.clear();
     if (j.isMember("midpoints_data") && j["midpoints_data"].isObject()) {
         const Json::Value& mps = j["midpoints_data"];
@@ -686,6 +693,7 @@ bool JsonDatabase::jsonToJobData(const Json::Value& j, JobData& data) {
                 data.midpointsData[key] = md;
         }
     }
+#endif
     data.bestFitAlignments.clear();
     if (j.isMember("bestfit_alignments") && j["bestfit_alignments"].isObject()) {
         const Json::Value& bf = j["bestfit_alignments"];

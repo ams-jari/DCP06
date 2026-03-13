@@ -36,15 +36,19 @@
 #include <dcp06/measurement/HiddenPoint.hpp>
 #include <dcp06/measurement/Circle.hpp>
 #include <dcp06/core/Defs.hpp>
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 #include <dcp06/core/SelectCircle.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
+#endif
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/calculation/CalculationPlane.hpp>
 #include <dcp06/calculation/CalculationCircleCore.hpp>
 #include <dcp06/calculation/ResCircle.hpp>
-#include <dcp06/database/JsonDatabase.hpp>
-#include <dcp06/database/DatabaseTypes.hpp>
 
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 #include <algorithm>
+#endif
 #include <math.h>
 #include <GUI_Types.hpp>
 #include <GUI_DeskTop.hpp>
@@ -112,12 +116,14 @@ void DCP::CircleDialog::OnInitDialog(void)
 	// Add fields to dialog
 	if(m_iDisplay != SHAFT_DLG)
 	{
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 		m_pCircleId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 		m_pCircleId->SetId(eCircleId);
 		m_pCircleId->SetText(StringC(AT_DCP06, L_DCP_ENTER_CIRCLE_ID_TOK));
 		m_pCircleId->GetStringInputCtrl()->SetCharsCountMax(DCP_POINT_ID_LENGTH);
 		m_pCircleId->SetEmptyAllowed(true);
 		AddCtrl(m_pCircleId);
+#endif
 
 		m_pDefinePlaneInfo = new GUI::TextCtrlC();
 		m_pDefinePlaneInfo->SetId(eDefinePlaneInfo);
@@ -181,7 +187,9 @@ void DCP::CircleDialog::OnInitDialog(void)
 	if(m_iDisplay != SHAFT_DLG)
 	{
 		m_pToolRadiusObserver.Attach(m_pToolRadius->GetSubject());
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 		m_pCircleIdEditObserver.Attach(m_pCircleId->GetSubject());
+#endif
 	}
 	DCP06_TRACE_EXIT;
 }
@@ -262,7 +270,6 @@ void DCP::CircleDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 		}
 		else if(ulParam2 == eCircleId && m_pCircleId && m_pCircleId->GetStringInputCtrl())
 		{
-			// User edited Circle Id - copy to model and upsert to DB (so it appears in LIST)
 			StringC s = m_pCircleId->GetStringInputCtrl()->GetString();
 			if(m_pDataModel->pCommon)
 			{
@@ -270,6 +277,8 @@ void DCP::CircleDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 				m_pDataModel->pCommon->convert_to_ascii(s, buf, (short)sizeof(buf));
 				m_pDataModel->pCommon->strbtrim(buf);
 				snprintf(m_pDataModel->circle_points[0].id, CIRCLE_ID_BUFF_LEN, "%-s", buf[0] ? buf : "Ci1");
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
+				// User edited Circle Id - upsert to DB (so it appears in LIST)
 				std::string circleId(buf[0] ? buf : "Ci1");
 				if (m_pModel && !circleId.empty() && m_iDisplay != SHAFT_DLG)
 				{
@@ -289,6 +298,7 @@ void DCP::CircleDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 						}
 					}
 				}
+#endif
 			}
 		}
 	}
@@ -298,6 +308,7 @@ void DCP::CircleDialog::OnValueChanged( int unNotifyCode,  int ulParam2)
 // ================================================================================================
 // Description: Load circle from database into dialog/model
 // ================================================================================================
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 bool DCP::CircleDialog::LoadCircleFromDb(const std::string& circleId)
 {
 	if(!m_pModel || circleId.empty()) return false;
@@ -347,6 +358,7 @@ bool DCP::CircleDialog::LoadCircleFromDb(const std::string& circleId)
 	RefreshControls();
 	return true;
 }
+#endif // DCP06_STORE_CIRCLE_OBJECTS
 
 void DCP::CircleDialog::RefreshControls()
 {
@@ -521,6 +533,7 @@ void DCP::CircleController::set_function_keys()
 
 	if(PLANE_KEYS == 0)
 	{
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 		// Point-style: ADD, LIST, DEL, PLANE, MEAS, CONT
 		FKDef vDef;
 		vDef.poOwner = this;
@@ -536,7 +549,21 @@ void DCP::CircleController::set_function_keys()
 		SetFunctionKey( FK5, vDef );
 		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 		SetFunctionKey( FK6, vDef );
-		
+#else
+		// DCP05: no ID/database - PLANE, CIRCL, CONT only
+		FKDef vDef;
+		vDef.poOwner = this;
+		vDef.strLable = L" ";
+		SetFunctionKey( FK1, vDef );
+		SetFunctionKey( FK2, vDef );
+		SetFunctionKey( FK3, vDef );
+		vDef.strLable = StringC(AT_DCP06,K_DCP_PLANE_TOK);
+		SetFunctionKey( FK4, vDef );
+		vDef.strLable = StringC(AT_DCP06,K_DCP_CIRCLE_POINTS_TOK);  // CIRCL
+		SetFunctionKey( FK5, vDef );
+		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
+		SetFunctionKey( FK6, vDef );
+#endif
 	}
 	else
 	{
@@ -601,6 +628,7 @@ bool DCP::CircleController::SetModel( GUI::ModelC* pModel )
 // ================================================================================================
 // Description: getNextCircleId - increment based on current: Ci1->Ci2, jari_2->jari_3
 // ================================================================================================
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 std::string DCP::CircleController::getNextCircleId() const
 {
 	char cidBuf[CIRCLE_ID_BUFF_LEN];
@@ -671,6 +699,7 @@ void DCP::CircleController::ShowSelectCircleDlg()
 	(void)GetController(SELECT_CIRCLE_CONTROLLER)->SetModel(pModel);
 	SetActiveController(SELECT_CIRCLE_CONTROLLER, true);
 }
+#endif // DCP06_STORE_CIRCLE_OBJECTS
 
 // ================================================================================================
 // Description: OnF1Pressed ADD (or XY when in plane menu)
@@ -684,11 +713,11 @@ void DCP::CircleController::OnF1Pressed()
     }
 	if(PLANE_KEYS == 0)
 	{
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 		// ADD: create new circle (clear current), assign next ID, save to DB (Point-style)
 		m_pDataModel->clear_circle();
 		std::string nextId = getNextCircleId();
 		snprintf(m_pDataModel->circle_points[0].id, CIRCLE_ID_BUFF_LEN, "%-s", nextId.c_str());
-		// Save new circle to DB immediately so it appears in LIST
 		if (m_pModel && m_iDisplay != SHAFT_DLG)
 		{
 			DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
@@ -707,6 +736,9 @@ void DCP::CircleController::OnF1Pressed()
 				}
 			}
 		}
+#else
+		// DCP05: F1 empty - no-op
+#endif
 		m_pDlg->RefreshControls();
 	}
 	else
@@ -737,8 +769,12 @@ void DCP::CircleController::OnF2Pressed()
     }
 	if(PLANE_KEYS == 0)
 	{
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 		// LIST: open Select Circle dialog (like Point LIST)
 		ShowSelectCircleDlg();
+#else
+		// DCP05: F2 is empty, no-op
+#endif
 	}
 	else
 	{
@@ -768,8 +804,12 @@ void DCP::CircleController::OnF3Pressed()
     }
 	if(PLANE_KEYS == 0)
 	{
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 		// DEL: delete circle
 		OnSHF2Pressed();
+#else
+		// DCP05: F3 is empty, no-op
+#endif
 	}
 	else
 	{
@@ -936,6 +976,7 @@ void DCP::CircleController::OnF6Pressed()
 			sprintf(m_pDataModel->circle_points[0].id, "%-s", cid);
 	}
 
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 	// Store circle to database when calculated and job is open (DCP9-style auto-save)
 	if (m_pDataModel->circle_points[0].calc && m_iDisplay != SHAFT_DLG && m_pModel)
 	{
@@ -969,6 +1010,7 @@ void DCP::CircleController::OnF6Pressed()
 			jdb->saveJob(m_pModel->m_currentJobId);
 		}
 	}
+#endif
 
     // Remove the following statement if you don't want an exit
     // to the main menu
@@ -988,9 +1030,9 @@ void DCP::CircleController::OnF6Pressed()
 // ================================================================================================
 void DCP::CircleController::OnSHF2Pressed()
 {
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 	if(m_iDisplay != SHAFT_DLG && m_pModel)
 	{
-		// Get current circle ID and delete from DB
 		char cidBuf[CIRCLE_ID_BUFF_LEN];
 		cidBuf[0] = '\0';
 		if(m_pDlg->GetCircleIdString(cidBuf, sizeof(cidBuf)))
@@ -1023,6 +1065,9 @@ void DCP::CircleController::OnSHF2Pressed()
 	}
 	else
 		m_pDataModel->delete_circle();
+#else
+	m_pDataModel->delete_circle();
+#endif
 
 	if(m_iDisplay == SHAFT_DLG)
 		m_pDataModel->PLANE_TYPE = CIRCLE_POINTS_PLANE;
@@ -1148,6 +1193,7 @@ void DCP::CircleController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 		OnF6Pressed	();
 	}
 
+#ifdef DCP06_STORE_CIRCLE_OBJECTS
 	// SELECT CIRCLE (LIST)
 	if (lCtrlID == SELECT_CIRCLE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
@@ -1164,6 +1210,7 @@ void DCP::CircleController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 			}
 		}
 	}
+#endif
 
 	// CIRCLE PLANE MEAS
 	if(lCtrlID == CIRCLE_PLANE_MEAS_CONTROLLER && lExitCode == EC_KEY_CONT)

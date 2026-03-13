@@ -14,10 +14,12 @@
 #include <dcp06/core/Measure.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/measurement/MidPointController.hpp>
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
 #include <dcp06/measurement/Midpoint.hpp>
 #include <dcp06/core/SelectMidpoint.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
 #include <dcp06/database/DatabaseTypes.hpp>
+#endif
 
 #include <GUI_Types.hpp>
 #include <GUI_DeskTop.hpp>
@@ -36,18 +38,21 @@ using namespace DCP;
 DCP::MidPointController::MidPointController(DCP::Model *pModel)
     : m_pModel(pModel)
     , m_pCommon(0)
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     , m_pDlg(nullptr)
     , m_pDataModel(0)
+#endif
 {
     DCP06_LOG_DEBUG("-- MidPointController::MidPointController: constructing");
     SetTitle(StringC(AT_DCP06, T_DCP_MID_POINT_TOK));
 
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     m_pDataModel = new MidpointModel(pModel);
     m_pDlg = new MidpointDialog(pModel, m_pDataModel);
     (void)AddDialog(MIDPOINT_DLG, m_pDlg, true);
     DCP06_LOG_DEBUG("-- MidPointController::MidPointController: AddDialog(MIDPOINT_DLG) done");
-
     set_function_keys();
+#endif
 }
 
 // ================================================================================================
@@ -60,16 +65,19 @@ DCP::MidPointController::~MidPointController()
         delete m_pCommon;
         m_pCommon = 0;
     }
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     if (m_pDataModel)
     {
         delete m_pDataModel;
         m_pDataModel = 0;
     }
+#endif
 }
 
 // ================================================================================================
 // set_function_keys: ADD, LIST, DEL, (empty), MEAS, CONT
 // ================================================================================================
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
 void DCP::MidPointController::set_function_keys()
 {
     ResetFunctionKeys();
@@ -95,10 +103,12 @@ void DCP::MidPointController::set_function_keys()
 
     GUI::DesktopC::Instance()->UpdateFunctionKeys();
 }
+#endif // DCP06_STORE_MIDPOINT_OBJECTS
 
 // ================================================================================================
 // getNextMidpointId: Mp1->Mp2, midpoint_2->midpoint_3
 // ================================================================================================
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
 std::string DCP::MidPointController::getNextMidpointId() const
 {
     char buf[POINT_ID_BUFF_LEN];
@@ -166,13 +176,14 @@ void DCP::MidPointController::ShowSelectMidpointDlg()
     (void)GetController(SELECT_MIDPOINT_CONTROLLER)->SetModel(pModel);
     SetActiveController(SELECT_MIDPOINT_CONTROLLER, true);
 }
+#endif // DCP06_STORE_MIDPOINT_OBJECTS
 
 // ================================================================================================
 // RunMeas: open measure controller (original Run logic)
 // ================================================================================================
 void DCP::MidPointController::RunMeas()
 {
-    if (!m_pDataModel->pCommon->check_edm_mode())
+    if (!m_pCommon || !m_pCommon->check_edm_mode())
         return;
 
     DCP::MeasureModel* pModel = new MeasureModel;
@@ -192,19 +203,26 @@ void DCP::MidPointController::RunMeas()
 }
 
 // ================================================================================================
-// Run: delegate to base - let ControllerC show the default dialog (like CircleController does)
+// Run: when OFF go straight to measure; when ON delegate to base (show dialog)
 // ================================================================================================
 void DCP::MidPointController::Run(void)
 {
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     ControllerC::Run();
+#else
+    RunMeas();
+#endif
 }
 
 // ================================================================================================
-// OnControllerActivated
+// OnControllerActivated: when OFF, go straight to measure (legacy)
 // ================================================================================================
 void DCP::MidPointController::OnControllerActivated(void)
 {
     DCP06_LOG_DEBUG("-- MidPointController::OnControllerActivated: called");
+#ifndef DCP06_STORE_MIDPOINT_OBJECTS
+    RunMeas();
+#endif
 }
 
 // ================================================================================================
@@ -216,11 +234,14 @@ bool DCP::MidPointController::SetModel(GUI::ModelC* pModel)
     m_pCommon = new Common(m_pModel);
     m_pPointBuffModel = (PointBuffModel*)pModel;
     (void)ControllerC::SetModel(pModel);
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     bool ret = m_pDlg ? m_pDlg->SetModel(pModel) : true;
-    // Force framework to show this controller's dialog (Circle works without this; Midpoint needs it)
     SetActiveDialog(MIDPOINT_DLG, true);
     DCP06_LOG_DEBUG("-- MidPointController::SetModel: done");
     return ret;
+#else
+    return true;
+#endif
 }
 
 // ================================================================================================
@@ -228,6 +249,7 @@ bool DCP::MidPointController::SetModel(GUI::ModelC* pModel)
 // ================================================================================================
 void DCP::MidPointController::OnF1Pressed()
 {
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     if (!m_pDlg || !m_pDataModel) return;
 
     m_pDataModel->clear_midpoint();
@@ -260,6 +282,7 @@ void DCP::MidPointController::OnF1Pressed()
         }
     }
     m_pDlg->RefreshControls();
+#endif
 }
 
 // ================================================================================================
@@ -267,8 +290,10 @@ void DCP::MidPointController::OnF1Pressed()
 // ================================================================================================
 void DCP::MidPointController::OnF2Pressed()
 {
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     if (!m_pDlg) return;
     ShowSelectMidpointDlg();
+#endif
 }
 
 // ================================================================================================
@@ -276,7 +301,9 @@ void DCP::MidPointController::OnF2Pressed()
 // ================================================================================================
 void DCP::MidPointController::OnF3Pressed()
 {
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     OnSHF2Pressed();
+#endif
 }
 
 // ================================================================================================
@@ -291,7 +318,9 @@ void DCP::MidPointController::OnF4Pressed()
 // ================================================================================================
 void DCP::MidPointController::OnF5Pressed()
 {
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     if (!m_pDlg || !m_pDataModel) return;
+#endif
     RunMeas();
 }
 
@@ -300,6 +329,7 @@ void DCP::MidPointController::OnF5Pressed()
 // ================================================================================================
 void DCP::MidPointController::OnF6Pressed()
 {
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     if (!m_pDlg || !m_pDataModel) return;
 
     m_pDlg->UpdateData();
@@ -336,6 +366,7 @@ void DCP::MidPointController::OnF6Pressed()
         (void)Close(EC_KEY_CONT);
     else
         (void)Close(EC_KEY_ESC);
+#endif
 }
 
 // ================================================================================================
@@ -343,6 +374,7 @@ void DCP::MidPointController::OnF6Pressed()
 // ================================================================================================
 void DCP::MidPointController::OnSHF2Pressed()
 {
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     if (!m_pDlg || !m_pDataModel) return;
 
     char buf[POINT_ID_BUFF_LEN];
@@ -379,6 +411,7 @@ void DCP::MidPointController::OnSHF2Pressed()
         m_pDataModel->delete_midpoint();
 
     m_pDlg->RefreshControls();
+#endif
 }
 
 // ================================================================================================
@@ -408,6 +441,7 @@ void DCP::MidPointController::OnActiveControllerClosed(int lCtrlID, int lExitCod
             GetDataModel()->m_pPointBuff[0].z = z_mid;
             GetDataModel()->m_pPointBuff[0].sta = POINT_MEASURED;
 
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
             m_pDlg->UpdateData();
             char buf[POINT_ID_BUFF_LEN];
             buf[0] = '\0';
@@ -435,6 +469,7 @@ void DCP::MidPointController::OnActiveControllerClosed(int lCtrlID, int lExitCod
                     jdb->saveJob(m_pModel->m_currentJobId);
                 }
             }
+#endif
             Close(EC_KEY_CONT);
         }
         else
@@ -444,6 +479,7 @@ void DCP::MidPointController::OnActiveControllerClosed(int lCtrlID, int lExitCod
         }
     }
 
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
     if (lCtrlID == SELECT_MIDPOINT_CONTROLLER && lExitCode == EC_KEY_CONT)
     {
         DCP::SelectMidpointModel* pModel = (DCP::SelectMidpointModel*)GetController(SELECT_MIDPOINT_CONTROLLER)->GetModel();
@@ -459,6 +495,7 @@ void DCP::MidPointController::OnActiveControllerClosed(int lCtrlID, int lExitCod
         if (m_pDlg)
             m_pDlg->RefreshControls();
     }
+#endif
 
     DestroyController(lCtrlID);
 }

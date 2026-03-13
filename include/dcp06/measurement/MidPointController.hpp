@@ -34,7 +34,9 @@
 #include <dcp06/core/Types.hpp>
 #include <dcp06/core/Common.hpp>
 #include <dcp06/core/PointBuffModel.hpp>
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
 #include <dcp06/measurement/Midpoint.hpp>
+#endif
 #include <GUI_AppBase.hpp>
 #include <TBL_SurveyModel.hpp>
 #include <TBL_Measurement.hpp>
@@ -70,15 +72,19 @@ namespace DCP
             USER_APP_VERIFY(false); return *this;
         }
 
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
         void set_function_keys();
         std::string getNextMidpointId() const;
         void ShowSelectMidpointDlg();
+#endif
         void RunMeas();
 
         Common* m_pCommon;
         Model* m_pModel;
+#ifdef DCP06_STORE_MIDPOINT_OBJECTS
         MidpointDialog* m_pDlg;
         MidpointModel* m_pDataModel;
+#endif
     };
 }
 

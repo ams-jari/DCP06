@@ -317,6 +317,12 @@ namespace DCP
 	#define DCP_CHANGE_STATION_MENU 13
 	#define DCP_USER_DEFINED_MENU	14
 
+	// Object storage compiler switches (default OFF - define in project to enable)
+	// DCP06_STORE_CIRCLE_OBJECTS: Circle ADD, DEL, LIST, JsonDatabase circlesData, SelectCircle
+	// DCP06_STORE_MIDPOINT_OBJECTS: Midpoint ADD, DEL, LIST, JsonDatabase midpointsData, SelectMidpoint, MidpointDialog
+	// #define DCP06_STORE_CIRCLE_OBJECTS
+	// #define DCP06_STORE_MIDPOINT_OBJECTS
+
 	// FILE
 	// DCP_SKIP_FILE_TYPE_MENU: when defined (in project PreprocessorDefinitions), "File" goes
 	// directly to Job File (OPEN/NEW/COPY/SWAP/CLOSE) instead of showing the file-type selection.
