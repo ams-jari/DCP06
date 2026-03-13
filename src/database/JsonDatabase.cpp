@@ -212,6 +212,7 @@ Json::Value JsonDatabase::pointDataToJson(const PointData& data) {
     Json::Value j;
     j["id"] = data.id;
     j["type"] = data.type.empty() ? "point" : data.type;
+    if (!data.source.empty()) j["source"] = data.source;
     j["meas_time"] = data.measTime;
     j["measurer"] = data.measurer;
     j["instrument_id"] = data.instrumentId;
@@ -235,6 +236,7 @@ Json::Value JsonDatabase::pointDataToJson(const PointData& data) {
 bool JsonDatabase::jsonToPointData(const Json::Value& j, PointData& data) {
     data.id = getJsonString(j, "id", "");
     data.type = getJsonString(j, "type", "point");
+    data.source = getJsonString(j, "source", "");
     data.measTime = getJsonString(j, "meas_time", "");
     data.measurer = getJsonString(j, "measurer", "");
     data.instrumentId = getJsonString(j, "instrument_id", "");
@@ -1077,6 +1079,71 @@ std::vector<DCP_SHARED_PTR<PointData> > JsonDatabase::getAllPointsInJob() const 
     return out;
 }
 
+namespace {
+std::vector<DCP_SHARED_PTR<PointData> > getPointsForList(
+    const std::map<std::string, DCP_SHARED_PTR<PointData> >& points, const std::string& tag) {
+    std::vector<std::pair<int, DCP_SHARED_PTR<PointData> > > sorted;
+    for (std::map<std::string, DCP_SHARED_PTR<PointData> >::const_iterator it = points.begin();
+         it != points.end(); ++it) {
+        if (!it->second.get()) continue;
+        std::string src = it->second->source;
+        if (src.empty()) src = PointSource::DCP06_3D_MEAS;  // backward compat
+        if (src == tag)
+            sorted.push_back(std::make_pair(pointIdSortKey(it->first), it->second));
+    }
+    std::sort(sorted.begin(), sorted.end(), SortByPointId());
+    std::vector<DCP_SHARED_PTR<PointData> > out;
+    for (size_t i = 0; i < sorted.size(); ++i) out.push_back(sorted[i].second);
+    return out;
+}
+
+std::vector<DCP_SHARED_PTR<PointData> > getPointsForPick(
+    const std::map<std::string, DCP_SHARED_PTR<PointData> >& points) {
+    std::vector<std::pair<int, DCP_SHARED_PTR<PointData> > > sorted;
+    for (std::map<std::string, DCP_SHARED_PTR<PointData> >::const_iterator it = points.begin();
+         it != points.end(); ++it) {
+        if (!it->second.get()) continue;
+        if (pointHasActualValues(*it->second))
+            sorted.push_back(std::make_pair(pointIdSortKey(it->first), it->second));
+    }
+    std::sort(sorted.begin(), sorted.end(), SortByPointId());
+    std::vector<DCP_SHARED_PTR<PointData> > out;
+    for (size_t i = 0; i < sorted.size(); ++i) out.push_back(sorted[i].second);
+    return out;
+}
+
+void fillSelectPointsFromList(const std::vector<DCP_SHARED_PTR<PointData> >& pts,
+    S_SELECT_POINTS* pList, short iMaxPoints, short iDef, short& iCount) {
+    for (size_t i = 0; i < pts.size() && iCount < iMaxPoints; i++) {
+        const DCP_SHARED_PTR<PointData>& pt = pts[i];
+        if (!pt) continue;
+        bool mea = pointHasActualValues(*pt);
+        bool des = pointHasDesignValues(*pt);
+        pList[iCount].iId = static_cast<short>(i + 1);
+        std::string id = pt->id.size() <= (size_t)DCP_POINT_ID_LENGTH ? pt->id : pt->id.substr(0, DCP_POINT_ID_LENGTH);
+        snprintf(pList[iCount].point_id, sizeof(pList[iCount].point_id), DCP_POINT_ID_FMT, id.c_str());
+        pList[iCount].bActualDefined = mea;
+        pList[iCount].bDesignDefined = des;
+        pList[iCount].bPointSelected = false;
+        if (iDef == BOTH) {
+            pList[iCount].bDesignSelected = des;
+            pList[iCount].bActualSelected = mea;
+        } else if (iDef == ACTUAL) {
+            pList[iCount].bDesignSelected = false;
+            pList[iCount].bActualSelected = mea;
+            if (!pList[iCount].bActualSelected)
+                pList[iCount].bDesignSelected = des;
+        } else {
+            pList[iCount].bDesignSelected = des;
+            pList[iCount].bActualSelected = false;
+            if (!pList[iCount].bDesignSelected)
+                pList[iCount].bActualSelected = mea;
+        }
+        iCount++;
+    }
+}
+}  // namespace
+
 short JsonDatabase::getPointListAsSelectPoints(S_SELECT_POINTS* pList, short iMaxPoints, short iDef) const {
     std::vector<DCP_SHARED_PTR<PointData> > pts = getAllPointsInJob();
     short iCount = 0;
@@ -1110,6 +1177,22 @@ short JsonDatabase::getPointListAsSelectPoints(S_SELECT_POINTS* pList, short iMa
     return iCount;
 }
 
+short JsonDatabase::getPointListAsSelectPointsForList(S_SELECT_POINTS* pList, short iMaxPoints, short iDef, const std::string& tag) const {
+    if (!m_currentJob.get()) return 0;
+    std::vector<DCP_SHARED_PTR<PointData> > pts = getPointsForList(m_currentJob->points, tag);
+    short iCount = 0;
+    fillSelectPointsFromList(pts, pList, iMaxPoints, iDef, iCount);
+    return iCount;
+}
+
+short JsonDatabase::getPointListAsSelectPointsForPick(S_SELECT_POINTS* pList, short iMaxPoints) const {
+    if (!m_currentJob.get()) return 0;
+    std::vector<DCP_SHARED_PTR<PointData> > pts = getPointsForPick(m_currentJob->points);
+    short iCount = 0;
+    fillSelectPointsFromList(pts, pList, iMaxPoints, BOTH, iCount);
+    return iCount;
+}
+
 short JsonDatabase::getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxPoints) const {
     std::vector<DCP_SHARED_PTR<PointData> > pts = getAllPointsInJob();
     short iCount = 0;
@@ -1125,6 +1208,43 @@ short JsonDatabase::getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxP
         iCount++;
     }
     return iCount;
+}
+
+short JsonDatabase::getPointListAsSelectPointForList(S_SELECT_POINT* pList, short iMaxPoints, const std::string& tag) const {
+    if (!m_currentJob.get()) return 0;
+    std::vector<DCP_SHARED_PTR<PointData> > pts = getPointsForList(m_currentJob->points, tag);
+    short iCount = 0;
+    for (size_t i = 0; i < pts.size() && iCount < iMaxPoints; i++) {
+        const DCP_SHARED_PTR<PointData>& pt = pts[i];
+        if (!pt) continue;
+        pList[iCount].no = static_cast<short>(i + 1);
+        std::string id = pt->id.size() <= (size_t)DCP_POINT_ID_LENGTH ? pt->id : pt->id.substr(0, DCP_POINT_ID_LENGTH);
+        snprintf(pList[iCount].point_id, sizeof(pList[iCount].point_id), DCP_POINT_ID_FMT, id.c_str());
+        bool mea = pointHasActualValues(*pt);
+        bool des = pointHasDesignValues(*pt);
+        sprintf(pList[iCount].point_status, "%s/%s", mea ? "A" : "-", des ? "D" : "-");
+        iCount++;
+    }
+    return iCount;
+}
+
+int JsonDatabase::getPointIndexInJob(const std::string& pointId) const {
+    std::vector<DCP_SHARED_PTR<PointData> > pts = getAllPointsInJob();
+    for (size_t i = 0; i < pts.size(); i++) {
+        if (pts[i] && pts[i]->id == pointId)
+            return static_cast<int>(i + 1);
+    }
+    return 0;
+}
+
+int JsonDatabase::getPointIndexForList(const std::string& tag, const std::string& pointId) const {
+    if (!m_currentJob.get()) return 0;
+    std::vector<DCP_SHARED_PTR<PointData> > pts = getPointsForList(m_currentJob->points, tag);
+    for (size_t i = 0; i < pts.size(); i++) {
+        if (pts[i] && pts[i]->id == pointId)
+            return static_cast<int>(i + 1);
+    }
+    return 0;
 }
 
 short JsonDatabase::getCircleListAsSelectCircle(S_SELECT_CIRCLE* pList, short iMaxCircles) const {
@@ -1169,6 +1289,48 @@ bool JsonDatabase::getPointByIndex(int index1Based, bool useActual, char* pid,
     if (pid) {
         snprintf(pid, POINT_ID_BUFF_LEN, DCP_POINT_ID_FMT, pt->id.c_str());
     }
+    if (xact) fmtDouble(pt->x_mea, xact); if (xdes) fmtDouble(pt->x_dsg, xdes);
+    if (yact) fmtDouble(pt->y_mea, yact); if (ydes) fmtDouble(pt->y_dsg, ydes);
+    if (zact) fmtDouble(pt->z_mea, zact); if (zdes) fmtDouble(pt->z_dsg, zdes);
+    if (note) {
+        std::string n = pt->note.size() <= 6 ? pt->note : pt->note.substr(0, 6);
+        sprintf(note, "%-6.6s", n.c_str());
+    }
+    return true;
+}
+
+bool JsonDatabase::getPointByIndexForList(const std::string& tag, int index1Based, bool useActual, char* pid,
+    char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const {
+    if (!m_currentJob.get()) return false;
+    std::vector<DCP_SHARED_PTR<PointData> > pts = getPointsForList(m_currentJob->points, tag);
+    if (index1Based < 1 || index1Based > static_cast<int>(pts.size())) return false;
+    const DCP_SHARED_PTR<PointData>& pt = pts[index1Based - 1];
+    if (!pt) return false;
+    if (pid) snprintf(pid, POINT_ID_BUFF_LEN, DCP_POINT_ID_FMT, pt->id.c_str());
+    if (useActual) {
+        if (xact) fmtDouble(pt->x_mea, xact); if (xdes) fmtDouble(pt->x_dsg, xdes);
+        if (yact) fmtDouble(pt->y_mea, yact); if (ydes) fmtDouble(pt->y_dsg, ydes);
+        if (zact) fmtDouble(pt->z_mea, zact); if (zdes) fmtDouble(pt->z_dsg, zdes);
+    } else {
+        if (xact) fmtDouble(pt->x_dsg, xact); if (xdes) fmtDouble(pt->x_mea, xdes);
+        if (yact) fmtDouble(pt->y_dsg, yact); if (ydes) fmtDouble(pt->y_mea, ydes);
+        if (zact) fmtDouble(pt->z_dsg, zact); if (zdes) fmtDouble(pt->z_mea, zdes);
+    }
+    if (note) {
+        std::string n = pt->note.size() <= 6 ? pt->note : pt->note.substr(0, 6);
+        sprintf(note, "%-6.6s", n.c_str());
+    }
+    return true;
+}
+
+bool JsonDatabase::getPointByIndexForPick(int index1Based, char* pid,
+    char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const {
+    if (!m_currentJob.get()) return false;
+    std::vector<DCP_SHARED_PTR<PointData> > pts = getPointsForPick(m_currentJob->points);
+    if (index1Based < 1 || index1Based > static_cast<int>(pts.size())) return false;
+    const DCP_SHARED_PTR<PointData>& pt = pts[index1Based - 1];
+    if (!pt) return false;
+    if (pid) snprintf(pid, POINT_ID_BUFF_LEN, DCP_POINT_ID_FMT, pt->id.c_str());
     if (xact) fmtDouble(pt->x_mea, xact); if (xdes) fmtDouble(pt->x_dsg, xdes);
     if (yact) fmtDouble(pt->y_mea, yact); if (ydes) fmtDouble(pt->y_dsg, ydes);
     if (zact) fmtDouble(pt->z_mea, zact); if (zdes) fmtDouble(pt->z_dsg, zdes);

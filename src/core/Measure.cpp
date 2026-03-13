@@ -239,8 +239,20 @@ void DCP::MeasureDialog::RefreshControls()
 		DCP06_LOG_DEBUG("-- %s: before SetString point no", __FUNCTION__);
 		m_pPointNo->GetStringInputCtrl()->SetString(sTemp);
 		
+		// Default Point ID on first display when blank (use default_pid if set, else suggested)
+		S_POINT_BUFF& pt = GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint - 1];
+		m_pCommon->strbtrim(pt.point_id);
+		if (pt.point_id[0] == '\0')
+		{
+			char suggested[POINT_ID_BUFF_LEN];
+			if (!m_pCommon->strblank(GetDataModel()->default_pid))
+				snprintf(suggested, sizeof(suggested), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iCurrentPoint);
+			else
+				m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), "P", GetDataModel()->m_iCurrentPoint);
+			snprintf(pt.point_id, sizeof(pt.point_id), DCP_POINT_ID_FMT, suggested);
+		}
 		DCP06_LOG_DEBUG("-- %s: before sprintf point_id", __FUNCTION__);
-		snprintf(point_id, sizeof(point_id), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id);
+		snprintf(point_id, sizeof(point_id), DCP_POINT_ID_FMT, pt.point_id);
 		m_pCommon->strbtrim(point_id);
 
 		sTemp = point_id ; //GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id;
@@ -412,6 +424,11 @@ void DCP::MeasureDialog::add_point()
 			{
 				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount+1);
 			}
+			else
+			{
+				// Phase D: Fallback when last point and default_pid both blank
+				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf), "P", GetDataModel()->m_iPointsCount + 1);
+			}
 		}
 
 		GetDataModel()->m_iPointsCount++;
@@ -495,7 +512,7 @@ void DCP::MeasureController::show_function_keys()
 		
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK);
@@ -515,26 +532,22 @@ void DCP::MeasureController::show_function_keys()
 		FKDef vDef;
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
-		if(isATR)
-		{
-			vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
-			SetFunctionKey( FK2, vDef );
-		}
-
-
 		vDef.strLable = StringC(AT_DCP06,K_DCP_NEXT_TOK);
-		SetFunctionKey( FK3, vDef );
+		SetFunctionKey( FK2, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_PREV_TOK);
-		SetFunctionKey( FK4, vDef );
+		SetFunctionKey( FK3, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_ADD_TOK);
-		SetFunctionKey( FK5, vDef );
+		SetFunctionKey( FK4, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
+		SetFunctionKey( FK5, vDef );
+
+		vDef.strLable = L" ";
 		SetFunctionKey( FK6, vDef );
 		
 		// SHIFT
@@ -676,47 +689,45 @@ void DCP::MeasureController::OnF1Pressed()
 }
 
 // ================================================================================================
-// Description: F2
+// Description: F2 - NEXT POINT
 // ================================================================================================
 void DCP::MeasureController::OnF2Pressed()
 {
-	//// DIST
-	if(m_pCommon->check_edm_mode())
-	{
-		DisableFunctionKey(FK1);
-		DisableFunctionKey(FK2);
-		DisableFunctionKey(FK3);
-		DisableFunctionKey(FK4);
-		DisableFunctionKey(FK5);
-		DisableFunctionKey(FK6);
-
-		DCP::MeasDistModel* pModel = new MeasDistModel;
-
-		if(GetController(MEAS_DIST_CONTROLLER) == nullptr)
-		{
-			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::MeasDistController(m_pModel));
-		}
-		(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
-		SetActiveController(MEAS_DIST_CONTROLLER, true);
-	}
-} 
-// NEXT POINT
-void DCP::MeasureController::OnF3Pressed()
-{
 	m_pDlg->next_point();
 }
-// previous point
-void DCP::MeasureController::OnF4Pressed()
+// PREV POINT
+void DCP::MeasureController::OnF3Pressed()
 {
 	m_pDlg->prev_point();
 }
-
-// Add point
-void DCP::MeasureController::OnF5Pressed()
+// ADD POINT
+void DCP::MeasureController::OnF4Pressed()
 {
 	m_pDlg->add_point();
 }
-// Description: Handle change of position values
+
+// Phase E: F5 = CONT (ADD moved to F4)
+void DCP::MeasureController::OnF5Pressed()
+{
+	if (m_pDlg == nullptr)
+	{
+		USER_APP_VERIFY( false );
+		return;
+	}
+	if(!m_bCamera)
+	{
+		m_pDlg->UpdateData();
+		(void)Close(EC_KEY_CONT);
+	}
+	else
+	{
+		m_bCamera = false;
+		poVideoDlg->Close();
+		SetActiveDialog(MEAS_DLG);
+		show_function_keys();
+	}
+}
+// F6 (unused)
 void DCP::MeasureController::OnF6Pressed()
 {
     if (m_pDlg == nullptr)

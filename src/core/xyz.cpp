@@ -286,7 +286,7 @@ void DCP::XYZController::show_function_keys()
 		
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_X_TOK);
@@ -315,7 +315,7 @@ void DCP::XYZController::show_function_keys()
 		FKDef vDef;
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_X_TOK);

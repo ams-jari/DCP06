@@ -415,7 +415,7 @@ void DCP::BestFitController::OnF1Pressed()
 	S_SELECT_POINTS selPts[MAX_BESTFIT_POINTS];
 	char pid[POINT_ID_BUFF_LEN], bXdes[DCP_COORD_STR_BUFF_LEN], bYdes[DCP_COORD_STR_BUFF_LEN], bZdes[DCP_COORD_STR_BUFF_LEN];
 	char bXmea[DCP_COORD_STR_BUFF_LEN], bYmea[DCP_COORD_STR_BUFF_LEN], bZmea[DCP_COORD_STR_BUFF_LEN];
-	short nPts = jdb->getPointListAsSelectPoints(selPts, MAX_BESTFIT_POINTS, DESIGN);
+	short nPts = jdb->getPointListAsSelectPointsForList(selPts, MAX_BESTFIT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_3D_MEAS);
 	if (nPts <= 0)
 	{
 		MsgBox msgBox;
@@ -426,7 +426,7 @@ void DCP::BestFitController::OnF1Pressed()
 	}
 	for (short i = 0; i < nPts && i < MAX_BESTFIT_POINTS; i++)
 	{
-		if (jdb->getPointByIndex(i + 1, false, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
+		if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, i + 1, false, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
 		{
 			snprintf(m_pDataModel->point_OCS[i].point_id, sizeof(m_pDataModel->point_OCS[i].point_id), DCP_POINT_ID_FMT, pid);
 			strcpy(m_pDataModel->point_DCS[i].point_id, m_pDataModel->point_OCS[i].point_id);
@@ -523,6 +523,7 @@ void DCP::BestFitController::OnF3Pressed()
 		{
 			(void)AddController( MEAS_CONTROLLER, new DCP::MeasureController(m_pDlg->GetModel()) );
 		}
+		(void)GetController( MEAS_CONTROLLER )->SetTitle(StringC(AT_DCP06, T_DCP_BF_MEAS_TOK));
 		(void)GetController( MEAS_CONTROLLER )->SetModel(pModel);
 		SetActiveController(MEAS_CONTROLLER, true);
 	}

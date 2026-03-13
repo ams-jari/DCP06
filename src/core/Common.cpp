@@ -29,6 +29,7 @@
 #include <dcp06/core/Common.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/core/Logger.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include "calc.h"
 #include <math.h>
@@ -300,7 +301,7 @@ short points_defined=0,i;
 /*************************************************************************
 *************************************************************************/
 
-char *DCP::Common::strltrim(char *s)
+char *DCP::Common::strltrim(char *s) const
 {
    char *p;
    char *q;
@@ -318,7 +319,7 @@ char *DCP::Common::strltrim(char *s)
 /*************************************************************************
 *************************************************************************/
 
-char *DCP::Common::strtrim(char *s)
+char *DCP::Common::strtrim(char *s) const
 {
    short  i;
 
@@ -331,7 +332,7 @@ char *DCP::Common::strtrim(char *s)
 /*************************************************************************
 *************************************************************************/
 
-char *DCP::Common::strbtrim(char *s)
+char *DCP::Common::strbtrim(char *s) const
 {
 	strltrim(s);
 	strtrim(s);
@@ -1405,6 +1406,52 @@ short last,first,i,j,length,pit;
 	{
 	}
 }
+
+// Phase D: Suggest next Point ID. Uses last point in job if JsonDatabase+job loaded; else prefix+fallbackNum.
+// Context-specific prefixes (321_, OFF, BF, etc.) bypass job to avoid P1->P2 confusion with 3D meas points.
+void DCP::Common::get_suggested_next_point_id(char* outBuf, size_t outSize, const char* defaultPrefix, int fallbackNum) const
+{
+	if (!outBuf || outSize < 2) return;
+	outBuf[0] = '\0';
+	if (!m_pModel) { snprintf(outBuf, outSize, "%s%d", defaultPrefix ? defaultPrefix : "P", fallbackNum); return; }
+	// Skip job lookup for context-specific prefixes - user uses P1,P2,P3 for 3D meas; we need 321_pnt_1, OFF1, BF1 etc.
+	bool forcePrefix = defaultPrefix && (strncmp(defaultPrefix, "321_", 4) == 0 || strcmp(defaultPrefix, "OFF") == 0 || strcmp(defaultPrefix, "BF") == 0 || strcmp(defaultPrefix, "REF") == 0);
+	if (forcePrefix)
+	{
+		snprintf(outBuf, outSize, "%s%d", defaultPrefix, fallbackNum);
+		return;
+	}
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ?
+		dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	bool jobOpen = jdb && jdb->isJobLoaded() && !m_pModel->m_currentJobId.empty();
+	if (jobOpen)
+	{
+		int nPts = jdb->getJobPointsCount();
+		char lastPid[POINT_ID_BUFF_LEN]; lastPid[0] = '\0';
+		if (nPts > 0 && jdb->getPointByIndex(nPts, true, lastPid, 0, 0, 0, 0, 0, 0, 0) && lastPid[0] != '\0')
+		{
+			strbtrim(lastPid);
+			char* p = strchr(lastPid, '(');
+			if (p) { *p = '\0'; strbtrim(lastPid); }
+			strncpy(outBuf, lastPid, (size_t)(outSize - 1));
+			outBuf[outSize - 1] = '\0';
+			strbtrim(outBuf);
+			size_t len = strlen(outBuf);
+			int i = (int)len - 1;
+			while (i >= 0 && outBuf[i] >= '0' && outBuf[i] <= '9') i--;
+			if (i < (int)len - 1)
+			{
+				int num = atoi(outBuf + i + 1);
+				snprintf(outBuf + i + 1, outSize - (size_t)(i + 1), "%d", num + 1);
+			}
+			else
+				snprintf(outBuf, outSize, "P%d", nPts + 1);
+			return;
+		}
+	}
+	snprintf(outBuf, outSize, "%s%d", defaultPrefix ? defaultPrefix : "P", fallbackNum);
+}
+
 /************************************************************************
 *************************************************************************/
 char* DCP::Common::strlower(char *s)

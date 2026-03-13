@@ -7209,7 +7209,10 @@ const wchar_t DCP06_TOK_DCP_EN_Module[] = {
       73,  68,  80,  79,  73,  78,  84, 000,  // 632 = T_DCP_SELECT_MIDPOINT_TOK
       77, 105, 100, 112, 111, 105, 110, 116,
       32,  73, 100, 000,                     // 633 = P_DCP_MIDPOINT_ID_TOK
-      67, 111, 111, 114, 100, 115, 000 } ;   // 634 = P_DCP_COORDS_TOK
+      67, 111, 111, 114, 100, 115, 000,     // 634 = P_DCP_COORDS_TOK
+      79,  82,  73,  69,  78,  84,  65,  84,
+      73,  79,  78,  92,  66,  70,  92,  77,
+      69,  65,  83, 000 } ;                  // 635 = T_DCP_BF_MEAS_TOK "ORIENTATION\BF\MEAS"
 
 #endif // #ifndef DCP06_TOK_IEN
 

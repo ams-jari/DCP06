@@ -63,6 +63,15 @@ IF DEFINED SIM_BASE (
 )
 
 REM 2. Common Captivate install paths (MkEdit -I uses these) + Captivate 10 simulator
+REM 3. SDK Applications path (when using symlink: Applications\Common\DCP06 -> repo)
+SET "SDK_DCP06_EN=%SYSTEM1500_ROOT%\Applications\Common\DCP06\Text\Languages\en"
+IF DEFINED SYSTEM1500_ROOT IF EXIST "!SDK_DCP06_EN!" (
+    copy /Y "%LEN_FILE%" "!SDK_DCP06_EN!\DCP06.LEN" >nul 2>&1
+    IF NOT ERRORLEVEL 1 (
+        SET COPY_OK=1
+        echo Installed to SDK Applications path: !SDK_DCP06_EN!
+    )
+)
 FOR %%P IN (
     "C:\Users\Public\Documents\Leica Captivate\CS_x64\Leica Geosystems\Leica Captivate\System\Plugin\DCP06\en"
     "C:\Users\Public\Documents\Leica Captivate\CS_32\Leica Geosystems\Leica Captivate\System\Plugin\DCP06\en"

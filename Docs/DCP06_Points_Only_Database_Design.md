@@ -60,14 +60,15 @@ Tasks done once, not repeated.
 
 ### 4.3 LIST vs PICK (Rules 3, 4)
 
-| Function | Shows | Use Case |
-|----------|-------|----------|
-| **LIST** | Points measured in *current context* (e.g. circle points for circle, 3D meas points for 3D meas) | Navigate/select within current object |
-| **PICK** | **All** points in database (job) | Reuse any measured point in any context |
+**See `DCP06_LIST_PICK_Design.md` for the refined design.**
 
-- **3D meas:** LIST = points measured in 3D meas. PICK = all points (new; like DCP9 SelectPoint).
-- **Circle:** LIST = points measured for this circle. PICK = all points (to add existing point to circle).
-- **Plane, Line, 321, BestFit, Change Station, etc.:** Same pattern.
+| Function | Shows | Filter | Use Case |
+|----------|-------|--------|----------|
+| **LIST** | Points with *current tag* | Tag = current context | Navigate within current list |
+| **PICK** | Points from any tag | Tag (any) + **has actual values** | Copy measured coords to avoid remeasuring |
+
+- **LIST:** Context-specific. In 321 → points tagged `321`. In 3D meas → points tagged `3d_meas`. etc.
+- **PICK:** Cross-context. Shows only points with measured coords (`x_mea`, `y_mea`, `z_mea`). User picks to copy values and avoid remeasuring.
 
 ### 4.4 Measurement: MEAS Only (Rule 5)
 

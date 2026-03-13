@@ -826,7 +826,8 @@ void DCP::Meas3DController::show_function_keys()
 			vDef.strLable = L"LIST";  // Point list (was PID)
 			SetFunctionKey( FK4, vDef );
 
-			vDef.strLable = StringC(AT_DCP06,K_DCP_SPECIAL_TOK);
+			// Phase E: SPECI moved to second row (SHFK3) only; F5 empty until PICK (Phase C)
+			vDef.strLable = L" ";
 			SetFunctionKey( FK5, vDef );
 
 			vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
@@ -1239,13 +1240,8 @@ void DCP::Meas3DController::OnF5Pressed()
 	}
 	else
 	{
-		// F5 = SPECI (special menu)
-		if(GetController(SPECIAL_MENU_CONTROLLER) == nullptr)
-		{
-			(void)AddController( SPECIAL_MENU_CONTROLLER, new DCP::SpecialMenuController (m_pDlg->GetModel()));
-		}
-		(void)GetController( SPECIAL_MENU_CONTROLLER )->SetModel( m_pDlg->GetModel());
-		SetActiveController(SPECIAL_MENU_CONTROLLER, true);
+		// Phase E: F5 empty on main bar; SPECI on second row (SHFK3) only
+		// (void) no-op
 	}
 }
 
@@ -1394,7 +1390,7 @@ void DCP::Meas3DController::OnSHF5Pressed()
 		dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 	if (jdb && jdb->isJobLoaded())
 	{
-		pModel->m_iCounts = jdb->getPointListAsSelectPoints(&pModel->points[0], MAX_SELECT_POINTS, BOTH);
+		pModel->m_iCounts = jdb->getPointListAsSelectPointsForList(&pModel->points[0], MAX_SELECT_POINTS, BOTH, DCP::Database::PointSource::DCP06_3D_MEAS);
 		pModel->sFile = StringC(m_pDlg->GetModel()->m_currentJobId.c_str());
 		pModel->pAdfFile = 0;
 		pModel->pJdb = jdb;
@@ -1626,7 +1622,9 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 					else
 					{
 						char buf[32]; sprintf(buf, "P%d", nPts + 1);
-						jdb->addPoint(buf, DCP::Database::PointData());
+						DCP::Database::PointData data;
+						data.source = DCP::Database::PointSource::DCP06_3D_MEAS;
+						jdb->addPoint(buf, data);
 						m_pDlg->GetModel()->m_currentPointIndex = nPts + 1;
 						if (!m_pDlg->GetModel()->m_currentJobId.empty())
 							jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);
@@ -1716,9 +1714,21 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 	// select point
 	if(lCtrlID == SELECT_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*) GetController( SELECT_POINT_CONTROLLER )->GetModel();		
+		DCP::SelectPointModel* pModel = (DCP::SelectPointModel*) GetController( SELECT_POINT_CONTROLLER )->GetModel();
 		if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel())
-			m_pDlg->GetModel()->m_currentPointIndex = pModel->m_iSelectedId;
+		{
+			DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+				dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+			if (jdb && jdb->isJobLoaded() && pModel->m_iSelectedId > 0)
+			{
+				char pidBuf[POINT_ID_BUFF_LEN]; pidBuf[0] = '\0';
+				if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, pModel->m_iSelectedId, true, pidBuf, 0, 0, 0, 0, 0, 0, 0))
+				{
+					int idxJob = jdb->getPointIndexInJob(pidBuf);
+					m_pDlg->GetModel()->m_currentPointIndex = (idxJob > 0) ? idxJob : 1;
+				}
+			}
+		}
 		m_pDataModel->DSP_MODE = SINGLE;
 		m_pDlg->RefreshControls();
 	}
@@ -1757,6 +1767,7 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 				if (jdb && jdb->isJobLoaded() && !pointId.empty())
 				{
 					DCP::Database::PointData data;
+					data.source = DCP::Database::PointSource::DCP06_3D_MEAS;
 					jdb->addPoint(pointId, data);
 					int n = jdb->getJobPointsCount();
 					m_pDlg->GetModel()->m_currentPointIndex = n;
@@ -1880,6 +1891,7 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 			{
 				std::string pidStr(pid);
 				DCP::Database::PointData data;
+				data.source = DCP::Database::PointSource::DCP06_3D_MEAS;
 				if (!jdb->getPoint(pidStr, data))
 					jdb->addPoint(pidStr, data);
 			}
@@ -1943,9 +1955,15 @@ void DCP::Meas3DController::ShowSelectPointDlg()
 		if (jdb && jdb->isJobLoaded())
 		{
 			DCP::SelectPointModel* pModel = new SelectPointModel;
-			int iCount = jdb->getPointListAsSelectPoint(&pModel->points[0], MAX_SELECT_POINTS);
+			int iCount = jdb->getPointListAsSelectPointForList(&pModel->points[0], MAX_SELECT_POINTS, DCP::Database::PointSource::DCP06_3D_MEAS);
 			pModel->m_iCounts = iCount;
-			pModel->m_iSelectedId = m_pDlg->GetModel()->m_currentPointIndex;
+			char pidBuf[POINT_ID_BUFF_LEN]; pidBuf[0] = '\0';
+			if (jdb->getPointByIndex(m_pDlg->GetModel()->m_currentPointIndex, true, pidBuf, 0, 0, 0, 0, 0, 0, 0)) {
+				int idxList = jdb->getPointIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, pidBuf);
+				pModel->m_iSelectedId = (idxList > 0) ? idxList : 1;
+			} else {
+				pModel->m_iSelectedId = (iCount > 0) ? 1 : 0;
+			}
 			if(GetController(SELECT_POINT_CONTROLLER) == nullptr)
 				(void)AddController( SELECT_POINT_CONTROLLER, new DCP::SelectPointController );
 			(void)GetController( SELECT_POINT_CONTROLLER )->SetModel(pModel);
@@ -2203,6 +2221,7 @@ void DCP::Meas3DModel::save_point()
 			if (pointId.empty()) return;
 			DCP::Database::PointData data;
 			bool exists = jdb->getPoint(pointId, data);
+			if (data.source.empty()) data.source = DCP::Database::PointSource::DCP06_3D_MEAS;
 			data.x_mea = m_pCommon->strblank(xmea_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(xmea_ptr);
 			data.y_mea = m_pCommon->strblank(ymea_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(ymea_ptr);
 			data.z_mea = m_pCommon->strblank(zmea_ptr) ? std::numeric_limits<double>::quiet_NaN() : atof(zmea_ptr);

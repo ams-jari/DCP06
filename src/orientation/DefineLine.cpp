@@ -356,6 +356,7 @@ void DCP::DefineLineController::OnF5Pressed()
         return;
     }
 	DCP::MeasureModel* pModel = new MeasureModel;
+	sprintf(pModel->default_pid, "%-s", "321_li_pnt_");
 
 	pModel->m_iMaxPoint = MAX_POINTS_IN_LINE;
 	pModel->m_iMinPoint = 2;

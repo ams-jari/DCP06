@@ -146,7 +146,7 @@ short DCP::MsgBox::DeleteChstMessage(StringC strMessage)
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = pDlg;
 		
-		vDef.strLable	= StringC(AT_DCP06,K_DCP_ALL_TOK);
+		vDef.strLable	= StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		pDlg->SetFunctionKey( FK2, vDef );
 
 		vDef.strLable	= StringC(AT_DCP06,K_DCP_STATION_TOK);
@@ -186,7 +186,7 @@ short DCP::MsgBox::DeletePointsMeas(StringC strMessage)
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = pDlg;
 		
-		vDef.strLable	= StringC(AT_DCP06,K_DCP_ALL_TOK);
+		vDef.strLable	= StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		pDlg->SetFunctionKey( FK2, vDef );
 
 		vDef.strLable	= StringC(AT_DCP06,K_DCP_CURRENT_POINT_TOK);

@@ -54,7 +54,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
+OBS_IMPLEMENT_EXECUTE(DCP::MeasVDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -69,7 +69,8 @@
 // USER DIALOG
 
 DCP::MeasVDialog::MeasVDialog(DCP::Model* pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel), iInfoInd(0)
+	m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel), iInfoInd(0),
+	m_pPointIdObserver(OBS_METHOD_TO_PARAM0(MeasVDialog, OnPointIdChanged), this)
 {
 	//SetTxtApplicationId(AT_DCP06);
 	m_pCommon = new Common(pModel);
@@ -103,6 +104,7 @@ void DCP::MeasVDialog::OnInitDialog(void)
 	m_pPointId->GetStringInputCtrl()->SetCharsCountMax(DCP_POINT_ID_LENGTH);
 	//m_pPointId->GetStringInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	m_pPointId->SetEmptyAllowed(true);
+	m_pPointIdObserver.Attach(m_pPointId->GetSubject());
 	AddCtrl(m_pPointId);
 
 	// InsertEmptyLine(); CAPTIVATE
@@ -183,6 +185,17 @@ void DCP::MeasVDialog::RefreshControls()
 {
 	if(m_pPointId && m_pX && m_pY && m_pZ)
 	{
+		// Default Point ID on first display when blank (321: 321_pnt_1, else REF1)
+		S_POINT_BUFF& rb = GetDataModel()->ref_point_buff;
+		m_pCommon->strbtrim(rb.point_id);
+		if (rb.point_id[0] == '\0')
+		{
+			short d = GetDataModel()->display;
+			const char* prefix = (d == A321_DLG || d == A321_USERDEF_DLG) ? "321_pnt_" : "REF";
+			char suggested[POINT_ID_BUFF_LEN];
+			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), prefix, 1);
+			snprintf(rb.point_id, sizeof(rb.point_id), DCP_POINT_ID_FMT, suggested);
+		}
 		if(GetDataModel()->ref_point_buff.sta != POINT_NOT_DEFINED)
 		{
 			m_pX->GetFloatInputCtrl()->SetDouble(GetDataModel()->ref_point_buff.x);
@@ -251,6 +264,17 @@ void DCP::MeasVDialog::delete_point()
 	}
 }
 
+void DCP::MeasVDialog::OnPointIdChanged(int unNotifyCode, int /*ulParam2*/)
+{
+	if (unNotifyCode == GUI::NC_ONEDITMODE_LEFT && GetDataModel())
+	{
+		char cPoint[POINT_ID_BUFF_LEN];
+		m_pCommon->convert_to_ascii(m_pPointId->GetStringInputCtrl()->GetString(), cPoint, POINT_ID_BUFF_LEN);
+		m_pCommon->strbtrim(cPoint);
+		snprintf(GetDataModel()->ref_point_buff.point_id, sizeof(GetDataModel()->ref_point_buff.point_id), DCP_POINT_ID_FMT, cPoint);
+	}
+}
+
 // ================================================================================================
 // ====================================  UserController  ===================================
 // ================================================================================================
@@ -290,7 +314,7 @@ ResetFunctionKeys();
 		
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK);
@@ -310,14 +334,8 @@ ResetFunctionKeys();
 		FKDef vDef;
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
-
-		if(isATR)
-		{
-			vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
-			SetFunctionKey( FK2, vDef );
-		}
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_OFFSV_TOK);
 		SetFunctionKey( FK5, vDef );
@@ -424,6 +442,15 @@ void DCP::MeasVController::OnF1Pressed()
 
 		DCP::MeasXYZModel* pModel = new MeasXYZModel;
 
+		// Phase D: Ensure Point ID - use suggested from DB/job when blank
+		if (m_pCommon->strblank(m_pDlg->GetDataModel()->ref_point_buff.point_id))
+		{
+			short d = m_pDlg->GetDataModel()->display;
+			const char* prefix = (d == A321_DLG || d == A321_USERDEF_DLG) ? "321_pnt_" : "REF";
+			char suggested[POINT_ID_BUFF_LEN];
+			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), prefix, 1);
+			snprintf(m_pDlg->GetDataModel()->ref_point_buff.point_id, sizeof(m_pDlg->GetDataModel()->ref_point_buff.point_id), DCP_POINT_ID_FMT, suggested);
+		}
 		snprintf(pModel->sPointId, sizeof(pModel->sPointId), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->ref_point_buff.point_id);
 		m_pCommon->strbtrim(pModel->sPointId);
 		
@@ -633,6 +660,10 @@ void DCP::MeasVController::OnActiveControllerClosed( int lCtrlID, int lExitCode 
 			m_pDlg->GetDataModel()->ref_point_buff.y =pModel->m_dY;
 			m_pDlg->GetDataModel()->ref_point_buff.z =pModel->m_dZ;
 			m_pDlg->GetDataModel()->ref_point_buff.sta = POINT_MEASURED;
+			// Phase D: Persist Point ID from MeasXYZ (user may have edited it)
+			m_pCommon->strbtrim(pModel->sPointId);
+			if (!m_pCommon->strblank(pModel->sPointId))
+				snprintf(m_pDlg->GetDataModel()->ref_point_buff.point_id, sizeof(m_pDlg->GetDataModel()->ref_point_buff.point_id), DCP_POINT_ID_FMT, pModel->sPointId);
 		}
 	}
 

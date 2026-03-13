@@ -41,6 +41,7 @@
 #include <dcp06/file/SelectFile.hpp>
 #include <dcp06/file/AdfFileFunc.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/core/SelectMultiPoints.hpp>
 #include <GUI_Types.hpp>
@@ -189,7 +190,16 @@ void DCP::BestFitSelectPointsDialog::RefreshControls()
 		sTemp.Format(L"%d/%d",GetDataModel()->iCurrentPoint, GetDataModel()->m_iPointsCount);
 		m_pPointNo->GetStringInputCtrl()->SetString(sTemp);
 
-		sTemp = GetDataModel()->points[GetDataModel()->iCurrentPoint-1].point_id;
+		// Default Point ID on first display when blank
+		S_POINT_BUFF& pt = GetDataModel()->points[GetDataModel()->iCurrentPoint - 1];
+		m_pCommon->strbtrim(pt.point_id);
+		if (pt.point_id[0] == '\0')
+		{
+			char suggested[POINT_ID_BUFF_LEN];
+			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), "BF", GetDataModel()->iCurrentPoint);
+			snprintf(pt.point_id, sizeof(pt.point_id), DCP_POINT_ID_FMT, suggested);
+		}
+		sTemp = pt.point_id;
 		sTemp.RTrim();
 		m_pPointId->GetStringInputCtrl()->SetString(sTemp);
 		
@@ -545,6 +555,11 @@ void DCP::BestFitSelectPointsController::OnF5Pressed()
 			{
 				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", m_pDlg->GetDataModel()->default_pid, m_pDlg->GetDataModel()->m_iPointsCount+1);
 			}
+			else
+			{
+				// Phase D: Fallback when last point and default_pid both blank
+				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf), "BF", m_pDlg->GetDataModel()->m_iPointsCount + 1);
+			}
 		}
 		delete m_pCommon;
 		m_pCommon = 0;
@@ -698,7 +713,7 @@ void DCP::BestFitSelectPointsController::OnActiveControllerClosed( int lCtrlID, 
 		DCP::SelectMultiPointsModel* pSelectModel = new SelectMultiPointsModel;
 		int iCount = 0;
 		if (useDb)
-			iCount = jdb->getPointListAsSelectPoints(&pSelectModel->sel_points[0], MAX_SELECT_POINTS, def);
+			iCount = jdb->getPointListAsSelectPointsForList(&pSelectModel->sel_points[0], MAX_SELECT_POINTS, def, DCP::Database::PointSource::DCP06_3D_MEAS);
 		else if (adf.setFile(strSelectedFile))
 			iCount = adf.GetPointList(&pSelectModel->sel_points[0], MAX_SELECT_POINTS, def);
 
@@ -756,7 +771,7 @@ void DCP::BestFitSelectPointsController::OnActiveControllerClosed( int lCtrlID, 
 					char bXdes[DCP_COORD_STR_BUFF_LEN], bYdes[DCP_COORD_STR_BUFF_LEN], bZdes[DCP_COORD_STR_BUFF_LEN];
 					char pid[POINT_ID_BUFF_LEN];
 					cc++;
-					if (jdb->getPointByIndex((int)pModel->nro_table[i][0], (pModel->nro_table[i][1] != DESIGN),
+					if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, (int)pModel->nro_table[i][0], (pModel->nro_table[i][1] != DESIGN),
 						pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, (char*)0))
 					{
 						snprintf(m_pDlg->GetDataModel()->points[cc-1].point_id, sizeof(m_pDlg->GetDataModel()->points[0].point_id), DCP_POINT_ID_FMT, pid);

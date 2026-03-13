@@ -43,11 +43,34 @@ public:
     /// Fill S_SELECT_POINTS from current job for point selection dialogs. Returns count.
     short getPointListAsSelectPoints(S_SELECT_POINTS* pList, short iMaxPoints, short iDef) const;
 
+    /// LIST: Fill S_SELECT_POINTS with points having given tag. Backward compat: empty source treated as "3d_meas".
+    short getPointListAsSelectPointsForList(S_SELECT_POINTS* pList, short iMaxPoints, short iDef, const std::string& tag) const;
+
+    /// PICK: Fill S_SELECT_POINTS with points that have actual values (any tag). For copying measured coords.
+    short getPointListAsSelectPointsForPick(S_SELECT_POINTS* pList, short iMaxPoints) const;
+
     /// Fill S_SELECT_POINT from current job (no/point_id/point_status format). Returns count.
     short getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxPoints) const;
 
+    /// LIST: Fill S_SELECT_POINT with points having given tag (for SelectPoint dialog).
+    short getPointListAsSelectPointForList(S_SELECT_POINT* pList, short iMaxPoints, const std::string& tag) const;
+
+    /// Get 1-based index of point in full job (by ID). Returns 0 if not found.
+    int getPointIndexInJob(const std::string& pointId) const;
+
+    /// Get 1-based index of point in tag-filtered list. Returns 0 if not found.
+    int getPointIndexForList(const std::string& tag, const std::string& pointId) const;
+
     /// Get point by 1-based index (sorted by point ID). Fills coord buffers like form_pnt1. Returns true if found.
     bool getPointByIndex(int index1Based, bool useActual, char* pid,
+        char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const;
+
+    /// Get point by 1-based index from LIST-filtered list (tag). Use after getPointListAsSelectPointsForList.
+    bool getPointByIndexForList(const std::string& tag, int index1Based, bool useActual, char* pid,
+        char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const;
+
+    /// Get point by 1-based index from PICK-filtered list (has actual values). Use after getPointListAsSelectPointsForPick.
+    bool getPointByIndexForPick(int index1Based, char* pid,
         char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const;
 
     /// Job display helpers (replace AdfFileFunc getFileName/getPointsCountString/etc when using DB)

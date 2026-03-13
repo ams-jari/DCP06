@@ -280,7 +280,7 @@ void DCP::SeparateRecController::show_function_keys()
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
 		
-		vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK2, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_RECORDING_TOK);
@@ -298,7 +298,7 @@ void DCP::SeparateRecController::show_function_keys()
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
 		
-		vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK2, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_RECORDING_TOK);

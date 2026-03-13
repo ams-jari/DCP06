@@ -73,9 +73,9 @@ namespace DCP
 			short strblank(char *s);
 			char *strlower(char *s);
 			void delete_point(S_POINT_BUFF *points);
-			char *strbtrim(char *s); 
-			char *strtrim(char *s);
-			char *strltrim(char *s);
+			char *strbtrim(char *s) const;
+			char *strtrim(char *s) const;
+			char *strltrim(char *s) const;
 
 			short defined_bestFit_points(S_POINT_BUFF *point_OCS, short *lastpoint);
 			short get_OCS_SCS_points_count(S_POINT_BUFF *point_OCS,S_POINT_BUFF *point_DCS, short max);
@@ -112,6 +112,10 @@ namespace DCP
 
 			void inc_id(char *id);
 
+			/** Phase D: Suggest next Point ID for DB storage.
+			 *  When job is loaded (JsonDatabase): increments trailing number of last point in job.
+			 *  Otherwise: uses defaultPrefix + fallbackNum (e.g. "REF", 1 -> "REF1"). */
+			void get_suggested_next_point_id(char* outBuf, size_t outSize, const char* defaultPrefix, int fallbackNum) const;
 
 			bool check_edm_mode();
 			void delay();

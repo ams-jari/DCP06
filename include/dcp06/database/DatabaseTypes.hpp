@@ -34,8 +34,24 @@ struct MeasurementData {
     MeasurementData() : calculated(false), rms(0.0) {}
 };
 
-// Point measurement data (aligned with DCP9 PointData)
+// Point source tags for LIST/PICK (DCP06-specific; see DCP06_LIST_PICK_Design.md)
+namespace PointSource {
+    const char* const DCP06_3D_MEAS   = "3d_meas";
+    const char* const DCP06_321       = "321";
+    const char* const DCP06_BESTFIT  = "bestfit";
+    const char* const DCP06_PLANE     = "plane";
+    const char* const DCP06_LINE      = "line";
+    const char* const DCP06_CIRCLE   = "circle";
+    const char* const DCP06_MIDPOINT  = "midpoint";
+    const char* const DCP06_CHST      = "chst";
+    const char* const DCP06_LINE_SETTING = "line_setting";
+    const char* const DCP06_MEASURE   = "measure";
+    const char* const DCP06_HIDDEN    = "hidden";
+}
+
+// Point measurement data (aligned with DCP9 PointData; DCP06 adds source)
 struct PointData : MeasurementData {
+    std::string source;  // DCP06: tag for LIST/PICK (e.g. "3d_meas", "321")
     double x_dsg, y_dsg, z_dsg;
     double x_mea, y_mea, z_mea;
     double x_scs, y_scs, z_scs;

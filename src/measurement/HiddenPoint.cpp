@@ -481,7 +481,7 @@ void DCP::HiddenPointController::show_function_keys()
 		
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK);
@@ -501,25 +501,22 @@ void DCP::HiddenPointController::show_function_keys()
 		FKDef vDef;
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
-		if(isATR)
-		{
-			vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
-			SetFunctionKey( FK2, vDef );
-		}
-		
 		vDef.strLable = StringC(AT_DCP06,K_DCP_NEXT_TOK);
-		SetFunctionKey( FK3, vDef );
+		SetFunctionKey( FK2, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_PREV_TOK);
-		SetFunctionKey( FK4, vDef );
+		SetFunctionKey( FK3, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_CALC_TOK);
-		SetFunctionKey( FK5, vDef );
+		SetFunctionKey( FK4, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
+		SetFunctionKey( FK5, vDef );
+
+		vDef.strLable = L" ";
 		SetFunctionKey( FK6, vDef );
 		
 		// SHIFT
@@ -623,64 +620,36 @@ void DCP::HiddenPointController::OnF1Pressed()
 	}
 }
 
-// ================================================================================================
-// Description: F2
-// ================================================================================================
+// Phase E: F2 = NEXT (DIST removed)
 void DCP::HiddenPointController::OnF2Pressed()
-{
-	//// DIST
-	if(m_pCommon->check_edm_mode())
-	{
-		DisableFunctionKey(FK1);
-		DisableFunctionKey(FK2);
-		DisableFunctionKey(FK3);
-		DisableFunctionKey(FK4);
-		DisableFunctionKey(FK5);
-		DisableFunctionKey(FK6);
-
-		DCP::MeasDistModel* pModel = new MeasDistModel;
-
-		if(GetController(MEAS_DIST_CONTROLLER) == nullptr)
-		{
-			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::MeasDistController(m_pModel));
-		}
-		(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
-		SetActiveController(MEAS_DIST_CONTROLLER, true);
-	}
-} 
-// NEXT
-void DCP::HiddenPointController::OnF3Pressed()
 {
 	m_pDlg->PointNext();
 }
-
 // PREV
-void DCP::HiddenPointController::OnF4Pressed()
+void DCP::HiddenPointController::OnF3Pressed()
 {
 	m_pDlg->PointPrev();
 }
 
-// Description: Handle change of position values
-void DCP::HiddenPointController::OnF5Pressed()
+// CALC
+void DCP::HiddenPointController::OnF4Pressed()
 {
-	if(m_pDlg->calc_hidden_point())
+	if (m_pDlg->calc_hidden_point())
 		Close(EC_KEY_CONT);
 }
-// Description: Handle change of position values
-void DCP::HiddenPointController::OnF6Pressed()
+
+// Phase E: F5 = CONT
+void DCP::HiddenPointController::OnF5Pressed()
 {
-    if (m_pDlg == nullptr)
-    {
-        USER_APP_VERIFY( false );
-        return;
-    }
-
-
-	if(!m_bCamera)
+	if (m_pDlg == nullptr)
 	{
-		 m_pDlg->UpdateData();
-
-		 if(m_pDlg->GetDataModel()->m_pPointBuff[0].sta != 0)
+		USER_APP_VERIFY(false);
+		return;
+	}
+	if (!m_bCamera)
+	{
+		m_pDlg->UpdateData();
+		if (m_pDlg->GetDataModel()->m_pPointBuff[0].sta != 0)
 			(void)Close(EC_KEY_CONT);
 		else
 			(void)Close(EC_KEY_ESC);
@@ -692,10 +661,22 @@ void DCP::HiddenPointController::OnF6Pressed()
 		SetActiveDialog(HIDDENPOINT_DLG);
 		show_function_keys();
 	}
-
-    // Update model
-    // Set it to hello world dialog
-   
+}
+// Phase E: F6 unused (CONT moved to F5)
+void DCP::HiddenPointController::OnF6Pressed()
+{
+	if (m_pDlg == nullptr)
+	{
+		USER_APP_VERIFY(false);
+		return;
+	}
+	if (m_bCamera)
+	{
+		m_bCamera = false;
+		poVideoDlg->Close();
+		SetActiveDialog(HIDDENPOINT_DLG);
+		show_function_keys();
+	}
 }
 void DCP::HiddenPointController::OnSHF1Pressed()
 {

@@ -109,7 +109,7 @@ namespace DCP
     };
 
 
-	class MeasVDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
+		class MeasVDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -151,12 +151,16 @@ namespace DCP
 			//GUI::TextCtrlC* m_pInfo;
 
 			Model* m_pModel;
+
+		OBS_DECLARE_EXECUTE(MeasVDialog);
 	private:
 		//virtual void OnTimer(void);
 		//GUI::TimerC m_pTimer;
 		Common* m_pCommon;
 		short iInfoInd;
 		StringC strInfoText;
+		OBS::ObserverC m_pPointIdObserver;
+		virtual void OnPointIdChanged(int unNotifyCode, int ulParam2);
 	};
 };
 

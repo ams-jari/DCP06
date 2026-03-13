@@ -596,6 +596,14 @@ void DCP::Fbs3DDialog::RefreshControls()
 		}
 		m_pDataModel->set_xyz_des_ptr();
 		m_pDataModel->set_xyz_mea_ptr();
+
+		// Default Point ID on first display when blank (no file open)
+		if (!m_pDataModel->pFileFunc->IsOpen() && m_pCommon->strblank(m_pDataModel->pid_ptr))
+		{
+			char suggested[POINT_ID_BUFF_LEN];
+			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), "3D", 1);
+			snprintf(m_pDataModel->bPid, sizeof(m_pDataModel->bPid), DCP_POINT_ID_FMT, suggested);
+		}
 		
 		if(m_pDataModel->DSP_MODE != FRONTBACK)
 		{
@@ -997,7 +1005,7 @@ DCP::Fbs3DController::Fbs3DController(Model* pModel)
     vDef.poOwner = this;
 	// VIVA REMOVED
 	//vDef.nLable = K_DCP_ALL_TOK;
-	vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
+	vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 
 	SetFunctionKey( FK1, vDef );
 
@@ -1096,7 +1104,7 @@ void DCP::Fbs3DController::show_function_keys()
 		
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK);
@@ -1119,7 +1127,7 @@ void DCP::Fbs3DController::show_function_keys()
 			FKDef vDef;
 			//vDef.nAppId = AT_DCP06;
 			vDef.poOwner = this;
-			vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
+			vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 			SetFunctionKey( FK1, vDef );
 
 			vDef.strLable = StringC(AT_DCP06,K_DCP_AIM_TOK);

@@ -224,12 +224,21 @@ void DCP::LineFitMeasDialog::RefreshControls()
 		sTemp.Format(L"%d/%d",GetDataModel()->m_iCurrentPoint, GetDataModel()->m_iPointsCount);
 		m_pPointNo->GetStringInputCtrl()->SetString(sTemp);
 		
-		snprintf(point_id, sizeof(point_id), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id);
+		// Default Point ID on first display when blank
+		S_POINT_BUFF& pt = GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint - 1];
+		m_pCommon->strbtrim(pt.point_id);
+		if (pt.point_id[0] == '\0')
+		{
+			char suggested[POINT_ID_BUFF_LEN];
+			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), "P", GetDataModel()->m_iCurrentPoint);
+			snprintf(pt.point_id, sizeof(pt.point_id), DCP_POINT_ID_FMT, suggested);
+		}
+		snprintf(point_id, sizeof(point_id), DCP_POINT_ID_FMT, pt.point_id);
 		m_pCommon->strbtrim(point_id);
 
 		sTemp = point_id ; //GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].point_id;
 		//sTemp.Format(L"%-s",temp_point_table[GetDataModel()->m_iCurrentPoint-1].point_id);
-		if(sTemp.IsEmpty()) 
+		if(sTemp.IsEmpty())
 			sTemp = L" ";
 		m_pPointId->GetStringInputCtrl()->SetString(sTemp);
 		
@@ -399,6 +408,11 @@ void DCP::LineFitMeasDialog::add_point()
 			{
 				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount+1);
 			}
+			else
+			{
+				// Phase D: Fallback when last point and default_pid both blank
+				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf), "P", GetDataModel()->m_iPointsCount + 1);
+			}
 		}
 
 		GetDataModel()->m_iPointsCount++;
@@ -482,7 +496,7 @@ void DCP::LineFitMeasController::show_function_keys()
 		
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06, K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06, K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
 		vDef.strLable = StringC(AT_DCP06, K_DCP_CONT_TOK);
@@ -502,27 +516,25 @@ void DCP::LineFitMeasController::show_function_keys()
 		FKDef vDef;
 		//vDef.nAppId = AT_DCP06;
 		vDef.poOwner = this;
-		vDef.strLable = StringC(AT_DCP06,K_DCP_ALL_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
-		if(isATR)
-		{
-			vDef.strLable = StringC(AT_DCP06,K_DCP_DIST_TOK);
-			SetFunctionKey( FK2, vDef );
-		}
-
-
+		// Phase E: Remove DIST; F2=NEXT, F3=PREV, F4=ADD, F5=CONT
 		vDef.strLable = StringC(AT_DCP06,K_DCP_NEXT_TOK);
-		SetFunctionKey( FK3, vDef );
+		SetFunctionKey( FK2, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_PREV_TOK);
-		SetFunctionKey( FK4, vDef );
+		SetFunctionKey( FK3, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_ADD_TOK);
-		SetFunctionKey( FK5, vDef );
+		SetFunctionKey( FK4, vDef );
 
 		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
+		SetFunctionKey( FK5, vDef );
+
+		vDef.strLable = L" ";
 		SetFunctionKey( FK6, vDef );
+
 		
 		// SHIFT
 		// CAPTIVATE
@@ -666,59 +678,35 @@ void DCP::LineFitMeasController::OnF1Pressed()
 }
 
 // ================================================================================================
-// Description: F2
+// Description: F2 - NEXT POINT (Phase E: DIST removed)
 // ================================================================================================
 void DCP::LineFitMeasController::OnF2Pressed()
 {
-	//// DIST
-	if(m_pCommon->check_edm_mode())
-	{
-		DisableFunctionKey(FK1);
-		DisableFunctionKey(FK2);
-		DisableFunctionKey(FK3);
-		DisableFunctionKey(FK4);
-		DisableFunctionKey(FK5);
-		DisableFunctionKey(FK6);
-
-		DCP::MeasDistModel* pModel = new MeasDistModel;
-
-		if(GetController(MEAS_DIST_CONTROLLER) == nullptr)
-		{
-			(void)AddController( MEAS_DIST_CONTROLLER, new DCP::MeasDistController(m_pModel));
-		}
-		(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
-		SetActiveController(MEAS_DIST_CONTROLLER, true);
-	}
-} 
-// NEXT POINT
-void DCP::LineFitMeasController::OnF3Pressed()
-{
 	m_pDlg->next_point();
-}
-// previous point
-void DCP::LineFitMeasController::OnF4Pressed()
+} 
+// PREV POINT
+void DCP::LineFitMeasController::OnF3Pressed()
 {
 	m_pDlg->prev_point();
 }
-
-// Add point
-void DCP::LineFitMeasController::OnF5Pressed()
+// ADD POINT
+void DCP::LineFitMeasController::OnF4Pressed()
 {
 	m_pDlg->add_point();
 }
-// Description: Handle change of position values
-void DCP::LineFitMeasController::OnF6Pressed()
-{
-    if (m_pDlg == nullptr)
-    {
-        USER_APP_VERIFY( false );
-        return;
-    }
 
-	if(!m_bCamera)
+// Phase E: F5 = CONT
+void DCP::LineFitMeasController::OnF5Pressed()
+{
+	if (m_pDlg == nullptr)
+	{
+		USER_APP_VERIFY(false);
+		return;
+	}
+	if (!m_bCamera)
 	{
 		m_pDlg->UpdateData();
-	   (void)Close(EC_KEY_CONT);
+		(void)Close(EC_KEY_CONT);
 	}
 	else
 	{
@@ -727,13 +715,22 @@ void DCP::LineFitMeasController::OnF6Pressed()
 		SetActiveDialog(MEAS_DLG);
 		show_function_keys();
 	}
-    // Update model
-    // Set it to hello world dialog
-   // m_pDlg->UpdateData();
-
-    // Remove the following statement if you don't want an exit
-    // to the main menu
-    //(void)Close(EC_KEY_CONT);
+}
+// Phase E: F6 unused (was CONT, now on F5)
+void DCP::LineFitMeasController::OnF6Pressed()
+{
+	if (m_pDlg == nullptr)
+	{
+		USER_APP_VERIFY(false);
+		return;
+	}
+	if (m_bCamera)
+	{
+		m_bCamera = false;
+		poVideoDlg->Close();
+		SetActiveDialog(MEAS_DLG);
+		show_function_keys();
+	}
 }
 void DCP::LineFitMeasController::OnSHF1Pressed()
 {

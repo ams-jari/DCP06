@@ -31,6 +31,7 @@
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/calculation/CalculationLine.hpp>
 #include <dcp06/core/SelectMultiPoints.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 
 #include <GUI_DeskTop.hpp>
 #include <GUI_Layout.hpp>
@@ -537,8 +538,8 @@ void DCP::CalculationDist2PointsController::OnActiveControllerClosed( int lCtrlI
 			DCP::CalculationDist2PointsModel* pDataModel = m_pDlg->GetDataModel();
 			if (pDataModel->pJdb)
 			{
-				pDataModel->pJdb->getPointByIndex((int)p1, true, pid1, bXmea1, bXdes1, bYmea1, bYdes1, bZmea1, bZdes1, nullptr);
-				pDataModel->pJdb->getPointByIndex((int)p2, true, pid2, bXmea2, bXdes2, bYmea2, bYdes2, bZmea2, bZdes2, nullptr);
+				pDataModel->pJdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, (int)p1, true, pid1, bXmea1, bXdes1, bYmea1, bYdes1, bZmea1, bZdes1, nullptr);
+				pDataModel->pJdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, (int)p2, true, pid2, bXmea2, bXdes2, bYmea2, bYdes2, bZmea2, bZdes2, nullptr);
 			}
 			else if (pDataModel->pAdfFile)
 			{

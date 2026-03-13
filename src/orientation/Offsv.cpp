@@ -36,13 +36,15 @@
 #include <dcp06/measurement/HomePoints.hpp>
 #include <dcp06/measurement/Circle.hpp>
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/core/Common.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/file/File.hpp>
 #include <dcp06/core/SelectPoint.hpp>
 #include <dcp06/core/SelectOnePoint.hpp>
 #include <dcp06/file/SelectFile.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
-
+#include <dcp06/database/DatabaseTypes.hpp>
+#include <BSS_TSK_ApiComponent.hpp>
 #include <GUI_Types.hpp>
 
 // Detect memory leaks
@@ -54,7 +56,7 @@
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
-//OBS_IMPLEMENT_EXECUTE(DCP::InitializationDialog);
+OBS_IMPLEMENT_EXECUTE(DCP::OffsetVDialog);
 
 // ================================================================================================
 // =====================================  Static Functions  =======================================
@@ -69,7 +71,8 @@
 // USER DIALOG
 
 DCP::OffsetVDialog::OffsetVDialog(DCP::Model* pModel):GUI::ModelHandlerC(),GUI::StandardDialogC(),
-	m_pFile(0),m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel),m_sFile(L"")
+	m_pFile(0),m_pPointId(0),m_pX(0),m_pY(0),m_pZ(0),m_pModel(pModel),m_sFile(L""),
+	m_pPointIdObserver(OBS_METHOD_TO_PARAM0(OffsetVDialog, OnPointIdChanged), this)
 {
 	//SetTxtApplicationId(AT_DCP06);
 }
@@ -102,6 +105,7 @@ void DCP::OffsetVDialog::OnInitDialog(void)
 	m_pPointId->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
 	m_pPointId->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
 	m_pPointId->SetEmptyAllowed(true);
+	m_pPointIdObserver.Attach(m_pPointId->GetSubject());
 	// m_pPointId->GetStringInputCtrl()->SetAlign(AlignmentT::AL_RIGHT); CAPTIVATE
 	AddCtrl(m_pPointId);
 
@@ -157,12 +161,41 @@ void DCP::OffsetVDialog::RefreshControls()
 {
 	if(m_pX && m_pY && m_pZ && m_pFile && m_pPointId)
 	{
+		// Default Point ID on first display when blank
+		DCP::Common common(m_pModel);
+		S_POINT_BUFF& ob = GetDataModel()->ovalues_buff;
+		common.strbtrim(ob.point_id);
+		if (ob.point_id[0] == '\0')
+		{
+			char suggested[POINT_ID_BUFF_LEN];
+			short d = GetDataModel()->display;
+			const char* prefix = (d == A321_DLG || d == A321_USERDEF_DLG) ? "321_pnt_" : "OFF";
+			common.get_suggested_next_point_id(suggested, sizeof(suggested), prefix, 1);
+			snprintf(ob.point_id, sizeof(ob.point_id), DCP_POINT_ID_FMT, suggested);
+		}
+
 		if(!m_sFile.IsEmpty())
 		{
 			m_pFile->GetStringInputCtrl()->SetString(m_sFile);
 		}
 		else
 			m_pFile->GetStringInputCtrl()->SetString(L" ");
+
+		// Point ID editable in 321 context (step 1: define offset point)
+		short d = GetDataModel()->display;
+		bool editable = (d == A321_DLG || d == A321_USERDEF_DLG);
+		if (editable)
+		{
+			m_pPointId->SetCtrlState(GUI::BaseCtrlC::CS_ReadWrite);
+			m_pPointId->GetStringInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadWrite);
+		}
+		else
+		{
+			m_pPointId->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
+			m_pPointId->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
+			m_pPointId->GetStringInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_ReadOnly);
+			m_pPointId->GetStringInputCtrl()->SetCtrlState(GUI::BaseCtrlC::CS_FocusUnable);
+		}
 
 		StringC sPointId(GetDataModel()->ovalues_buff.point_id);
 		
@@ -216,6 +249,20 @@ StringC DCP::OffsetVDialog::getfileName()
 {
 	StringC sSelectedFile = m_pFile->GetStringInputCtrl()->GetString();
 	return sSelectedFile;
+}
+
+void DCP::OffsetVDialog::OnPointIdChanged(int unNotifyCode, int /*ulParam2*/)
+{
+	if (unNotifyCode == GUI::NC_ONEDITMODE_LEFT && GetDataModel())
+	{
+		StringC sPoint = m_pPointId->GetStringInputCtrl()->GetString();
+		char cPoint[POINT_ID_BUFF_LEN];
+		DCP::Common common(m_pModel);
+		common.convert_to_ascii(sPoint, cPoint, (short)sizeof(cPoint));
+		common.strbtrim(cPoint);
+		snprintf(GetDataModel()->ovalues_buff.point_id, sizeof(GetDataModel()->ovalues_buff.point_id), DCP_POINT_ID_FMT, cPoint);
+		RefreshControls();
+	}
 }
 
 void DCP::OffsetVDialog::delete_point()
@@ -344,7 +391,7 @@ void DCP::OffsetVController::OnF1Pressed()
 	}
 	m_pDlg->SelectFile(StringC(m_pModel->m_currentJobId.c_str()));
 	DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
-	short iCount = jdb->getPointListAsSelectPoints(&pModel->points[0], MAX_SELECT_POINTS, DESIGN);
+	short iCount = jdb->getPointListAsSelectPointsForList(&pModel->points[0], MAX_SELECT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_321);
 	if (iCount > 0)
 	{
 		pModel->m_iPointsCount = iCount;
@@ -376,7 +423,7 @@ void DCP::OffsetVController::OnF2Pressed()
 		return;
 	}
 	DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
-	short iCount = jdb->getPointListAsSelectPoints(&pModel->points[0], MAX_SELECT_POINTS, DESIGN);
+	short iCount = jdb->getPointListAsSelectPointsForList(&pModel->points[0], MAX_SELECT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_321);
 	if (iCount > 0)
 	{
 		pModel->m_iPointsCount = iCount;
@@ -401,6 +448,21 @@ void DCP::OffsetVController::OnF5Pressed()
         USER_APP_VERIFY( false );
         return;
     }
+
+	// Phase D: Ensure Point ID when point is defined but ID blank (e.g. X/Y/Z manual entry)
+	S_POINT_BUFF& ob = m_pDlg->GetDataModel()->ovalues_buff;
+	if (ob.sta != POINT_NOT_DEFINED)
+	{
+		Common common(m_pModel);
+		if (common.strblank(ob.point_id))
+		{
+			char suggested[POINT_ID_BUFF_LEN];
+			short d = m_pDlg->GetDataModel()->display;
+			const char* prefix = (d == A321_DLG || d == A321_USERDEF_DLG) ? "321_pnt_" : "OFF";
+			common.get_suggested_next_point_id(suggested, sizeof(suggested), prefix, 1);
+			snprintf(ob.point_id, sizeof(ob.point_id), DCP_POINT_ID_FMT, suggested);
+		}
+	}
 
 	DCP::OffsetVModel* pModel = new DCP::OffsetVModel();
 	// copy point id
@@ -432,11 +494,23 @@ void DCP::OffsetVController::OnF6Pressed()
     }
 
     // Update model
-    // Set it to hello world dialog
     m_pDlg->UpdateData();
 
-    // Remove the following statement if you don't want an exit
-    // to the main menu
+	// Phase D: Ensure Point ID when point is defined via X/Y/Z but ID blank
+	S_POINT_BUFF& ob = m_pDlg->GetDataModel()->ovalues_buff;
+	if (ob.sta != POINT_NOT_DEFINED)
+	{
+		Common common(m_pModel);
+		if (common.strblank(ob.point_id))
+		{
+			char suggested[POINT_ID_BUFF_LEN];
+			short d = m_pDlg->GetDataModel()->display;
+			const char* prefix = (d == A321_DLG || d == A321_USERDEF_DLG) ? "321_pnt_" : "OFF";
+			common.get_suggested_next_point_id(suggested, sizeof(suggested), prefix, 1);
+			snprintf(ob.point_id, sizeof(ob.point_id), DCP_POINT_ID_FMT, suggested);
+		}
+	}
+
     (void)Close(EC_KEY_CONT);
 }
 
@@ -480,7 +554,7 @@ void DCP::OffsetVController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 			char bXmea[15], bYmea[15], bZmea[15];
 			char bXdes[15], bYdes[15], bZdes[15], pid[POINT_ID_BUFF_LEN];
 			bool useDesign = (pModel->points[iSelected - 1].bDesignSelected);
-			if (jdb->getPointByIndex(iSelected, !useDesign, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
+			if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_321, iSelected, !useDesign, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
 			{
 				if (useDesign)
 				{

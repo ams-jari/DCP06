@@ -25,6 +25,7 @@
 #include <dcp06/calculation/Calculation321.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
 #include <dcp06/database/DatabaseTypes.hpp>
+#include <dcp06/core/Common.hpp>
 
 #include <GUI_Desktop.hpp>
 #include <GUI_Application.hpp>
@@ -583,9 +584,39 @@ void DCP::Alignment321Controller::OnF5Pressed()
 			a321.line.uy = m_pDataModel->align321_line_buff[0].uy;
 			a321.line.uz = m_pDataModel->align321_line_buff[0].uz;
 			a321.line.calculated = (m_pDataModel->align321_line_buff[0].calc != 0);
-			a321.reference_point.x_mea = m_pDataModel->align321_ref_point_buff.x;
-			a321.reference_point.y_mea = m_pDataModel->align321_ref_point_buff.y;
-			a321.reference_point.z_mea = m_pDataModel->align321_ref_point_buff.z;
+			// Offset point (Offsv): design coords entered by user
+			if (m_pDataModel->align321_ovalues_buff.sta != 0)
+			{
+				char pid[POINT_ID_BUFF_LEN]; pid[0] = '\0';
+				DCP::Common common(m_pDlg->GetModel());
+				common.convert_to_ascii(StringC(m_pDataModel->align321_ovalues_buff.point_id), pid, POINT_ID_BUFF_LEN);
+				common.strbtrim(pid);
+				a321.offset_value.id = pid;
+				a321.offset_value.x_dsg = m_pDataModel->align321_ovalues_buff.x;
+				a321.offset_value.y_dsg = m_pDataModel->align321_ovalues_buff.y;
+				a321.offset_value.z_dsg = m_pDataModel->align321_ovalues_buff.z;
+				a321.offset_value.x_mea = std::numeric_limits<double>::quiet_NaN();
+				a321.offset_value.y_mea = std::numeric_limits<double>::quiet_NaN();
+				a321.offset_value.z_mea = std::numeric_limits<double>::quiet_NaN();
+			}
+			if (m_pDataModel->align321_ovalues_tool_buff.sta != 0)
+			{
+				a321.offset_value_tool.x_dsg = m_pDataModel->align321_ovalues_tool_buff.x;
+				a321.offset_value_tool.y_dsg = m_pDataModel->align321_ovalues_tool_buff.y;
+				a321.offset_value_tool.z_dsg = m_pDataModel->align321_ovalues_tool_buff.z;
+			}
+			// Reference point (MeasV): measured coords
+			if (m_pDataModel->align321_ref_point_buff.sta != 0)
+			{
+				char pid[POINT_ID_BUFF_LEN]; pid[0] = '\0';
+				DCP::Common common(m_pDlg->GetModel());
+				common.convert_to_ascii(StringC(m_pDataModel->align321_ref_point_buff.point_id), pid, POINT_ID_BUFF_LEN);
+				common.strbtrim(pid);
+				a321.reference_point.id = pid;
+				a321.reference_point.x_mea = m_pDataModel->align321_ref_point_buff.x;
+				a321.reference_point.y_mea = m_pDataModel->align321_ref_point_buff.y;
+				a321.reference_point.z_mea = m_pDataModel->align321_ref_point_buff.z;
+			}
 			a321.matrix.a00 = m_pDataModel->matrix[0][0]; a321.matrix.a01 = m_pDataModel->matrix[0][1];
 			a321.matrix.a02 = m_pDataModel->matrix[0][2]; a321.matrix.a03 = m_pDataModel->matrix[0][3];
 			a321.matrix.a10 = m_pDataModel->matrix[1][0]; a321.matrix.a11 = m_pDataModel->matrix[1][1];
@@ -594,6 +625,25 @@ void DCP::Alignment321Controller::OnF5Pressed()
 			a321.matrix.a22 = m_pDataModel->matrix[2][2]; a321.matrix.a23 = m_pDataModel->matrix[2][3];
 			if (!jdb->update321Alignment("321_1", a321))
 				jdb->add321Alignment("321_1", a321);
+			// Store 321 points in main points map for LIST/PICK (Phase 3)
+			if (!a321.offset_value.id.empty())
+			{
+				DCP::Database::PointData pd;
+				pd.source = DCP::Database::PointSource::DCP06_321;
+				pd.x_dsg = a321.offset_value.x_dsg; pd.y_dsg = a321.offset_value.y_dsg; pd.z_dsg = a321.offset_value.z_dsg;
+				pd.x_mea = a321.offset_value.x_mea; pd.y_mea = a321.offset_value.y_mea; pd.z_mea = a321.offset_value.z_mea;
+				if (!jdb->updatePoint(a321.offset_value.id, pd))
+					jdb->addPoint(a321.offset_value.id, pd);
+			}
+			if (!a321.reference_point.id.empty())
+			{
+				DCP::Database::PointData pd;
+				pd.source = DCP::Database::PointSource::DCP06_321;
+				pd.x_dsg = a321.reference_point.x_dsg; pd.y_dsg = a321.reference_point.y_dsg; pd.z_dsg = a321.reference_point.z_dsg;
+				pd.x_mea = a321.reference_point.x_mea; pd.y_mea = a321.reference_point.y_mea; pd.z_mea = a321.reference_point.z_mea;
+				if (!jdb->updatePoint(a321.reference_point.id, pd))
+					jdb->addPoint(a321.reference_point.id, pd);
+			}
 		}
 		Close(EC_KEY_CONT);
 	}

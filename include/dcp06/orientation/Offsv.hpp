@@ -32,6 +32,7 @@
 // ================================================================================================
 
 #include <dcp06/core/Types.hpp>
+#include <dcp06/core/Defs.hpp>
 #include <GUI_ComboLineCtrl.hpp>
 #include <GUI_StandardDialog.hpp>
 #include <GUI_TextCtrl.hpp>
@@ -95,7 +96,7 @@ namespace DCP
     };
 
 
-	class OffsetVDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC
+		class OffsetVDialog:public GUI::StandardDialogC, public GUI::ModelHandlerC, public OBS::CommandC
 	{
 		 public:
 
@@ -139,7 +140,11 @@ namespace DCP
 			GUI::ComboLineCtrlC* m_pZ;
 
 			Model* m_pModel;
+
+			OBS_DECLARE_EXECUTE(OffsetVDialog);
 	private:
+			OBS::ObserverC m_pPointIdObserver;
+			virtual void OnPointIdChanged(int unNotifyCode, int ulParam2);
 			StringC m_sFile;
 	};
 
