@@ -44,7 +44,9 @@ public:
     short getPointListAsSelectPoints(S_SELECT_POINTS* pList, short iMaxPoints, short iDef) const;
 
     /// LIST: Fill S_SELECT_POINTS with points having given tag. Backward compat: empty source treated as "3d_meas".
-    short getPointListAsSelectPointsForList(S_SELECT_POINTS* pList, short iMaxPoints, short iDef, const std::string& tag) const;
+    /// If designValuesOnly, only points with valid design coords (pointHasDesignValues).
+    short getPointListAsSelectPointsForList(S_SELECT_POINTS* pList, short iMaxPoints, short iDef, const std::string& tag,
+        bool designValuesOnly = false) const;
 
     /// PICK: Fill S_SELECT_POINTS with points that have actual values (any tag). For copying measured coords.
     short getPointListAsSelectPointsForPick(S_SELECT_POINTS* pList, short iMaxPoints) const;
@@ -66,8 +68,10 @@ public:
         char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const;
 
     /// Get point by 1-based index from LIST-filtered list (tag). Use after getPointListAsSelectPointsForList.
+    /// designValuesOnly must match the flag used when building that list.
     bool getPointByIndexForList(const std::string& tag, int index1Based, bool useActual, char* pid,
-        char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note) const;
+        char* xact, char* xdes, char* yact, char* ydes, char* zact, char* zdes, char* note,
+        bool designValuesOnly = false) const;
 
     /// Get point by 1-based index from PICK-filtered list (has actual values). Use after getPointListAsSelectPointsForPick.
     bool getPointByIndexForPick(int index1Based, char* pid,
@@ -76,6 +80,9 @@ public:
     /// Job display helpers (replace AdfFileFunc getFileName/getPointsCountString/etc when using DB)
     std::string getJobDisplayName() const;
     int getJobPointsCount() const;
+    /// Survey points only (source `3d_meas`; empty source treated as survey). Matches LIST; used for export / next ID.
+    int getSurveyPointCount() const;
+    bool getLastSurveyPointId(char* out, size_t outSize) const;
     std::string getJobFileSizeString() const;
     std::string getJobModDateString() const;
     std::string getJobModTimeString() const;

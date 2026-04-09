@@ -74,7 +74,7 @@
 // ================================================================================================
 DCP::FileView3DDialog::FileView3DDialog(DCP::FileModel* pDataModel):GUI::ModelHandlerC(),GUI::StandardDialogC()
 			,m_pFile(0),m_pPointId(0), m_pXDsg(0), m_pYDsg(0), m_pZDsg(0),
-			m_pXActDev(0),m_pYActDev(0),m_pZActDev(0),m_pDataModel(pDataModel)
+			m_pXActDev(0),m_pYActDev(0),m_pZActDev(0),m_pDataModel(pDataModel),pCommon(0)
 {
 	//SetTxtApplicationId(AT_DCP06);
 }
@@ -201,7 +201,8 @@ void DCP::FileView3DDialog::OnDialogActivated()
 	bool useDb = jdb && jdb->isJobLoaded() && !GetModel()->m_currentJobId.empty();
 	if (!useDb)
 		m_pDataModel->m_pAdfFile->always_single = 1;
-	pCommon = new Common(GetModel());
+	if (GetModel() && !pCommon)
+		pCommon = new Common(GetModel());
 	if (useDb) GetModel()->m_currentPointIndex = 1;
 	RefreshControls();
 	DCP06_TRACE_EXIT;
@@ -223,18 +224,28 @@ void DCP::FileView3DDialog::RefreshControls()
 	if(m_pFile && m_pPointId && m_pXDsg && m_pYDsg && m_pZDsg && m_pXActDev &&
 		m_pYActDev && m_pZActDev) 
 	{
+		DCP::Model* pModel = GetModel();
+		// SetModel may run RefreshControls before OnDialogActivated; Common must exist before use.
+		if (pModel && !pCommon)
+			pCommon = new Common(pModel);
+
 		char xdes_buf[32], ydes_buf[32], zdes_buf[32];
 		char xmea_buf[32], ymea_buf[32], zmea_buf[32];
 		char* xdes_ptr = xdes_buf, *ydes_ptr = ydes_buf, *zdes_ptr = zdes_buf;
 		char* xmea_ptr = xmea_buf, *ymea_ptr = ymea_buf, *zmea_ptr = zmea_buf;
 		char pointid_buf[32];
-		DCP::Database::JsonDatabase* jdb = GetModel() && GetModel()->GetDatabase() ?
-			dynamic_cast<DCP::Database::JsonDatabase*>(GetModel()->GetDatabase()) : 0;
-		bool useDb = jdb && jdb->isJobLoaded() && !GetModel()->m_currentJobId.empty();
+		DCP::Database::JsonDatabase* jdb = pModel && pModel->GetDatabase() ?
+			dynamic_cast<DCP::Database::JsonDatabase*>(pModel->GetDatabase()) : 0;
+		bool useDb = jdb && jdb->isJobLoaded() && pModel && !pModel->m_currentJobId.empty();
 		if (useDb)
 		{
 			pointid_buf[0] = xdes_buf[0] = ydes_buf[0] = zdes_buf[0] = xmea_buf[0] = ymea_buf[0] = zmea_buf[0] = '\0';
-			int idx = GetModel()->m_currentPointIndex;
+			int idx = pModel->m_currentPointIndex;
+			int nFlat = jdb->getJobPointsCount();
+			if (idx > nFlat && nFlat > 0)
+				pModel->m_currentPointIndex = idx = nFlat;
+			else if (idx < 1 && nFlat > 0)
+				pModel->m_currentPointIndex = idx = 1;
 			if (idx > 0 && jdb->getPointByIndex(idx, true, pointid_buf, xmea_buf, xdes_buf, ymea_buf, ydes_buf, zmea_buf, zdes_buf, 0))
 			{
 				// buffers filled
@@ -252,17 +263,18 @@ void DCP::FileView3DDialog::RefreshControls()
 		char y_diff[XYZ_VALUE_BUFF_LEN];
 		char z_diff[XYZ_VALUE_BUFF_LEN];
 
-		m_pFile->GetStringInputCtrl()->SetString(useDb && GetModel() ?
-			StringC(GetModel()->m_currentJobId.c_str()) : StringC(L""));
+		m_pFile->GetStringInputCtrl()->SetString(useDb && pModel ?
+			StringC(pModel->m_currentJobId.c_str()) : StringC(L""));
 		
 		char coord_str[XYZ_MEA_AND_DIFF_BUFF_LEN];
 		
 		char pointid_temp[POINT_ID_BUFF_LEN];
 		sprintf(pointid_temp,"%s", pointid_buf);
-		pCommon->strbtrim(pointid_temp);
+		if (pCommon)
+			pCommon->strbtrim(pointid_temp);
 		m_pPointId->GetStringInputCtrl()->SetString(StringC(pointid_temp));
 
-		if(!pCommon->strblank(xdes_ptr))
+		if(pCommon && !pCommon->strblank(xdes_ptr))
 		{
 			//sprintf(temp,"%.*f",m_pModel->m_nDecimals,atof(GetModel()->m_pAdfFile->xdes_front));
 			m_pXDsg->GetFloatInputCtrl()->SetDouble(atof(xdes_ptr));
@@ -272,9 +284,9 @@ void DCP::FileView3DDialog::RefreshControls()
 			m_pXDsg->GetFloatInputCtrl()->SetEmpty();
 		}
 		
-		if(!pCommon->strblank(ydes_ptr))
+		if(pCommon && !pCommon->strblank(ydes_ptr))
 		{
-			sprintf(coord_str,"%.*f",GetModel()->m_nDecimals,atof(ydes_ptr));
+			sprintf(coord_str,"%.*f",pModel ? pModel->m_nDecimals : 3,atof(ydes_ptr));
 			//m_pYDsg->GetFloatInputCtrl()->SetString(StringC(temp));
 			m_pYDsg->GetFloatInputCtrl()->SetDouble(atof(ydes_ptr));
 		}
@@ -283,9 +295,9 @@ void DCP::FileView3DDialog::RefreshControls()
 			m_pYDsg->GetFloatInputCtrl()->SetEmpty();
 		}
 		
-		if(!pCommon->strblank(zdes_ptr))
+		if(pCommon && !pCommon->strblank(zdes_ptr))
 		{
-			sprintf(coord_str,"%.*f",GetModel()->m_nDecimals,atof(zdes_ptr));
+			sprintf(coord_str,"%.*f",pModel ? pModel->m_nDecimals : 3,atof(zdes_ptr));
 			//m_pZDsg->GetFloatInputCtrl()->SetString(StringC(temp));
 			m_pZDsg->GetFloatInputCtrl()->SetDouble(atof(zdes_ptr));
 		}
@@ -294,9 +306,13 @@ void DCP::FileView3DDialog::RefreshControls()
 			m_pZDsg->GetFloatInputCtrl()->SetEmpty();
 		}
 
+		if (pCommon) {
 		pCommon->get_dist_(xmea_ptr,xdes_ptr,x_diff);
 		pCommon->get_dist_(ymea_ptr,ydes_ptr,y_diff);
 		pCommon->get_dist_(zmea_ptr,zdes_ptr,z_diff);
+		} else {
+			x_diff[0] = y_diff[0] = z_diff[0] = '\0';
+		}
 
 		//if(!pCommon->strblank(GetModel()->m_pAdfFile->xmea_front))
 		//{

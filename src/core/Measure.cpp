@@ -40,6 +40,9 @@
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/core/ChangeFace.hpp>
 #include <dcp06/core/SelectPoint.hpp>
+#include <dcp06/core/SelectOnePoint.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 #include <dcp06/core/PointBuffModel.hpp>
 #include <dcp06/core/Common.hpp>
 #include <dcp06/measurement/MeasDist.hpp>
@@ -544,10 +547,10 @@ void DCP::MeasureController::show_function_keys()
 		vDef.strLable = StringC(AT_DCP06,K_DCP_ADD_TOK);
 		SetFunctionKey( FK4, vDef );
 
-		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
+		vDef.strLable = StringC(AT_DCP06,K_DCP_PICK_TOK);
 		SetFunctionKey( FK5, vDef );
 
-		vDef.strLable = L" ";
+		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 		SetFunctionKey( FK6, vDef );
 		
 		// SHIFT
@@ -706,7 +709,7 @@ void DCP::MeasureController::OnF4Pressed()
 	m_pDlg->add_point();
 }
 
-// Phase E: F5 = CONT (ADD moved to F4)
+// F5 = PICK (321 line/plane measurement)
 void DCP::MeasureController::OnF5Pressed()
 {
 	if (m_pDlg == nullptr)
@@ -714,20 +717,44 @@ void DCP::MeasureController::OnF5Pressed()
 		USER_APP_VERIFY( false );
 		return;
 	}
-	if(!m_bCamera)
-	{
-		m_pDlg->UpdateData();
-		(void)Close(EC_KEY_CONT);
-	}
-	else
+	if (m_bCamera)
 	{
 		m_bCamera = false;
 		poVideoDlg->Close();
 		SetActiveDialog(MEAS_DLG);
 		show_function_keys();
+		return;
+	}
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	if (!jdb || !jdb->isJobLoaded() || m_pModel->m_currentJobId.empty())
+	{
+		MsgBox msgBox;
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
+		msgBox.ShowMessageOk(msg);
+		return;
+	}
+	DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
+	short iCount = jdb->getPointListAsSelectPointsForPick(&pModel->points[0], MAX_SELECT_POINTS);
+	if (iCount > 0)
+	{
+		pModel->m_iPointsCount = iCount;
+		pModel->sSelectedFile = StringC(m_pModel->m_currentJobId.c_str());
+		pModel->m_iDef = ACTUAL;
+		if (GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
+			(void)AddController(SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
+		(void)GetController(SELECT_ONE_POINT_CONTROLLER)->SetModel(pModel);
+		SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
+	}
+	else
+	{
+		MsgBox msgBox;
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_NO_POINTS_TOK);
+		msgBox.ShowMessageOk(msg);
 	}
 }
-// F6 (unused)
+// F6 = CONT
 void DCP::MeasureController::OnF6Pressed()
 {
     if (m_pDlg == nullptr)
@@ -883,6 +910,32 @@ void DCP::MeasureController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 		StringC strSelectedPoint = pModel->m_strSelectedPoint;
 		short iSelectedPointId = pModel->m_iSelectedId;
 		m_pDlg->SelectPoint(strSelectedPoint,iSelectedPointId);
+	}
+
+	// PICK: Copy measured coords from selected point (321 line/plane)
+	if (lCtrlID == SELECT_ONE_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
+	{
+		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*)GetController(SELECT_ONE_POINT_CONTROLLER)->GetModel();
+		if (pModel->iSelectedNo > 0)
+		{
+			DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+			if (jdb && jdb->isJobLoaded())
+			{
+				char bXmea[15], bYmea[15], bZmea[15];
+				char bXdes[15], bYdes[15], bZdes[15], pid[POINT_ID_BUFF_LEN];
+				if (jdb->getPointByIndexForPick(pModel->iSelectedNo, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
+				{
+					if (!m_pCommon->strblank(bXmea) && !m_pCommon->strblank(bYmea) && !m_pCommon->strblank(bZmea))
+					{
+						double x = atof(bXmea), y = atof(bYmea), z = atof(bZmea);
+						m_pDlg->update_meas_values(x, y, z, POINT_MEASURED);
+						if (!m_pCommon->strblank(pid))
+							snprintf(m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint - 1].point_id, sizeof(m_pDlg->GetDataModel()->point_table[0].point_id), DCP_POINT_ID_FMT, pid);
+					}
+				}
+			}
+		}
+		m_pDlg->RefreshControls();
 	}
 
 	// MEASURE DIST

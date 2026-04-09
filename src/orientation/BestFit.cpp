@@ -61,6 +61,45 @@
 // =====================================  Static Functions  =======================================
 // ================================================================================================
 
+namespace {
+
+/// After a job is opened: clear Best Fit buffers and load OCS template points (3D meas design) from DB.
+void loadBestFitOcsTemplateFromJob(DCP::BestFitModel* pBf, DCP::Model* pApp, DCP::Database::JsonDatabase* jdb)
+{
+	if (!pBf || !pApp || !jdb || !jdb->isJobLoaded())
+		return;
+	DCP::Common common(pApp);
+	memset(&pBf->point_DCS[0], 0, sizeof(DCP::S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memset(&pBf->point_OCS[0], 0, sizeof(DCP::S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	memset(&pBf->point_RES[0], 0, sizeof(DCP::S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+	pBf->calculated = false;
+	pBf->INTO_TEMPLATE = false;
+	pBf->INTO_CAPTURE = false;
+	pApp->ocsp_defined = false;
+
+	DCP::S_SELECT_POINTS selPts[MAX_BESTFIT_POINTS];
+	char pid[POINT_ID_BUFF_LEN];
+	char bXdes[DCP_COORD_STR_BUFF_LEN], bYdes[DCP_COORD_STR_BUFF_LEN], bZdes[DCP_COORD_STR_BUFF_LEN];
+	char bXmea[DCP_COORD_STR_BUFF_LEN], bYmea[DCP_COORD_STR_BUFF_LEN], bZmea[DCP_COORD_STR_BUFF_LEN];
+	short nPts = jdb->getPointListAsSelectPointsForList(&selPts[0], MAX_BESTFIT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_3D_MEAS);
+	if (nPts <= 0)
+		return;
+	for (short i = 0; i < nPts && i < MAX_BESTFIT_POINTS; i++)
+	{
+		if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, i + 1, false, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
+		{
+			snprintf(pBf->point_OCS[i].point_id, sizeof(pBf->point_OCS[i].point_id), DCP_POINT_ID_FMT, pid);
+			strcpy(pBf->point_DCS[i].point_id, pBf->point_OCS[i].point_id);
+			pBf->point_OCS[i].x = atof(bXdes);
+			pBf->point_OCS[i].y = atof(bYdes);
+			pBf->point_OCS[i].z = atof(bZdes);
+			pBf->point_OCS[i].sta = (!common.strblank(bXdes) && !common.strblank(bYdes) && !common.strblank(bZdes)) ? POINT_DESIGN : POINT_NOT_DEFINED;
+		}
+	}
+	pBf->INTO_TEMPLATE = true;
+}
+
+}  // namespace
 
 // ================================================================================================
 // ======================================  Member Functions  ======================================
@@ -175,13 +214,13 @@ void DCP::BestFitDialog::RefreshControls()
 	if(m_pFile && m_pPoints && 	m_pPointMeas &&  m_pCalc)
 	{
 		Common common(GetModel());
-		StringC sStat=L"-";
-		if(common.get_OCS_points_count(&m_pDataModel->point_OCS[0],MAX_BESTFIT_POINTS) >= 3 && m_pDataModel->INTO_TEMPLATE)
-			sStat = L"+";
+		// Job row: show current job id (DB); "-" when none
+		if (!GetModel()->m_currentJobId.empty())
+			m_pFile->GetStringInputCtrl()->SetString(StringC(GetModel()->m_currentJobId.c_str()));
+		else
+			m_pFile->GetStringInputCtrl()->SetString(L"-");
 
-		m_pFile->GetStringInputCtrl()->SetString(sStat);
-		
-		sStat = L"-";
+		StringC sStat = L"-";
 		if(common.get_OCS_points_count(&m_pDataModel->point_OCS[0],MAX_BESTFIT_POINTS) >= 3 && m_pDataModel->INTO_CAPTURE)
 			sStat = L"+";	
 		
@@ -335,7 +374,7 @@ DCP::BestFitController::BestFitController(Model* pModel)
 	//vDef.nAppId = AT_DCP06;
 	vDef.poOwner = this;
 
-	vDef.strLable = StringC(AT_DCP06,K_DCP_FILE_TOK);
+	vDef.strLable = StringC(AT_DCP06, K_DCP_3DFILE_TOK);
 	SetFunctionKey( FK1, vDef );
 
 	vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_TOK);
@@ -395,50 +434,15 @@ void DCP::BestFitController::OnF1Pressed()
 		USER_APP_VERIFY(false);
 		return;
 	}
-	// DB-primary: job must be loaded; ADF only for import/export in File dialog
-	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
-	if (!jdb || !jdb->isJobLoaded() || m_pModel->m_currentJobId.empty())
+	// JOB: list all jobs in storage (same as main File / 3D meas job picker)
+	DCP::SelectFileModel* pSel = new DCP::SelectFileModel;
+	if (GetController(SELECT_FILE_CONTROLLER) == nullptr)
 	{
-		MsgBox msgBox;
-		StringC msg;
-		msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
-		msgBox.ShowMessageOk(msg);
-		return;
+		StringC sTitle = GetTitle();
+		(void)AddController(SELECT_FILE_CONTROLLER, new DCP::SelectFileController(FILE_TYPE_JOBS, sTitle, m_pModel));
 	}
-	Common common(m_pDlg->GetModel());
-	if (common.get_OCS_points_count(&m_pDataModel->point_OCS[0], MAX_BESTFIT_POINTS) > 0)
-	{
-		if (!delete_bestFit())
-			return;
-	}
-	// Load points from current job (design coords for OCS template)
-	S_SELECT_POINTS selPts[MAX_BESTFIT_POINTS];
-	char pid[POINT_ID_BUFF_LEN], bXdes[DCP_COORD_STR_BUFF_LEN], bYdes[DCP_COORD_STR_BUFF_LEN], bZdes[DCP_COORD_STR_BUFF_LEN];
-	char bXmea[DCP_COORD_STR_BUFF_LEN], bYmea[DCP_COORD_STR_BUFF_LEN], bZmea[DCP_COORD_STR_BUFF_LEN];
-	short nPts = jdb->getPointListAsSelectPointsForList(selPts, MAX_BESTFIT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_3D_MEAS);
-	if (nPts <= 0)
-	{
-		MsgBox msgBox;
-		StringC msg;
-		msg.LoadTxt(AT_DCP06, M_DCP_NO_POINTS_TOK);
-		msgBox.ShowMessageOk(msg);
-		return;
-	}
-	for (short i = 0; i < nPts && i < MAX_BESTFIT_POINTS; i++)
-	{
-		if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, i + 1, false, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
-		{
-			snprintf(m_pDataModel->point_OCS[i].point_id, sizeof(m_pDataModel->point_OCS[i].point_id), DCP_POINT_ID_FMT, pid);
-			strcpy(m_pDataModel->point_DCS[i].point_id, m_pDataModel->point_OCS[i].point_id);
-			m_pDataModel->point_OCS[i].x = atof(bXdes);
-			m_pDataModel->point_OCS[i].y = atof(bYdes);
-			m_pDataModel->point_OCS[i].z = atof(bZdes);
-			m_pDataModel->point_OCS[i].sta = (!common.strblank(bXdes) && !common.strblank(bYdes) && !common.strblank(bZdes)) ? POINT_DESIGN : POINT_NOT_DEFINED;
-		}
-	}
-	m_pDataModel->INTO_TEMPLATE = true;
-	m_pDataModel->calculated = false;
-	m_pDlg->RefreshControls();
+	(void)GetController(SELECT_FILE_CONTROLLER)->SetModel(pSel);
+	SetActiveController(SELECT_FILE_CONTROLLER, true);
 }
 
 void DCP::BestFitController::OnF2Pressed()
@@ -676,6 +680,31 @@ void DCP::BestFitController::OnActiveDialogClosed( int /*lDlgID*/, int /*lExitCo
 // Description: React on close of controller
 void DCP::BestFitController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 {
+	if (lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	{
+		DCP::SelectFileController* selCtrl = dynamic_cast<DCP::SelectFileController*>(GetController(SELECT_FILE_CONTROLLER));
+		DCP::SelectFileModel* pSel = (DCP::SelectFileModel*)GetController(SELECT_FILE_CONTROLLER)->GetModel();
+		StringC strSelected = pSel->m_strSelectedFile;
+		strSelected.Trim();
+		if (!strSelected.IsEmpty() && selCtrl && selCtrl->GetFileType() == FILE_TYPE_JOBS)
+		{
+			char jobIdBuf[64];
+			jobIdBuf[0] = '\0';
+			BSS::UTI::BSS_UTI_WCharToAscii(strSelected, jobIdBuf);
+			std::string jobId(jobIdBuf);
+			DCP::Database::IDatabase* db = m_pModel->GetDatabase();
+			if (db && !jobId.empty() && db->loadJob(jobId))
+			{
+				m_pModel->m_currentJobId = jobId;
+				m_pModel->ADFFileName = StringC(jobId.c_str());
+				DCP::Database::JsonDatabase* jdb = dynamic_cast<DCP::Database::JsonDatabase*>(db);
+				if (jdb)
+					loadBestFitOcsTemplateFromJob(m_pDataModel, m_pModel, jdb);
+				m_pDlg->UpdateData();
+			}
+		}
+	}
+
 	if(lCtrlID == BESTFIT_POINT_CONTROLLER) 
 	{
 		DCP::BestFitSelectPointsModel* pModel = (DCP::BestFitSelectPointsModel*) GetController( BESTFIT_POINT_CONTROLLER )->GetModel();

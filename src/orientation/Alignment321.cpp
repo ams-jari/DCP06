@@ -751,8 +751,31 @@ void DCP::Alignment321Controller::OnActiveControllerClosed( int lCtrlID, int lEx
 		else
 			m_pDataModel->align321_active_line = Y_LINE;
 
-
-
+		// Add 321 plane points to main points for PICK (before CALC)
+		DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+		if (jdb && jdb->isJobLoaded() && !m_pDlg->GetModel()->m_currentJobId.empty())
+		{
+			DCP::Common common(m_pDlg->GetModel());
+			S_PLANE_BUFF* pPl = m_pDataModel->align321_hz_plane ? &m_pDataModel->align321_hz_plane_buff[0] : &m_pDataModel->align321_plane_buff[0];
+			for (int i = 0; i < MAX_POINTS_IN_PLANE; i++)
+			{
+				const S_POINT_BUFF& pt = pPl->points[i];
+				if (pt.sta == POINT_NOT_DEFINED) continue;
+				if (pt.x == pt.x && pt.y == pt.y && pt.z == pt.z)
+				{
+					char pid[POINT_ID_BUFF_LEN]; pid[0] = '\0';
+					common.convert_to_ascii(StringC(pt.point_id), pid, POINT_ID_BUFF_LEN);
+					common.strbtrim(pid);
+					if (pid[0] == '\0') continue;
+					DCP::Database::PointData pd;
+					pd.source = DCP::Database::PointSource::DCP06_321;
+					pd.x_mea = pt.x; pd.y_mea = pt.y; pd.z_mea = pt.z;
+					if (!jdb->updatePoint(pid, pd))
+						jdb->addPoint(pid, pd);
+				}
+			}
+			jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);
+		}
 	}
 	if (lCtrlID == DEFINE_LINE_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
@@ -761,6 +784,30 @@ void DCP::Alignment321Controller::OnActiveControllerClosed( int lCtrlID, int lEx
 		memcpy(&m_pDataModel->align321_line_buff[0], &pModel->line_buff[0], sizeof(S_LINE_BUFF));
 		m_pDataModel->old_active_coodinate_system = DCS;
 		m_pDlg->GetModel()->ocsd_defined = false;
+		// Add 321 line points to main points for PICK (before CALC)
+		DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+		if (jdb && jdb->isJobLoaded() && !m_pDlg->GetModel()->m_currentJobId.empty())
+		{
+			DCP::Common common(m_pDlg->GetModel());
+			for (int i = 0; i < MAX_POINTS_IN_LINE; i++)
+			{
+				const S_POINT_BUFF& pt = m_pDataModel->align321_line_buff[0].points[i];
+				if (pt.sta == POINT_NOT_DEFINED) continue;
+				if (pt.x == pt.x && pt.y == pt.y && pt.z == pt.z)  // has valid coords (not NaN)
+				{
+					char pid[POINT_ID_BUFF_LEN]; pid[0] = '\0';
+					common.convert_to_ascii(StringC(pt.point_id), pid, POINT_ID_BUFF_LEN);
+					common.strbtrim(pid);
+					if (pid[0] == '\0') continue;
+					DCP::Database::PointData pd;
+					pd.source = DCP::Database::PointSource::DCP06_321;
+					pd.x_mea = pt.x; pd.y_mea = pt.y; pd.z_mea = pt.z;
+					if (!jdb->updatePoint(pid, pd))
+						jdb->addPoint(pid, pd);
+				}
+			}
+			jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);
+		}
 	}
 	if (lCtrlID == OFFSV_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{

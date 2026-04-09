@@ -56,6 +56,7 @@ public:
     virtual ~FormatSelectDialog();
     virtual void OnInitDialog();
     virtual void OnDialogActivated();
+    virtual void RefreshControls();
     virtual bool SetModel(GUI::ModelC* pModel);
     FormatSelectModel* GetDataModel() const;
 protected:

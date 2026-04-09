@@ -320,7 +320,7 @@ DCP::OffsetVController::OffsetVController(DCP::Model* pModel, short display)
 	vDef.strLable = StringC(AT_DCP06,K_DCP_3DFILE_TOK);
 	SetFunctionKey( FK1, vDef );
 
-	vDef.strLable = StringC(AT_DCP06,K_DCP_POINT_ID_TOK);
+	vDef.strLable = StringC(AT_DCP06, K_DCP_PICK_TOK);
 	SetFunctionKey( FK2, vDef );
 
 	if(display != A321_USERDEF_DLG)
@@ -391,7 +391,8 @@ void DCP::OffsetVController::OnF1Pressed()
 	}
 	m_pDlg->SelectFile(StringC(m_pModel->m_currentJobId.c_str()));
 	DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
-	short iCount = jdb->getPointListAsSelectPointsForList(&pModel->points[0], MAX_SELECT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_321);
+	pModel->m_listDesignValuesOnly = false;
+	short iCount = jdb->getPointListAsSelectPointsForList(&pModel->points[0], MAX_SELECT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_321, false);
 	if (iCount > 0)
 	{
 		pModel->m_iPointsCount = iCount;
@@ -408,7 +409,7 @@ void DCP::OffsetVController::OnF1Pressed()
 	}
 }
 
-// PID - use current job and DB point selection (no ADF)
+// PICK: 321-tagged points that have design values only (copy design XYZ into offset values)
 void DCP::OffsetVController::OnF2Pressed()
 {
 	if (m_pDlg == nullptr)
@@ -423,7 +424,8 @@ void DCP::OffsetVController::OnF2Pressed()
 		return;
 	}
 	DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
-	short iCount = jdb->getPointListAsSelectPointsForList(&pModel->points[0], MAX_SELECT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_321);
+	pModel->m_listDesignValuesOnly = true;
+	short iCount = jdb->getPointListAsSelectPointsForList(&pModel->points[0], MAX_SELECT_POINTS, DESIGN, DCP::Database::PointSource::DCP06_321, true);
 	if (iCount > 0)
 	{
 		pModel->m_iPointsCount = iCount;
@@ -554,7 +556,7 @@ void DCP::OffsetVController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 			char bXmea[15], bYmea[15], bZmea[15];
 			char bXdes[15], bYdes[15], bZdes[15], pid[POINT_ID_BUFF_LEN];
 			bool useDesign = (pModel->points[iSelected - 1].bDesignSelected);
-			if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_321, iSelected, !useDesign, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
+			if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_321, iSelected, !useDesign, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0, pModel->m_listDesignValuesOnly))
 			{
 				if (useDesign)
 				{

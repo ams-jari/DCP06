@@ -64,7 +64,7 @@ using namespace DCP;
 
 // ******************************************************************************************
 FileDialog::FileDialog(DCP::FileModel* pFileModel):m_pFile(0), m_pNumberOfPoints(0), 
-m_pSize(0), m_pDate(0), m_pTime(0),m_pFreeSpace(0),m_pDataModel(pFileModel)
+m_pSize(0), m_pDate(0), m_pTime(0),m_pFreeSpace(0),m_pDataModel(pFileModel),m_pCommon(0),m_pModel(0)
 {
 	//SetTxtApplicationId(AT_DCP06);
 	
@@ -438,7 +438,7 @@ bool DCP::FileController::SetModel( GUI::ModelC* pModel )
 void DCP::FileController::OnSHF1Pressed()
 {
 	DCP06_TRACE_ENTER;
-	if (m_pDlg == nullptr) { USER_APP_VERIFY(false); DCP06_TRACE_EXIT; return; }
+	if (m_pDlg == nullptr || m_pModel == nullptr) { USER_APP_VERIFY(false); DCP06_TRACE_EXIT; return; }
 	DCP::FormatSelectModel* pFmtModel = new FormatSelectModel;
 	pFmtModel->m_bForImport = true;
 	if (GetController(FORMAT_SELECT_CONTROLLER) == nullptr)
@@ -453,6 +453,8 @@ void DCP::FileController::OnSHF1Pressed()
 void DCP::FileController::OnSHF4Pressed()
 {
 	DCP06_TRACE_ENTER;
+	if (m_pModel == nullptr || m_pDlg == nullptr)
+		{ DCP06_TRACE_EXIT; return; }
 	if (m_pModel->m_currentJobId.empty())
 		{ DCP06_TRACE_EXIT; return; }
 	DCP::FormatSelectModel* pFmtModel = new FormatSelectModel;

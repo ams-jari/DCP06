@@ -1426,9 +1426,9 @@ void DCP::Common::get_suggested_next_point_id(char* outBuf, size_t outSize, cons
 	bool jobOpen = jdb && jdb->isJobLoaded() && !m_pModel->m_currentJobId.empty();
 	if (jobOpen)
 	{
-		int nPts = jdb->getJobPointsCount();
 		char lastPid[POINT_ID_BUFF_LEN]; lastPid[0] = '\0';
-		if (nPts > 0 && jdb->getPointByIndex(nPts, true, lastPid, 0, 0, 0, 0, 0, 0, 0) && lastPid[0] != '\0')
+		// Use last *survey* (3d_meas) point only so 321_pnt_* / internal rows do not steal the sequence (P4 -> P5).
+		if (jdb->getLastSurveyPointId(lastPid, sizeof lastPid) && lastPid[0] != '\0')
 		{
 			strbtrim(lastPid);
 			char* p = strchr(lastPid, '(');
@@ -1445,7 +1445,10 @@ void DCP::Common::get_suggested_next_point_id(char* outBuf, size_t outSize, cons
 				snprintf(outBuf + i + 1, outSize - (size_t)(i + 1), "%d", num + 1);
 			}
 			else
-				snprintf(outBuf, outSize, "P%d", nPts + 1);
+			{
+				int nSurvey = jdb->getSurveyPointCount();
+				snprintf(outBuf, outSize, "P%d", nSurvey + 1);
+			}
 			return;
 		}
 	}

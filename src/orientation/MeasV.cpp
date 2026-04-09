@@ -37,6 +37,9 @@
 #include <dcp06/measurement/Circle.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/core/MsgBox.hpp>
+#include <dcp06/core/SelectOnePoint.hpp>
+#include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 #include <dcp06/core/PointBuffModel.hpp>
 #include <dcp06/measurement/MeasXYZ.hpp>
 #include <dcp06/measurement/MeasDist.hpp>
@@ -337,6 +340,9 @@ ResetFunctionKeys();
 		vDef.strLable = StringC(AT_DCP06,K_DCP_MEAS_TOK);
 		SetFunctionKey( FK1, vDef );
 
+		vDef.strLable = StringC(AT_DCP06,K_DCP_PICK_TOK);
+		SetFunctionKey( FK4, vDef );
+
 		vDef.strLable = StringC(AT_DCP06,K_DCP_OFFSV_TOK);
 		SetFunctionKey( FK5, vDef );
 
@@ -434,9 +440,7 @@ void DCP::MeasVController::OnF1Pressed()
 		
 			DisableFunctionKey(FK1);
 			DisableFunctionKey(FK2);
-			/*isableFunctionKey(FK3);
 			DisableFunctionKey(FK4);
-			*/
 			DisableFunctionKey(FK5);
 			DisableFunctionKey(FK6);
 
@@ -488,7 +492,46 @@ void DCP::MeasVController::OnF2Pressed()
 		(void)GetController( MEAS_DIST_CONTROLLER )->SetModel( pModel);
 		SetActiveController(MEAS_DIST_CONTROLLER, true);
 	}
-} 
+}
+
+// PICK: Copy measured coords from existing point (Phase 5)
+void DCP::MeasVController::OnF4Pressed()
+{
+	if (m_pDlg == nullptr)
+	{
+		USER_APP_VERIFY(false);
+		return;
+	}
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	if (!jdb || !jdb->isJobLoaded() || m_pModel->m_currentJobId.empty())
+	{
+		MsgBox msgBox;
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
+		msgBox.ShowMessageOk(msg);
+		return;
+	}
+	DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
+	short iCount = jdb->getPointListAsSelectPointsForPick(&pModel->points[0], MAX_SELECT_POINTS);
+	if (iCount > 0)
+	{
+		pModel->m_iPointsCount = iCount;
+		pModel->sSelectedFile = StringC(m_pModel->m_currentJobId.c_str());
+		pModel->m_iDef = ACTUAL;
+		if (GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
+			(void)AddController(SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
+		(void)GetController(SELECT_ONE_POINT_CONTROLLER)->SetModel(pModel);
+		SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
+	}
+	else
+	{
+		MsgBox msgBox;
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_NO_POINTS_TOK);
+		msgBox.ShowMessageOk(msg);
+	}
+}
+
 // OFFSV
 void DCP::MeasVController::OnF5Pressed()
 {
@@ -630,8 +673,7 @@ void DCP::MeasVController::OnActiveControllerClosed( int lCtrlID, int lExitCode 
 	{
 		EnableFunctionKey(FK1);
 		EnableFunctionKey(FK2);
-		/*EnableFunctionKey(FK3);
-		EnableFunctionKey(FK4);*/
+		EnableFunctionKey(FK4);
 		EnableFunctionKey(FK5);
 		EnableFunctionKey(FK6);
 
@@ -648,8 +690,7 @@ void DCP::MeasVController::OnActiveControllerClosed( int lCtrlID, int lExitCode 
 	{
 		EnableFunctionKey(FK1);
 		EnableFunctionKey(FK2);
-		/*EnableFunctionKey(FK3);
-		EnableFunctionKey(FK4);*/
+		EnableFunctionKey(FK4);
 		EnableFunctionKey(FK5);
 		EnableFunctionKey(FK6);
 
@@ -664,6 +705,32 @@ void DCP::MeasVController::OnActiveControllerClosed( int lCtrlID, int lExitCode 
 			m_pCommon->strbtrim(pModel->sPointId);
 			if (!m_pCommon->strblank(pModel->sPointId))
 				snprintf(m_pDlg->GetDataModel()->ref_point_buff.point_id, sizeof(m_pDlg->GetDataModel()->ref_point_buff.point_id), DCP_POINT_ID_FMT, pModel->sPointId);
+		}
+	}
+
+	if (lCtrlID == SELECT_ONE_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
+	{
+		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*)GetController(SELECT_ONE_POINT_CONTROLLER)->GetModel();
+		int iSelected = pModel->iSelectedNo;
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		if (jdb && jdb->isJobLoaded() && iSelected > 0)
+		{
+			char bXmea[15], bYmea[15], bZmea[15];
+			char bXdes[15], bYdes[15], bZdes[15], pid[POINT_ID_BUFF_LEN];
+			if (jdb->getPointByIndexForPick(iSelected, pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
+			{
+				if (!m_pCommon->strblank(bXmea) && !m_pCommon->strblank(bYmea) && !m_pCommon->strblank(bZmea))
+				{
+					m_pDlg->GetDataModel()->ref_point_buff.x = atof(bXmea);
+					m_pDlg->GetDataModel()->ref_point_buff.y = atof(bYmea);
+					m_pDlg->GetDataModel()->ref_point_buff.z = atof(bZmea);
+					m_pDlg->GetDataModel()->ref_point_buff.sta = POINT_MEASURED;
+					if (!m_pCommon->strblank(pid))
+						snprintf(m_pDlg->GetDataModel()->ref_point_buff.point_id, sizeof(m_pDlg->GetDataModel()->ref_point_buff.point_id), DCP_POINT_ID_FMT, pid);
+					m_pDlg->set_values(m_pDlg->GetDataModel()->ref_point_buff.x, m_pDlg->GetDataModel()->ref_point_buff.y, m_pDlg->GetDataModel()->ref_point_buff.z);
+					m_pDlg->RefreshControls();
+				}
+			}
 		}
 	}
 

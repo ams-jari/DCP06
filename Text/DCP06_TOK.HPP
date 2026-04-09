@@ -127,7 +127,7 @@ const RSC::TxtC::TOKEN
       P_DCP_X_TOK                          = 82,   // "x"                                                         
       P_DCP_Y_TOK                          = 83,   // "y"                                                         
       P_DCP_Z_TOK                          = 84,   // "z"                                                         
-      P_DCP_TEMPLATE_SK_TOK                = 85,   // "File                        .."                            
+      P_DCP_TEMPLATE_SK_TOK                = 85,   // "Job"                            
       P_DCP_OCS_POINTS_SK_TOK              = 86,   // "OR insert points (POINT)"                                  
       L_DCP_POM_SELECT_OCS_POINTS_TOK      = 87,   // "Select object points in OCS"                               
       L_DCP_POM_MEASURE_SCS_POINTS_TOK     = 88,   // "Measure points in SCS"                                     

@@ -92,6 +92,8 @@ namespace DCP
 
 
 			void show_function_keys();
+			void pointMenu_ClearMeasuredValuesAndNote();
+			void pointMenu_DeleteCurrentPointWithConfirm();
 			
         private:
 

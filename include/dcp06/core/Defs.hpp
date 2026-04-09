@@ -20,6 +20,12 @@ namespace DCP
 {
 	//#define AMS_DEBUG 1
 	#define CUSTOMER_BUILD 1  // was DCP06_CUSTOMER
+
+	/// 3D-MEAS POINT sub-menu: when 1, F5 opens Job/File and CLEAR stays on Shift+F2 (legacy).
+	/// When 0 (default), F5=CLEAR and F6=DEL.
+#ifndef DCP06_ENABLE_POINT_MENU_JOB
+#define DCP06_ENABLE_POINT_MENU_JOB 0
+#endif
 	
 	// Do not use these (Captivate 8)
     //#define TS16 // WITHOUT SCANNING

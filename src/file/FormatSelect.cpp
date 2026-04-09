@@ -39,7 +39,13 @@ void FormatSelectDialog::OnInitDialog() {
 }
 
 void FormatSelectDialog::OnDialogActivated() {
-    RefreshControls();
+    // Do not call StandardDialogC::RefreshControls() here: the framework may invoke
+    // OnDialogActivated before all controls exist, and the base RefreshControls can fault.
+    // Format text is static; set once in OnInitDialog.
+}
+
+void FormatSelectDialog::RefreshControls() {
+    // No dynamic fields; avoid delegating to StandardDialogC (unsafe if controls not ready).
 }
 
 bool FormatSelectDialog::SetModel(GUI::ModelC* pModel) {

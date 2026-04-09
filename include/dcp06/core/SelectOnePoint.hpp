@@ -223,6 +223,8 @@ namespace DCP
 			short iActual_or_design;
 			short iSelectedNo;
 			StringC sSelectedFile;
+			/// When true, LIST was built with design-values-only filter (must match getPointByIndexForList).
+			bool m_listDesignValuesOnly;
     };
 
 };

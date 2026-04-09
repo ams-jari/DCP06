@@ -485,6 +485,7 @@ void DCP::SelectOnePointController::OnActiveControllerClosed( int lCtrlID, int l
 
 // Instantiate template classes
 DCP::SelectOnePointModel::SelectOnePointModel()
+	: m_listDesignValuesOnly(false)
 {
 	//memset(&sel_points[0],0,sizeof(S_SELECT_POINTS) * MAX_POINTS_IN_FILE);
 	//memset(nro_table,0,sizeof(short) * MAX_POINTS_IN_FILE*2);

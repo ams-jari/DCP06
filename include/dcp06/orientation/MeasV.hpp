@@ -65,6 +65,7 @@ namespace DCP
             // Description: Handle change of position values
             virtual void OnF1Pressed();
 			virtual void OnF2Pressed();
+			virtual void OnF4Pressed();
 			virtual void OnF5Pressed();
 			virtual void OnF6Pressed();
 			virtual void OnSHF1Pressed();

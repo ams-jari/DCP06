@@ -24,6 +24,7 @@
 // $NoKeywords: $
 
 #include "stdafx.h"
+#include <string>
 #include <dcp06/core/Model.hpp>
 #include <dcp06/core/Logger.hpp>
 #include <dcp06/init/Initialization.hpp>
@@ -35,6 +36,7 @@
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/file/File.hpp>
 #include <dcp06/core/SelectPoint.hpp>
+#include <dcp06/core/SelectOnePoint.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
 #include <dcp06/database/DatabaseTypes.hpp>
 #include <dcp06/calculation/CalculationDist2Points.hpp>
@@ -781,11 +783,23 @@ void DCP::Meas3DController::show_function_keys()
 			vDef.strLable = StringC(AT_DCP06,K_DCP_SWAP_TOK);
 			SetFunctionKey( FK4, vDef );
 
+#if DCP06_ENABLE_POINT_MENU_JOB
+			// Legacy: F5 = Job/File, CLEAR on Shift+F2
 			vDef.strLable = StringC(AT_DCP06,K_DCP_3DFILE_TOK);
 			SetFunctionKey( FK5, vDef );
 
 			vDef.strLable = StringC(AT_DCP06,K_DCP_CLEAR_TOK);
 			SetFunctionKey( SHFK2, vDef );
+#else
+			vDef.strLable = StringC(AT_DCP06,K_DCP_CLEAR_TOK);
+			SetFunctionKey( FK5, vDef );
+
+			vDef.strLable = StringC(AT_DCP06,K_DCP_INIT_TOK);
+			SetFunctionKey( SHFK2, vDef );
+#endif
+
+			vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
+			SetFunctionKey( FK6, vDef );
 
 			// Hide quit
 			FKDef vDef1;
@@ -826,8 +840,7 @@ void DCP::Meas3DController::show_function_keys()
 			vDef.strLable = L"LIST";  // Point list (was PID)
 			SetFunctionKey( FK4, vDef );
 
-			// Phase E: SPECI moved to second row (SHFK3) only; F5 empty until PICK (Phase C)
-			vDef.strLable = L" ";
+			vDef.strLable = StringC(AT_DCP06, K_DCP_PICK_TOK);
 			SetFunctionKey( FK5, vDef );
 
 			vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
@@ -866,6 +879,76 @@ void DCP::Meas3DController::show_function_keys()
 			//m_bPointMenu = false;
 		}
 	}
+}
+
+// ================================================================================================
+// POINT sub-menu helpers (CLEAR / DEL)
+// ================================================================================================
+void DCP::Meas3DController::pointMenu_ClearMeasuredValuesAndNote()
+{
+	if(!m_pDataModel->m_bJobOpen)
+	{
+		if(m_pDataModel->DSP_MODE == SINGLE)
+		{
+			m_pCommon->empty_xyz_buffers(m_pDataModel->bXmea, m_pDataModel->bYmea,m_pDataModel->bZmea,9);
+			sprintf(m_pDataModel->note_ptr,"%-6.6s","");
+		}
+	}
+	else
+	{
+		if(m_pDataModel->DSP_MODE == SINGLE)
+		{
+			m_pCommon->empty_xyz_buffers(m_pDataModel->bXmea, m_pDataModel->bYmea, m_pDataModel->bZmea, 9);
+			sprintf(m_pDataModel->bNote,"%-6.6s","");
+		}
+		m_pDataModel->save_point();
+	}
+}
+
+void DCP::Meas3DController::pointMenu_DeleteCurrentPointWithConfirm()
+{
+	if (m_pDlg == nullptr)
+	{
+		USER_APP_VERIFY(false);
+		return;
+	}
+	if (!m_pDataModel->m_bJobOpen || !m_pDlg->GetModel())
+	{
+		msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
+		msgbox->ShowMessageOk(msg);
+		return;
+	}
+	DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+		dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+	if (!jdb || !jdb->isJobLoaded())
+		return;
+	char pidBuf[POINT_ID_BUFF_LEN];
+	pidBuf[0] = '\0';
+	const int idx = m_pDlg->GetModel()->m_currentPointIndex;
+	if (idx < 1 || !jdb->getPointByIndex(idx, true, pidBuf, 0, 0, 0, 0, 0, 0, 0))
+		return;
+	if (m_pCommon)
+		m_pCommon->strbtrim(pidBuf);
+	if (pidBuf[0] == '\0')
+		return;
+	msg.LoadTxt(AT_DCP06, M_DCP_DELETE_POINT_TOK);
+	msg.Format(msg, (const wchar_t*)StringC(pidBuf));
+	if (!msgbox->ShowMessageYesNo(msg))
+		return;
+	const std::string id(pidBuf);
+	if (!jdb->deletePoint(id))
+		return;
+	if (!m_pDlg->GetModel()->m_currentJobId.empty())
+		jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);
+	const int n = jdb->getJobPointsCount();
+	if (n <= 0)
+		m_pDlg->GetModel()->m_currentPointIndex = 1;
+	else if (idx > n)
+		m_pDlg->GetModel()->m_currentPointIndex = n;
+	m_pDataModel->DSP_MODE = SINGLE;
+	m_pDlg->RefreshControls();
+	m_bPointMenu = false;
+	show_function_keys();
 }
 
 // ================================================================================================
@@ -1002,31 +1085,11 @@ void DCP::Meas3DController::OnF2Pressed()
 				dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 			if (jdb && jdb->isJobLoaded())
 			{
-				int n = jdb->getJobPointsCount();
-				// Suggest next ID by incrementing LAST point in list (avoid duplicate if current != last)
-				char lastPid[POINT_ID_BUFF_LEN]; lastPid[0] = '\0';
-				if (n > 0 && jdb->getPointByIndex(n, true, lastPid, 0, 0, 0, 0, 0, 0, 0) && lastPid[0] != '\0')
-				{
-					if (m_pCommon) m_pCommon->strbtrim(lastPid);
-					char* p = strchr(lastPid, '(');
-					if (p) { *p = '\0'; if (m_pCommon) m_pCommon->strbtrim(lastPid); }
-					strncpy(buffer, lastPid, POINT_ID_BUFF_LEN - 1);
-					buffer[POINT_ID_BUFF_LEN - 1] = '\0';
-					if (m_pCommon) m_pCommon->strbtrim(buffer);
-					// Increment trailing number (works with long IDs like test_point_8 -> test_point_9)
-					size_t len = strlen(buffer);
-					int i = (int)len - 1;
-					while (i >= 0 && buffer[i] >= '0' && buffer[i] <= '9') i--;
-					if (i < (int)len - 1)
-					{
-						int num = atoi(buffer + i + 1);
-						sprintf(buffer + i + 1, "%d", num + 1);
-					}
-					else
-						sprintf(buffer, "P%d", n + 1);
-				}
+				// Same rules as Common::get_suggested_next_point_id: last *survey* point only (not 321_pnt_* / rp-p*).
+				if (m_pCommon)
+					m_pCommon->get_suggested_next_point_id(buffer, sizeof(buffer), "P", 1);
 				else
-					sprintf(buffer, "P%d", n + 1);
+					snprintf(buffer, sizeof(buffer), "P1");
 				DCP::InputTextModel* pModel = new InputTextModel;
 				pModel->m_StrInfoText.LoadTxt(AT_DCP06, L_DCP_ENTER_POINT_ID_TOK);
 				pModel->m_StrTitle = GetTitle();
@@ -1215,7 +1278,7 @@ void DCP::Meas3DController::OnF5Pressed()
 		    USER_APP_VERIFY( false );
 			return;
 		}
-		
+#if DCP06_ENABLE_POINT_MENU_JOB
 		if (m_pDataModel->m_bJobOpen && m_pDataModel->file_updated == 1 && m_pDlg->GetModel())
 		{
 			DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
@@ -1229,19 +1292,52 @@ void DCP::Meas3DController::OnF5Pressed()
 			(void)AddController( FILE_CONTROLLER, new DCP::FileController(m_pDlg->GetModel()) );
 		}
 
-		//(void)GetController(FILE_CONTROLLER)->SetTitleTok(AT_DCP06,T_DCP_DOM_PLANE_MEAS_TOK);
-
 		(void)GetController( FILE_CONTROLLER )->SetModel(m_pDlg->GetModel());
 		SetActiveController(FILE_CONTROLLER, true);
 
 		m_bPointMenu = false;	
 		show_function_keys();
+#else
+		pointMenu_ClearMeasuredValuesAndNote();
+		m_pDlg->RefreshControls();
+		m_bPointMenu = false;	
+		show_function_keys();
+#endif
 
 	}
 	else
 	{
-		// Phase E: F5 empty on main bar; SPECI on second row (SHFK3) only
-		// (void) no-op
+		// F5 = PICK: Copy measured coords from existing point (Phase 5)
+		if (m_pDlg && m_pDataModel->m_bJobOpen && m_pDlg->GetModel())
+		{
+			DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+				dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+			if (jdb && jdb->isJobLoaded())
+			{
+				DCP::SelectOnePointModel* pModel = new DCP::SelectOnePointModel();
+				short iCount = jdb->getPointListAsSelectPointsForPick(&pModel->points[0], MAX_SELECT_POINTS);
+				if (iCount > 0)
+				{
+					pModel->m_iPointsCount = iCount;
+					pModel->sSelectedFile = StringC(m_pDlg->GetModel()->m_currentJobId.c_str());
+					pModel->m_iDef = ACTUAL;
+					if (GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
+						(void)AddController(SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pDlg->GetModel()));
+					(void)GetController(SELECT_ONE_POINT_CONTROLLER)->SetModel(pModel);
+					SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
+				}
+				else
+				{
+					msg.LoadTxt(AT_DCP06, M_DCP_NO_POINTS_TOK);
+					msgbox->ShowMessageOk(msg);
+				}
+			}
+			else
+			{
+				msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
+				msgbox->ShowMessageOk(msg);
+			}
+		}
 	}
 }
 
@@ -1250,6 +1346,11 @@ void DCP::Meas3DController::OnF5Pressed()
 // ================================================================================================
 void DCP::Meas3DController::OnF6Pressed()
 {
+	if (m_bPointMenu)
+	{
+		pointMenu_DeleteCurrentPointWithConfirm();
+		return;
+	}
   if (m_pDlg == nullptr)
     {
         USER_APP_VERIFY( false );
@@ -1315,29 +1416,23 @@ void DCP::Meas3DController::OnSHF2Pressed()
 {
 	if(m_bPointMenu)
 	{
-		// CLEAR	
-		if(!m_pDataModel->m_bJobOpen)
-		{
-			if(m_pDataModel->DSP_MODE == SINGLE)
-			{
-				m_pCommon->empty_xyz_buffers(m_pDataModel->bXmea, m_pDataModel->bYmea,m_pDataModel->bZmea,9);
-				sprintf(m_pDataModel->note_ptr,"%-6.6s","");
-
-			}
-		}
-		else
-		{
-			if(m_pDataModel->DSP_MODE == SINGLE)
-			{
-				m_pCommon->empty_xyz_buffers(m_pDataModel->bXmea, m_pDataModel->bYmea, m_pDataModel->bZmea, 9);
-				sprintf(m_pDataModel->bNote,"%-6.6s","");
-			}
-			m_pDataModel->save_point();
-							
-		}
+#if DCP06_ENABLE_POINT_MENU_JOB
+		// Legacy: CLEAR on Shift+F2 when F5 is Job/File
+		pointMenu_ClearMeasuredValuesAndNote();
 		m_pDlg->RefreshControls();
 		m_bPointMenu = false;	
 		show_function_keys();
+#else
+		// CLEAR is on F5; Shift+F2 = INIT (same as main 3D-MEAS bar)
+		if(GetController(INIT_CONTROLLER) == nullptr)
+		{
+			(void)AddController( INIT_CONTROLLER, new DCP::InitializationController );
+		}
+		(void)GetController( INIT_CONTROLLER )->SetModel( m_pDlg->GetModel());
+		SetActiveController(INIT_CONTROLLER, true);
+		m_bPointMenu = false;
+		show_function_keys();
+#endif
 	}
 	else
 	{
@@ -1726,6 +1821,46 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 				{
 					int idxJob = jdb->getPointIndexInJob(pidBuf);
 					m_pDlg->GetModel()->m_currentPointIndex = (idxJob > 0) ? idxJob : 1;
+				}
+			}
+		}
+		m_pDataModel->DSP_MODE = SINGLE;
+		m_pDlg->RefreshControls();
+	}
+	// PICK: Copy measured coords from selected point to current point (Phase 5)
+	if (lCtrlID == SELECT_ONE_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
+	{
+		DCP::SelectOnePointModel* pModel = (DCP::SelectOnePointModel*)GetController(SELECT_ONE_POINT_CONTROLLER)->GetModel();
+		if (m_pDataModel->m_bJobOpen && m_pDlg->GetModel() && pModel->iSelectedNo > 0)
+		{
+			DCP::Database::JsonDatabase* jdb = m_pDlg->GetModel()->GetDatabase() ?
+				dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
+			if (jdb && jdb->isJobLoaded())
+			{
+				char bXmea[15], bYmea[15], bZmea[15];
+				char bXdes[15], bYdes[15], bZdes[15], pidPicked[POINT_ID_BUFF_LEN];
+				if (jdb->getPointByIndexForPick(pModel->iSelectedNo, pidPicked, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, 0))
+				{
+					if (m_pCommon->strblank(bXmea) || m_pCommon->strblank(bYmea) || m_pCommon->strblank(bZmea))
+						;  // Skip - no valid actual values (OCS)
+					else
+					{
+						char pidCur[POINT_ID_BUFF_LEN]; pidCur[0] = '\0';
+						if (jdb->getPointByIndex(m_pDlg->GetModel()->m_currentPointIndex, true, pidCur, 0, 0, 0, 0, 0, 0, 0) && pidCur[0] != '\0')
+						{
+							m_pCommon->strbtrim(pidCur);  // trim padding so getPoint/updatePoint find map key
+							DCP::Database::PointData data;
+							if (jdb->getPoint(pidCur, data))
+							{
+								data.x_mea = atof(bXmea);
+								data.y_mea = atof(bYmea);
+								data.z_mea = atof(bZmea);
+								jdb->updatePoint(pidCur, data);
+								if (!m_pDlg->GetModel()->m_currentJobId.empty())
+									jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);
+							}
+						}
+					}
 				}
 			}
 		}
