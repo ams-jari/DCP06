@@ -43,6 +43,22 @@ bool isInternal321HzPlaneRefPoint(const PointData& p) {
     return id == "rp-p1" || id == "rp-p2" || id == "rp-p3";
 }
 
+/// LIST treats empty source like survey (see getPointListAsSelectPointsForList).
+bool isSurveyLikePointSource(const std::string& s) {
+    return s.empty() || s == PointSource::DCP06_3D_MEAS;
+}
+
+/// Option A: 321 sync must not replace a full survey row with a sparse PointData (would drop measTime etc.).
+/// Merge only coordinates from the incoming 321 payload; keep source and other fields.
+void merge321UpdateIntoExistingSurvey(PointData& existing, const PointData& incoming321) {
+    if (!DCP_ISNAN(incoming321.x_mea)) existing.x_mea = incoming321.x_mea;
+    if (!DCP_ISNAN(incoming321.y_mea)) existing.y_mea = incoming321.y_mea;
+    if (!DCP_ISNAN(incoming321.z_mea)) existing.z_mea = incoming321.z_mea;
+    if (!DCP_ISNAN(incoming321.x_dsg)) existing.x_dsg = incoming321.x_dsg;
+    if (!DCP_ISNAN(incoming321.y_dsg)) existing.y_dsg = incoming321.y_dsg;
+    if (!DCP_ISNAN(incoming321.z_dsg)) existing.z_dsg = incoming321.z_dsg;
+}
+
 int pointIdSortKey(const std::string& id) {
     const char* p = id.c_str();
     while (*p && !std::isdigit(static_cast<unsigned char>(*p))) ++p;
@@ -839,7 +855,13 @@ bool JsonDatabase::addPoint(const std::string& pointId, const PointData& data) {
 bool JsonDatabase::updatePoint(const std::string& pointId, const PointData& data) {
     if (!m_currentJob.get()) return false;
     std::map<std::string, DCP_SHARED_PTR<PointData> >::iterator it = m_currentJob->points.find(pointId);
-    if (it == m_currentJob->points.end()) return false;
+    if (it == m_currentJob->points.end() || !it->second) return false;
+    // Option A: 321 CALC / DefinePlane / DefineLine sync must not demote survey points to source "321".
+    if (data.source == PointSource::DCP06_321 && isSurveyLikePointSource(it->second->source)) {
+        merge321UpdateIntoExistingSurvey(*it->second, data);
+        it->second->id = pointId;
+        return true;
+    }
     *it->second = data;
     it->second->id = pointId;
     return true;
