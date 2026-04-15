@@ -425,7 +425,13 @@ void DCP::Meas3DDialog::OnDialogActivated()
 	if (jobOpen)
 	{
 		int nPts = jdb->getJobPointsCount();
-		GetModel()->m_currentPointIndex = (nPts > 0) ? 1 : 0;
+		int& idx = GetModel()->m_currentPointIndex;
+		// Do not reset to P1 every time the dialog is shown — that broke LIST (select P4, CONT) and similar flows.
+		// Only clamp invalid indices (e.g. first open idx==0, or job shrank).
+		if (nPts <= 0)
+			idx = 0;
+		else if (idx < 1 || idx > nPts)
+			idx = 1;
 	}
 	RefreshControls();
 	DCP06_TRACE_EXIT;
@@ -1720,7 +1726,8 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 						DCP::Database::PointData data;
 						data.source = DCP::Database::PointSource::DCP06_3D_MEAS;
 						jdb->addPoint(buf, data);
-						m_pDlg->GetModel()->m_currentPointIndex = nPts + 1;
+						int idxNew = jdb->getPointIndexInJob(std::string(buf));
+						m_pDlg->GetModel()->m_currentPointIndex = (idxNew > 0) ? idxNew : jdb->getJobPointsCount();
 						if (!m_pDlg->GetModel()->m_currentJobId.empty())
 							jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);
 					}
@@ -1904,8 +1911,8 @@ void DCP::Meas3DController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 					DCP::Database::PointData data;
 					data.source = DCP::Database::PointSource::DCP06_3D_MEAS;
 					jdb->addPoint(pointId, data);
-					int n = jdb->getJobPointsCount();
-					m_pDlg->GetModel()->m_currentPointIndex = n;
+					int idxNew = jdb->getPointIndexInJob(pointId);
+					m_pDlg->GetModel()->m_currentPointIndex = (idxNew > 0) ? idxNew : jdb->getJobPointsCount();
 					m_pDlg->RefreshControls();
 					if (!m_pDlg->GetModel()->m_currentJobId.empty())
 						jdb->saveJob(m_pDlg->GetModel()->m_currentJobId);

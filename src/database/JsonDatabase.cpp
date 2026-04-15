@@ -43,6 +43,15 @@ bool isInternal321HzPlaneRefPoint(const PointData& p) {
     return id == "rp-p1" || id == "rp-p2" || id == "rp-p3";
 }
 
+/// Default IDs for 321 offset / define plane / define line buffers, stored in main `points` for PICK/321 UI.
+/// They must not appear on the 3D-MEAS NEXT/PREV tape (same role as rp-p1..3 for flat job navigation).
+bool isInternal321NavPlaceholderId(const std::string& id) {
+    if (id.size() >= 8 && id.compare(0, 8, "321_pnt_") == 0) return true;
+    if (id.size() >= 11 && id.compare(0, 11, "321_pl_pnt_") == 0) return true;
+    if (id.size() >= 11 && id.compare(0, 11, "321_li_pnt_") == 0) return true;
+    return false;
+}
+
 /// LIST treats empty source like survey (see getPointListAsSelectPointsForList).
 bool isSurveyLikePointSource(const std::string& s) {
     return s.empty() || s == PointSource::DCP06_3D_MEAS;
@@ -1101,6 +1110,7 @@ std::vector<DCP_SHARED_PTR<PointData> > JsonDatabase::getAllPointsInJob() const 
          it != m_currentJob->points.end(); ++it) {
         if (!it->second.get()) continue;
         if (isInternal321HzPlaneRefPoint(*it->second)) continue;
+        if (isInternal321NavPlaceholderId(it->first)) continue;
         // Include all points (including new ones with no actual/design yet) so they appear in the list
         sorted.push_back(std::make_pair(pointIdSortKey(it->first), it->second));
     }
@@ -1330,9 +1340,11 @@ short JsonDatabase::getPointListAsSelectPointForList(S_SELECT_POINT* pList, shor
 }
 
 int JsonDatabase::getPointIndexInJob(const std::string& pointId) const {
+    const std::string idNorm = trim(pointId);
+    if (idNorm.empty()) return 0;
     std::vector<DCP_SHARED_PTR<PointData> > pts = getAllPointsInJob();
     for (size_t i = 0; i < pts.size(); i++) {
-        if (pts[i] && pts[i]->id == pointId)
+        if (pts[i] && pts[i]->id == idNorm)
             return static_cast<int>(i + 1);
     }
     return 0;
@@ -1340,9 +1352,11 @@ int JsonDatabase::getPointIndexInJob(const std::string& pointId) const {
 
 int JsonDatabase::getPointIndexForList(const std::string& tag, const std::string& pointId) const {
     if (!m_currentJob.get()) return 0;
+    const std::string idNorm = trim(pointId);
+    if (idNorm.empty()) return 0;
     std::vector<DCP_SHARED_PTR<PointData> > pts = getPointsForList(m_currentJob->points, tag);
     for (size_t i = 0; i < pts.size(); i++) {
-        if (pts[i] && pts[i]->id == pointId)
+        if (pts[i] && pts[i]->id == idNorm)
             return static_cast<int>(i + 1);
     }
     return 0;
@@ -1451,7 +1465,7 @@ std::string JsonDatabase::getJobDisplayName() const {
 
 int JsonDatabase::getJobPointsCount() const {
     if (!m_currentJob.get()) return 0;
-    // Must match getPointByIndex / getAllPointsInJob (excludes internal 321 hz-plane refs like rp-p1..3).
+    // Must match getPointByIndex / getAllPointsInJob (excludes rp-p1..3 and 321_pnt_/321_pl_pnt_/321_li_pnt_ placeholders).
     return static_cast<int>(getAllPointsInJob().size());
 }
 
