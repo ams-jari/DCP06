@@ -57,6 +57,16 @@ DCP06_LOG_DEBUG("-- %s: done", __FUNCTION__);
 - Set `Logger::setLevel(Logger::Debug)` for full trace visibility.
 - Log file: typically `DCP06.log` in the application data path.
 
+### Simple Scan (field debugging)
+
+With debug level enabled, grep `DCP06.log` for prefixes:
+
+| Prefix | Where |
+|--------|--------|
+| `SimpleScan meas RAW GetMeas` | Raw slope distance / Hz / V for **this observation** (`GetMeas` after `NC_ON_SUCCESS`). |
+| `SimpleScan to_xyz IN` / `OUT` | Values come from **`OnActiveControllerClosed`**: accumulated `dist_tot` / `hor_tot` / `ver_tot`, then fed to `Common::to_xyz`. For plane grid scan those totals **must reset in `ScanMeasXYZController::Run()` each point**; otherwise they grow (`50 → 100 → 150` m) and **`to_xyz IN` diverges from RAW** despite correct logging. |
+| `SimpleScan save` | Design grid XYZ vs measured `m_dX/Y/Z` and strings written to `.scn` (`exit` notes cancel vs CONT). |
+
 ---
 
 ## See also

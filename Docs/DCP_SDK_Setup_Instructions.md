@@ -269,7 +269,8 @@ The full VS 2008 DVD/ISO should include a `wcu` folder at the root with subfolde
 | Link errors (missing .lib) | `Binary\Win32\libs` present? Stellar_SWDC_EC7_SDK.msi run? |
 | App not in simulator menu | Post-build ran? DCP06.sys correct? Simulator restarted? |
 | SWXResBuilder: "Svg file not in Config.xml" | Every SVG in `SWXRes_Source/` must be listed in `Config.xml` with Filename. Remove unused SVGs or add them. |
-| MkEdit: "can't build applications without valid dongle!" | The second MkEdit step (generate .dxx) requires a Leica dongle. **Simulator install still works** – the first MkEdit step copies DLL/sys to the simulator. You can run DCP06 in the simulator without the dongle. The .dxx file is for device deployment. |
+| MkEdit / `Plugin\DCP06\DCP06.dll`: **File open failed** | The plugin DLL is **locked** while **DCP06 is open** in the simulator (often enough to block overwrite). **Exit DCP06** inside TS; fully **close simulator** if it persists. Fresh DLL is still under `%SYSTEM1500_ROOT%\Binary\RCL\Win32\Release\DCP06.dll` — copy manually if needed. Details: [DCP06_Build_PostBuild_Troubleshooting.md](DCP06_Build_PostBuild_Troubleshooting.md). |
+| MkEdit: "can't build applications without valid dongle!" | The **second** MkEdit step (`.dxx` / release packaging) requires a **Leica dongle**. For **dev**, you usually only need the DLL + LEN; use a **dongled machine** for official release builds. See [DCP06_Build_PostBuild_Troubleshooting.md](DCP06_Build_PostBuild_Troubleshooting.md). |
 
 ## 14. Documentation in SDK
 
@@ -277,7 +278,7 @@ The full VS 2008 DVD/ISO should include a `wcu` folder at the root with subfolde
 - `Documentation\Captivate-GeoC++PluginSDK_API_DOC.zip` – API reference
 - `Documentation\Captivate-GeoC++v10-Stellar-SDK-ReleaseNotes.pdf` – Release notes
 
-*DCP06 project docs:* `docs\DCP_SDK_Setup_Instructions.md` (this file), `Docs\DCP06_Project_Plan.md`, `Docs\README.md`.
+*DCP06 project docs:* `Docs\DCP_SDK_Setup_Instructions.md` (this file), `Docs\DCP06_Build_PostBuild_Troubleshooting.md`, `Docs\DCP06_Project_Plan.md`, `Docs\README.md`.
 
 ---
 

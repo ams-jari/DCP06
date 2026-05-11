@@ -16,6 +16,7 @@ This folder contains the planning and reference documentation for the DCP06 proj
 | [DCP06_LIST_PICK_Implementation_Plan.md](DCP06_LIST_PICK_Implementation_Plan.md) | Implementation status and phases for LIST/PICK |
 | [DCP06_Logging_Trace_Usage.md](DCP06_Logging_Trace_Usage.md) | How to add debug traces (MSVC-safe patterns) |
 | [DCP06_Debugging_Crash_Dumps.md](DCP06_Debugging_Crash_Dumps.md) | Capturing and analyzing crash dumps |
+| [DCP06_Build_PostBuild_Troubleshooting.md](DCP06_Build_PostBuild_Troubleshooting.md) | MkEdit DLL “file open failed” (exit DCP06 / simulator); dongle vs dev builds |
 
 ## Quick Reference
 

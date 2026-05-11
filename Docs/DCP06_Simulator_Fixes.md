@@ -1,5 +1,7 @@
 # DCP06 Simulator Fixes (XX strings, icon, DCP06.log)
 
+**Strings and simulator path:** User-visible text is rebuilt from `Text/DCP06_TOK.HPP` → `hpp_to_men.py` → `DCP06.men` → `DCP06.LEN`. If the UI shows old wording, the running simulator may be loading an **`en\DCP06.LEN` from a folder that post-build does not copy to** (DLL updated, LEN stale). See [DCP06_Build_PostBuild_Troubleshooting.md](DCP06_Build_PostBuild_Troubleshooting.md) §3.
+
 ## TextTool / DCP06.LEN fix (March 2026)
 
 **Problem:** TextTool was not producing DCP06.LEN; only DCP06.L (32 bytes) was updated. DCP06.LEN stayed at an old timestamp.
@@ -20,6 +22,7 @@
   - Registry: `DeviceRootPathRelease\Leica Geosystems\Leica Captivate\System\Plugin\DCP06\en\`
   - `C:\Users\Public\Documents\Leica Captivate\CS_x64\...\Plugin\DCP06\en\`
   - `C:\Users\Public\Documents\Leica Captivate\CS_32\...\Plugin\DCP06\en\`
+  - Desktop TS folders under `...\Captivate 10 simulator\...` and `...\Captivate simulator\...` (see `build_lang.bat`)
 
 **Action:** Rebuild the project so `build_lang.bat` runs and copies `DCP06.LEN` to all paths. Ensure your simulator uses one of these locations.
 
@@ -43,3 +46,11 @@
 3. Last resort: `DCP06.log` in the process current directory (often the Captivate install folder)
 
 The first line in the log file will show the resolved path.
+
+### 4. Simple Scan (`.scn` path + large coordinate scatter)
+
+**.scn folder (May 2026):** Scan files previously went to the **SD ascii root** (e.g. `…\SD Card\Data\`). They should live under **`Data\DCP06\`**, alongside the JsonDatabase convention in `Model.cpp`. **`ScanFileFunc::getPath()`** now appends `\DCP06`, creates the folder if needed, and keeps a trailing separator for legacy `strcat` usage.
+
+**.scn values look random:** Numbers are **`MeasXYZModel::m_dX/Y/Z`** from **`Common::to_xyz`** (instrument HA/VA + slope dist, then **`active_coodinate_system`** matrices). Huge jumps usually mean the **instrument position at measure time does not match the grid aim** (e.g. simulator test overlay still at **Hz 180°, V 90°** while the status bar moves during “instrument turning”), or simulator measurement noise—not necessarily a wrong CSV layout.
+
+**Mitigation in code:** Wider ASCII buffers when writing **`pid,x,y,z`** rows (`ScanFileFunc::add_new_pnt`) and clamped **`%.*f`** decimal width when formatting scan coordinates (`PlaneScanning.cpp`). If scatter persists on **real hardware** with stable lock, trace **`m_dX/m_dY/m_dZ`** or raw angles/dist before **`to_xyz`** per shot.
