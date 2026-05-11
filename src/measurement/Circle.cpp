@@ -36,10 +36,10 @@
 #include <dcp06/measurement/HiddenPoint.hpp>
 #include <dcp06/measurement/Circle.hpp>
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 #ifdef DCP06_STORE_CIRCLE_OBJECTS
 #include <dcp06/core/SelectCircle.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
-#include <dcp06/database/DatabaseTypes.hpp>
 #endif
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/calculation/CalculationPlane.hpp>
@@ -70,6 +70,30 @@ OBS_IMPLEMENT_EXECUTE(DCP::CircleDialog);
 // =====================================  Static Functions  =======================================
 // ================================================================================================
 
+/// Default point IDs Ci1Pnt1, Ci1Pnt2 from circle id Ci1; enable job sync for PICK (MeasureModel::job_sync_source).
+static void setupCircleRimMeasureModelForJob(DCP::MeasureModel* pModel, const char* circleIdRaw, DCP::Common* pCommon)
+{
+	if (!pModel || !pCommon) return;
+	pModel->job_sync_source[0] = '\0';
+	pModel->default_pid[0] = '\0';
+	char cid[CIRCLE_ID_BUFF_LEN];
+	cid[0] = '\0';
+	if (circleIdRaw && circleIdRaw[0])
+		snprintf(cid, sizeof(cid), "%s", circleIdRaw);
+	else
+		snprintf(cid, sizeof(cid), "Ci1");
+	pCommon->strbtrim(cid);
+	if (cid[0] == '\0')
+		snprintf(cid, sizeof(cid), "Ci1");
+	// Full id = cid + "Pnt" + index; keep cid short enough for DCP_POINT_ID_LENGTH.
+	const size_t maxBase = (size_t)DCP_POINT_ID_LENGTH > 8 ? (size_t)DCP_POINT_ID_LENGTH - 8 : 4;
+	if (strlen(cid) > maxBase)
+		cid[maxBase] = '\0';
+	snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%sPnt", cid);
+	strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_CIRCLE,
+		sizeof(pModel->job_sync_source) - 1);
+	pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';
+}
 
 // ================================================================================================
 // ======================================  Member Functions  ======================================
@@ -912,6 +936,7 @@ void DCP::CircleController::OnF5Pressed()
 
 		memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
 		memcpy(&pModel->point_table[0],&m_pDataModel->circle_points[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
+		setupCircleRimMeasureModelForJob(pModel, m_pDataModel->circle_points[0].id, m_pDataModel->pCommon);
 		DCP06_LOG_DEBUG("-- %s: MeasureModel created pts=%d cur=%d", __FUNCTION__, pModel->m_iPointsCount, pModel->m_iCurrentPoint);
 
 		DCP06_LOG_DEBUG("-- %s: checking GetController(MEAS_CONTROLLER)", __FUNCTION__);

@@ -396,23 +396,17 @@ void DCP::LineFitMeasDialog::add_point()
 	{
 		// 271011
 		char point_id_buf[POINT_ID_BUFF_LEN];
-		snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iPointsCount-1].point_id);
-
-		if(!m_pCommon->strblank(point_id_buf))
+		if (!m_pCommon->strblank(GetDataModel()->default_pid))
 		{
-			m_pCommon->inc_id(point_id_buf);
+			snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount + 1);
 		}
 		else
 		{
-			if(!m_pCommon->strblank(GetDataModel()->default_pid))
-			{
-				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount+1);
-			}
+			snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iPointsCount-1].point_id);
+			if (!m_pCommon->strblank(point_id_buf))
+				m_pCommon->inc_id(point_id_buf);
 			else
-			{
-				// Phase D: Fallback when last point and default_pid both blank
 				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf), "P", GetDataModel()->m_iPointsCount + 1);
-			}
 		}
 
 		GetDataModel()->m_iPointsCount++;

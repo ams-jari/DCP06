@@ -33,6 +33,8 @@ public:
 
     bool addPoint(const std::string& pointId, const PointData& data) DCP_OVERRIDE;
     bool updatePoint(const std::string& pointId, const PointData& data) DCP_OVERRIDE;
+    /// Upsert measured coords for a special-flow point (circle rim, etc.) into main `points` for PICK/job file. Saves job.
+    bool upsertSpecialMeasuredPoint(const std::string& pointId, double x_mea, double y_mea, double z_mea, const std::string& sourceTag);
     bool deletePoint(const std::string& pointId) DCP_OVERRIDE;
     bool getPoint(const std::string& pointId, PointData& data) const DCP_OVERRIDE;
     std::vector<DCP_SHARED_PTR<PointData> > getAllPoints() const DCP_OVERRIDE;

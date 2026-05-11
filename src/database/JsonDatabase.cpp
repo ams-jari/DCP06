@@ -876,6 +876,30 @@ bool JsonDatabase::updatePoint(const std::string& pointId, const PointData& data
     return true;
 }
 
+bool JsonDatabase::upsertSpecialMeasuredPoint(const std::string& pointId, double x_mea, double y_mea, double z_mea,
+    const std::string& sourceTag) {
+    if (!m_currentJob.get()) return false;
+    const std::string idNorm = trim(pointId);
+    if (idNorm.empty() || sourceTag.empty()) return false;
+    PointData data;
+    const bool exists = getPoint(idNorm, data);
+    if (!exists) {
+        data = PointData();
+        data.id = idNorm;
+    }
+    data.source = sourceTag;
+    data.x_mea = x_mea;
+    data.y_mea = y_mea;
+    data.z_mea = z_mea;
+    if (data.measTime.empty()) data.measTime = getCurrentIsoTime();
+    if (!exists) {
+        if (!addPoint(idNorm, data)) return false;
+    } else {
+        if (!updatePoint(idNorm, data)) return false;
+    }
+    return saveJob(m_currentJob->id);
+}
+
 bool JsonDatabase::deletePoint(const std::string& pointId) {
     if (!m_currentJob.get()) return false;
     return m_currentJob->points.erase(pointId) > 0;

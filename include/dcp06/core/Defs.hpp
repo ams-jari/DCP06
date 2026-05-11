@@ -613,6 +613,8 @@ namespace DCP
 	#define MIN_POINTS_FOR_CIRCLE       3
 	#define BOUNDARY_PLANE_POINTS       3
 	#define DEFAULT_BOUNDARY_SIZE       500.0
+	/** MeasDialog default_pid for Simple Scan boundary; blanks become ScBd_1, ScBd_2, ScBd_3 (same pattern as 321_pnt_). */
+	#define DCP_SCAN_BOUNDARY_DEFAULT_PID_PREFIX  "ScBd_"
 	typedef struct {
 		double height_diff;
 		double line_offset;

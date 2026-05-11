@@ -597,7 +597,7 @@ const RSC::TxtC::TOKEN
       P_DCP_RESOLUTION_WIDTH_TOK           = 551,  // "Grid Width" (-)                                            
       P_DCP_RESOLUTION_HEIGTH_TOK          = 552,  // "Grid Height" (-)                                           
       L_DCP_SCANNING_TOK                   = 553,  // "Scanning" (-)                                              
-      M_DCP_SCAN_TOO_MANY_POINTS_TOK       = 554,  // "The scanning area contains t.." (-)                        
+      M_DCP_SCAN_TOO_MANY_POINTS_TOK       = 554,  // "Too many scan points (%d). Maximum is %d." (-)                        
       P_DCP_SCN_FILE_TOK                   = 555,  // "SCAN -File" (-)                                            
       T_DCP_SCAN_TOK                       = 556,  // "SCANNING" (-)                                              
       I_SCANNING_POINTS_CREATED_TOK        = 557,  // "Scanning points  created." (-)                             

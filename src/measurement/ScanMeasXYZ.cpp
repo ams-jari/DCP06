@@ -27,6 +27,21 @@
 #include "stdafx.h"
 #include <dcp06/core/Logger.hpp>
 #include <dcp06/core/Model.hpp>
+
+namespace {
+	const char* simpleScanCsLabel(short cs)
+	{
+		switch (cs) {
+			case DCS:  return "DCS";
+			case OCSP: return "OCSP";
+			case OCSD: return "OCSD";
+			case OCSC: return "OCSC";
+			case OCSU: return "OCSU";
+			default:   return "?";
+		}
+	}
+}
+
 #include <dcp06/init/Initialization.hpp>
 #include <dcp06/measurement/ScanMeasXYZ.hpp>
 #include <dcp06/core/Defs.hpp>
@@ -264,7 +279,10 @@ void DCP::DoScanMeasXYZController::OnOperationDistEvent(int unNotifyCode,  int u
 
 		//MsgBox MsgBox;
 		//MsgBox.ShowMessageOk(L"NC_SUCCESS");
-		DCP06_LOG_DEBUG("DoScanMeasXYZController::OnOperationDistEvent NC_SUCCESS");
+		DCP06_LOG_DEBUG("SimpleScan meas RAW GetMeas: slopeDist_m=%.8f Hz_deg=%.8f V_deg=%.8f avgCnt=%d prismConst=%.4f prismHt=%.4f ppm=%.4f stdDev=%.6f",
+			dSlopeDist, dH, dV, (int)pModel->m_iAverageDistCount,
+			(double)pModel->m_fPrismConst, (double)pModel->m_fPrismHeight,
+			pModel->m_dPPM, pModel->m_dAveragedDistStdDev);
 		Close(EC_KEY_CONT); 
 	}
 	else if(unNotifyCode ==TBL::DistanceMeasProcedureC::NC_ON_STOP)
@@ -664,6 +682,21 @@ void DCP::ScanMeasXYZController::Run()
 
 	//DCP::MeasXYZModel* pModel = (DCP::MeasXYZModel*)GetModel();
 
+	// One controller instance is reused for every grid point; accumulation must not carry
+	// between Run() calls or dist/angle totals (and m_iCount) grow without bound and
+	// to_xyz receives sums instead of the current shot (Simple Scan wrong coordinates).
+	m_iCount = 0;
+	m_iCount2 = 0;
+	dist_tot = 0.0;
+	ver_tot = 0.0;
+	hor_tot = 0.0;
+	dist_tot2 = 0.0;
+	ver_tot2 = 0.0;
+	hor_tot2 = 0.0;
+	x_tot = 0.0;
+	y_tot = 0.0;
+	z_tot = 0.0;
+
 	m_pCommon = new Common(poModel);
 	
 		poHourGlass->Continue();
@@ -700,7 +733,23 @@ short DCP::ScanMeasXYZController::get_xyz_values(double* x, double* y, double* z
 }
 void DCP::ScanMeasXYZController::to_xyz(double dis, double hor, double ver, double *x, double *y, double *z, short tool, double *x_scs, double *y_scs, double *z_scs)
 {
-	m_pCommon->to_xyz(dis, hor, ver, x, y,  z,  m_iUseTool, x_scs, y_scs, z_scs);
+	const short acs = poModel ? poModel->active_coodinate_system : (short)DCS;
+	DCP06_LOG_DEBUG(
+		"SimpleScan to_xyz IN: slopeDist_m=%.8f Hz_deg=%.8f V_deg=%.8f wrapToolArg=%hd m_iUseTool=%hd active_CS=%d (%s)",
+		dis, hor, ver, tool, m_iUseTool, (int)acs, simpleScanCsLabel(acs));
+
+	m_pCommon->to_xyz(dis, hor, ver, x, y, z, m_iUseTool, x_scs, y_scs, z_scs);
+
+	if (x_scs && y_scs && z_scs) {
+		DCP06_LOG_DEBUG(
+			"SimpleScan to_xyz OUT: XYZ=%.8f %.8f %.8f SCS_xyz=%.8f %.8f %.8f",
+			x ? *x : 0.0, y ? *y : 0.0, z ? *z : 0.0,
+			*x_scs, *y_scs, *z_scs);
+	} else {
+		DCP06_LOG_DEBUG(
+			"SimpleScan to_xyz OUT: XYZ=%.8f %.8f %.8f",
+			x ? *x : 0.0, y ? *y : 0.0, z ? *z : 0.0);
+	}
 }
 
 

@@ -30,6 +30,20 @@
 #include <dcp06/measurement/PlaneScanning.hpp>
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/file/SelectFile.hpp>
+
+namespace {
+	const char* simpleScanCsLabelPlane(short cs)
+	{
+		switch (cs) {
+			case DCS:  return "DCS";
+			case OCSP: return "OCSP";
+			case OCSD: return "OCSD";
+			case OCSC: return "OCSC";
+			case OCSU: return "OCSU";
+			default:   return "?";
+		}
+	}
+}
 #include <dcp06/core/Measure.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/file/AdfFileFunc.hpp>
@@ -393,6 +407,8 @@ void DCP::PlaneScanController::OnF1Pressed()
 		memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * BOUNDARY_PLANE_POINTS);
 		memcpy(&pModel->point_table[0],&m_pDataModel->boundary_plane[0].points[0], sizeof(S_POINT_BUFF) * BOUNDARY_PLANE_POINTS);
 
+		snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%s", DCP_SCAN_BOUNDARY_DEFAULT_PID_PREFIX);
+
 		
 		if(GetController(MEAS_CONTROLLER) == nullptr)
 		{
@@ -615,14 +631,34 @@ void DCP::PlaneScanController::OnActiveControllerClosed( int lCtrlID, int lExitC
 			m_pDataModel->m_pAdfFile->form_save_pnt();
 			*/
 			
-			char temp_x[20];
-			char temp_y[20];
-			char temp_z[20];
+			char temp_x[64];
+			char temp_y[64];
+			char temp_z[64];
+			int dec = (int)m_pDlg->GetModel()->m_nDecimals;
+			if (dec < 0) dec = 1;
+			if (dec > 10) dec = 10;
 
-			sprintf(temp_x,"%.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dX);
-			sprintf(temp_y,"%.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dY);
-			sprintf(temp_z,"%.*f",m_pDlg->GetModel()->m_nDecimals, pModel->m_dZ);
-		
+			snprintf(temp_x, sizeof(temp_x), "%.*f", dec, pModel->m_dX);
+			snprintf(temp_y, sizeof(temp_y), "%.*f", dec, pModel->m_dY);
+			snprintf(temp_z, sizeof(temp_z), "%.*f", dec, pModel->m_dZ);
+
+			if (m_pDataModel->current_point >= 1) {
+				const int idxSav = m_pDataModel->current_point - 1;
+				char pidLog[POINT_ID_BUFF_LEN];
+				snprintf(pidLog, sizeof(pidLog), DCP_POINT_ID_FMT,
+					m_pDataModel->des_points[idxSav].point_id);
+				const short acsSav = m_pDlg->GetModel()->active_coodinate_system;
+				DCP06_LOG_DEBUG(
+					"SimpleScan save: seqPt=%d totalPts=%u id=\"%s\" designXYZ=%.8f %.8f %.8f measXYZ=%.8f %.8f %.8f storedStr=\"%s %s %s\" exit=%d active_CS=%d (%s)",
+					m_pDataModel->current_point, (unsigned)m_pDataModel->points_count, pidLog,
+					m_pDataModel->des_points[idxSav].x, m_pDataModel->des_points[idxSav].y,
+					m_pDataModel->des_points[idxSav].z,
+					pModel->m_dX, pModel->m_dY, pModel->m_dZ,
+					(lExitCode == EC_KEY_CONT) ? temp_x : "",
+					(lExitCode == EC_KEY_CONT) ? temp_y : "",
+					(lExitCode == EC_KEY_CONT) ? temp_z : "",
+					lExitCode, (int)acsSav, simpleScanCsLabelPlane(acsSav));
+			}
 
 			if(lExitCode == EC_KEY_CONT)
 				m_pDataModel->m_pScanFile->add_new_pnt(m_pDataModel->des_points[m_pDataModel->current_point-1].point_id, temp_x, temp_y, temp_z);

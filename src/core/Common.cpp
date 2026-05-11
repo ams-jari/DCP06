@@ -1415,7 +1415,7 @@ void DCP::Common::get_suggested_next_point_id(char* outBuf, size_t outSize, cons
 	outBuf[0] = '\0';
 	if (!m_pModel) { snprintf(outBuf, outSize, "%s%d", defaultPrefix ? defaultPrefix : "P", fallbackNum); return; }
 	// Skip job lookup for context-specific prefixes - user uses P1,P2,P3 for 3D meas; we need 321_pnt_1, OFF1, BF1 etc.
-	bool forcePrefix = defaultPrefix && (strncmp(defaultPrefix, "321_", 4) == 0 || strcmp(defaultPrefix, "OFF") == 0 || strcmp(defaultPrefix, "BF") == 0 || strcmp(defaultPrefix, "REF") == 0);
+	bool forcePrefix = defaultPrefix && (strncmp(defaultPrefix, "321_", 4) == 0 || strcmp(defaultPrefix, "OFF") == 0 || strcmp(defaultPrefix, "BF") == 0 || strcmp(defaultPrefix, "REF") == 0 || strcmp(defaultPrefix, DCP_SCAN_BOUNDARY_DEFAULT_PID_PREFIX) == 0);
 	if (forcePrefix)
 	{
 		snprintf(outBuf, outSize, "%s%d", defaultPrefix, fallbackNum);

@@ -76,6 +76,7 @@ FOR %%P IN (
     "C:\Users\Public\Documents\Leica Captivate\CS_x64\Leica Geosystems\Leica Captivate\System\Plugin\DCP06\en"
     "C:\Users\Public\Documents\Leica Captivate\CS_32\Leica Geosystems\Leica Captivate\System\Plugin\DCP06\en"
     "C:\Users\dell\Desktop\AMS\Captivate 10 simulator\Leica Captivate\TS\Leica Geosystems\Leica Captivate\System\Plugin\DCP06\en"
+    "C:\Users\dell\Desktop\AMS\Captivate simulator\Leica Captivate\TS\Leica Geosystems\Leica Captivate\System\Plugin\DCP06\en"
 ) DO (
     IF NOT EXIST %%~P mkdir %%~P 2>nul
     copy /Y "%LEN_FILE%" "%%~P\DCP06.LEN" >nul 2>&1

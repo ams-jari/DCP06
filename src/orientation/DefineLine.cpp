@@ -34,6 +34,7 @@
 #include <dcp06/calculation/CalculationLine.hpp>
 #include <dcp06/orientation/ResLine.hpp>
 #include <dcp06/core/Common.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 
 #include <GUI_DeskTop.hpp>
 
@@ -357,6 +358,9 @@ void DCP::DefineLineController::OnF5Pressed()
     }
 	DCP::MeasureModel* pModel = new MeasureModel;
 	sprintf(pModel->default_pid, "%-s", "321_li_pnt_");
+	strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_321,
+		sizeof(pModel->job_sync_source) - 1);
+	pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';
 
 	pModel->m_iMaxPoint = MAX_POINTS_IN_LINE;
 	pModel->m_iMinPoint = 2;

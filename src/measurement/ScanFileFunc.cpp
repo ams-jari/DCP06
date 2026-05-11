@@ -32,7 +32,7 @@
 #include "calc.h"
 #include <UTL_StringFunctions.hpp>
 #include <GMAT_UnitConverter.hpp>
-
+#include <string>
 
 // Detect memory leaks
 #ifdef _DEBUG
@@ -100,8 +100,9 @@ bool DCP::ScanFileFunc::setFile(const char* filename)
 		m_pFile = 0;
 	}
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
-	//CPI::SensorC::GetInstance()->
+	getPath();
+	if (m_pCommon->strblank(m_cPath))
+		return false;
 	
 	char full_path[CPI::LEN_PATH_MAX];
 	char temp_name[CPI::LEN_PATH_MAX];	
@@ -157,7 +158,9 @@ bool DCP::ScanFileFunc::setFile(StringC filename)
 	if(m_pCommon->strblank(filename_temp))
 		return false;
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	getPath();
+	if (m_pCommon->strblank(m_cPath))
+		return false;
 	
 	char full_path[CPI::LEN_PATH_MAX];
 		char temp_name[CPI::LEN_PATH_MAX];	
@@ -213,16 +216,39 @@ bool DCP::ScanFileFunc::setFile(StringC filename)
 }
 
 // ****************************************************************************************
+// SD card ascii root + DCP06 subfolder (same convention as JsonDatabase paths in Model).
 void DCP::ScanFileFunc::getPath()
 {
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
+	m_cPath[0] = '\0';
+	char base[CPI::LEN_PATH_MAX];
+	base[0] = '\0';
+	if (!CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, base))
+		return;
+	m_pCommon->strbtrim(base);
+	if (m_pCommon->strblank(base))
+		return;
 
-	//boost::filesystem::
-	//CPI::FileUtilitiesC::MakeDir(m_cPath);
-	boost::filesystem::path filePath= m_cPath;
-    boost::system::error_code errCode;
-	boost::filesystem::create_directory(filePath, errCode);
-	
+	boost::filesystem::path sub = boost::filesystem::path(base) / "DCP06";
+	boost::system::error_code errCode;
+	boost::filesystem::create_directories(sub, errCode);
+
+	std::string native = sub.make_preferred().string();
+	if (native.empty())
+		return;
+	if (native.size() >= sizeof(m_cPath))
+		native.resize(sizeof(m_cPath) - 2);
+
+	strncpy(m_cPath, native.c_str(), sizeof(m_cPath) - 1);
+	m_cPath[sizeof(m_cPath) - 1] = '\0';
+
+	size_t len = strlen(m_cPath);
+	if (len > 0 && len < sizeof(m_cPath) - 2) {
+		const char last = m_cPath[len - 1];
+		if (last != '\\' && last != '/') {
+			m_cPath[len] = (char)boost::filesystem::path::preferred_separator;
+			m_cPath[len + 1] = '\0';
+		}
+	}
 }
 
 // ****************************************************************************************
@@ -477,6 +503,10 @@ MsgBox msgbox;
 	sprintf(filename,"%s.scn",fname);
 
 	CloseFile();
+	getPath();
+	if (m_pCommon->strblank(m_cPath))
+		return -1;
+
 	sprintf(m_cPathAndFileName,"%-s%-s",m_cPath,filename);
 		
 		if(access1(filename) == 1)
@@ -535,8 +565,10 @@ int attr = 0;
 	//char filename_temp[20];
 	//UTL::UnicodeToAscii(filename_temp, fname);
 
-	bool bRet =	CPI::SensorC::GetInstance()->GetPath(m_pModel->FILE_STORAGE1, CPI::ftUserAscii, m_cPath);
-	
+	getPath();
+	if (m_pCommon->strblank(m_cPath))
+		return 0;
+
 	char full_path[CPI::LEN_PATH_MAX];
 	full_path[0] = '\0';
 
@@ -621,8 +653,12 @@ short DCP::ScanFileFunc::delete_adf_file(bool showMsg)
 // *****************************************************************************************
 short DCP::ScanFileFunc::add_new_pnt(char *pid, char *xact,char *yact,char *zact) 
 {
-char bXact[15], bYact[15], bZact[15];
-int Result;
+	static const size_t XYZBUFSZ = 64;
+	char bXact[XYZBUFSZ];
+	char bYact[XYZBUFSZ];
+	char bZact[XYZBUFSZ];
+	char tmpXYZ[XYZBUFSZ + 16];
+	int Result;
 
 	MsgBox msgbox;
 
@@ -637,25 +673,37 @@ int Result;
 		
 		if(Result == 0)
 		{
-			sprintf(bXact,"%-9.9s", " ");
-			sprintf(bYact,"%-9.9s", " ");
-			sprintf(bZact,"%-9.9s", " ");
+			memset(bXact, 0, sizeof(bXact));
+			memset(bYact, 0, sizeof(bYact));
+			memset(bZact, 0, sizeof(bZact));
+			bXact[0] = ' ';
+			bYact[0] = ' ';
+			bZact[0] = ' ';
 			
-			if(xact != nullptr)
+			if(xact != nullptr && xact[0] != '\0')
 			{
-				sprintf(bXact,"%s", m_pCommon->strbtrim(xact));	
+				strncpy(tmpXYZ, xact, sizeof(tmpXYZ) - 1);
+				tmpXYZ[sizeof(tmpXYZ) - 1] = '\0';
+				strncpy(bXact, m_pCommon->strbtrim(tmpXYZ), XYZBUFSZ - 1);
+				bXact[XYZBUFSZ - 1] = '\0';
 			}
-			if(yact != nullptr)
+			if(yact != nullptr && yact[0] != '\0')
 			{
-				sprintf(bYact,"%s", m_pCommon->strbtrim(yact));	
+				strncpy(tmpXYZ, yact, sizeof(tmpXYZ) - 1);
+				tmpXYZ[sizeof(tmpXYZ) - 1] = '\0';
+				strncpy(bYact, m_pCommon->strbtrim(tmpXYZ), XYZBUFSZ - 1);
+				bYact[XYZBUFSZ - 1] = '\0';
 			}
 
-			if(zact != nullptr)
+			if(zact != nullptr && zact[0] != '\0')
 			{
-				sprintf(bZact,"%s", m_pCommon->strbtrim(zact));	
+				strncpy(tmpXYZ, zact, sizeof(tmpXYZ) - 1);
+				tmpXYZ[sizeof(tmpXYZ) - 1] = '\0';
+				strncpy(bZact, m_pCommon->strbtrim(tmpXYZ), XYZBUFSZ - 1);
+				bZact[XYZBUFSZ - 1] = '\0';
 			}
 			
-			sprintf(trow,"%-s,%s,%s,%s%c%c",
+			snprintf(trow, sizeof(trow), "%-s,%s,%s,%s%c%c",
 			pid,
 			bXact,
 			bYact,

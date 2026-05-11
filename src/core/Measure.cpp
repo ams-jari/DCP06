@@ -405,6 +405,22 @@ void DCP::MeasureDialog::update_meas_values(double x, double y, double z, short 
 		GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].cds = m_pModel->active_coodinate_system;
 		GetDataModel()->point_table[GetDataModel()->m_iCurrentPoint-1].sta = status;
 
+		// Persist special-flow rim points (circle, etc.) to job.points for PICK / JSON — see job_sync_source on MeasureModel.
+		MeasureModel* dm = GetDataModel();
+		if (dm->job_sync_source[0] != '\0' && m_pModel && m_pModel->GetDatabase()) {
+			DCP::Database::JsonDatabase* jdb =
+				dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase());
+			if (jdb && jdb->isJobLoaded() && !m_pModel->m_currentJobId.empty()) {
+				char pidRaw[POINT_ID_BUFF_LEN];
+				snprintf(pidRaw, sizeof(pidRaw), DCP_POINT_ID_FMT,
+					dm->point_table[dm->m_iCurrentPoint - 1].point_id);
+				common.strbtrim(pidRaw);
+				if (pidRaw[0] != '\0') {
+					jdb->upsertSpecialMeasuredPoint(std::string(pidRaw), x, y, z, std::string(dm->job_sync_source));
+				}
+			}
+		}
+
 		RefreshControls();
 	}
 }
@@ -415,23 +431,19 @@ void DCP::MeasureDialog::add_point()
 	{
 		// 271011
 		char point_id_buf[POINT_ID_BUFF_LEN];
-		snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iPointsCount-1].point_id);
-
-		if(!m_pCommon->strblank(point_id_buf))
+		// If default_pid is set (Ci1Pnt, 321_li_pnt_, …), use prefix + next index — inc_id() breaks on
+		// embedded digits (e.g. Ci1Pnt3 -> Ci2 because atoi("1Pnt3")==1).
+		if (!m_pCommon->strblank(GetDataModel()->default_pid))
 		{
-			m_pCommon->inc_id(point_id_buf);
+			snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount + 1);
 		}
 		else
 		{
-			if(!m_pCommon->strblank(GetDataModel()->default_pid))
-			{
-				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount+1);
-			}
+			snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, GetDataModel()->point_table[GetDataModel()->m_iPointsCount-1].point_id);
+			if (!m_pCommon->strblank(point_id_buf))
+				m_pCommon->inc_id(point_id_buf);
 			else
-			{
-				// Phase D: Fallback when last point and default_pid both blank
 				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf), "P", GetDataModel()->m_iPointsCount + 1);
-			}
 		}
 
 		GetDataModel()->m_iPointsCount++;
@@ -1167,6 +1179,7 @@ DCP::MeasureModel::MeasureModel()
 	m_iPointsCount = 0;
 	m_iCurrentPoint = 1;
 	default_pid[0] = '\0';
+	job_sync_source[0] = '\0';
 	memset(&point_table[0],0,sizeof(S_POINT_BUFF)* 20);
 	memset(&point_table2[0],0,sizeof(S_POINT_BUFF)* 20);
 

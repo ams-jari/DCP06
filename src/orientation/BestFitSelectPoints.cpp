@@ -543,23 +543,17 @@ void DCP::BestFitSelectPointsController::OnF5Pressed()
 
 		// 271011
 		char point_id_buf[POINT_ID_BUFF_LEN];
-		snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->points[m_pDlg->GetDataModel()->m_iPointsCount-1].point_id);
-
-		if(!m_pCommon->strblank(point_id_buf))
+		if (!m_pCommon->strblank(m_pDlg->GetDataModel()->default_pid))
 		{
-			m_pCommon->inc_id(point_id_buf);
+			snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", m_pDlg->GetDataModel()->default_pid, m_pDlg->GetDataModel()->m_iPointsCount + 1);
 		}
 		else
 		{
-			if(!m_pCommon->strblank(m_pDlg->GetDataModel()->default_pid))
-			{
-				snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", m_pDlg->GetDataModel()->default_pid, m_pDlg->GetDataModel()->m_iPointsCount+1);
-			}
+			snprintf(point_id_buf, sizeof(point_id_buf), DCP_POINT_ID_FMT, m_pDlg->GetDataModel()->points[m_pDlg->GetDataModel()->m_iPointsCount-1].point_id);
+			if (!m_pCommon->strblank(point_id_buf))
+				m_pCommon->inc_id(point_id_buf);
 			else
-			{
-				// Phase D: Fallback when last point and default_pid both blank
 				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf), "BF", m_pDlg->GetDataModel()->m_iPointsCount + 1);
-			}
 		}
 		delete m_pCommon;
 		m_pCommon = 0;

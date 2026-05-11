@@ -32,6 +32,7 @@
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/core/Common.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 #include <dcp06/calculation/CalculationPlane.hpp>
 #include <dcp06/orientation/ResPlane.hpp>
 
@@ -666,6 +667,9 @@ void DCP::DefinePlaneController::OnF5Pressed()
 	pModel->m_iPointsCount = 3;
 	pModel->m_iCurrentPoint = 1;
 	sprintf(pModel->default_pid, "%-s", "321_pl_pnt_");
+	strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_321,
+		sizeof(pModel->job_sync_source) - 1);
+	pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';
 
 	memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
 	memcpy(&pModel->point_table[0],&m_pDlg->GetDataModel()->plane_buff[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
