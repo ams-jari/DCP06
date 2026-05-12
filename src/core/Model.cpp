@@ -33,14 +33,71 @@
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
 
+#include <boost/filesystem.hpp>
 #include <stdio.h>
+#include <fstream>
+#include <string>
 #include <UTL_StringFunctions.hpp>
 #include <GMAT_UnitConverter.hpp>
+#include <ABL_Types.hpp>
 
 // Detect memory leaks
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+namespace {
+	const char kLastOpenJobFile[] = "last_open_job.txt";
+
+	static void trimInPlaceAscii(std::string& s)
+	{
+		size_t i = 0;
+		while (i < s.size() && (unsigned char)s[i] <= ' ')
+			++i;
+		if (i > 0)
+			s.erase(0, i);
+		while (!s.empty() && (unsigned char)s[s.size() - 1] <= ' ')
+			s.erase(s.size() - 1);
+	}
+
+	static void stripJobFileSuffixAscii(std::string& s)
+	{
+		while (s.size() >= 4)
+		{
+			if (s.compare(s.size() - 4, 4, ".adf") == 0 || s.compare(s.size() - 4, 4, ".ADF") == 0)
+				s.resize(s.size() - 4);
+			else
+				break;
+		}
+		while (s.size() >= 5)
+		{
+			if (s.compare(s.size() - 5, 5, ".json") == 0 || s.compare(s.size() - 5, 5, ".JSON") == 0)
+				s.resize(s.size() - 5);
+			else
+				break;
+		}
+	}
+
+	static std::string jobIdFromPersistedWideName(const StringC& wc)
+	{
+		if (wc.IsEmpty())
+			return std::string();
+		char buf[CPI::LEN_PATH_MAX];
+		buf[0] = '\0';
+		BSS::UTI::BSS_UTI_WCharToAscii(wc, buf, (int)(sizeof(buf) - 1));
+		buf[sizeof(buf) - 1] = '\0';
+		std::string s(buf);
+		trimInPlaceAscii(s);
+		if (s.empty())
+			return std::string();
+		size_t slash = s.find_last_of("/\\");
+		if (slash != std::string::npos && slash + 1 < s.size())
+			s = s.substr(slash + 1);
+		trimInPlaceAscii(s);
+		stripJobFileSuffixAscii(s);
+		return s;
+	}
+}
 
 // ================================================================================================
 // ========================================  Declarations  ========================================
@@ -266,6 +323,110 @@ void DCP::Model::SetDatabaseDataDirectory(const char* path)
 		m_pDatabase->setDataDirectory(path ? path : "");
 }
 
+void DCP::Model::refreshJsonDatabaseDataDirectoryFromStoredFilePreference()
+{
+	char dbPath[CPI::LEN_PATH_MAX];
+	dbPath[0] = '\0';
+	if (!CPI::SensorC::GetInstance() || !CPI::SensorC::GetInstance()->GetPath(FILE_STORAGE1, CPI::ftUserAscii, dbPath))
+	{
+		DCP06_LOG_WARN("GetPath(FILE_STORAGE1) failed; JsonDatabase path not updated");
+		return;
+	}
+	std::string dir(dbPath);
+	dir += "/DCP06";
+	if (m_pDatabase.get())
+		m_pDatabase->setDataDirectory(dir);
+	std::string logPath = std::string(dbPath) + "/DCP06/DCP06.log";
+	DCP::Logger::setLogPath(logPath.c_str());
+	DCP06_TRACE_POINT("JsonDatabase directory: %s", dir.c_str());
+}
+
+void DCP::Model::syncPersistedLastOpenJobMarker()
+{
+	refreshJsonDatabaseDataDirectoryFromStoredFilePreference();
+	Database::JsonDatabase* jdb = dynamic_cast<Database::JsonDatabase*>(m_pDatabase.get());
+	if (!jdb)
+		return;
+	std::string dir = jdb->getDataDirectory();
+	if (dir.empty())
+		return;
+	std::string path = dir + "/" + std::string(kLastOpenJobFile);
+	if (m_currentJobId.empty())
+	{
+		(void)::remove(path.c_str());
+		return;
+	}
+	std::ofstream out(path.c_str(), std::ios::out | std::ios::trunc | std::ios::binary);
+	if (!out)
+	{
+		DCP06_LOG_WARN("Could not write last_open_job marker: %s", path.c_str());
+		return;
+	}
+	out << m_currentJobId << '\n';
+}
+
+void DCP::Model::tryRestoreLastOpenJobAfterConfigLoad()
+{
+	if (!m_currentJobId.empty())
+		return;
+	refreshJsonDatabaseDataDirectoryFromStoredFilePreference();
+	Database::JsonDatabase* jdb = dynamic_cast<Database::JsonDatabase*>(m_pDatabase.get());
+	if (!jdb)
+		return;
+	std::string dir = jdb->getDataDirectory();
+
+	std::string candidate;
+	if (!dir.empty())
+	{
+		std::string path = dir + "/" + std::string(kLastOpenJobFile);
+		std::ifstream in(path.c_str(), std::ios::in | std::ios::binary);
+		if (in)
+		{
+			std::getline(in, candidate);
+			trimInPlaceAscii(candidate);
+			stripJobFileSuffixAscii(candidate);
+		}
+	}
+	if (candidate.empty())
+	{
+		boost::system::error_code ec;
+		boost::filesystem::path cwd = boost::filesystem::current_path(ec);
+		if (!ec)
+		{
+			const boost::filesystem::path tryPaths[] = {
+				cwd / "DCP06" / kLastOpenJobFile,
+				cwd / kLastOpenJobFile };
+			for (size_t ti = 0; ti < sizeof(tryPaths) / sizeof(tryPaths[0]); ++ti)
+			{
+				const std::string path = tryPaths[ti].string();
+				std::ifstream in(path.c_str(), std::ios::in | std::ios::binary);
+				if (!in)
+					continue;
+				std::getline(in, candidate);
+				trimInPlaceAscii(candidate);
+				stripJobFileSuffixAscii(candidate);
+				if (!candidate.empty())
+					break;
+			}
+		}
+	}
+	if (candidate.empty())
+	{
+		candidate = jobIdFromPersistedWideName(ADFFileName);
+		if (!candidate.empty())
+			stripJobFileSuffixAscii(candidate);
+	}
+	if (candidate.empty())
+		return;
+	if (!jdb->loadJob(candidate))
+	{
+		DCP06_LOG_WARN("Restoring last job failed for id '%s'", candidate.c_str());
+		return;
+	}
+	m_currentJobId = candidate;
+	ADFFileName = StringC(jdb->getJobDisplayName().c_str());
+}
+
 void DCP::Model::initialize_matrix4x4(double pMatrix[4][4])
 {
 	for(int i=0; i < 4; i++)
@@ -344,6 +505,8 @@ DCP::ConfigController::ConfigController(GUI::ControllerC* pParent, Model* poMode
 	
 		 //lint -restore
     }
+
+	poModel->tryRestoreLastOpenJobAfterConfigLoad();
 	/*
 	poModel->SetConfigKey(CNF_KEY_CONFIG2);
     //if (!GetModel()->IsConfigLoaded())

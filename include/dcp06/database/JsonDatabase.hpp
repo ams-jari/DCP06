@@ -158,6 +158,8 @@ public:
 
 private:
     std::string getJobFilePath(const std::string& jobId) const;
+    /// After loading/saving a `.json`, set storage directory from the resolved path (fixes empty dir + relative cwd paths).
+    void inferDataDirectoryFromJobJsonPath(const std::string& jsonPathUsed);
     bool writeJsonToFile(const std::string& filePath, const Json::Value& j);
     bool readJsonFromFile(const std::string& filePath, Json::Value& j);
     Json::Value pointDataToJson(const PointData& data);

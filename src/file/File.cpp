@@ -187,6 +187,7 @@ void FileDialog::Close()
 	if (jdb) jdb->closeJob();
 	GetModel()->m_currentJobId.clear();
 	GetModel()->ADFFileName = L"";
+	GetModel()->syncPersistedLastOpenJobMarker();
 	sSelectedFile = L" ";
 
 	RefreshControls();
@@ -212,6 +213,7 @@ void FileDialog::Delete()
 				jdb->closeJob();
 				GetModel()->m_currentJobId.clear();
 				GetModel()->ADFFileName = L"";
+				GetModel()->syncPersistedLastOpenJobMarker();
 			}
 		}
 	}
@@ -776,6 +778,7 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 			{
 				m_pModel->m_currentJobId = jobId;
 				m_pModel->ADFFileName = StringC(jobId.c_str());
+				m_pModel->syncPersistedLastOpenJobMarker();
 				DCP06_LOG_INFO("FileController: opened job %s", jobId.c_str());
 			}
 		}
@@ -816,6 +819,7 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 						{
 							m_pModel->m_currentJobId = jobId;
 							m_pModel->ADFFileName = StringC(jobId.c_str());
+							m_pModel->syncPersistedLastOpenJobMarker();
 							DCP06_LOG_INFO("FileController: imported to job %s", jobId.c_str());
 						}
 					}
@@ -878,6 +882,7 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 				{
 					m_pModel->m_currentJobId = targetId;
 					m_pModel->ADFFileName = StringC(targetId.c_str());
+					m_pModel->syncPersistedLastOpenJobMarker();
 				}
 			}
 		}
@@ -912,6 +917,7 @@ void DCP::FileController::OnActiveControllerClosed( int lCtrlID, int lExitCode )
 					db->saveJob(jobId);
 					m_pModel->m_currentJobId = jobId;
 					m_pModel->ADFFileName = StringC(jobId.c_str());
+					m_pModel->syncPersistedLastOpenJobMarker();
 				}
 			}
 			//m_pDlg->CreateFile(sFileToCreate,pModel->m_StrText);

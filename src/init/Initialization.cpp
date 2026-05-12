@@ -429,6 +429,7 @@ void DCP::InitializationDialog::UpdateData()
 #endif
 
 	GetModel()->poConfigController->GetModel()->SetConfigKey(CNF_KEY_INIT);
+	GetModel()->refreshJsonDatabaseDataDirectoryFromStoredFilePreference();
 	GetModel()->poConfigController->StoreConfigData();
 	DCP06_TRACE_EXIT;
 }

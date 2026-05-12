@@ -334,6 +334,12 @@ namespace DCP
 			// Database (DCP9-aligned): 321/BestFit/Cylinder/ChangeStation terminology
 			Database::IDatabase* GetDatabase() const;
 			void SetDatabaseDataDirectory(const char* path);
+			/// DCP05-style: remember active job JSON id under JsonDatabase data directory; clear when no job.
+			void syncPersistedLastOpenJobMarker();
+			/// After config load: call loadJob for last session if sidecar / legacy ADFFileName slot resolves.
+			void tryRestoreLastOpenJobAfterConfigLoad();
+			/// Recompute JsonDatabase path from current FILE_STORAGE1 (must run after load_init_data / user storage change).
+			void refreshJsonDatabaseDataDirectoryFromStoredFilePreference();
 
 		private:
 			void initialize_matrix4x4(double pMatrix[4][4]);

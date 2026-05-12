@@ -222,6 +222,9 @@ DCP::Application::~Application()
 
 	if(poConfigController)
 	{
+		Model* exitingModel = poConfigController->GetModel();
+		if (exitingModel)
+			exitingModel->syncPersistedLastOpenJobMarker();
 		delete poConfigController;
 		poConfigController = 0;
 	}
@@ -311,6 +314,10 @@ bool DCP::Application::ConfirmClose(bool bEsc)
 			poConfigController->GetModel()->SetConfigKey(CNF_KEY_LINE_FITTING);
 			poConfigController->StoreConfigData();
 
+
+			Model* exitingModel = poConfigController->GetModel();
+			if (exitingModel)
+				exitingModel->syncPersistedLastOpenJobMarker();
 
 			DCP06_TRACE_EXIT;
 			return true;

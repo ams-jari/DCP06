@@ -709,6 +709,7 @@ void DCP::BestFitController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 			{
 				m_pModel->m_currentJobId = jobId;
 				m_pModel->ADFFileName = StringC(jobId.c_str());
+				m_pModel->syncPersistedLastOpenJobMarker();
 				DCP::Database::JsonDatabase* jdb = dynamic_cast<DCP::Database::JsonDatabase*>(db);
 				if (jdb)
 					loadBestFitOcsTemplateFromJob(m_pDataModel, m_pModel, jdb);

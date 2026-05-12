@@ -220,6 +220,22 @@ std::string JsonDatabase::getJobFilePath(const std::string& jobId) const {
     return p.string();
 }
 
+void JsonDatabase::inferDataDirectoryFromJobJsonPath(const std::string& pathStr) {
+    if (pathStr.empty())
+        return;
+    namespace bfs = boost::filesystem;
+    bfs::path p(pathStr);
+    boost::system::error_code ec;
+    bfs::path base = bfs::current_path(ec);
+    if (ec)
+        return;
+    const bfs::path absPath = p.is_absolute() ? p : bfs::absolute(p, base);
+    const bfs::path parent = absPath.has_parent_path() ? absPath.parent_path() : bfs::path();
+    if (parent.empty())
+        return;
+    setDataDirectory(parent.string());
+}
+
 double JsonDatabase::parseDouble(const std::string& s) {
     std::string t = trim(s);
     if (t.empty()) return std::numeric_limits<double>::quiet_NaN();
@@ -792,7 +808,9 @@ bool JsonDatabase::createJob(const std::string& jobId) {
 bool JsonDatabase::loadJob(const std::string& jobId) {
     DCP06_TRACE_ENTER;
     Json::Value j;
-    if (!readJsonFromFile(getJobFilePath(jobId), j)) { DCP06_TRACE_EXIT; return false; }
+    const std::string pathStr = getJobFilePath(jobId);
+    if (!readJsonFromFile(pathStr, j)) { DCP06_TRACE_EXIT; return false; }
+    inferDataDirectoryFromJobJsonPath(pathStr);
     m_currentJob = DCP_UNIQUE_PTR<JobData>(new JobData());
     if (!jsonToJobData(j, *m_currentJob)) {
         m_currentJob.reset();
@@ -807,7 +825,10 @@ bool JsonDatabase::loadJob(const std::string& jobId) {
 bool JsonDatabase::saveJob(const std::string& jobId) {
     DCP06_TRACE_ENTER;
     if (!m_isJobLoaded || !m_currentJob.get()) { DCP06_TRACE_EXIT; return false; }
-    bool ok = writeJsonToFile(getJobFilePath(jobId), jobDataToJson(*m_currentJob));
+    const std::string pathStr = getJobFilePath(jobId);
+    bool ok = writeJsonToFile(pathStr, jobDataToJson(*m_currentJob));
+    if (ok)
+        inferDataDirectoryFromJobJsonPath(pathStr);
     DCP06_TRACE_POINT("jobId=%s ok=%d", jobId.c_str(), ok);
     DCP06_TRACE_EXIT;
     return ok;
