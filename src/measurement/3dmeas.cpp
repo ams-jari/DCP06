@@ -1091,9 +1091,9 @@ void DCP::Meas3DController::OnF2Pressed()
 				dynamic_cast<DCP::Database::JsonDatabase*>(m_pDlg->GetModel()->GetDatabase()) : 0;
 			if (jdb && jdb->isJobLoaded())
 			{
-				// Same rules as Common::get_suggested_next_point_id: last *survey* point only (not 321_pnt_* / rp-p*).
+				// Same rules as suggestSurveyPointId / get_suggested_next_point_id(...,"P"): last *survey* point only (not 321_* placeholders / rp-p*).
 				if (m_pCommon)
-					m_pCommon->get_suggested_next_point_id(buffer, sizeof(buffer), "P", 1);
+					m_pCommon->suggestSurveyPointId(buffer, sizeof(buffer), 1);
 				else
 					snprintf(buffer, sizeof(buffer), "P1");
 				DCP::InputTextModel* pModel = new InputTextModel;

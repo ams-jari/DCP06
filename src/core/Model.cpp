@@ -83,7 +83,7 @@ DCP::Model::Model():m_nOption(2),m_nAutoIncrement(0), m_nOverWriteInfo(YES), m_n
 			bestFit_into_template	 = 0;
 			bestFit_into_capture	 = 0;
 
-			circle_plane_type = CIRCLE_POINTS_PLANE;
+			circle_plane_type = XY_PLANE;
 			circle_cx = 0.0;
 			circle_cy = 0.0;
 			circle_cz = 0.0;

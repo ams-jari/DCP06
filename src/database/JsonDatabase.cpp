@@ -46,9 +46,12 @@ bool isInternal321HzPlaneRefPoint(const PointData& p) {
 /// Default IDs for 321 offset / define plane / define line buffers, stored in main `points` for PICK/321 UI.
 /// They must not appear on the 3D-MEAS NEXT/PREV tape (same role as rp-p1..3 for flat job navigation).
 bool isInternal321NavPlaceholderId(const std::string& id) {
-    if (id.size() >= 8 && id.compare(0, 8, "321_pnt_") == 0) return true;
+    // Legacy longer prefixes must be checked before the short "321_pl_" prefix (would match legacy ids).
     if (id.size() >= 11 && id.compare(0, 11, "321_pl_pnt_") == 0) return true;
     if (id.size() >= 11 && id.compare(0, 11, "321_li_pnt_") == 0) return true;
+    if (id.size() >= 8 && id.compare(0, 8, "321_pnt_") == 0) return true;
+    if (id.size() >= 7 && id.compare(0, 7, "321_pl_") == 0) return true;
+    if (id.size() >= 7 && id.compare(0, 7, "321_li_") == 0) return true;
     return false;
 }
 
@@ -1328,6 +1331,14 @@ short JsonDatabase::getPointListAsSelectPointsForPick(S_SELECT_POINTS* pList, sh
     return iCount;
 }
 
+short JsonDatabase::getPointListAsSelectPointsForJobDesignCoords(S_SELECT_POINTS* pList, short iMaxPoints) const {
+    if (!m_currentJob.get()) return 0;
+    std::vector<DCP_SHARED_PTR<PointData> > pts = filterListToDesignValuesOnly(getAllPointsInJob());
+    short iCount = 0;
+    fillSelectPointsFromList(pts, pList, iMaxPoints, DESIGN, iCount);
+    return iCount;
+}
+
 short JsonDatabase::getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxPoints) const {
     std::vector<DCP_SHARED_PTR<PointData> > pts = getAllPointsInJob();
     short iCount = 0;
@@ -1482,6 +1493,24 @@ bool JsonDatabase::getPointByIndexForPick(int index1Based, char* pid,
     return true;
 }
 
+bool JsonDatabase::getPointByIndexForJobDesignCoordsList(int index1Based, char* pid,
+    char* xdes, char* ydes, char* zdes, char* note) const {
+    if (!m_currentJob.get()) return false;
+    std::vector<DCP_SHARED_PTR<PointData> > pts = filterListToDesignValuesOnly(getAllPointsInJob());
+    if (index1Based < 1 || index1Based > static_cast<int>(pts.size())) return false;
+    const DCP_SHARED_PTR<PointData>& pt = pts[static_cast<size_t>(index1Based - 1)];
+    if (!pt) return false;
+    if (pid) snprintf(pid, POINT_ID_BUFF_LEN, DCP_POINT_ID_FMT, pt->id.c_str());
+    if (xdes) fmtDouble(pt->x_dsg, xdes);
+    if (ydes) fmtDouble(pt->y_dsg, ydes);
+    if (zdes) fmtDouble(pt->z_dsg, zdes);
+    if (note) {
+        std::string n = pt->note.size() <= 6 ? pt->note : pt->note.substr(0, 6);
+        sprintf(note, "%-6.6s", n.c_str());
+    }
+    return true;
+}
+
 std::string JsonDatabase::getJobDisplayName() const {
     if (!m_currentJob.get()) return "";
     return m_currentJob->id;
@@ -1489,7 +1518,7 @@ std::string JsonDatabase::getJobDisplayName() const {
 
 int JsonDatabase::getJobPointsCount() const {
     if (!m_currentJob.get()) return 0;
-    // Must match getPointByIndex / getAllPointsInJob (excludes rp-p1..3 and 321_pnt_/321_pl_pnt_/321_li_pnt_ placeholders).
+    // Must match getPointByIndex / getAllPointsInJob (excludes rp-p1..3 and 321 placeholders: pnt/pl/li legacy + short pl_/li_/pnt_).
     return static_cast<int>(getAllPointsInJob().size());
 }
 

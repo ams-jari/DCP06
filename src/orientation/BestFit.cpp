@@ -29,13 +29,13 @@
 #include <dcp06/core/Logger.hpp>
 #include <dcp06/orientation/BestFit.hpp>
 #include <dcp06/core/Defs.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 #include <dcp06/file/SelectFile.hpp>
 #include <dcp06/orientation/BestFitSelectPoints.hpp>
 #include <dcp06/core/Measure.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/database/IDatabase.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
-#include <dcp06/database/DatabaseTypes.hpp>
 #include <dcp06/core/Common.hpp>
 #include <limits>
 #include <dcp06/calculation/CalculationBestFit.hpp>
@@ -466,13 +466,13 @@ void DCP::BestFitController::OnF2Pressed()
 	pModel->m_iPointsCount = common.get_last_defined_point(&m_pDataModel->point_OCS[0],&m_pDataModel->point_DCS[0],MAX_BESTFIT_POINTS);
 	m_pDataModel->INTO_CAPTURE = true;
 	
-	sprintf(pModel->default_pid,"%-s","BF");
+	snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%s", DCP_BESTFIT_MEAS_DEFAULT_PID_PREFIX);
 
 	int to = pModel->m_iPointsCount < pModel->iMinPoint ? pModel->iMinPoint :  pModel->m_iPointsCount;
 	
 	for(int i = 0; i < to; i++)
 	{
-		sprintf(pModel->points[i].point_id,"BF%d",i+1);
+		snprintf(pModel->points[i].point_id, sizeof(pModel->points[i].point_id), "%s%d", DCP_BESTFIT_MEAS_DEFAULT_PID_PREFIX, i + 1);
 	}
 
 	if(GetController(BESTFIT_POINT_CONTROLLER) == nullptr)
@@ -516,10 +516,22 @@ void DCP::BestFitController::OnF3Pressed()
 		pModel->m_iMaxPoint = sum < 3 ? 3 : sum;
 		pModel->m_iMinPoint = MIN_POINTS_FOR_DISTANCE;
 		pModel->m_iPointsCount = sum;
-		pModel->disable_point_editing = true;
+		pModel->disable_point_editing = false;
 		
 		memcpy(&pModel->point_table[0],	&m_pDataModel->point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 		memcpy(&pModel->point_table2[0],&m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
+
+		snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%s", DCP_BESTFIT_MEAS_DEFAULT_PID_PREFIX);
+		strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_BESTFIT,
+			sizeof(pModel->job_sync_source) - 1);
+		pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';
+
+		for (short i = 0; i < sum; ++i)
+		{
+			if (pModel->point_table[i].sta == POINT_NOT_DEFINED)
+				pModel->point_table[i].point_id[0] = '\0';
+		}
+
 	
 
 

@@ -357,7 +357,7 @@ void DCP::DefineLineController::OnF5Pressed()
         return;
     }
 	DCP::MeasureModel* pModel = new MeasureModel;
-	sprintf(pModel->default_pid, "%-s", "321_li_pnt_");
+	sprintf(pModel->default_pid, "%-s", DCP_321_LINE_MEAS_DEFAULT_PID_PREFIX);
 	strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_321,
 		sizeof(pModel->job_sync_source) - 1);
 	pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';

@@ -38,6 +38,7 @@
 #include <dcp06/calculation/CalculationChst.hpp>
 #include <dcp06/orientation/ResBestFit.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
+#include <dcp06/database/DatabaseTypes.hpp>
 #include <cmath>
 
 #include <GUI_Desktop.hpp>
@@ -799,15 +800,15 @@ void DCP::ChangeStationController::OnF1Pressed()
 	pModel->iMinPoint = min;
 	pModel->iCurrentPoint = 1;
 	pModel->m_iPointsCount = m_pCommon->get_last_defined_point(&m_pDataModel->point_OCS[0],&m_pDataModel->point_DCS[0],MAX_BESTFIT_POINTS);
-	pModel->disable_point_editing = true;
-	sprintf(pModel->default_pid,"%-s","REF");
+	pModel->disable_point_editing = false;
+	snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%s", DCP_CHST_MEAS_DEFAULT_PID_PREFIX);
 
 	// 271011
 	// check pid
 	int to = pModel->m_iPointsCount < min ? min :  pModel->m_iPointsCount;
 	for(int i = 0; i < to; i++)
 	{
-		sprintf(pModel->points[i].point_id,"REF%d",i+1);
+		snprintf(pModel->points[i].point_id, sizeof(pModel->points[i].point_id), "%s%d", DCP_CHST_MEAS_DEFAULT_PID_PREFIX, i + 1);
 	}
 
 	//m_pDataModel->INTO_CAPTURE = true;
@@ -866,19 +867,20 @@ void DCP::ChangeStationController::OnF2Pressed()
 		pModel->m_iMaxPoint = MAX_BESTFIT_POINTS;
 		pModel->m_iMinPoint = min;
 		pModel->m_iPointsCount = sum;
-		pModel->disable_point_editing = true;
-		
-		sprintf(pModel->default_pid,"%-s","REF");
+		pModel->disable_point_editing = false;
+
+		snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%s", DCP_CHST_MEAS_DEFAULT_PID_PREFIX);
+		strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_CHST,
+			sizeof(pModel->job_sync_source) - 1);
+		pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';
 
 		memcpy(&pModel->point_table[0],	&m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 		memcpy(&pModel->point_table2[0],	&m_pDataModel->point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 
-		// 271011
-		// check pid
-		int to = sum < min ? min : sum;
-		for(int i = 0; i < to; i++)
+		for (short i = 0; i < sum; ++i)
 		{
-			sprintf(pModel->point_table[i].point_id,"REF%d",i+1);
+			if (pModel->point_table[i].sta == POINT_NOT_DEFINED)
+				pModel->point_table[i].point_id[0] = '\0';
 		}
 
 		if(GetController(MEAS_CONTROLLER) == nullptr)
@@ -954,7 +956,7 @@ void DCP::ChangeStationController::OnF4Pressed()
 
 	// set values...
 	DCP::MeasureModel* pModel = new MeasureModel;
-	pModel->disable_point_editing = true;
+	pModel->disable_point_editing = false;
 	pModel->m_iMaxPoint = 20;
 	pModel->m_iMinPoint = min;
 	pModel->m_iPointsCount = m_pCommon->get_last_defined_point(&m_pDataModel->point_OCS[0], MAX_BESTFIT_POINTS);
@@ -963,12 +965,22 @@ void DCP::ChangeStationController::OnF4Pressed()
 	memcpy(&pModel->point_table[0],	&m_pDataModel->point_DCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	memcpy(&pModel->point_table2[0],&m_pDataModel->point_OCS[0], sizeof(S_POINT_BUFF) * MAX_BESTFIT_POINTS);
 	
+	snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%s", DCP_CHST_MEAS_DEFAULT_PID_PREFIX);
+	strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_CHST,
+		sizeof(pModel->job_sync_source) - 1);
+	pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';
+
 	for(i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
 		if(pModel->point_table2[i].sta != 0)
 		{
 			snprintf(pModel->point_table[i].point_id, sizeof(pModel->point_table[i].point_id), DCP_POINT_ID_FMT, pModel->point_table2[i].point_id);
 		}
+	}
+	for (i = 0; i < MAX_BESTFIT_POINTS; ++i)
+	{
+		if (pModel->point_table[i].sta == POINT_NOT_DEFINED)
+			pModel->point_table[i].point_id[0] = '\0';
 	}
 	// load measurement display
  
@@ -1098,7 +1110,7 @@ void DCP::ChangeStationController::OnF5Pressed()
 	DCP::MeasureModel* pModel = new MeasureModel;
 	pModel->m_iMaxPoint = 20;
 	pModel->m_iMinPoint = min;
-	pModel->disable_point_editing = true;
+	pModel->disable_point_editing = false;
 	pModel->m_iPointsCount = m_pCommon->get_last_defined_point(&m_pDataModel->point_OCS[0], MAX_BESTFIT_POINTS);
 
 	
@@ -1110,12 +1122,22 @@ void DCP::ChangeStationController::OnF5Pressed()
 
 	m_pDlg->GetModel()->stationNumber++;
 
+	snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%s", DCP_CHST_MEAS_DEFAULT_PID_PREFIX);
+	strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_CHST,
+		sizeof(pModel->job_sync_source) - 1);
+	pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';
+
 	for(i=0; i < MAX_BESTFIT_POINTS; i++)
 	{
 		if(pModel->point_table2[i].sta != 0)
 		{
 			snprintf(pModel->point_table[i].point_id, sizeof(pModel->point_table[i].point_id), DCP_POINT_ID_FMT, pModel->point_table2[i].point_id);
 		}
+	}
+	for (i = 0; i < MAX_BESTFIT_POINTS; ++i)
+	{
+		if (pModel->point_table[i].sta == POINT_NOT_DEFINED)
+			pModel->point_table[i].point_id[0] = '\0';
 	}
 	// load measurement display
  

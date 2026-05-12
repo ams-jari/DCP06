@@ -50,6 +50,7 @@
 #include <algorithm>
 #endif
 #include <math.h>
+#include <string.h>
 #include <GUI_Types.hpp>
 #include <GUI_DeskTop.hpp>
 #include <UTL_String.hpp>
@@ -70,10 +71,22 @@ OBS_IMPLEMENT_EXECUTE(DCP::CircleDialog);
 // =====================================  Static Functions  =======================================
 // ================================================================================================
 
-/// Default point IDs Ci1Pnt1, Ci1Pnt2 from circle id Ci1; enable job sync for PICK (MeasureModel::job_sync_source).
-static void setupCircleRimMeasureModelForJob(DCP::MeasureModel* pModel, const char* circleIdRaw, DCP::Common* pCommon)
+/// Default rim point IDs {circleId}_rim_1 … (MeasModel default_pid + index). Legacy was Ci1Pnt1; lowercased ascii circle id slug.
+static void dcpAsciiLowerCircleIdSlug(char* s)
 {
-	if (!pModel || !pCommon) return;
+	while (s && *s) {
+		unsigned char c = (unsigned char)*s;
+		if (c >= 'A' && c <= 'Z')
+			*s = (char)(c + 32);
+		++s;
+	}
+}
+
+/// default_pid + job_sync_source for circle-related Meas flows (rim, plane-defining MEAS plane).
+static void setupCircleMeasDefaultPidForJob(DCP::MeasureModel* pModel, const char* circleIdRaw,
+	DCP::Common* pCommon, const char* suffixStr)
+{
+	if (!pModel || !pCommon || !suffixStr || !suffixStr[0]) return;
 	pModel->job_sync_source[0] = '\0';
 	pModel->default_pid[0] = '\0';
 	char cid[CIRCLE_ID_BUFF_LEN];
@@ -85,14 +98,31 @@ static void setupCircleRimMeasureModelForJob(DCP::MeasureModel* pModel, const ch
 	pCommon->strbtrim(cid);
 	if (cid[0] == '\0')
 		snprintf(cid, sizeof(cid), "Ci1");
-	// Full id = cid + "Pnt" + index; keep cid short enough for DCP_POINT_ID_LENGTH.
-	const size_t maxBase = (size_t)DCP_POINT_ID_LENGTH > 8 ? (size_t)DCP_POINT_ID_LENGTH - 8 : 4;
-	if (strlen(cid) > maxBase)
-		cid[maxBase] = '\0';
-	snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%sPnt", cid);
+	const unsigned kMidLen = (unsigned)strlen(suffixStr);
+	static const unsigned kDigitReserve = 3u;
+	unsigned maxSlug = DCP_POINT_ID_LENGTH;
+	if (maxSlug <= kMidLen + kDigitReserve)
+		maxSlug = 1u;
+	else
+		maxSlug = maxSlug - kMidLen - kDigitReserve;
+	if (maxSlug >= sizeof(cid))
+		maxSlug = (unsigned)(sizeof(cid) - 1);
+	cid[maxSlug] = '\0';
+	dcpAsciiLowerCircleIdSlug(cid);
+	snprintf(pModel->default_pid, sizeof(pModel->default_pid), "%s%s", cid, suffixStr);
 	strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_CIRCLE,
 		sizeof(pModel->job_sync_source) - 1);
 	pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';
+}
+
+static void setupCircleRimMeasureModelForJob(DCP::MeasureModel* pModel, const char* circleIdRaw, DCP::Common* pCommon)
+{
+	setupCircleMeasDefaultPidForJob(pModel, circleIdRaw, pCommon, DCP_CIRCLE_RIM_MEAS_PID_SUFFIX);
+}
+
+static void setupCirclePlaneMeasureModelForJob(DCP::MeasureModel* pModel, const char* circleIdRaw, DCP::Common* pCommon)
+{
+	setupCircleMeasDefaultPidForJob(pModel, circleIdRaw, pCommon, DCP_CIRCLE_PLANE_MEAS_PID_SUFFIX);
 }
 
 // ================================================================================================
@@ -558,14 +588,14 @@ void DCP::CircleController::set_function_keys()
 	if(PLANE_KEYS == 0)
 	{
 #ifdef DCP06_STORE_CIRCLE_OBJECTS
-		// Point-style: ADD, LIST, DEL, PLANE, MEAS, CONT
+		// Point-style: ADD, DEL on F2 (DCP05 parity), LIST, PLANE, MEAS, CONT
 		FKDef vDef;
 		vDef.poOwner = this;
 		vDef.strLable = StringC(AT_DCP06,K_DCP_ADD_TOK);
 		SetFunctionKey( FK1, vDef );
-		vDef.strLable = StringC(AT_DCP06,K_DCP_LIST_TOK);
-		SetFunctionKey( FK2, vDef );
 		vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
+		SetFunctionKey( FK2, vDef );
+		vDef.strLable = StringC(AT_DCP06,K_DCP_LIST_TOK);
 		SetFunctionKey( FK3, vDef );
 		vDef.strLable = StringC(AT_DCP06,K_DCP_PLANE_TOK);
 		SetFunctionKey( FK4, vDef );
@@ -574,12 +604,14 @@ void DCP::CircleController::set_function_keys()
 		vDef.strLable = StringC(AT_DCP06,K_DCP_CONT_TOK);
 		SetFunctionKey( FK6, vDef );
 #else
-		// DCP05: no ID/database - PLANE, CIRCL, CONT only
+		// DCP05: DEL on F2; PLANE, CIRCL, CONT
 		FKDef vDef;
 		vDef.poOwner = this;
 		vDef.strLable = L" ";
 		SetFunctionKey( FK1, vDef );
+		vDef.strLable = StringC(AT_DCP06,K_DCP_DEL_TOK);
 		SetFunctionKey( FK2, vDef );
+		vDef.strLable = L" ";
 		SetFunctionKey( FK3, vDef );
 		vDef.strLable = StringC(AT_DCP06,K_DCP_PLANE_TOK);
 		SetFunctionKey( FK4, vDef );
@@ -782,7 +814,7 @@ void DCP::CircleController::OnF1Pressed()
 }
 
 // ================================================================================================
-// Description: OnF2Pressed LIST (or ZX when in plane menu)
+// Description: OnF2Pressed DELETE on main screen (or ZX when in plane menu). DCP05: DEL was F2.
 // ================================================================================================
 void DCP::CircleController::OnF2Pressed()
 {
@@ -793,12 +825,7 @@ void DCP::CircleController::OnF2Pressed()
     }
 	if(PLANE_KEYS == 0)
 	{
-#ifdef DCP06_STORE_CIRCLE_OBJECTS
-		// LIST: open Select Circle dialog (like Point LIST)
-		ShowSelectCircleDlg();
-#else
-		// DCP05: F2 is empty, no-op
-#endif
+		OnSHF2Pressed();
 	}
 	else
 	{
@@ -817,7 +844,7 @@ void DCP::CircleController::OnF2Pressed()
 }
 
 // ================================================================================================
-// Description: OnF3Pressed DEL (or YZ when in plane menu)
+// Description: OnF3Pressed LIST when STORE builds (or YZ when in plane menu)
 // ================================================================================================
 void DCP::CircleController::OnF3Pressed()
 {
@@ -829,10 +856,10 @@ void DCP::CircleController::OnF3Pressed()
 	if(PLANE_KEYS == 0)
 	{
 #ifdef DCP06_STORE_CIRCLE_OBJECTS
-		// DEL: delete circle
-		OnSHF2Pressed();
+		// LIST was F2 in older layout; on F3 after DEL/F2 parity
+		ShowSelectCircleDlg();
 #else
-		// DCP05: F3 is empty, no-op
+		// F3 unused on legacy main Circle screen
 #endif
 	}
 	else
@@ -877,6 +904,10 @@ void DCP::CircleController::OnF4Pressed()
 
 		memset(&pModel->point_table[0],0,sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
 		memcpy(&pModel->point_table[0],&m_pDataModel->planes[0].points[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_PLANE);
+		/* Blank copied point IDs so Meas uses default_pid (ci{_pln_ n}) instead of stale survey P2 etc. */
+		for (short ip = 0; ip < MAX_POINTS_IN_PLANE; ++ip)
+			pModel->point_table[ip].point_id[0] = '\0';
+		setupCirclePlaneMeasureModelForJob(pModel, m_pDataModel->circle_points[0].id, m_pDataModel->pCommon);
 
 		if(GetController(CIRCLE_PLANE_MEAS_CONTROLLER) == nullptr)
 		{
@@ -1158,8 +1189,10 @@ void DCP::CircleController::OnActiveControllerClosed( int lCtrlID, int lExitCode
 {
 	if(lCtrlID == MEAS_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();		
-		
+		DCP::MeasureModel* pModel = (DCP::MeasureModel*) GetController( MEAS_CONTROLLER )->GetModel();
+		if (pModel == 0)
+			return;
+
 		// copy values
 		memcpy(&m_pDataModel->circle_points[0].points[0], &pModel->point_table[0], sizeof(S_POINT_BUFF) * MAX_POINTS_IN_CIRCLE);
 	
@@ -1286,7 +1319,7 @@ bool DCP::CircleController::Close(int lExitCode, bool bConfirmation)
 DCP::CircleModel::CircleModel(Model* pModel):m_pModel(pModel)
 {
 	cx = 0.0;cy=0.0;cz=0.0, diameter=0.0,bR=0.0;
-	PLANE_TYPE = CIRCLE_POINTS_PLANE;
+	PLANE_TYPE = (pModel != 0) ? pModel->circle_plane_type : XY_PLANE;
 	
 	pCommon = new Common(pModel);
 	pMsgBox = new MsgBox;
@@ -1322,7 +1355,6 @@ DCP::CircleModel::~CircleModel()
 void DCP::CircleModel::clear_circle()
 {
 	cx = 0.0; cy = 0.0; cz = 0.0; diameter = 0.0;
-	PLANE_TYPE = CIRCLE_POINTS_PLANE;
 	memset(&temp_plane_table[0], 0, sizeof(S_PLANE_BUFF));
 	memset(&planes[0], 0, sizeof(S_PLANE_BUFF));
 	memset(&circle_points[0], 0, sizeof(S_CIRCLE_BUFF));

@@ -53,6 +53,12 @@ public:
     /// PICK: Fill S_SELECT_POINTS with points that have actual values (any tag). For copying measured coords.
     short getPointListAsSelectPointsForPick(S_SELECT_POINTS* pList, short iMaxPoints) const;
 
+    /** Best Fit define / PICK: main job points with valid design XYZ (sorted by ID). List uses DESIGN column only. */
+    short getPointListAsSelectPointsForJobDesignCoords(S_SELECT_POINTS* pList, short iMaxPoints) const;
+    /** Index into list from getPointListAsSelectPointsForJobDesignCoords (1-based). Fills formatted design coord strings. */
+    bool getPointByIndexForJobDesignCoordsList(int index1Based, char* pid,
+        char* xdes, char* ydes, char* zdes, char* note) const;
+
     /// Fill S_SELECT_POINT from current job (no/point_id/point_status format). Returns count.
     short getPointListAsSelectPoint(S_SELECT_POINT* pList, short iMaxPoints) const;
 

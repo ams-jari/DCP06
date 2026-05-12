@@ -230,7 +230,13 @@ void DCP::LineFitMeasDialog::RefreshControls()
 		if (pt.point_id[0] == '\0')
 		{
 			char suggested[POINT_ID_BUFF_LEN];
-			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), "P", GetDataModel()->m_iCurrentPoint);
+			char prefixBuf[32];
+			snprintf(prefixBuf, sizeof(prefixBuf), "%s", GetDataModel()->default_pid);
+			const char* prefix =
+				m_pCommon->strblank(prefixBuf)
+					? DCP_LINE_FIT_MEAS_DEFAULT_PID_PREFIX
+					: prefixBuf;
+			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), prefix, GetDataModel()->m_iCurrentPoint);
 			snprintf(pt.point_id, sizeof(pt.point_id), DCP_POINT_ID_FMT, suggested);
 		}
 		snprintf(point_id, sizeof(point_id), DCP_POINT_ID_FMT, pt.point_id);
@@ -406,7 +412,8 @@ void DCP::LineFitMeasDialog::add_point()
 			if (!m_pCommon->strblank(point_id_buf))
 				m_pCommon->inc_id(point_id_buf);
 			else
-				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf), "P", GetDataModel()->m_iPointsCount + 1);
+				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf),
+					DCP_LINE_FIT_MEAS_DEFAULT_PID_PREFIX, GetDataModel()->m_iPointsCount + 1);
 		}
 
 		GetDataModel()->m_iPointsCount++;
@@ -1091,7 +1098,7 @@ DCP::LineFitMeasModel::LineFitMeasModel()
 	m_iMaxPoint = 0;
 	m_iPointsCount = 0;
 	m_iCurrentPoint = 1;
-	default_pid[0] = '\0';
+	snprintf(default_pid, sizeof(default_pid), "%s", DCP_LINE_FIT_MEAS_DEFAULT_PID_PREFIX);
 	memset(&point_table[0],0,sizeof(S_POINT_BUFF)* MAX_LINEFIT_POINTS);
 	memset(&points_in_line[0],0,sizeof(S_POINT_BUFF)* MAX_LINEFIT_POINTS);
 

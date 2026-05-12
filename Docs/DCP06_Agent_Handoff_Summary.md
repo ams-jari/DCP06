@@ -1,6 +1,6 @@
 # DCP06 Agent Handoff Summary
 
-**Date:** 2026-03-07  
+**Date:** 2026-05-06 (section 2.4 added) · original 2026-03-07  
 **Purpose:** Handoff document for new agent to continue work on DCP06 (Leica Captivate plugin – onboard 3D measurement).
 
 ---
@@ -32,7 +32,7 @@ Naming migration: DOM → 321, POM → BF in titles and strings.
 
 ### 2.2 321 Reference Point ID – Editable & Transfer
 
-- **Default IDs:** 321 context uses `321_pnt_1`, `321_pl_pnt_1` (plane), `321_li_pnt_1` (line)
+- **Default IDs:** 321 context uses **`321_pnt_1`** (offset / MeasV), **`321_pl_1`** (plane meas; `DCP_321_PLANE_MEAS_DEFAULT_PID_PREFIX`), **`321_li_1`** (line meas; `DCP_321_LINE_MEAS_DEFAULT_PID_PREFIX`). Legacy job rows **`321_pl_pnt_*` / `321_li_pnt_*`** remain recognized as internal placeholders in `JsonDatabase`. **Circle rim** meas defaults to **`{circleId}_rim_`** (lowercased trimmed slug + `DCP_CIRCLE_RIM_MEAS_PID_SUFFIX`) + index → e.g. **`ci1_rim_1`** (legacy **`Ci1Pnt1`**).
 - **Offsv Point ID editable:** ReadWrite when `display == A321_DLG || A321_USERDEF_DLG`
 - **Offsv/MeasV Point ID observers:** `OnPointIdChanged` saves edits to `ovalues_buff` (Offsv) and `ref_point_buff` (MeasV)
 - **Offsv OnF5/OnF6:** Use `321_pnt_` prefix when in 321 context
@@ -48,6 +48,14 @@ Naming migration: DOM → 321, POM → BF in titles and strings.
   - `T_DCP_DOM_LINE_MEAS_TOK` → `ORIENTATION\321\LINE\MEAS`
   - `T_ORIE_DOM_POINT_OFFSV_TOK` → `ORIENTATION\321\POINT\OFFSV` (already done)
   - `T_ORIE_DOM_POINT_MEASV_TOK` → `ORIENTATION\321\POINT\MEASV` (already done)
+
+### 2.4 Circle: DEL on F2 (DCP05 parity) and default plane method
+
+- **Problem (DCP06 vs DCP05):** Main Circle screen had blank F1–F3 in the non–`DCP06_STORE_CIRCLE_OBJECTS` build, so **DEL** disappeared; plane field defaulted to **“circle p”** (`CIRCLE_POINTS_PLANE`) because `Model::circle_plane_type` was initialized that way and `clear_circle()` used to reset `PLANE_TYPE` to circle-points after clearing.
+- **DEL:** Legacy layout shows **DEL** on **F2**; `OnF2Pressed` (main screen, `PLANE_KEYS == 0`) calls `OnSHF2Pressed()` (same delete path as before). When **`DCP06_STORE_CIRCLE_OBJECTS`** is defined, softkeys are **F2 = DEL**, **F3 = LIST** so DEL stays on F2 like DCP05.
+- **Default plane method:** `Model` constructor sets **`circle_plane_type = XY_PLANE`** (not `CIRCLE_POINTS_PLANE`). `CircleModel` copies `pModel->circle_plane_type` on construction. **`clear_circle()`** clears geometry only and **does not** overwrite `PLANE_TYPE`, so the user’s plane method is not forced back to “circle p” after delete/clear.
+- **Legacy jobs:** Settings/archives that already store **`circle_plane_type = CIRCLE_POINTS_PLANE`** still load as **“circle p”** until the user changes it—no automatic one-time migration in code.
+- **Files:** `src/measurement/Circle.cpp`, `Src/measurement/Circle.cpp` (keep in sync), `src/core/Model.cpp`, `Src/core/Model.cpp`.
 
 ---
 
@@ -101,6 +109,8 @@ Simulator Plugin\DCP06\en\DCP06.LEN
 | Offsv dialog | `src/orientation/Offsv.cpp`, `include/dcp06/orientation/Offsv.hpp` |
 | MeasV dialog | `src/orientation/MeasV.cpp`, `include/dcp06/orientation/MeasV.hpp` |
 | Common (convert_to_ascii, get_suggested_next_point_id) | `src/core/Common.cpp`, `include/dcp06/core/Common.hpp` |
+| Circle dialog / controller (softkeys, plane type) | `src/measurement/Circle.cpp`, `include/dcp06/measurement/Circle.hpp` (mirror under `Src/` if used by VS project) |
+| Global circle defaults (`circle_plane_type`) | `src/core/Model.cpp`, `include/dcp06/core/Model.hpp` |
 | Tracking doc | `Docs/DCP06_DOM_POM_Rename_Tracking.md` |
 
 ---
@@ -137,4 +147,4 @@ Rule: `.cursor/rules/git-workflow.mdc` – wait for an explicit user request (e.
 
 ---
 
-*Last updated: 2026-03-07*
+*Last updated: 2026-05-06*

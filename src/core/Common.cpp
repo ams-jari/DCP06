@@ -1415,7 +1415,7 @@ void DCP::Common::get_suggested_next_point_id(char* outBuf, size_t outSize, cons
 	outBuf[0] = '\0';
 	if (!m_pModel) { snprintf(outBuf, outSize, "%s%d", defaultPrefix ? defaultPrefix : "P", fallbackNum); return; }
 	// Skip job lookup for context-specific prefixes - user uses P1,P2,P3 for 3D meas; we need 321_pnt_1, OFF1, BF1 etc.
-	bool forcePrefix = defaultPrefix && (strncmp(defaultPrefix, "321_", 4) == 0 || strcmp(defaultPrefix, "OFF") == 0 || strcmp(defaultPrefix, "BF") == 0 || strcmp(defaultPrefix, "REF") == 0 || strcmp(defaultPrefix, DCP_SCAN_BOUNDARY_DEFAULT_PID_PREFIX) == 0);
+	bool forcePrefix = defaultPrefix && (strncmp(defaultPrefix, "321_", 4) == 0 || strcmp(defaultPrefix, "OFF") == 0 || strcmp(defaultPrefix, "BF") == 0 || strcmp(defaultPrefix, DCP_BESTFIT_MEAS_DEFAULT_PID_PREFIX) == 0 || strcmp(defaultPrefix, DCP_CHST_MEAS_DEFAULT_PID_PREFIX) == 0 || strcmp(defaultPrefix, DCP_SIMPLE_SCAN_GRID_PID_PREFIX) == 0 || strcmp(defaultPrefix, DCP_LINE_FIT_MEAS_DEFAULT_PID_PREFIX) == 0 || strcmp(defaultPrefix, "REF") == 0 || strcmp(defaultPrefix, DCP_SCAN_BOUNDARY_DEFAULT_PID_PREFIX) == 0);
 	if (forcePrefix)
 	{
 		snprintf(outBuf, outSize, "%s%d", defaultPrefix, fallbackNum);
@@ -1453,6 +1453,28 @@ void DCP::Common::get_suggested_next_point_id(char* outBuf, size_t outSize, cons
 		}
 	}
 	snprintf(outBuf, outSize, "%s%d", defaultPrefix ? defaultPrefix : "P", fallbackNum);
+}
+
+void DCP::Common::suggestSurveyPointId(char* outBuf, size_t outSize, int fallbackNum) const
+{
+	get_suggested_next_point_id(outBuf, outSize, "P", fallbackNum);
+}
+
+void DCP::Common::suggestFeaturePointId(char* outBuf, size_t outSize, const char* prefix, const char* middlefix, int index) const
+{
+	if (!outBuf || outSize < 2)
+		return;
+	outBuf[0] = '\0';
+	if (!prefix || index < 1)
+		return;
+	if (middlefix != 0 && middlefix[0] != '\0')
+		snprintf(outBuf, outSize, "%s_%s_%d", prefix, middlefix, index);
+	else
+		snprintf(outBuf, outSize, "%s_%d", prefix, index);
+	outBuf[outSize - 1] = '\0';
+	size_t n = strlen(outBuf);
+	if (n > (size_t)DCP_POINT_ID_LENGTH)
+		outBuf[DCP_POINT_ID_LENGTH] = '\0';
 }
 
 /************************************************************************

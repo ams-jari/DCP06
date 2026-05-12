@@ -114,8 +114,15 @@ namespace DCP
 
 			/** Phase D: Suggest next Point ID for DB storage.
 			 *  When job is loaded (JsonDatabase): increments trailing number of last point in job.
-			 *  Otherwise: uses defaultPrefix + fallbackNum (e.g. "REF", 1 -> "REF1"). */
+			 *  Otherwise: uses defaultPrefix + fallbackNum (e.g. "REF", 1 -> "REF1").
+			 *  Survey-only convenience: prefer suggestSurveyPointId() for clarity. */
 			void get_suggested_next_point_id(char* outBuf, size_t outSize, const char* defaultPrefix, int fallbackNum) const;
+
+			/** Family A (survey / 3D meas): same as get_suggested_next_point_id(..., "P", fallbackNum); no naming format change. */
+			void suggestSurveyPointId(char* outBuf, size_t outSize, int fallbackNum) const;
+
+			/** Family B: build {prefix}_{middlefix}_{index}; if middlefix is null or empty, {prefix}_{index}. Result clamped to DCP_POINT_ID_LENGTH. */
+			void suggestFeaturePointId(char* outBuf, size_t outSize, const char* prefix, const char* middlefix, int index) const;
 
 			bool check_edm_mode();
 			void delay();

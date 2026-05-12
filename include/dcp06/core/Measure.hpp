@@ -219,7 +219,7 @@ namespace DCP
 			S_POINT_BUFF point_table[20];
 			S_POINT_BUFF point_table2[20];
 
-			/// Prefix for suggested point IDs (e.g. "Ci1Pnt" + index → Ci1Pnt1). Sized for long circle/line ids.
+			/// Prefix for suggested point IDs (e.g. `ci1_rim_` + index → ci1_rim_1 circle rim meas). Sized for long circle ids.
 			char default_pid[POINT_ID_BUFF_LEN];
 			/// If non-empty, each successful measure syncs current point to JsonDatabase with this source tag (e.g. PointSource::DCP06_CIRCLE).
 			char job_sync_source[20];

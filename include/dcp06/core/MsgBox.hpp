@@ -27,6 +27,9 @@
 #ifndef DCP_MSGBOX_HPP
 #define DCP_MSGBOX_HPP
 
+/** Captivate message dialog text area (~29 chars visible per line without wrap). MsgBox inserts newlines automatically. */
+#define DCP_MSG_DIALOG_CHARS_PER_LINE 29
+
 // ================================================================================================
 // ==========================================  Includes   =========================================
 // ================================================================================================

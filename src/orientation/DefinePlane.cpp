@@ -666,7 +666,7 @@ void DCP::DefinePlaneController::OnF5Pressed()
 	pModel->m_iMinPoint = MIN_POINTS_FOR_PLANE;
 	pModel->m_iPointsCount = 3;
 	pModel->m_iCurrentPoint = 1;
-	sprintf(pModel->default_pid, "%-s", "321_pl_pnt_");
+	sprintf(pModel->default_pid, "%-s", DCP_321_PLANE_MEAS_DEFAULT_PID_PREFIX);
 	strncpy(pModel->job_sync_source, DCP::Database::PointSource::DCP06_321,
 		sizeof(pModel->job_sync_source) - 1);
 	pModel->job_sync_source[sizeof(pModel->job_sync_source) - 1] = '\0';

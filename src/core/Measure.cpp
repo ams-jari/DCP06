@@ -194,10 +194,12 @@ void DCP::MeasureDialog::OnDialogActivated()
 	Common common(m_pModel);
 	//m_pTimer.SetTimer( 2000 / GUI::TimerC::iMS_PER_TICK , 2000 / GUI::TimerC::iMS_PER_TICK );
 
-	pData->m_iPointsCount = common.get_last_defined_point(&pData->point_table[0], pData->m_iMaxPoint);
-
-	if(pData->m_iPointsCount  < pData->m_iMinPoint)
-		pData->m_iPointsCount = pData->m_iMinPoint;
+	// Never shrink m_iPointsCount from get_last_defined_point: ADD can create slot N with only a
+	// synthesized point_id until measured; overwriting with scan results drops trailing slots/cont data.
+	short fromScan = common.get_last_defined_point(&pData->point_table[0], pData->m_iMaxPoint);
+	short ensuredMin = (fromScan < pData->m_iMinPoint) ? pData->m_iMinPoint : fromScan;
+	if (pData->m_iPointsCount < ensuredMin)
+		pData->m_iPointsCount = ensuredMin;
 
 	DCP06_LOG_DEBUG("-- %s: calling RefreshControls", __FUNCTION__);
 	RefreshControls();
@@ -431,8 +433,8 @@ void DCP::MeasureDialog::add_point()
 	{
 		// 271011
 		char point_id_buf[POINT_ID_BUFF_LEN];
-		// If default_pid is set (Ci1Pnt, 321_li_pnt_, …), use prefix + next index — inc_id() breaks on
-		// embedded digits (e.g. Ci1Pnt3 -> Ci2 because atoi("1Pnt3")==1).
+		// If default_pid is set (Ci1_rim_, 321_li_, …), use prefix + next index — inc_id() breaks on
+		// embedded digits in old patterns (e.g. legacy Ci1Pnt3 → atoi quirks).
 		if (!m_pCommon->strblank(GetDataModel()->default_pid))
 		{
 			snprintf(point_id_buf, sizeof(point_id_buf), "%s%d", GetDataModel()->default_pid, GetDataModel()->m_iPointsCount + 1);
@@ -940,9 +942,9 @@ void DCP::MeasureController::OnActiveControllerClosed( int lCtrlID, int lExitCod
 					if (!m_pCommon->strblank(bXmea) && !m_pCommon->strblank(bYmea) && !m_pCommon->strblank(bZmea))
 					{
 						double x = atof(bXmea), y = atof(bYmea), z = atof(bZmea);
-						m_pDlg->update_meas_values(x, y, z, POINT_MEASURED);
 						if (!m_pCommon->strblank(pid))
 							snprintf(m_pDlg->GetDataModel()->point_table[m_pDlg->GetDataModel()->m_iCurrentPoint - 1].point_id, sizeof(m_pDlg->GetDataModel()->point_table[0].point_id), DCP_POINT_ID_FMT, pid);
+						m_pDlg->update_meas_values(x, y, z, POINT_MEASURED);
 					}
 				}
 			}

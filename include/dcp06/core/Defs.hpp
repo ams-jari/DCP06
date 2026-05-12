@@ -615,6 +615,23 @@ namespace DCP
 	#define DEFAULT_BOUNDARY_SIZE       500.0
 	/** MeasDialog default_pid for Simple Scan boundary; blanks become ScBd_1, ScBd_2, ScBd_3 (same pattern as 321_pnt_). */
 	#define DCP_SCAN_BOUNDARY_DEFAULT_PID_PREFIX  "ScBd_"
+
+	/** 321 plane / line measure (MeasDialog): index appended -> 321_pl_1, 321_li_1 (legacy was 321_pl_pnt_*, 321_li_pnt_*). */
+	#define DCP_321_PLANE_MEAS_DEFAULT_PID_PREFIX  "321_pl_"
+	#define DCP_321_LINE_MEAS_DEFAULT_PID_PREFIX   "321_li_"
+	/** Best-fit POM measure / template points: MeasDialog prefix + slot index → e.g. bf_1 (PICK overwrites PID from job). */
+	#define DCP_BESTFIT_MEAS_DEFAULT_PID_PREFIX    "bf_"
+	/** Change station ref / POS1 / POS2 measure: MeasDialog prefix + slot index → e.g. chst_1 (align with bf_ pattern). */
+	#define DCP_CHST_MEAS_DEFAULT_PID_PREFIX      "chst_"
+	/** Simple Scan grid-generated points: UI prefix + index → e.g. ssc_1 (boundary meas remains ScBd_). */
+	#define DCP_SIMPLE_SCAN_GRID_PID_PREFIX      "ssc_"
+	/** Line fitting measure points: MeasDialog/list prefix + index → e.g. lf_1. */
+	#define DCP_LINE_FIT_MEAS_DEFAULT_PID_PREFIX "lf_"
+
+	/** Circle rim measure: `default_pid` = `{lowercased truncated circle id}` + this suffix; MeasDialog appends index → e.g. ci1_rim_1 (legacy: Ci1Pnt1). */
+	#define DCP_CIRCLE_RIM_MEAS_PID_SUFFIX  "_rim_"
+	/** Circle plane MEAS (3 pts): `{slug}` + suffix + index → e.g. ci1_pln_1 (slug rules match rim). */
+	#define DCP_CIRCLE_PLANE_MEAS_PID_SUFFIX  "_pln_"
 	typedef struct {
 		double height_diff;
 		double line_offset;

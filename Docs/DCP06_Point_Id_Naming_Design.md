@@ -59,14 +59,14 @@ These are **illustrative**; exact strings should be centralized as constants bef
 
 | Feature | Prefix | Middlefix | Example IDs | Index scope |
 |---------|--------|-----------|-------------|-------------|
-| 321 plane measure (DOM) | `321` | `pln` | `321_pln_1` … | Points in that measure dialog |
-| 321 line measure (DOM) | `321` | `ln` | `321_ln_1` … | Same |
-| 321 offset / MeasV (when 321 context) | `321` | `pnt` | `321_pnt_1` … | Align with existing `321_pnt_*` if kept |
+| 321 plane measure (DOM / MeasDialog) | `321` | `pl` via combined prefix | **`321_pl_1`** (`DCP_321_PLANE_MEAS_DEFAULT_PID_PREFIX` + index) | Points in that measure dialog |
+| 321 line measure (DOM / MeasDialog) | `321` | `li` via combined prefix | **`321_li_1`** (`DCP_321_LINE_MEAS_DEFAULT_PID_PREFIX` + index) | Points in that measure dialog |
+| 321 offset / MeasV (when 321 context) | `321` | `pnt` (combined in prefix) | **`321_pnt_1`** (unchanged `321_pnt_`) | Offsv / MeasV blank default |
 | Offsv (non-321) | `off` | — | `off_1` | Per session / buffer |
 | Best Fit | `bf` | — | `bf_1`, `bf_2` | BF point list |
 | Simple Scan boundary | `sc` | `bd` | `sc_bd_1`, `sc_bd_2`, `sc_bd_3` | Boundary corners (maps conceptually from `ScBd_*`) |
 | Simple Scan grid (design) | User base (e.g. `sc`) | — | `sc_1`, `sc_2` or keep `SC1`-style legacy | Row-major counter; user prefix may stay short |
-| Circle rim (per circle id) | `ci` + short id | `rim` | `ci1_rim_1` or `c01_rim_1` | Per circle + rim order |
+| Circle rim meas (MeasDialog per circle id) | (circle id slug) | `rim` via `DCP_CIRCLE_RIM_MEAS_PID_SUFFIX` | **`ci1_rim_1`** (`{lowercased id}` + `_rim_` + index; legacy `Ci1Pnt1`) | Rim points for that circle |
 | Change station / REF style | `ref` | — | `ref_1` | CHST / MeasV non-321 |
 | Internal hz plane refs | (fixed) | — | `rp-p1` … `rp-p3` | **Legacy fixed** — see §7 |
 
@@ -89,10 +89,10 @@ These are **illustrative**; exact strings should be centralized as constants bef
 
 ## 6. Implementation direction (non-binding checklist)
 
-1. Add **`suggestSurveyPointId`** — narrow refocus of current `get_suggested_next_point_id` for `defaultPrefix == "P"` (or dedicated entry) with clear “survey only” contract.
-2. Add **`suggestFeaturePointId(prefix, middlefix, index)`** — returns one string, enforces length, optional validation.
-3. Replace ad hoc `default_pid` strings with **named constants** mapping to `(prefix, middlefix)` pairs.
-4. Extend **JSON / LIST filters** (`isInternal321NavPlaceholderId`, etc.) for any **new** middlefix patterns so survey tape stays clean.
+1. ~~Add **`suggestSurveyPointId`**~~ — **Done** in `Common` (wrapper: `get_suggested_next_point_id(..., "P", n)`). 3D meas “add point” uses it for survey-only clarity.
+2. ~~Add **`suggestFeaturePointId(prefix, middlefix, index)`**~~ — **Done** in `Common` (formats `prefix_middlefix_index`; empty middlefix → `prefix_index`). Callers can adopt incrementally.
+3. **Replace ad hoc `default_pid` strings** — **Partial:** 321 plane/line use **`DCP_321_PLANE_MEAS_DEFAULT_PID_PREFIX`** / **`DCP_321_LINE_MEAS_DEFAULT_PID_PREFIX`** in `Defs.hpp`.
+4. **Extend JSON / LIST filters** — **Partial:** `isInternal321NavPlaceholderId` accepts **new** `321_pl_*`, `321_li_*` and legacy `321_pl_pnt_*`, `321_li_pnt_*` (order preserves legacy match before short `321_pl_`).
 5. Document **deprecation** of mixed styles (e.g. migrate `ScBd_` → `sc_bd_` only if product agrees; otherwise keep alias in doc).
 
 ---
@@ -119,7 +119,7 @@ Treat these as **documented exceptions** to the general pattern, not as a third 
 
 ## See also
 
-- `include/dcp06/core/Defs.hpp` — `DCP_POINT_ID_LENGTH`, `DCP_SCAN_BOUNDARY_DEFAULT_PID_PREFIX`
-- `src/core/Common.cpp` — `get_suggested_next_point_id`, `inc_id`
+- `include/dcp06/core/Defs.hpp` — … **`DCP_CIRCLE_RIM_MEAS_PID_SUFFIX`**
+- `src/core/Common.cpp` — `get_suggested_next_point_id`, **`suggestSurveyPointId`**, **`suggestFeaturePointId`**, `inc_id`
 - `src/core/Measure.cpp` — `default_pid`, blank `point_id` fill, `add_point`
 - `Docs/DCP06_Agent_Handoff_Summary.md` — historical note on `321_`, `OFF`, `BF`, `REF`

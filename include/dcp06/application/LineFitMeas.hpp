@@ -233,7 +233,7 @@ namespace DCP
 
 			//S_POINT_BUFF point_table2[20];
 
-			char default_pid[10];
+			char default_pid[20];
 			bool disable_point_editing;
 
 			S_LINE_BUFF* pLline_buff;

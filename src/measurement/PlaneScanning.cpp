@@ -72,6 +72,21 @@ namespace {
 #define new DEBUG_NEW
 #endif
 
+namespace {
+	inline void asciiPrefixToPointIdWide(StringC& dest, const char* asciiPrefix)
+	{
+		wchar_t wb[POINT_ID_BUFF_LEN];
+		size_t k = 0;
+		while (asciiPrefix && asciiPrefix[k] && k + 1u < POINT_ID_BUFF_LEN)
+		{
+			wb[k] = static_cast<unsigned char>(asciiPrefix[k]);
+			++k;
+		}
+		wb[k] = L'\0';
+		dest = wb;
+	}
+}
+
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
@@ -127,7 +142,7 @@ void DCP::PlaneScanDialog::OnInitDialog(void)
 	m_pPointId = new GUI::ComboLineCtrlC(GUI::ComboLineCtrlC::IC_String);
 	m_pPointId->SetId(ePointId);
 	m_pPointId->SetText(StringC(AT_DCP06,P_DCP_POINT_ID_TOK));
-	m_pPointId->GetStringInputCtrl()->SetCharsCountMax(3);
+	m_pPointId->GetStringInputCtrl()->SetCharsCountMax(DCP_POINT_ID_LENGTH);
 	AddCtrl(m_pPointId);
 	
 	//InsertEmptyLine();
@@ -510,7 +525,7 @@ void DCP::PlaneScanController::OnSHF2Pressed()
 		m_pDataModel->iResolutionHeigth = 100;
 		m_pDataModel->iResolutionWidth = 100;
 		m_pDataModel->sFileName = L"";
-		m_pDataModel->sPointId = L"SC";
+		asciiPrefixToPointIdWide(m_pDataModel->sPointId, DCP_SIMPLE_SCAN_GRID_PID_PREFIX);
 		memset(&m_pDataModel->boundary_plane[0].points[0],0,sizeof(S_POINT_BUFF)* BOUNDARY_PLANE_POINTS);
 
 		memset(&m_pDataModel->des_points[0], 0, sizeof(S_SCAN_POINT_BUFF) * MAX_SCAN_POINTS);
@@ -754,7 +769,7 @@ DCP::PlaneScanModel::PlaneScanModel(Model* pModel)
 	iResolutionHeigth = 100;
 	iResolutionWidth = 100;
 	sFileName = L"";
-	sPointId = L"SC";
+	asciiPrefixToPointIdWide(sPointId, DCP_SIMPLE_SCAN_GRID_PID_PREFIX);
 	isRunning = false;
 	//memset(&boundary_points[0],0,sizeof(S_POINT_BUFF)* 3);
 	memset(&boundary_plane[0],0,sizeof(S_PLANE_BUFF));
@@ -797,8 +812,8 @@ bool DCP::PlaneScanModel::generate_points(DCP::Model *pModel)
 	bool ret = false;
 	struct ams_vector plane_p1,plane_p2,plane_p3;
 	struct ams_vector corner_p1, corner_p2, corner_p3, corner_p4;
-	char first_pointid[STRING_BUFFER_SMALL];
-	char pointIdBuffer[STRING_BUFFER_SMALL];
+	char first_pointid[POINT_ID_BUFF_LEN];
+	char pointIdBuffer[POINT_ID_BUFF_LEN];
 	struct line lineP2P3, lineP1P2, lineP4P3;
 	StringC strMsg;
 	bool too_many_points = false;
@@ -889,7 +904,7 @@ bool DCP::PlaneScanModel::generate_points(DCP::Model *pModel)
 			//UTL::UnicodeToAscii(first_pointid, sPointId);
 			BSS::UTI::BSS_UTI_WCharToAscii( sPointId, first_pointid );
 	
-			sprintf(pointIdBuffer,"%-s%d",first_pointid,1);
+			snprintf(pointIdBuffer, sizeof(pointIdBuffer), "%s%d", first_pointid, 1);
 			
 			if(m_pScanFile->create_adf_file(fname, false)==0)
 			{
@@ -990,7 +1005,7 @@ bool DCP::PlaneScanModel::add_line_points(ScanFileFunc* m_pScanFile, struct line
 							short i, short pointCountWidth, double distWidth, double resolutionWidth, char* first_pointid,
 							DCP::Model *pModel)
 {
-	char pointIdBuffer[STRING_BUFFER_SMALL];
+	char pointIdBuffer[POINT_ID_BUFF_LEN];
 	bool ret = true;
 
 	for (int j = 0; j <= pointCountWidth; j++)
@@ -1017,7 +1032,7 @@ bool DCP::PlaneScanModel::add_line_points(ScanFileFunc* m_pScanFile, struct line
 		*/
 		if(points_count  < MAX_SCAN_POINTS)
 		{
-			sprintf(pointIdBuffer,"%-s%d",first_pointid, points_count + 1);
+			snprintf(pointIdBuffer, sizeof(pointIdBuffer), "%s%d", first_pointid, points_count + 1);
 
 			snprintf(des_points[points_count].point_id, sizeof(des_points[points_count].point_id), DCP_POINT_ID_FMT, pointIdBuffer);
 			des_points[points_count].x = line1->px + (j * resolutionWidth) * line1->ux;
@@ -1058,7 +1073,7 @@ bool DCP::PlaneScanModel::add_line_points(ScanFileFunc* m_pScanFile, struct line
 					*/
 					if(points_count < MAX_SCAN_POINTS)
 					{
-						sprintf(pointIdBuffer,"%-s%d",first_pointid, points_count + 1);
+						snprintf(pointIdBuffer, sizeof(pointIdBuffer), "%s%d", first_pointid, points_count + 1);
 
 						snprintf(des_points[points_count].point_id, sizeof(des_points[points_count].point_id), DCP_POINT_ID_FMT, pointIdBuffer);
 						des_points[points_count].x = line1->px + (j * resolutionWidth + (te)) * line1->ux ;

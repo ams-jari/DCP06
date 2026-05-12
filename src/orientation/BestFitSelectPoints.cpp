@@ -37,13 +37,10 @@
 #include <dcp06/core/Defs.hpp>
 #include <dcp06/core/MsgBox.hpp>
 #include <dcp06/core/SelectPoint.hpp>
+#include <dcp06/core/SelectOnePoint.hpp>
 
-#include <dcp06/file/SelectFile.hpp>
-#include <dcp06/file/AdfFileFunc.hpp>
 #include <dcp06/database/JsonDatabase.hpp>
 #include <dcp06/database/DatabaseTypes.hpp>
-#include <dcp06/core/Defs.hpp>
-#include <dcp06/core/SelectMultiPoints.hpp>
 #include <GUI_Types.hpp>
 #include <ABL_CommandFactory.hpp>
 #include <ABL_ControllerFactory.hpp>
@@ -54,6 +51,13 @@
 #define new DEBUG_NEW
 #endif
 
+
+namespace {
+	inline const char* best_fit_select_pid_prefix(short iDisplay)
+	{
+		return (iDisplay == CHST_DLG) ? DCP_CHST_MEAS_DEFAULT_PID_PREFIX : DCP_BESTFIT_MEAS_DEFAULT_PID_PREFIX;
+	}
+}
 
 // ================================================================================================
 // ========================================  Declarations  ========================================
@@ -196,7 +200,8 @@ void DCP::BestFitSelectPointsDialog::RefreshControls()
 		if (pt.point_id[0] == '\0')
 		{
 			char suggested[POINT_ID_BUFF_LEN];
-			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested), "BF", GetDataModel()->iCurrentPoint);
+			m_pCommon->get_suggested_next_point_id(suggested, sizeof(suggested),
+				best_fit_select_pid_prefix(GetDataModel()->iDisplay), GetDataModel()->iCurrentPoint);
 			snprintf(pt.point_id, sizeof(pt.point_id), DCP_POINT_ID_FMT, suggested);
 		}
 		sTemp = pt.point_id;
@@ -421,46 +426,67 @@ bool DCP::BestFitSelectPointsController::SetModel( GUI::ModelC* pModel )
 	
 }
 
-// PICK
+// PICK: points in current job with design XYZ (fills current Best Fit template slot)
 void DCP::BestFitSelectPointsController::OnF1Pressed()
 {
 	Common common(m_pModel);
 	MsgBox msgbox;
-	short last=0;
+	short last = 0;
 	short pcount = m_pDlg->GetDataModel()->iMaxPoint;
 
-	if(common.get_OCS_points_count(&m_pDlg->GetDataModel()->points[0],m_pDlg->GetDataModel()->iMaxPoint)>0)
+	if (common.get_OCS_points_count(&m_pDlg->GetDataModel()->points[0], m_pDlg->GetDataModel()->iMaxPoint) > 0)
 	{
 		StringC msg;
 		short iCur = m_pDlg->GetDataModel()->iCurrentPoint;
-		StringC strActivePoint =m_pDlg->GetDataModel()->points[iCur].point_id;
-	
-		msg.LoadTxt(AT_DCP06,M_DCP_DELETE_POINTS_TOK);
-		msg.Format(msg,L"");
-		if(msgbox.ShowMessageYesNo(msg))
+		StringC strActivePoint = m_pDlg->GetDataModel()->points[iCur].point_id;
+
+		msg.LoadTxt(AT_DCP06, M_DCP_DELETE_POINTS_TOK);
+		msg.Format(msg, L"");
+		if (msgbox.ShowMessageYesNo(msg))
 		{
-			memset(&m_pDlg->GetDataModel()->points[0],0,sizeof(S_POINT_BUFF) * m_pDlg->GetDataModel()->iMaxPoint); 
-			memset(&m_pDlg->GetDataModel()->points1[0],0,sizeof(S_POINT_BUFF) * m_pDlg->GetDataModel()->iMaxPoint); 
+			memset(&m_pDlg->GetDataModel()->points[0], 0, sizeof(S_POINT_BUFF) * m_pDlg->GetDataModel()->iMaxPoint);
+			memset(&m_pDlg->GetDataModel()->points1[0], 0, sizeof(S_POINT_BUFF) * m_pDlg->GetDataModel()->iMaxPoint);
 			last = 0;
 		}
 		else
-		{	
-			last = common.get_last_defined_point(&m_pDlg->GetDataModel()->points[0],&m_pDlg->GetDataModel()->points1[0],
-					m_pDlg->GetDataModel()->iMaxPoint);
-			
-			pcount = m_pDlg->GetDataModel()->iMaxPoint-last;
+		{
+			last = common.get_last_defined_point(&m_pDlg->GetDataModel()->points[0],
+				&m_pDlg->GetDataModel()->points1[0], m_pDlg->GetDataModel()->iMaxPoint);
+
+			pcount = m_pDlg->GetDataModel()->iMaxPoint - last;
 		}
 	}
 
-		// SELECT FILE		
-		DCP::SelectFileModel* pModel = new SelectFileModel;
-		if(GetController(SELECT_FILE_CONTROLLER) == nullptr)
-		{
-			StringC sTitle = GetTitle();	
-			(void)AddController( SELECT_FILE_CONTROLLER, new DCP::SelectFileController(ADF_BF_STA/*ONLY_ADF*/, sTitle,m_pModel) );
-		}
-		(void)GetController( SELECT_FILE_CONTROLLER )->SetModel(pModel);
-		SetActiveController(SELECT_FILE_CONTROLLER, true);
+	DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+	if (!jdb || !jdb->isJobLoaded() || m_pModel->m_currentJobId.empty())
+	{
+		MsgBox msgBox;
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
+		msgBox.ShowMessageOk(msg);
+		return;
+	}
+
+	DCP::SelectOnePointModel* pSel = new DCP::SelectOnePointModel();
+	short iCount = jdb->getPointListAsSelectPointsForJobDesignCoords(&pSel->points[0], MAX_POINTS_IN_FILE);
+	if (iCount <= 0)
+	{
+		delete pSel;
+		MsgBox msgBox;
+		StringC msg;
+		msg.LoadTxt(AT_DCP06, M_DCP_NO_POINTS_TOK);
+		msgBox.ShowMessageOk(msg);
+		return;
+	}
+
+	pSel->m_iPointsCount = iCount;
+	pSel->sSelectedFile = StringC(m_pModel->m_currentJobId.c_str());
+	pSel->m_iDef = DESIGN;
+
+	if (GetController(SELECT_ONE_POINT_CONTROLLER) == nullptr)
+		(void)AddController(SELECT_ONE_POINT_CONTROLLER, new DCP::SelectOnePointController(m_pModel));
+	(void)GetController(SELECT_ONE_POINT_CONTROLLER)->SetModel(pSel);
+	SetActiveController(SELECT_ONE_POINT_CONTROLLER, true);
 
 }
 // NEXT
@@ -553,7 +579,8 @@ void DCP::BestFitSelectPointsController::OnF5Pressed()
 			if (!m_pCommon->strblank(point_id_buf))
 				m_pCommon->inc_id(point_id_buf);
 			else
-				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf), "BF", m_pDlg->GetDataModel()->m_iPointsCount + 1);
+				m_pCommon->get_suggested_next_point_id(point_id_buf, sizeof(point_id_buf),
+					best_fit_select_pid_prefix(m_pDlg->GetDataModel()->iDisplay), m_pDlg->GetDataModel()->m_iPointsCount + 1);
 		}
 		delete m_pCommon;
 		m_pCommon = 0;
@@ -688,105 +715,37 @@ void DCP::BestFitSelectPointsController::OnActiveControllerClosed( int lCtrlID, 
 		
 	}
 
-	if(lCtrlID == SELECT_FILE_CONTROLLER && lExitCode == EC_KEY_CONT)
+	if (lCtrlID == SELECT_ONE_POINT_CONTROLLER && lExitCode == EC_KEY_CONT)
 	{
-		DCP::SelectFileModel* pFileModel = (DCP::SelectFileModel*) GetController( SELECT_FILE_CONTROLLER )->GetModel();
-		StringC strSelectedFile = pFileModel->m_strSelectedFile;
-
-		AdfFileFunc adf(m_pModel);
-		adf.always_single = 1;
-		short def = (m_pDlg->GetDataModel()->iDisplay == BESTFIT_DLG) ? DESIGN : ACTUAL;
-
-		char jobIdBuf[DCP_JOB_ID_MAX_LEN + 1];
-		jobIdBuf[0] = '\0';
-		BSS::UTI::BSS_UTI_WCharToAscii(strSelectedFile, jobIdBuf);
-		std::string selectedJobId(jobIdBuf);
-		Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
-		bool useDb = jdb && jdb->isJobLoaded() && !selectedJobId.empty() &&
-		             selectedJobId == m_pModel->m_currentJobId;
-		DCP::SelectMultiPointsModel* pSelectModel = new SelectMultiPointsModel;
-		int iCount = 0;
-		if (useDb)
-			iCount = jdb->getPointListAsSelectPointsForList(&pSelectModel->sel_points[0], MAX_SELECT_POINTS, def, DCP::Database::PointSource::DCP06_3D_MEAS);
-		else if (adf.setFile(strSelectedFile))
-			iCount = adf.GetPointList(&pSelectModel->sel_points[0], MAX_SELECT_POINTS, def);
-
-		if (iCount > 0)
-		{
-			pSelectModel->m_iPointsCount = iCount;
-			pSelectModel->m_iDef = def;
-			pSelectModel->sSelectedFile = strSelectedFile;
-			pSelectModel->m_iMinPoint = m_pDlg->GetDataModel()->iMinPoint;
-			pSelectModel->m_iMaxPoint = MAX_BESTFIT_POINTS;
-			pSelectModel->helpToken = H_DCP_SEL_MULTI_A_OR_D_TOK;
-
-			StringC sTemp;
-			sTemp.LoadTxt(AT_DCP06, T_DCP_SELECT_POINTS_TOK);
-			wchar_t cTemp[256];
-			swprintf_s(cTemp, 256, L"%s (%d-%d) %s", (const wchar_t*)StringC(sTemp), pSelectModel->m_iMinPoint, pSelectModel->m_iMaxPoint, (const wchar_t*)StringC(pSelectModel->sSelectedFile));
-			pSelectModel->sInfo = StringC(cTemp);
-			pSelectModel->sTitle = GetTitle();
-
-			if (GetController(SELECT_MULTIPOINTS_CONTROLLER) == nullptr)
-				(void)AddController(SELECT_MULTIPOINTS_CONTROLLER, new DCP::SelectMultiPointsController(m_pModel));
-			(void)GetController(SELECT_MULTIPOINTS_CONTROLLER)->SetModel(pSelectModel);
-			SetActiveController(SELECT_MULTIPOINTS_CONTROLLER, true);
-		}
-		else if (!useDb)
-		{
-			MsgBox msgbox;
-			msgbox.ShowMessageOk(L"Set file error!");
-		}
-	}  
-	  
-	if(lCtrlID == SELECT_MULTIPOINTS_CONTROLLER && lExitCode == EC_KEY_CONT)
-	{
-		DCP::SelectMultiPointsModel* pModel = (DCP::SelectMultiPointsModel*) GetController( SELECT_MULTIPOINTS_CONTROLLER )->GetModel();
 		Common common(m_pModel);
+		DCP::SelectOnePointModel* pSel = (DCP::SelectOnePointModel*)GetController(SELECT_ONE_POINT_CONTROLLER)->GetModel();
+		DCP::Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<DCP::Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
+		short curPt = m_pDlg->GetDataModel()->iCurrentPoint;
+		if (curPt < 1)
+			curPt = 1;
 
-		char jobIdBuf[DCP_JOB_ID_MAX_LEN + 1];
-		jobIdBuf[0] = '\0';
-		BSS::UTI::BSS_UTI_WCharToAscii(pModel->sSelectedFile, jobIdBuf);
-		std::string selectedJobId(jobIdBuf);
-		Database::JsonDatabase* jdb = m_pModel->GetDatabase() ? dynamic_cast<Database::JsonDatabase*>(m_pModel->GetDatabase()) : 0;
-		bool useDb = jdb && jdb->isJobLoaded() && !selectedJobId.empty() &&
-		             selectedJobId == m_pModel->m_currentJobId;
-		short last = common.get_last_defined_point(&m_pDlg->GetDataModel()->points[0], &m_pDlg->GetDataModel()->points1[0],
-			m_pDlg->GetDataModel()->iMaxPoint);
-		short cc = last;
-
-		if (useDb)
+		if (jdb && jdb->isJobLoaded() && pSel && pSel->iSelectedNo > 0)
 		{
-			for (short i = 0; i < pModel->m_iMaxPoint; i++)
+			char pid[POINT_ID_BUFF_LEN];
+			char xd[DCP_COORD_STR_BUFF_LEN], yd[DCP_COORD_STR_BUFF_LEN], zd[DCP_COORD_STR_BUFF_LEN];
+
+			if (jdb->getPointByIndexForJobDesignCoordsList(pSel->iSelectedNo, pid, xd, yd, zd, (char*)0))
 			{
-				if (pModel->nro_table[i][0] != 0)
+				if (!common.strblank(xd) && !common.strblank(yd) && !common.strblank(zd))
 				{
-					char bXmea[DCP_COORD_STR_BUFF_LEN], bYmea[DCP_COORD_STR_BUFF_LEN], bZmea[DCP_COORD_STR_BUFF_LEN];
-					char bXdes[DCP_COORD_STR_BUFF_LEN], bYdes[DCP_COORD_STR_BUFF_LEN], bZdes[DCP_COORD_STR_BUFF_LEN];
-					char pid[POINT_ID_BUFF_LEN];
-					cc++;
-					if (jdb->getPointByIndexForList(DCP::Database::PointSource::DCP06_3D_MEAS, (int)pModel->nro_table[i][0], (pModel->nro_table[i][1] != DESIGN),
-						pid, bXmea, bXdes, bYmea, bYdes, bZmea, bZdes, (char*)0))
-					{
-						snprintf(m_pDlg->GetDataModel()->points[cc-1].point_id, sizeof(m_pDlg->GetDataModel()->points[0].point_id), DCP_POINT_ID_FMT, pid);
-						m_pDlg->GetDataModel()->points[cc-1].x = (pModel->nro_table[i][1] == DESIGN) ? atof(bXdes) : atof(bXmea);
-						m_pDlg->GetDataModel()->points[cc-1].y = (pModel->nro_table[i][1] == DESIGN) ? atof(bYdes) : atof(bYmea);
-						m_pDlg->GetDataModel()->points[cc-1].z = (pModel->nro_table[i][1] == DESIGN) ? atof(bZdes) : atof(bZmea);
-						short sdes = (!common.strblank(bXdes) && !common.strblank(bYdes) && !common.strblank(bZdes)) ? POINT_DESIGN : POINT_NOT_DEFINED;
-						short smea = (!common.strblank(bXmea) && !common.strblank(bYmea) && !common.strblank(bZmea)) ? POINT_DESIGN : POINT_NOT_DEFINED;
-						m_pDlg->GetDataModel()->points[cc-1].sta = (pModel->nro_table[i][1] == DESIGN) ? sdes : smea;
-					}
+					S_POINT_BUFF* p = &m_pDlg->GetDataModel()->points[curPt - 1];
+					if (!common.strblank(pid))
+						snprintf(p->point_id, sizeof(p->point_id), DCP_POINT_ID_FMT, pid);
+					p->x = atof(xd);
+					p->y = atof(yd);
+					p->z = atof(zd);
+					p->sta = POINT_DESIGN;
 				}
 			}
-			m_pDlg->GetDataModel()->m_iPointsCount = cc;
 		}
-		else if (!useDb)
-		{
-			MsgBox msgbox;
-			StringC msg;
-			msg.LoadTxt(AT_DCP06, M_DCP_3DFILE_ISNOT_OPEN_TOK);
-			msgbox.ShowMessageOk(msg);
-		}
+
+		m_pDlg->RefreshControls();
+		m_pDlg->SetFocusToPoint();
 	}
 
 	/*
