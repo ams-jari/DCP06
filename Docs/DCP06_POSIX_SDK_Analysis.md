@@ -34,11 +34,11 @@ Leica **TS20** total stations ship with **Captivate 10 on Linux** (replacing Win
 
 ### What “done” means here (vs production)
 
-| Milestone | Meaning |
-|-----------|---------|
-| Steps 1–5 on x86 WSL | Compiles and links; exports plugin entry — **learning milestone** |
-| Step 6 (Yocto ARM) | Cross-compile for **actual TS20 device** ABI |
-| Deployable plugin on instrument | Needs localization (`.LEN`), assets, packaging — **MkEdit/TextTool equivalent on Linux still TBD** |
+| Milestone | Meaning | Status |
+|-----------|---------|--------|
+| Steps 1–5 on x86 WSL | Compiles and links; exports plugin entry — **learning milestone** | **done** |
+| Step 6 (Yocto ARM) | Cross-compile for **actual TS20 device** ABI | **done** |
+| Deployable plugin on instrument | Needs localization (`.LEN`), assets, packaging — **MkEdit/TextTool equivalent on Linux still TBD** | pending |
 
 Production **DCP05 on TS20** remains Pasi’s deliverable; this repo documents **how** and **what broke**, not a reseller-facing release.
 
@@ -53,6 +53,9 @@ Updated as the step-by-step build progresses; see also [DCP06_POSIX_Linux_Build_
 - MSVC **“extra qualification”** in class bodies (`Class::method()`) must be fixed for GCC.
 - Link **versioned** SDK `.so` files directly; add **Boost filesystem/system** from SDK `libs/`.
 - POSIX SDK ships **no** MkEdit, TextTool, SWXResBuilder, HelloWorld, or simulator.
+- **ARM cross-build:** source Yocto `environment-setup-cortexa53-crypto-leicageo-linux` each session; use Leica's `cortexa53-crypto-leicageo-linux-toolchain.cmake`; set `CAPTIVATE_POSIX_ARM_LIBS` (not x86 libs).
+- **ARM compile defs:** `HW_ARM` + `PLAT_WINCE_ARM` (no `OS_WINCE` / `WIN32` — `__linux__` handles POSIX paths).
+- **Symbol check on ARM:** use `aarch64-leicageo-linux-nm -D DCP06.so` (host `nm` cannot read aarch64 ELF).
 
 ---
 
@@ -305,28 +308,28 @@ Use this as the initial integration plan. Order matters — do not port all of D
 
 ### Phase 0 — Environment (Linux host)
 
-- [ ] Set up **Ubuntu 22.04 x86_64** (bare metal, VM, or **WSL2**)
-- [ ] Extract SDK to a fixed path, e.g. `/opt/leica/Captivate_PluginSDK_POSIX_v10.0.0-rc.309/`
-- [ ] Run `Platform-SDK/cortexa53-crypto-sdk_v5.0.23.sh` (requires sudo for default `/usr/local/leicasdk-x86_64`)
-- [ ] Source Yocto `environment-setup-cortexa53-*` for ARM cross-builds
-- [ ] Install build tools: `cmake`, `ninja-build` or `make`, `g++-11`, Python 3
+- [x] Set up **Ubuntu 22.04 x86_64** (bare metal, VM, or **WSL2**)
+- [x] Extract SDK to a fixed path (AMS: `/mnt/c/.../Captivate_PluginSDK_POSIX_v10.0.0-rc.309/`)
+- [x] Run `Platform-SDK/cortexa53-crypto-sdk_v5.0.23.sh` (requires sudo for default `/usr/local/leicasdk-x86_64`)
+- [x] Source Yocto `environment-setup-cortexa53-crypto-leicageo-linux` for ARM cross-builds
+- [x] Install build tools: `cmake`, `ninja-build` or `make`, `g++-11`, Python 3
 
 ### Phase 1 — Minimal plugin (HelloWorld parity)
 
-- [ ] Create `Project/Linux/` (or `CMakeLists.txt` at repo root) producing **`DCP06.so`**
+- [x] Create `Project/Linux/` producing **`DCP06.so`** (steps 1–3: header smoke → link smoke → `Start15751` stub)
 - [ ] Copy/adapt `DCP06.dat`, `DCP06.sys` (App.Id=15751, entry point) from Windows project
-- [ ] Add include paths to `Projects/*/Source/API_Hdr` (mirror Windows vcxproj list)
-- [ ] Link against `Binary/x86_64-ubuntu_22.04-gcc11/libs` — start with same libs as Windows Release|Win32
+- [x] Add include paths to `Projects/*/Source/API_Hdr` (mirror Windows vcxproj list)
+- [x] Link against `Binary/x86_64-ubuntu_22.04-gcc11/libs` — start with same libs as Windows Release|Win32
 - [ ] Build empty plugin that registers and appears in Captivate menu (or confirm load on device)
 - [ ] Use `LibManager/lm --lock` if symlinked libs break the linker on WSL
 
 ### Phase 2 — DCP06 source port
 
-- [ ] Replace / extend `stdafx.h` for Linux (`__linux__`, no `windows.h`)
-- [ ] Abstract platform layer: log path, time functions, path separators
-- [ ] Audit wchar / string conversion (see §5.3)
-- [ ] Build DCP06 shared sources; fix compile errors module by module
-- [ ] Rebuild third-party deps for Linux/arm64 (Eigen, nlohmann/json — avoid Windows `vcpkg_installed/`)
+- [x] Replace / extend `stdafx.h` for Linux (`__linux__`, no `windows.h`)
+- [x] Abstract platform layer: log path, time functions, path separators (partial — Logger, SelectFile)
+- [x] Audit wchar / string conversion (see §5.3) — `SelectFile.cpp` fixed for Linux paths
+- [x] Build DCP06 shared sources; fix compile errors module by module (110 vcproj sources, steps 4–5)
+- [x] Rebuild third-party deps for Linux/arm64 (Eigen, jsoncpp — avoid Windows `vcpkg_installed/`)
 
 ### Phase 3 — Localization and resources
 
@@ -337,7 +340,7 @@ Use this as the initial integration plan. Order matters — do not port all of D
 
 ### Phase 4 — Device build and deploy
 
-- [ ] Cross-compile with `armv8-leicageo_linux_5.0-gcc13` libs + Yocto sysroot
+- [x] Cross-compile with `armv8-leicageo_linux_5.0-gcc13` libs + Yocto sysroot (Step 6 — `DCP06.so` aarch64, `Start15751`)
 - [ ] Ask Leica for TS20 plugin install / packaging (MkEdit equivalent)
 - [ ] Test on TS20 hardware: measurement (TBL), paths (CPI), config (archive), UI (GuiPlus)
 
@@ -377,7 +380,8 @@ Use this as the initial integration plan. Order matters — do not port all of D
 |------|--------|
 | 2026-06-13 | Initial analysis of `Captivate_PluginSDK_POSIX_v10.0.0-rc.309` |
 | 2026-06-13 | Added Context & goals (DCP05 production vs DCP06 reconnaissance, Pasi handoff, findings list) |
+| 2026-06-13 | Steps 1–6 complete: x86 + ARM `DCP06.so`; checklist and ARM cross-build findings updated |
 
 ---
 
-*Analysed from local SDK folder on Windows; build steps require a Linux host (WSL2 or VM) to execute.*
+*Analysed from local SDK folder on Windows; Steps 1–6 build path verified on WSL2 + Ubuntu 22.04 (x86-64 and ARM aarch64).*

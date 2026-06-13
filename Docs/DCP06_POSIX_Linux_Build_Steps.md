@@ -20,8 +20,8 @@ Work through these steps **in order**. Do not skip ahead until the current step 
 | **2** | `Project/Linux/step02_link_smoke/` | Link a test `.so` against core SDK libraries | done |
 | **3** | `Project/Linux/step03_min_plugin/` | Minimal plugin stub exporting `Start15751` | done |
 | **4** | `Project/Linux/step04_dcp06_logger/` | Compile first real DCP06 source (`Logger.cpp`) | done |
-| **5** | `Project/Linux/step05_full_plugin/` | Full `DCP06.so` (110 vcproj sources + SDK link) | **→ you are here** |
-| 6 | Yocto SDK | Cross-compile for TS20 (`armv8-leicageo_linux_5.0-gcc13`) | pending |
+| **5** | `Project/Linux/step05_full_plugin/` | Full `DCP06.so` (110 vcproj sources + SDK link) | done |
+| **6** | `Project/Linux/step06_arm_cross/` | Cross-compile `DCP06.so` for TS20 ARM | done |
 
 ---
 
@@ -31,6 +31,8 @@ Work through these steps **in order**. Do not skip ahead until the current step 
 - [x] `CAPTIVATE_POSIX_SDK`, `DCP06_ROOT`, `CAPTIVATE_POSIX_LIBS` in `~/.bashrc`
 - [x] `build-essential`, `cmake`, `ninja-build` installed
 - [x] SDK libs and `lm --help` verified
+- [x] Yocto cross-SDK at `/usr/local/leicasdk-x86_64` (Stage 2 in [WSL Setup §6](DCP06_POSIX_WSL_Setup.md#6-stage-2--yocto-cross-sdk-ts20-device-builds))
+- [x] `CAPTIVATE_POSIX_ARM_LIBS` available (set in build script or `~/.bashrc`)
 
 ---
 
@@ -249,6 +251,97 @@ When Step 5 passes, continue to Step 6 (Yocto cross-compile for TS20 ARM).
 
 ---
 
+## Step 6 — ARM cross-compile (`DCP06.so` for TS20)
+
+**Purpose:** Build the same full DCP06 plugin for the **TS20 device ABI** (`aarch64`, `armv8-leicageo_linux_5.0-gcc13`) using the Yocto cross-SDK installed in WSL Stage 2.
+
+**Prerequisites:**
+
+- [x] Step 5 passed (x86-64 `DCP06.so`)
+- [x] Yocto SDK installed at `/usr/local/leicasdk-x86_64` (see [DCP06_POSIX_WSL_Setup.md §6](DCP06_POSIX_WSL_Setup.md#6-stage-2--optional-yocto-cross-sdk-ts20-device-builds))
+
+### New / updated files
+
+| Path | Role |
+|------|------|
+| `Project/Linux/step06_arm_cross/` | CMake target → ARM `DCP06.so` |
+| `Project/Linux/step06_arm_cross/build_wsl.sh` | Sources Yocto env + runs cross-build |
+| `Project/Linux/cmake/CaptivatePosixSdk.cmake` | ARM mode when `CAPTIVATE_POSIX_ARM_LIBS` is set (`HW_ARM`, `PLAT_WINCE_ARM`) |
+
+### Run (in Ubuntu)
+
+```bash
+source ~/.bashrc
+source /usr/local/leicasdk-x86_64/environment-setup-cortexa53-crypto-leicageo-linux
+export CAPTIVATE_POSIX_ARM_LIBS="$CAPTIVATE_POSIX_SDK/Binary/armv8-leicageo_linux_5.0-gcc13/libs"
+
+bash "$DCP06_ROOT/Project/Linux/step06_arm_cross/build_wsl.sh"
+```
+
+Or manually:
+
+```bash
+source ~/.bashrc
+source /usr/local/leicasdk-x86_64/environment-setup-cortexa53-crypto-leicageo-linux
+export CAPTIVATE_POSIX_ARM_LIBS="$CAPTIVATE_POSIX_SDK/Binary/armv8-leicageo_linux_5.0-gcc13/libs"
+
+TOOLCHAIN=/usr/local/leicasdk-x86_64/sysroots/x86_64-leicasdk-linux/usr/share/cmake/cortexa53-crypto-leicageo-linux-toolchain.cmake
+
+mkdir -p ~/build/dcp06-step06
+cd ~/build/dcp06-step06
+rm -rf ./*
+cmake -DCMAKE_TOOLCHAIN_FILE="$TOOLCHAIN" "$DCP06_ROOT/Project/Linux/step06_arm_cross"
+cmake --build . -j"$(nproc)"
+
+file DCP06.so
+aarch64-leicageo-linux-nm -D DCP06.so | grep Start15751
+echo "Exit code: $?"
+```
+
+### Expected result
+
+- Build completes (~110 `.cpp` files; Leica header warnings are OK)
+- `file DCP06.so` → `ELF 64-bit LSB shared object, ARM aarch64`
+- `aarch64-leicageo-linux-nm -D DCP06.so | grep Start15751` shows exported symbol **`Start15751`**
+- Exit code `0`
+
+### Notes
+
+- Build **out of tree** under `~/build/dcp06-step06` (Linux filesystem — faster than `/mnt/c/...`).
+- Uses Leica's `cortexa53-crypto-leicageo-linux-toolchain.cmake` from the Yocto SDK.
+- ARM libs come from `Binary/armv8-leicageo_linux_5.0-gcc13/libs` (not the x86 Ubuntu libs).
+- Defines `HW_ARM` + `PLAT_WINCE_ARM` (matches DCP06 physical device config; `__linux__` handles POSIX paths).
+- **Still not deployable** — packaging/localization/assets remain TBD.
+
+### If it fails
+
+- `Yocto SDK not installed` → complete [WSL Setup §6](DCP06_POSIX_WSL_Setup.md#6-stage-2--optional-yocto-cross-sdk-ts20-device-builds)
+- `aarch64-leicageo-linux-g++: not found` → `source .../environment-setup-cortexa53-crypto-leicageo-linux` first
+- Linker errors / undefined references → paste full output; ARM libs may need extra transitive `.so` entries
+- CMake picks host `g++` → ensure `-DCMAKE_TOOLCHAIN_FILE=...` is passed on the **first** `cmake` invocation
+
+---
+
+## Build path complete (Steps 1–6)
+
+All reconnaissance build steps are **done** on AMS WSL (2026-06-13):
+
+| Step | Output | Architecture | Entry symbol |
+|------|--------|--------------|--------------|
+| 5 | `~/build/dcp06-step05/DCP06.so` | x86-64 (Ubuntu dev) | `Start15751` |
+| 6 | `~/build/dcp06-step06/DCP06.so` | ARM aarch64 (TS20 device) | `Start15751` |
+
+**Not yet deployable** to a TS20 instrument. Remaining work:
+
+1. **Packaging** — ask Leica for Linux MkEdit equivalent; adapt `DCP06.dat` / `DCP06.sys`.
+2. **Localization** — `.men` → `.LEN` pipeline (TextTool has no Linux port in SDK).
+3. **Resources** — SWXRes/png assets.
+4. **Hardware test** — load plugin on TS20; exercise TBL/CPI/GuiPlus paths.
+
+Hand off compile/link findings to Pasi for the **production DCP05** Linux port.
+
+---
+
 ## Related docs
 
 - [DCP06_POSIX_WSL_Setup.md](DCP06_POSIX_WSL_Setup.md)
@@ -266,3 +359,4 @@ When Step 5 passes, continue to Step 6 (Yocto cross-compile for TS20 ARM).
 | 2026-06-13 | Step 4 added (Logger.cpp, stdafx Linux branch, CaptivatePosixSdk.cmake) |
 | 2026-06-13 | Step 5 added (full DCP06.so, 110 sources, Start15751, Linux port fixes) |
 | 2026-06-13 | Added “Why these steps exist” (DCP05 vs DCP06 reconnaissance context) |
+| 2026-06-13 | Step 6 added (ARM cross-compile via Yocto SDK + `step06_arm_cross`) |

@@ -93,6 +93,7 @@ cat >> ~/.bashrc << 'EOF'
 export CAPTIVATE_POSIX_SDK="/mnt/c/Users/dell/Desktop/AMS/Development/Captivate_PluginSDK_POSIX_v10.0.0-rc.309/Captivate_PluginSDK_POSIX_v10.0.0-rc.309"
 export DCP06_ROOT="/mnt/c/Users/dell/Desktop/AMS/Development/DCP06"
 export CAPTIVATE_POSIX_LIBS="$CAPTIVATE_POSIX_SDK/Binary/x86_64-ubuntu_22.04-gcc11/libs"
+export CAPTIVATE_POSIX_ARM_LIBS="$CAPTIVATE_POSIX_SDK/Binary/armv8-leicageo_linux_5.0-gcc13/libs"
 EOF
 
 source ~/.bashrc
@@ -101,7 +102,7 @@ source ~/.bashrc
 ### Performance note
 
 - **Editing** in Cursor on Windows + building from WSL against `/mnt/c/...` is fine to start.
-- **Heavy compiles** are faster if the SDK and build tree live on the **Linux filesystem** (e.g. `~/leica/sdk`, `~/projects/DCP06`). Copy or rsync when you begin serious builds (Stage 2 below).
+- **Heavy compiles** are faster if the SDK and build tree live on the **Linux filesystem** (e.g. `~/leica/sdk`, `~/projects/DCP06`). Copy or rsync when you begin serious builds (Stage 3 below).
 
 ---
 
@@ -147,32 +148,46 @@ Verify LibManager runs:
 
 ---
 
-## 6. Stage 2 — Optional: Yocto cross-SDK (TS20 device builds)
+## 6. Stage 2 — Yocto cross-SDK (TS20 device builds)
 
-**Defer this** until you need ARM/device builds or Leica confirms deployment workflow.
+**Status (2026-06-13):** Installed on AMS WSL (`/usr/local/leicasdk-x86_64`). ARM `DCP06.so` cross-build verified — see [DCP06_POSIX_Linux_Build_Steps.md Step 6](DCP06_POSIX_Linux_Build_Steps.md#step-6--arm-cross-compile-dcp06so-for-ts20).
 
 The installer must run **inside WSL** (not PowerShell):
 
 ```bash
 cd "$CAPTIVATE_POSIX_SDK/Platform-SDK"
 chmod +x cortexa53-crypto-sdk_v5.0.23.sh
-./cortexa53-crypto-sdk_v5.0.23.sh
+sudo ./cortexa53-crypto-sdk_v5.0.23.sh
 ```
 
+- Installer: **GeoSurv SDK 5.0.23** (`cortexa53-crypto-sdk_v5.0.23.sh`, ~1.6 GB self-extracting script)
 - Default install: `/usr/local/leicasdk-x86_64` (requires `sudo`)
 - Needs: `python3`, `xz`, host `gcc` (installed in Stage 1)
-- After install, source the environment script (name varies by install):
+- Harmless warning during install: `setlocale: LC_ALL: cannot change locale (en_US.UTF-8)`
+
+After install, source the environment script **before every ARM cross-build session**:
 
 ```bash
-# Example — adjust path after install:
-source /usr/local/leicasdk-x86_64/environment-setup-cortexa53-leica-linux
-```
-
-Then use ARM libs:
-
-```bash
+source /usr/local/leicasdk-x86_64/environment-setup-cortexa53-crypto-leicageo-linux
 export CAPTIVATE_POSIX_ARM_LIBS="$CAPTIVATE_POSIX_SDK/Binary/armv8-leicageo_linux_5.0-gcc13/libs"
 ```
+
+Verify the cross-toolchain:
+
+```bash
+source /usr/local/leicasdk-x86_64/environment-setup-cortexa53-crypto-leicageo-linux
+aarch64-leicageo-linux-gcc --version
+# Expected: gcc (GCC) 13.4.0
+```
+
+Build ARM `DCP06.so` (full plugin, 110 sources):
+
+```bash
+source ~/.bashrc
+bash "$DCP06_ROOT/Project/Linux/step06_arm_cross/build_wsl.sh"
+```
+
+Expected: `file DCP06.so` → `ELF 64-bit LSB shared object, ARM aarch64`; `Start15751` exported.
 
 **Note:** Some Yocto SDK setups are sensitive to WSL. If the installer fails, note the error and ask Leica support — a native Linux VM is the fallback, not dual-boot.
 
@@ -251,13 +266,17 @@ wsl -d Ubuntu-22.04 -- bash -lc 'ls "$CAPTIVATE_POSIX_LIBS" | wc -l'
 
 | Step | Command / check | Done |
 |------|-----------------|------|
-| WSL2 enabled | `wsl --list --verbose` → VERSION 2 | [ ] |
-| Ubuntu 22.04 running | `lsb_release -a` → 22.04 | [ ] |
-| GCC 11 | `gcc --version` | [ ] |
-| SDK libs visible | `ls $CAPTIVATE_POSIX_LIBS \| head` | [ ] |
-| `lm --help` works | `Tools/LibManager/lm --help` | [ ] |
-| DCP06 path OK | `ls $DCP06_ROOT/README.md` | [ ] |
-| Env in `.bashrc` | `echo $CAPTIVATE_POSIX_SDK` after new shell | [ ] |
+| WSL2 enabled | `wsl --list --verbose` → VERSION 2 | [x] |
+| Ubuntu 22.04 running | `lsb_release -a` → 22.04 | [x] |
+| GCC 11 | `gcc --version` | [x] |
+| SDK libs visible | `ls $CAPTIVATE_POSIX_LIBS \| head` | [x] |
+| `lm --help` works | `Tools/LibManager/lm --help` | [x] |
+| DCP06 path OK | `ls $DCP06_ROOT/README.md` | [x] |
+| Env in `.bashrc` | `echo $CAPTIVATE_POSIX_SDK` after new shell | [x] |
+| Yocto SDK installed | `ls /usr/local/leicasdk-x86_64/environment-setup-*` | [x] |
+| ARM cross-compiler | `aarch64-leicageo-linux-gcc --version` (after sourcing env) | [x] |
+| x86 `DCP06.so` builds | `bash Project/Linux/step05_full_plugin/build_wsl.sh` | [x] |
+| ARM `DCP06.so` builds | `bash Project/Linux/step06_arm_cross/build_wsl.sh` | [x] |
 
 ---
 
@@ -291,10 +310,11 @@ Reset WSL disk location (advanced): see [Microsoft WSL docs](https://learn.micro
 
 ## 13. Next steps after WSL is ready
 
-1. Complete the [POSIX SDK first-build checklist](DCP06_POSIX_SDK_Analysis.md#9-first-build-checklist) Phase 0–1.  
-2. Ask Leica for POSIX **HelloWorld sample** and **TS20 packaging** docs.  
-3. Add `Project/Linux/` or root `CMakeLists.txt` for a minimal `DCP06.so` proof.  
-4. Port DCP06 incrementally — see API notes in [DCP06_POSIX_SDK_Analysis.md](DCP06_POSIX_SDK_Analysis.md#5-linuxposix-api-differences-dcp06-impact).
+1. ~~Complete Steps 1–6 in [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md)~~ — **done** (x86 + ARM `DCP06.so`, `Start15751`).
+2. Ask Leica for POSIX **HelloWorld sample** and **TS20 packaging** docs (MkEdit/TextTool equivalent on Linux).
+3. Port localization pipeline: `.men` → `.LEN`, SWXRes/png assets.
+4. Test on TS20 hardware when available.
+5. Hand off findings to Pasi for **production DCP05** Linux port — see [DCP06_POSIX_SDK_Analysis.md](DCP06_POSIX_SDK_Analysis.md).
 
 ---
 
@@ -303,6 +323,7 @@ Reset WSL disk location (advanced): see [Microsoft WSL docs](https://learn.micro
 | Date | Change |
 |------|--------|
 | 2026-06-13 | Initial WSL2 + Ubuntu 22.04 setup guide (no dual-boot) |
+| 2026-06-13 | Stage 2 Yocto SDK installed; Step 6 ARM cross-build verified; checklist and env vars updated |
 
 ---
 
