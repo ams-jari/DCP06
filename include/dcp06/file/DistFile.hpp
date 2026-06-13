@@ -207,7 +207,7 @@ namespace DCP
 			short open_file(short reclen);
 			
 			short close_distfile();
-			void CdfFileFunc::CloseFile();
+			void CloseFile();
 
 			short points;
 			short active_point;

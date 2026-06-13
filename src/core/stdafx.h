@@ -61,6 +61,10 @@ using std::exception;  // for the exception class
 #endif	
 #define DEBUG_NEW new			
 #endif
+#elif defined(__linux__)
+
+#define DEBUG_NEW new
+
 #else
 
 #include <vxworks.h>

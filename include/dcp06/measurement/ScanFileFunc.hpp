@@ -72,7 +72,7 @@ namespace DCP
 			short IsOpen() { return opened;}
 
 			short delete_adf_file(bool showMsg = true);
-			short ScanFileFunc::add_new_pnt(char *pid, char *xact,char *yact,char *zact);
+			short add_new_pnt(char *pid, char *xact,char *yact,char *zact);
 			short form_next_pnt();
 			short form_prev_pnt();
 			short delete_point_from_adf(short pno);

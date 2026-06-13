@@ -50,6 +50,23 @@
 #endif
 
 using namespace DCP;
+
+namespace {
+#if defined(__linux__)
+void dcpPathToAscii(const boost::filesystem::path& fileInfo, char* tempFileName, size_t bufLen)
+{
+	const std::string pathStr = fileInfo.string();
+	std::strncpy(tempFileName, pathStr.c_str(), bufLen - 1);
+	tempFileName[bufLen - 1] = '\0';
+}
+#else
+void dcpPathToAscii(const boost::filesystem::path& fileInfo, char* tempFileName, size_t bufLen)
+{
+	BSS::UTI::BSS_UTI_WCharToAscii(fileInfo.c_str(), tempFileName, static_cast<uint32_t>(bufLen));
+}
+#endif
+}
+
 // ================================================================================================
 // ========================================  Declarations  ========================================
 // ================================================================================================
@@ -214,7 +231,7 @@ void SelectFileDialog::OnDialogActivated()
 		
 		boost::filesystem::path FileInfo = *itrDir;
 
-		BSS::UTI::BSS_UTI_WCharToAscii(FileInfo.c_str(), tempFileName);
+		dcpPathToAscii(FileInfo, tempFileName, sizeof(tempFileName));
 
 		//MsgBox msgbox;
 		//StringC msg;
@@ -441,7 +458,7 @@ void SelectFileDialog::OnDialogActivated()
 		++itrDir )
 		{
 			boost::filesystem::path FileInfo = *itrDir;
-			BSS::UTI::BSS_UTI_WCharToAscii(FileInfo.c_str(), tempFileName);
+			dcpPathToAscii(FileInfo, tempFileName, sizeof(tempFileName));
 
 		//if(FileIterator.FindFirst(pSearch, FileInfo) == 0)
 		//{
@@ -499,7 +516,7 @@ void SelectFileDialog::OnDialogActivated()
 		++itrDir )
 		{
 			boost::filesystem::path FileInfo = *itrDir;
-			BSS::UTI::BSS_UTI_WCharToAscii(FileInfo.c_str(), tempFileName);
+			dcpPathToAscii(FileInfo, tempFileName, sizeof(tempFileName));
 
 			if( boost::filesystem::regular_file == itrDir->status().type()) 
 			{
@@ -547,7 +564,7 @@ void SelectFileDialog::OnDialogActivated()
 		++itrDir )
 		{
 			boost::filesystem::path FileInfo = *itrDir;
-			BSS::UTI::BSS_UTI_WCharToAscii(FileInfo.c_str(), tempFileName);
+			dcpPathToAscii(FileInfo, tempFileName, sizeof(tempFileName));
 
 		if( boost::filesystem::regular_file == itrDir->status().type()) 
 		{

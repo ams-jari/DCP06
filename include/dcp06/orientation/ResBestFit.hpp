@@ -179,7 +179,7 @@ namespace DCP
 				//double get_max_dist_and_rms_line(S_LINE_BUFF *line, short *pno, double *rms/*, short ACT*/);
 
 				StringC sTitle;
-				short ResBestFitDialog::get_max_res();
+				short get_max_res();
 				
 
 				//void DCP::SelectMultiPointsDialog::remove_point_table(short sel);

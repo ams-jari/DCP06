@@ -3,7 +3,56 @@
 **Date:** 2026-06-13  
 **SDK analysed:** `Captivate_PluginSDK_POSIX_v10.0.0-rc.309`  
 **Location (local):** `C:\Users\dell\Desktop\AMS\Development\Captivate_PluginSDK_POSIX_v10.0.0-rc.309`  
-**Purpose:** Assess Leica’s Linux/POSIX Captivate 10 SDK for a DCP06 TS20 variant.
+**Purpose:** Assess Leica’s Linux/POSIX Captivate 10 SDK and document what AMS learns for **TS20 / Linux plugin development**. Findings here feed the **production DCP05 Linux port** (see [Context & goals](#context--goals) below).
+
+---
+
+## Context & goals
+
+### Why AMS is doing this now
+
+Leica **TS20** total stations ship with **Captivate 10 on Linux** (replacing Windows CE on older onboard controllers). Resellers and end customers who bought **DCP05 for TS20** are waiting; AMS was late to the Linux Captivate v10 transition because Leica did not give the same early notice as for past Captivate releases.
+
+**Commercial interim option (separate from this doc):** CS20 controller (Windows EC7) can run DCP05 as a backup until onboard TS20 DCP05 is ready. Customer licensing and trial terms are handled by sales/management, not this engineering track.
+
+### DCP05 vs DCP06 — who owns what
+
+| | **DCP05** | **DCP06 (this repo)** |
+|---|-----------|------------------------|
+| **Role** | **Production** onboard 3D measurement for Leica resellers/customers | **Next trial / evolution** of DCP05 (database, LIST/PICK, etc.) |
+| **Linux port owner** | **Pasi Ojaniemi** (`C:\Users\dell\Desktop\AMS\Development\DCP05`) | This POSIX work is **reconnaissance**, not the customer deliverable |
+| **Goal on Linux** | Ship **DCP05** on TS20 | Learn SDK, prove build path, find pitfalls, hand findings to Pasi |
+
+**Do not confuse the two:** shipping DCP06 on Linux is **not** the answer to “when is DCP05 for TS20 available?” This work shortens that path by de-risking the SDK and toolchain.
+
+### What this POSIX track is trying to achieve
+
+1. **Understand the POSIX SDK** — layout, libraries, gaps vs Windows SDK, TS20/Yocto toolchain.
+2. **Prove a repeatable Linux build** — WSL2 steps in [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md) (header smoke → full `.so` with `Start15751`).
+3. **Catalog porting issues** — things MSVC allows but GCC/Linux rejects (see §5 and build-step notes).
+4. **Hand off to Pasi** — concrete fixes, CMake patterns, and open questions so DCP05 porting can move faster.
+
+### What “done” means here (vs production)
+
+| Milestone | Meaning |
+|-----------|---------|
+| Steps 1–5 on x86 WSL | Compiles and links; exports plugin entry — **learning milestone** |
+| Step 6 (Yocto ARM) | Cross-compile for **actual TS20 device** ABI |
+| Deployable plugin on instrument | Needs localization (`.LEN`), assets, packaging — **MkEdit/TextTool equivalent on Linux still TBD** |
+
+Production **DCP05 on TS20** remains Pasi’s deliverable; this repo documents **how** and **what broke**, not a reseller-facing release.
+
+### Findings already useful for DCP05 (living list)
+
+Updated as the step-by-step build progresses; see also [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md).
+
+- Build **out of tree** under `~/build/...` in WSL (not on `/mnt/c/...`).
+- Do **not** include `3rdparty/msvc2008_compat` on Linux — breaks system `<cstdint>`.
+- Guard **`DllMain`** and **`vxworks.h`** paths; add `__linux__` branch in `stdafx.h`.
+- **`boost::filesystem::path`** uses narrow strings on Linux — do not pass `path.c_str()` to `BSS_UTI_WCharToAscii`.
+- MSVC **“extra qualification”** in class bodies (`Class::method()`) must be fixed for GCC.
+- Link **versioned** SDK `.so` files directly; add **Boost filesystem/system** from SDK `libs/`.
+- POSIX SDK ships **no** MkEdit, TextTool, SWXResBuilder, HelloWorld, or simulator.
 
 ---
 
@@ -327,6 +376,7 @@ Use this as the initial integration plan. Order matters — do not port all of D
 | Date | Change |
 |------|--------|
 | 2026-06-13 | Initial analysis of `Captivate_PluginSDK_POSIX_v10.0.0-rc.309` |
+| 2026-06-13 | Added Context & goals (DCP05 production vs DCP06 reconnaissance, Pasi handoff, findings list) |
 
 ---
 

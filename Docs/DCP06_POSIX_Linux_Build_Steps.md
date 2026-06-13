@@ -4,6 +4,10 @@
 **Environment:** WSL2 + Ubuntu 22.04 (see [DCP06_POSIX_WSL_Setup.md](DCP06_POSIX_WSL_Setup.md))  
 **SDK:** `Captivate_PluginSDK_POSIX_v10.0.0-rc.309`
 
+### Why these steps exist
+
+This is a **reconnaissance build path** in DCP06 to learn the Captivate POSIX SDK and surface Linux porting issues. **Production TS20 delivery is DCP05** (owned by Pasi Ojaniemi). Results here are meant to **de-risk and accelerate** that port — not to ship DCP06 to resellers. Background: [DCP06_POSIX_SDK_Analysis.md — Context & goals](DCP06_POSIX_SDK_Analysis.md#context--goals).
+
 Work through these steps **in order**. Do not skip ahead until the current step passes.
 
 ---
@@ -14,9 +18,9 @@ Work through these steps **in order**. Do not skip ahead until the current step 
 |------|--------|------|--------|
 | **1** | `Project/Linux/step01_header_smoke/` | Compile a tiny program that includes Leica SDK headers | done |
 | **2** | `Project/Linux/step02_link_smoke/` | Link a test `.so` against core SDK libraries | done |
-| **3** | `Project/Linux/step03_min_plugin/` | Minimal plugin stub exporting `Start15751` | **→ you are here** |
-| 4 | `Project/Linux/` | CMake build of a **subset** of DCP06 sources | pending |
-| 5 | `Project/Linux/` | Full `DCP06.so` (all sources) | pending |
+| **3** | `Project/Linux/step03_min_plugin/` | Minimal plugin stub exporting `Start15751` | done |
+| **4** | `Project/Linux/step04_dcp06_logger/` | Compile first real DCP06 source (`Logger.cpp`) | done |
+| **5** | `Project/Linux/step05_full_plugin/` | Full `DCP06.so` (110 vcproj sources + SDK link) | **→ you are here** |
 | 6 | Yocto SDK | Cross-compile for TS20 (`armv8-leicageo_linux_5.0-gcc13`) | pending |
 
 ---
@@ -147,6 +151,104 @@ When Step 3 passes, continue to Step 4 (DCP06 source subset).
 
 ---
 
+## Step 4 — DCP06 `Logger.cpp` on Linux
+
+**Purpose:** Compile the first real DCP06 source file on Linux and verify `DCP::Logger` writes a log file using POSIX `localtime_r`.
+
+### What changed in the main tree
+
+- `src/core/stdafx.h` — added `#elif defined(__linux__)` branch (avoids `#include <vxworks.h>` on Linux)
+
+### Shared CMake
+
+- `Project/Linux/cmake/CaptivatePosixSdk.cmake` — SDK include paths, compile defs, and `dcp06_apply_posix_target_settings()` helper (reused by later steps)
+
+### Run (in Ubuntu)
+
+```bash
+source ~/.bashrc
+
+mkdir -p ~/build/dcp06-step04
+cd ~/build/dcp06-step04
+rm -rf ./*
+cmake "$DCP06_ROOT/Project/Linux/step04_dcp06_logger"
+cmake --build .
+./dcp06_logger_smoke
+cat /tmp/dcp06_step04.log
+echo "Exit code: $?"
+```
+
+### Expected result
+
+- Build succeeds (no SDK `.so` link needed — Logger is standalone)
+- `./dcp06_logger_smoke` prints: `DCP06 Logger smoke test OK (/tmp/dcp06_step04.log)`
+- Log file contains a line like: `[2026-06-13 ...] [INF] DCP06 Logger POSIX step 4 smoke test`
+- Exit code `0`
+
+### If it fails
+
+- `vxworks.h: No such file` → ensure `src/core/stdafx.h` has the `__linux__` branch
+- Missing `DCP06_TOK.HPP` or `Onboard_Tok.hpp` → check `CaptivatePosixSdk.cmake` include dirs and `Text/` path
+- CMake on `/mnt/c/...` → use `~/build/dcp06-step04` as above
+
+When Step 4 passes, continue to Step 5 (full plugin).
+
+---
+
+## Step 5 — Full `DCP06.so`
+
+**Purpose:** Build the complete DCP06 plugin shared library on Linux — all 110 translation units from `DCP06-VS2008.vcproj`, linked against Captivate POSIX SDK libraries. Exports **`Start15751`** (same entry as Windows `DCP06.dll`).
+
+### New / updated files
+
+| Path | Role |
+|------|------|
+| `Project/Linux/step05_full_plugin/` | CMake target → `DCP06.so` |
+| `Project/Linux/cmake/Dcp06Sources.cmake` | Source list from vcproj (regenerate with `gen_dcp06_sources.py`) |
+| `Project/Linux/cmake/CaptivatePosixSdk.cmake` | Extended: extra includes, `DCP_USE_JSON_DATABASE`, SDK + Boost libs |
+| `src/application/DCP06.cpp` | `DllMain` guarded with `#ifdef _WIN32` |
+| Header fixes | MSVC “extra qualification” in `DistFile.hpp`, `ScanFileFunc.hpp`, `ResBestFit.hpp` |
+| `src/file/SelectFile.cpp` | Linux path → ASCII helper (`boost::filesystem` uses `char` paths on Linux) |
+
+### Run (in Ubuntu)
+
+```bash
+source ~/.bashrc
+
+mkdir -p ~/build/dcp06-step05
+cd ~/build/dcp06-step05
+rm -rf ./*
+cmake "$DCP06_ROOT/Project/Linux/step05_full_plugin"
+cmake --build . -j"$(nproc)"
+
+file DCP06.so
+nm -D DCP06.so | grep Start15751
+echo "Exit code: $?"
+```
+
+Or use the helper script:
+
+```bash
+bash "$DCP06_ROOT/Project/Linux/step05_full_plugin/build_wsl.sh"
+```
+
+### Expected result
+
+- Build completes (~110 `.cpp` files; many Leica header warnings are OK)
+- `file DCP06.so` → `ELF 64-bit LSB shared object, x86-64`
+- `nm -D DCP06.so | grep Start15751` shows exported symbol **`Start15751`**
+- Exit code `0`
+
+### Notes
+
+- **Not deployable yet** — still needs `.LEN` localization, SWXRes/png assets, and Captivate packaging (MkEdit equivalent on Linux TBD).
+- Do **not** include `3rdparty/msvc2008_compat` on Linux (breaks system `<cstdint>`).
+- Source list must match vcproj; do not GLOB `src/` (orphan WIP files like `Alignment321Model.cpp` are excluded).
+
+When Step 5 passes, continue to Step 6 (Yocto cross-compile for TS20 ARM).
+
+---
+
 ## Related docs
 
 - [DCP06_POSIX_WSL_Setup.md](DCP06_POSIX_WSL_Setup.md)
@@ -161,3 +263,6 @@ When Step 3 passes, continue to Step 4 (DCP06 source subset).
 | 2026-06-13 | Step 1 added |
 | 2026-06-13 | Step 2 added |
 | 2026-06-13 | Step 3 added (minimal plugin, Start15751) |
+| 2026-06-13 | Step 4 added (Logger.cpp, stdafx Linux branch, CaptivatePosixSdk.cmake) |
+| 2026-06-13 | Step 5 added (full DCP06.so, 110 sources, Start15751, Linux port fixes) |
+| 2026-06-13 | Added “Why these steps exist” (DCP05 vs DCP06 reconnaissance context) |
