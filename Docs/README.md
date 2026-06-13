@@ -17,6 +17,9 @@ This folder contains the planning and reference documentation for the DCP06 proj
 | [DCP06_Logging_Trace_Usage.md](DCP06_Logging_Trace_Usage.md) | How to add debug traces (MSVC-safe patterns) |
 | [DCP06_Debugging_Crash_Dumps.md](DCP06_Debugging_Crash_Dumps.md) | Capturing and analyzing crash dumps |
 | [DCP06_Build_PostBuild_Troubleshooting.md](DCP06_Build_PostBuild_Troubleshooting.md) | MkEdit DLL “file open failed” (exit DCP06 / simulator); dongle vs dev builds |
+| [DCP06_POSIX_SDK_Analysis.md](DCP06_POSIX_SDK_Analysis.md) | Leica Captivate POSIX SDK (TS20/Linux): layout, gaps vs Windows SDK, first-build checklist |
+| [DCP06_POSIX_WSL_Setup.md](DCP06_POSIX_WSL_Setup.md) | WSL2 + Ubuntu 22.04 setup for POSIX SDK (not dual-boot) |
+| [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md) | Step-by-step POSIX plugin build (header smoke → full DCP06.so) |
 
 ## Quick Reference
 
