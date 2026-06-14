@@ -22,6 +22,7 @@ Work through these steps **in order**. Do not skip ahead until the current step 
 | **4** | `Project/Linux/step04_dcp06_logger/` | Compile first real DCP06 source (`Logger.cpp`) | done |
 | **5** | `Project/Linux/step05_full_plugin/` | Full `DCP06.so` (110 vcproj sources + SDK link) | done |
 | **6** | `Project/Linux/step06_arm_cross/` | Cross-compile `DCP06.so` for TS20 ARM | done |
+| **7** | `Project/Linux/step07_lxx_package/` | Package / dev-install DCP06 for Linux Captivate sim | tooling done; install blocked |
 
 ---
 
@@ -311,7 +312,6 @@ echo "Exit code: $?"
 - Uses Leica's `cortexa53-crypto-leicageo-linux-toolchain.cmake` from the Yocto SDK.
 - ARM libs come from `Binary/armv8-leicageo_linux_5.0-gcc13/libs` (not the x86 Ubuntu libs).
 - Defines `HW_ARM` + `PLAT_WINCE_ARM` (matches DCP06 physical device config; `__linux__` handles POSIX paths).
-- **Still not deployable** — packaging/localization/assets remain TBD.
 
 ### If it fails
 
@@ -322,29 +322,142 @@ echo "Exit code: $?"
 
 ---
 
-## Build path complete (Steps 1–6)
+## Step 7 — Linux Captivate package (`.lxx`) and dev install
 
-All reconnaissance build steps are **done** on AMS WSL (2026-06-13):
+**Purpose:** Turn the Step 5 `DCP06.so` into a loadable Ubuntu simulator package (`.lxx`) or install directly into the Linux Captivate plugin tree for UI testing.
+
+**Tooling:** MkEdit from the **x86_64 Plugin SDK** (Windows only). PObs build without a dongle; **final `.lxx` LOB packaging requires a Leica dongle** (same as Win32 `.dxx` — see [DCP06_Build_PostBuild_Troubleshooting.md](DCP06_Build_PostBuild_Troubleshooting.md)).
+
+### Prerequisites
+
+- [x] Step 5 complete (`~/build/dcp06-step05/DCP06.so`)
+- [x] Linux Captivate simulator running (see [DCP06_POSIX_WSL_Setup.md](DCP06_POSIX_WSL_Setup.md))
+- [x] `DCP06.LEN` — run on Windows: `scripts\build_lang.bat` (TextTool)
+- [x] x86_64 SDK MkEdit at `Captivate_PluginSDK_x86_64_v10.00_RC\...\Tools\MKTools\MkEdit.exe`
+
+### Run (in Ubuntu / WSL)
+
+```bash
+source ~/.bashrc
+bash "$DCP06_ROOT/Project/Linux/step07_lxx_package/build_lxx.sh"
+```
+
+Modes:
+
+```bash
+# Dev install only (works without dongle)
+bash "$DCP06_ROOT/Project/Linux/step07_lxx_package/build_lxx.sh" install
+
+# .lxx package only (needs dongle on Windows host)
+bash "$DCP06_ROOT/Project/Linux/step07_lxx_package/build_lxx.sh" package
+```
+
+### What the script does
+
+1. Copies `DCP06.so` → staging as `libDCP06.so` (Linux plugin naming convention)
+2. Stages `SWXRes/` logos (fixes `DCP06_logo_2X.png` case for `.sys`)
+3. Runs MkEdit `-M:mk -C` from `Project/` (attempts `DCP06.lxx` — **fails without dongle**, PObs still built)
+4. Runs MkEdit `-M:mk -I:… -C` to install PObs under `/home/gui-app/captivate/internal-storage/System/Plugin/DCP06/`
+5. Post-install fixups: `libDCP06.app` → `DCP06.app`, copies `EN/DCP06.LEN` and `SWXRes/` (MkEdit resources copy via WSL path is flaky)
+
+### Expected result (dev install, no dongle)
+
+After `install` or `all`:
+
+```
+/home/gui-app/captivate/internal-storage/System/Plugin/DCP06/
+  DCP06.app
+  DCP06.sys
+  libDCP06.so
+  EN/DCP06.LEN
+  SWXRes/DCP06_logo_1X.png
+  SWXRes/DCP06_logo_2X.png
+```
+
+Restart Captivate to load the plugin:
+
+```bash
+# TS sim must be running first
+start_ts_simulator_grpc_client -d
+captivate    # Ctrl+C to stop; rerun to reload plugins
+```
+
+Look for **DCP06** in the Apps menu (App.Id `15751`, entry `Start15751`).
+
+### Expected result (`.lxx`, dongled machine)
+
+On a PC with a valid Leica dongle:
+
+```bash
+bash "$DCP06_ROOT/Project/Linux/step07_lxx_package/build_lxx.sh" package
+```
+
+Output: `Project/Linux/step07_lxx_package/out/RelWithDebInfo/DCP06.lxx`
+
+Install workflow in Captivate UI is TBD — ask Pasi/Leica how partner `.lxx` files are loaded in v10 Linux sim. Built-in samples ship as `.lxx` + `.sig` in the Captivate distribution.
+
+### If it fails
+
+| Symptom | Fix |
+|---------|-----|
+| `DCP06.so not found` | Run Step 5 build script first |
+| `DCP06.LEN missing` | Run `scripts\build_lang.bat` on Windows |
+| `can't build applications without valid dongle` | **Normal** for `.lxx` without dongle; use `install` mode for sim testing |
+| `cannot copy directory tree: DCP06_Res.pob` on install | Script runs post-install fixups; verify `SWXRes/` and `EN/` manually |
+| DCP06 not in Apps menu | Restart `captivate`; confirm TS sim running; check `DEFAULT_SENSOR_TYPE=2300` in `/etc/captivate/captivate.env` |
+| MkEdit `cmd.exe` quoting errors | Run from WSL as above; script uses `Project/` as MkEdit working directory |
+| Captivate GUI flashes / `Killed` after install | **Broken DCP06 plugin** under `internal-storage/System/Plugin/` — move folder out entirely; see [Captivate Sim §7](DCP06_POSIX_Linux_Captivate_Sim.md#7-dcp06-plugin-crash--important) |
+
+### Warning — dev install not verified safe
+
+The first `build_lxx.sh install` on AMS WSL (2026-06-14) left duplicate `libDCP06.app` / `DCP06.app` and an incomplete MkEdit resources step. Captivate **panicked on startup** until the plugin folder was moved out of `Plugin/`. Treat `install` mode as **experimental** until MkEdit install is fixed or a signed `.lxx` is used.
+
+### Files added for Step 7
+
+| Path | Role |
+|------|------|
+| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.sys` | Plugin descriptor (Ubuntu) |
+| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.dat` | Version metadata for MkEdit |
+| `Project/x86_64-ubuntu_22.04-gcc11/Config/DCP06_RelWithDebInfo.xml` | MkEdit config (`APPL_UBUNTU`) |
+| `Project/Linux/step07_lxx_package/build_lxx.sh` | Staging + MkEdit driver |
+
+
+| Path | Role |
+|------|------|
+| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.sys` | Plugin descriptor (Ubuntu) |
+| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.dat` | Version metadata for MkEdit |
+| `Project/x86_64-ubuntu_22.04-gcc11/Config/DCP06_RelWithDebInfo.xml` | MkEdit config (`APPL_UBUNTU`) |
+| `Project/Linux/step07_lxx_package/build_lxx.sh` | Staging + MkEdit driver |
+
+---
+
+## Build path complete (Steps 1–7)
+
+Reconnaissance build steps on AMS WSL (2026-06-14):
 
 | Step | Output | Architecture | Entry symbol |
 |------|--------|--------------|--------------|
 | 5 | `~/build/dcp06-step05/DCP06.so` | x86-64 (Ubuntu dev) | `Start15751` |
 | 6 | `~/build/dcp06-step06/DCP06.so` | ARM aarch64 (TS20 device) | `Start15751` |
+| 7 | MkEdit staging / PObs (`.lxx` needs dongle) | x86-64 sim | `Start15751` — plugin load **not** verified |
 
-**Not yet deployable** to a TS20 instrument. Remaining work:
+**`.lxx` release packaging** still needs a **dongled Windows host** (coordinate with Pasi for production DCP05).
 
-1. **Packaging** — ask Leica for Linux MkEdit equivalent; adapt `DCP06.dat` / `DCP06.sys`.
-2. **Localization** — `.men` → `.LEN` pipeline (TextTool has no Linux port in SDK).
-3. **Resources** — SWXRes/png assets.
-4. **Hardware test** — load plugin on TS20; exercise TBL/CPI/GuiPlus paths.
+**Linux Captivate simulator** runs on AMS WSL; see [DCP06_POSIX_Linux_Captivate_Sim.md](DCP06_POSIX_Linux_Captivate_Sim.md) for startup, Docker, and plugin crash recovery.
 
-Hand off compile/link findings to Pasi for the **production DCP05** Linux port.
+Remaining for hardware delivery:
+
+1. **`.lxx` / `.yxx` signing** — Leica dongle + partner signing workflow
+2. **Hardware test** — load ARM `.yxx` on TS20; exercise TBL/CPI/GuiPlus paths
+
+Hand off compile/link/packaging findings to Pasi for the **production DCP05** Linux port.
 
 ---
 
 ## Related docs
 
 - [DCP06_POSIX_WSL_Setup.md](DCP06_POSIX_WSL_Setup.md)
+- [DCP06_POSIX_Linux_Captivate_Sim.md](DCP06_POSIX_Linux_Captivate_Sim.md)
 - [DCP06_POSIX_SDK_Analysis.md](DCP06_POSIX_SDK_Analysis.md)
 
 ---
@@ -360,3 +473,5 @@ Hand off compile/link findings to Pasi for the **production DCP05** Linux port.
 | 2026-06-13 | Step 5 added (full DCP06.so, 110 sources, Start15751, Linux port fixes) |
 | 2026-06-13 | Added “Why these steps exist” (DCP05 vs DCP06 reconnaissance context) |
 | 2026-06-13 | Step 6 added (ARM cross-compile via Yocto SDK + `step06_arm_cross`) |
+| 2026-06-14 | Step 7 added (MkEdit `.lxx` / dev install for Linux Captivate sim) |
+| 2026-06-14 | Documented DCP06 plugin crash recovery; dev install marked experimental |

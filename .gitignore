@@ -35,6 +35,7 @@ Text/Languages/**/*.bak
 
 # Linux POSIX CMake (in-tree build dirs; prefer ~/build/dcp06-step* in WSL)
 Project/Linux/**/build/
+Project/Linux/step07_lxx_package/out/
 
 # VS2008 / build artifacts
 *.ncb

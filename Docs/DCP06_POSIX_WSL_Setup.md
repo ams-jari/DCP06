@@ -277,10 +277,26 @@ wsl -d Ubuntu-22.04 -- bash -lc 'ls "$CAPTIVATE_POSIX_LIBS" | wc -l'
 | ARM cross-compiler | `aarch64-leicageo-linux-gcc --version` (after sourcing env) | [x] |
 | x86 `DCP06.so` builds | `bash Project/Linux/step05_full_plugin/build_wsl.sh` | [x] |
 | ARM `DCP06.so` builds | `bash Project/Linux/step06_arm_cross/build_wsl.sh` | [x] |
+| Linux Captivate sim runs | `captivate` from `/usr/bin` (see [Captivate Sim](DCP06_POSIX_Linux_Captivate_Sim.md)) | [x] |
+| Step 7 MkEdit staging | `bash Project/Linux/step07_lxx_package/build_lxx.sh package` | [x] |
 
 ---
 
-## 11. What stays on Windows (do not move yet)
+## 11. Linux Captivate simulator (optional — UI testing)
+
+Install from Leica Captivate v10 zip (`Simulator/Simulator/*.deb`). Full guide: **[DCP06_POSIX_Linux_Captivate_Sim.md](DCP06_POSIX_Linux_Captivate_Sim.md)**.
+
+Quick start:
+
+```bash
+echo 'DEFAULT_SENSOR_TYPE=2300' | sudo tee -a /etc/captivate/captivate.env
+sudo start_ts_simulator_grpc_client -d
+captivate    # no sudo; not the LeicaCaptivate binary under /mnt/c/.../Simulator/
+```
+
+---
+
+## 12. What stays on Windows (do not move yet)
 
 - **Visual Studio 2008 / 2022** — TS/CS20 and CS35 builds  
 - **Captivate TS simulator** — Win32 plugin testing  
@@ -291,7 +307,7 @@ WSL is for **POSIX SDK exploration and future `DCP06.so` builds**, not a replace
 
 ---
 
-## 12. Troubleshooting
+## 13. Troubleshooting
 
 | Issue | What to try |
 |-------|-------------|
@@ -303,27 +319,28 @@ WSL is for **POSIX SDK exploration and future `DCP06.so` builds**, not a replace
 | Yocto installer fails in WSL | Capture log; ask Leica; try Hyper-V Linux VM as fallback |
 | Line endings break scripts | In repo: `*.sh` LF only; `git config core.autocrlf input` in WSL clone |
 | Out of disk in WSL | `wsl --shutdown`, then expand VHD or clean `~/leica` build dirs |
+| Captivate GUI flashes / `Killed` | Broken plugin under `internal-storage/System/Plugin/` — see [Captivate Sim §7](DCP06_POSIX_Linux_Captivate_Sim.md#7-dcp06-plugin-crash--important) |
+| Docker `permission denied` | `sudo docker ps` or `newgrp docker` after `usermod -aG docker $USER` |
 
 Reset WSL disk location (advanced): see [Microsoft WSL docs](https://learn.microsoft.com/en-us/windows/wsl/) — only if default install path fills up.
 
 ---
 
-## 13. Next steps after WSL is ready
+## 14. Next steps after WSL is ready
 
-1. ~~Complete Steps 1–6 in [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md)~~ — **done** (x86 + ARM `DCP06.so`, `Start15751`).
-2. Ask Leica for POSIX **HelloWorld sample** and **TS20 packaging** docs (MkEdit/TextTool equivalent on Linux).
-3. Port localization pipeline: `.men` → `.LEN`, SWXRes/png assets.
-4. Test on TS20 hardware when available.
-5. Hand off findings to Pasi for **production DCP05** Linux port — see [DCP06_POSIX_SDK_Analysis.md](DCP06_POSIX_SDK_Analysis.md).
+1. ~~Complete Steps 1–7 tooling in [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md)~~ — **build path done** (x86 + ARM `DCP06.so`, MkEdit staging).
+2. Fix Step 7 dev install or obtain signed `.lxx` from dongled machine (Pasi).
+3. Hand off findings to Pasi for **production DCP05** Linux port — see [DCP06_POSIX_SDK_Analysis.md](DCP06_POSIX_SDK_Analysis.md).
 
 ---
 
-## 14. Revision history
+## 15. Revision history
 
 | Date | Change |
 |------|--------|
 | 2026-06-13 | Initial WSL2 + Ubuntu 22.04 setup guide (no dual-boot) |
 | 2026-06-13 | Stage 2 Yocto SDK installed; Step 6 ARM cross-build verified; checklist and env vars updated |
+| 2026-06-14 | Linux Captivate sim guide; Step 7; plugin crash troubleshooting |
 
 ---
 

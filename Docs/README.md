@@ -20,6 +20,7 @@ This folder contains the planning and reference documentation for the DCP06 proj
 | [DCP06_POSIX_SDK_Analysis.md](DCP06_POSIX_SDK_Analysis.md) | POSIX SDK analysis + **context/goals** (DCP05 vs DCP06, TS20, handoff to Pasi) |
 | [DCP06_POSIX_WSL_Setup.md](DCP06_POSIX_WSL_Setup.md) | WSL2 + Ubuntu 22.04 setup for POSIX SDK (not dual-boot) |
 | [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md) | Step-by-step reconnaissance build (header smoke → full `DCP06.so`); findings feed **DCP05 Linux** |
+| [DCP06_POSIX_Linux_Captivate_Sim.md](DCP06_POSIX_Linux_Captivate_Sim.md) | Linux Captivate v10 on WSL: startup, Docker, Step 7, plugin crash recovery |
 
 ## Quick Reference
 
@@ -32,4 +33,4 @@ This folder contains the planning and reference documentation for the DCP06 proj
 
 - **Customer product on TS20:** DCP05 Linux port (Pasi Ojaniemi, `DCP05` repo).
 - **This repo’s Linux work:** Learn Captivate POSIX SDK, prove build steps, document pitfalls for DCP05 — **not** a reseller-facing DCP06 Linux release.
-- **Start here:** [DCP06_POSIX_SDK_Analysis.md — Context & goals](DCP06_POSIX_SDK_Analysis.md#context--goals) → [WSL setup](DCP06_POSIX_WSL_Setup.md) → [Build steps](DCP06_POSIX_Linux_Build_Steps.md).
+- **Start here:** [DCP06_POSIX_SDK_Analysis.md — Context & goals](DCP06_POSIX_SDK_Analysis.md#context--goals) → [WSL setup](DCP06_POSIX_WSL_Setup.md) → [Build steps](DCP06_POSIX_Linux_Build_Steps.md) → [Linux Captivate sim](DCP06_POSIX_Linux_Captivate_Sim.md).

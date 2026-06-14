@@ -1,0 +1,5 @@
+App.Id=15751
+App.Dep=0,System,10.00,m
+App.EntryPoint=Start15751,DCP06,TPS,1,1,1,1,DCP06_logo_$SCALEFACTOR$.png,DCP06_logo_$SCALEFACTOR$.png
+App.DllDep=DCP06,TPS,0
+App.LicensePluginId=255
