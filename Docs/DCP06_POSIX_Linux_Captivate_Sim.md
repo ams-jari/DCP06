@@ -2,7 +2,7 @@
 
 **Date:** 2026-06-14  
 **Environment:** WSL2 + Ubuntu 22.04, Captivate v10.0.0-rc.309 Linux packages  
-**Status:** Simulator GUI verified working; DCP06 plugin dev-install **not yet safe** (see §7)
+**Status:** Simulator GUI OK; DCP06 **in Apps menu** via dev install; **launch needs signed `.lxx`** (see §7.1)
 
 **Related:** [DCP06_POSIX_WSL_Setup.md](DCP06_POSIX_WSL_Setup.md), [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md) (Step 7)
 
@@ -105,19 +105,19 @@ These appear on WSL even when Captivate **works**. They are not the crash cause 
 | 1–4 | Header/link/min plugin/logger smoke | See [Build Steps](DCP06_POSIX_Linux_Build_Steps.md) |
 | 5 | `~/build/dcp06-step05/DCP06.so` (x86-64) | `Start15751` exported |
 | 6 | `~/build/dcp06-step06/DCP06.so` (ARM) | Yocto cross-SDK |
-| 7 | MkEdit staging + PObs | `.lxx` needs dongle; dev install experimental |
+| 7 | MkEdit dev install + Apps menu | **Partial** — tile visible; launch needs signed `.lxx` |
 
 ---
 
-## 6. Step 7 — MkEdit / `.lxx` / dongle (same rule as Windows)
+## 6. Step 7 — MkEdit / `.lxx` / dongle
 
-| Action | Dongle? | Artifact |
-|--------|---------|----------|
-| Compile `DCP06.so` (Step 5) | No | `libDCP06.so` |
-| MkEdit PObs + dev install `-I:` | No | Files under `internal-storage/System/Plugin/DCP06/` |
-| MkEdit LOB package `-C` only | **Yes** | `DCP06.lxx` |
+| Action | Dongle? | Result (2026-06-15) |
+|--------|---------|------------------------|
+| Compile `DCP06.so` (Step 5) | No | `libDCP06.so` — OK |
+| MkEdit PObs + dev install `-I:` | No | Plugin registers in Apps menu; **no** `libDCP06.so.sig` |
+| MkEdit LOB package `-C` (`DCP06_Release.xml`) | **Yes** | `DCP06.lxx` + signature — **needed to run app** |
 
-Linux is **not** stricter than Windows — both gate **packaged** partner files (`.lxx` / `.dxx`). Day-to-day sim work on Windows uses MkEdit **install** (`-I:`), not `.dxx`. Linux dev install is the same idea but our first attempt produced an incomplete plugin tree.
+Linux dev install (`-I:`) is **not** equivalent to Windows plain-`DCP06.dll` copy: v10 Linux sim **enforces binary signature** on partner plugins. Use signed `.lxx` for a runnable app (coordinate with Pasi).
 
 Script:
 
@@ -166,21 +166,74 @@ Confirm in log (no new PANIC lines):
 tail -5 /home/gui-app/captivate/internal-storage/Log/ErrorLog_01.txt
 ```
 
-**Do not re-run `build_lxx.sh install`** until install produces a single valid `DCP06.app` (coordinate with Pasi / dongled MkEdit workflow).
+### Root cause (2026-06-15)
+
+Removing only `DCP06.sys` from the plugin folder lets Captivate start; the crash is in **`.sys` metadata**, not `.app` / `.so`.
+
+Compared to working built-in `Disto.sys` and SDK HelloWorld samples, MkEdit-installed `DCP06.sys` was missing:
+
+| Issue | DCP06 (broken) | Working plugins |
+|-------|----------------|-----------------|
+| `App.Type` | missing | `mixed` |
+| EntryPoint comment line | missing | `;App.EntryPoint=<...>` before real line |
+| Line endings in body | LF only | CRLF (`\r\n`) |
+
+Fix: update `Project/x86_64-ubuntu_22.04-gcc11/DCP06.sys` (CRLF + `App.Type=mixed` + comment), then re-run `build_lxx.sh install`.
+
+### 7.1 Launch — “This app may be damaged” (2026-06-15)
+
+After the `.sys` fix, Captivate **starts**, DCP06 **tile #25 appears** in Apps (icon may be blank). Tapping it shows *“This app may be damaged.”*
+
+Error log at click time:
+
+```
+Unable to open file .../Plugin/DCP06/libDCP06.so.sig
+Signature verification failed: public key hash mismatch.
+AppLoader ApplicationC::checkValidity: application is not signed
+```
+
+**Cause:** Linux Captivate v10 verifies partner plugin binaries. MkEdit dev install (`-I:`) without a dongle does **not** produce `libDCP06.so.sig`. Windows simulator dev install (plain `DCP06.dll` copy) does not enforce this the same way.
+
+**Next step for a runnable app:** signed **`.lxx`** package (dongle / Pasi) — see HelloWorld `Release.xml` POB type `APPL_DLL_LINUX_SIGNATURE` in the SDK. Optional interim test: load `HelloWorldGSV.lxx` from the Captivate v10 distribution to confirm the official partner install path.
+
+**Blank menu icon:** PNGs are under `SWXRes/` (manual post-install copy). May improve after a full `.lxx` install with `APPRESOURCES` POB; Disto also ships separate `*Focus_1X.png` icons.
 
 ---
 
-## 8. Open items for Pasi / Leica
+## 8. Handoff to Pasi — signed `.lxx` required
 
-1. Signed `.lxx` install workflow in Linux Captivate v10 UI  
-2. Whether dev install without dongle is supported long-term (MkEdit deprecated)  
-3. Correct Linux `.app` format when `APPL_DLL_LINUX` + incomplete resources POB  
-4. ARM `.yxx` packaging for TS20 device builds (Step 6 output)
+**Verified without dongle (2026-06-15):**
 
----
+1. `build_lxx.sh install` → DCP06 tile in Apps menu (App.Id 15751)
+2. Captivate starts with plugin installed (after `.sys` fix)
+3. Clicking DCP06 → *“This app may be damaged”* — missing `libDCP06.so.sig`
+
+**Request (dongled Windows PC):**
+
+```bash
+# WSL — stage assets
+bash "$DCP06_ROOT/Project/Linux/step07_lxx_package/build_lxx.sh" package
+```
+
+Then on Windows with dongle, from `Project/`:
+
+```
+MkEdit.exe -M:mk -F:x86_64-ubuntu_22.04-gcc11\Config\DCP06_Release.xml -C
+```
+
+Output: `Project/Linux/step07_lxx_package/out/RelWithDebInfo/DCP06.lxx` (includes `APPL_DLL_LINUX_SIGNATURE` POB).
+
+Install via Captivate v10 Linux sim UI (same path as `HelloWorldGSV.lxx` in the Captivate distribution). Confirm DCP06 launches and menu icon loads.
+
+**Open questions for Leica / Pasi:**
+
+1. Official partner `.lxx` install workflow in Linux Captivate v10 UI
+2. ARM `.yxx` packaging for TS20 device (Step 6 `DCP06.so` output)
+3. Whether unsigned dev install is supported on Linux long-term (MkEdit deprecated)
 
 ## 9. Revision history
 
 | Date | Change |
 |------|--------|
 | 2026-06-14 | Initial doc: sim install, startup, Step 7, dongle, DCP06 crash recovery |
+| 2026-06-15 | `.sys` crash root cause + fix; Apps menu verified; launch blocked on missing `.sig`; Pasi handoff §8 |

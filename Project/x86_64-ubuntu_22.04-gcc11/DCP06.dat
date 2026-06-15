@@ -10,8 +10,8 @@
 ; ReleaseDate: [1...31].[1...12].[2000...2050]
 ; ArticleNr:   [0...99999999]
 
-;Build number
-BuildNr: 1
+;Build number (Captivate v10.0.0-rc.309)
+BuildNr: 309
 
 ;Iteration number
 IterationNr: 0
@@ -20,14 +20,13 @@ IterationNr: 0
 SpecialInfo: 0
 
 ;Version number
-VersionNr: 1
+VersionNr: 10
 
 ;Release number
 ReleaseNr: 00
 
-
 ;Release date
-ReleaseDate: 01.03.2025
+ReleaseDate: 01.06.2025
 
 ;Articel Number
 ArticleNr: 1

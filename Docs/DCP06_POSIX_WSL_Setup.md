@@ -319,7 +319,8 @@ WSL is for **POSIX SDK exploration and future `DCP06.so` builds**, not a replace
 | Yocto installer fails in WSL | Capture log; ask Leica; try Hyper-V Linux VM as fallback |
 | Line endings break scripts | In repo: `*.sh` LF only; `git config core.autocrlf input` in WSL clone |
 | Out of disk in WSL | `wsl --shutdown`, then expand VHD or clean `~/leica` build dirs |
-| Captivate GUI flashes / `Killed` | Broken plugin under `internal-storage/System/Plugin/` — see [Captivate Sim §7](DCP06_POSIX_Linux_Captivate_Sim.md#7-dcp06-plugin-crash--important) |
+| Captivate GUI flashes / `Killed` | Broken `DCP06.sys` under `Plugin/DCP06/` — see [Captivate Sim §7](DCP06_POSIX_Linux_Captivate_Sim.md#7-dcp06-plugin-crash--important) |
+| *“This app may be damaged”* opening DCP06 | Missing `libDCP06.so.sig` — signed `.lxx` from dongled MkEdit; see [§7.1](DCP06_POSIX_Linux_Captivate_Sim.md#71-launch--this-app-may-be-damaged-2026-06-15) |
 | Docker `permission denied` | `sudo docker ps` or `newgrp docker` after `usermod -aG docker $USER` |
 
 Reset WSL disk location (advanced): see [Microsoft WSL docs](https://learn.microsoft.com/en-us/windows/wsl/) — only if default install path fills up.
@@ -328,8 +329,8 @@ Reset WSL disk location (advanced): see [Microsoft WSL docs](https://learn.micro
 
 ## 14. Next steps after WSL is ready
 
-1. ~~Complete Steps 1–7 tooling in [DCP06_POSIX_Linux_Build_Steps.md](DCP06_POSIX_Linux_Build_Steps.md)~~ — **build path done** (x86 + ARM `DCP06.so`, MkEdit staging).
-2. Fix Step 7 dev install or obtain signed `.lxx` from dongled machine (Pasi).
+1. ~~Complete Steps 1–7 tooling~~ — **build path done**; dev install shows DCP06 in Linux sim Apps menu.
+2. **Signed `DCP06.lxx`** from dongled machine (Pasi) — required to launch the app on Linux sim.
 3. Hand off findings to Pasi for **production DCP05** Linux port — see [DCP06_POSIX_SDK_Analysis.md](DCP06_POSIX_SDK_Analysis.md).
 
 ---
@@ -341,6 +342,7 @@ Reset WSL disk location (advanced): see [Microsoft WSL docs](https://learn.micro
 | 2026-06-13 | Initial WSL2 + Ubuntu 22.04 setup guide (no dual-boot) |
 | 2026-06-13 | Stage 2 Yocto SDK installed; Step 6 ARM cross-build verified; checklist and env vars updated |
 | 2026-06-14 | Linux Captivate sim guide; Step 7; plugin crash troubleshooting |
+| 2026-06-15 | Step 7 Apps menu verified; signed `.lxx` handoff to Pasi |
 
 ---
 

@@ -384,17 +384,25 @@ captivate    # Ctrl+C to stop; rerun to reload plugins
 
 Look for **DCP06** in the Apps menu (App.Id `15751`, entry `Start15751`).
 
+**Verified 2026-06-15:** After fixing `DCP06.sys` (`App.Type=mixed`, CRLF, EntryPoint comment), dev install shows DCP06 as **tile #25** in Apps. Tapping it shows *“This app may be damaged”* because `libDCP06.so.sig` is missing — see [Captivate Sim §7.1](DCP06_POSIX_Linux_Captivate_Sim.md#71-launch--this-app-may-be-damaged-2026-06-15).
+
 ### Expected result (`.lxx`, dongled machine)
 
-On a PC with a valid Leica dongle:
+On a PC with a valid Leica dongle, stage assets then run MkEdit with **Release** config (includes signature POB):
 
 ```bash
 bash "$DCP06_ROOT/Project/Linux/step07_lxx_package/build_lxx.sh" package
 ```
 
+From Windows `Project/` directory:
+
+```
+MkEdit.exe -M:mk -F:x86_64-ubuntu_22.04-gcc11\Config\DCP06_Release.xml -C
+```
+
 Output: `Project/Linux/step07_lxx_package/out/RelWithDebInfo/DCP06.lxx`
 
-Install workflow in Captivate UI is TBD — ask Pasi/Leica how partner `.lxx` files are loaded in v10 Linux sim. Built-in samples ship as `.lxx` + `.sig` in the Captivate distribution.
+Install via Captivate v10 Linux sim UI (same as `HelloWorldGSV.lxx` in the Captivate distribution). Built-in samples ship signed `.lxx` files; partner plugins need the dongle for `libDCP06.so.sig`.
 
 ### If it fails
 
@@ -402,31 +410,32 @@ Install workflow in Captivate UI is TBD — ask Pasi/Leica how partner `.lxx` fi
 |---------|-----|
 | `DCP06.so not found` | Run Step 5 build script first |
 | `DCP06.LEN missing` | Run `scripts\build_lang.bat` on Windows |
-| `can't build applications without valid dongle` | **Normal** for `.lxx` without dongle; use `install` mode for sim testing |
+| `can't build applications without valid dongle` | **Normal** for `.lxx` without dongle; use `install` mode to verify menu registration |
 | `cannot copy directory tree: DCP06_Res.pob` on install | Script runs post-install fixups; verify `SWXRes/` and `EN/` manually |
 | DCP06 not in Apps menu | Restart `captivate`; confirm TS sim running; check `DEFAULT_SENSOR_TYPE=2300` in `/etc/captivate/captivate.env` |
 | MkEdit `cmd.exe` quoting errors | Run from WSL as above; script uses `Project/` as MkEdit working directory |
-| Captivate GUI flashes / `Killed` after install | **Broken DCP06 plugin** under `internal-storage/System/Plugin/` — move folder out entirely; see [Captivate Sim §7](DCP06_POSIX_Linux_Captivate_Sim.md#7-dcp06-plugin-crash--important) |
+| Captivate GUI flashes / `Killed` on startup | Broken `DCP06.sys` — see [Captivate Sim §7](DCP06_POSIX_Linux_Captivate_Sim.md#7-dcp06-plugin-crash--important); fix `.sys` and re-run `install` |
+| *“This app may be damaged”* when opening DCP06 | Missing `libDCP06.so.sig` — build signed `DCP06.lxx` with dongle (`DCP06_Release.xml`); see [§7.1](DCP06_POSIX_Linux_Captivate_Sim.md#71-launch--this-app-may-be-damaged-2026-06-15) |
+| Blank DCP06 menu icon | PNGs manually copied to `SWXRes/`; may improve after full signed `.lxx` install |
 
-### Warning — dev install not verified safe
+### Step 7 status (2026-06-15)
 
-The first `build_lxx.sh install` on AMS WSL (2026-06-14) left duplicate `libDCP06.app` / `DCP06.app` and an incomplete MkEdit resources step. Captivate **panicked on startup** until the plugin folder was moved out of `Plugin/`. Treat `install` mode as **experimental** until MkEdit install is fixed or a signed `.lxx` is used.
+| Milestone | Status |
+|-----------|--------|
+| MkEdit staging + PObs | Done |
+| Dev install (`-I:`) | Done — DCP06 in Apps menu |
+| Captivate startup with plugin | Done (after `.sys` fix) |
+| DCP06 launches / runs | **Blocked** — needs signed `.lxx` (dongle) |
+| `.lxx` release package | Pending — `DCP06_Release.xml` added for Pasi |
 
 ### Files added for Step 7
 
 | Path | Role |
 |------|------|
-| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.sys` | Plugin descriptor (Ubuntu) |
-| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.dat` | Version metadata for MkEdit |
-| `Project/x86_64-ubuntu_22.04-gcc11/Config/DCP06_RelWithDebInfo.xml` | MkEdit config (`APPL_UBUNTU`) |
-| `Project/Linux/step07_lxx_package/build_lxx.sh` | Staging + MkEdit driver |
-
-
-| Path | Role |
-|------|------|
-| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.sys` | Plugin descriptor (Ubuntu) |
-| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.dat` | Version metadata for MkEdit |
-| `Project/x86_64-ubuntu_22.04-gcc11/Config/DCP06_RelWithDebInfo.xml` | MkEdit config (`APPL_UBUNTU`) |
+| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.sys` | Plugin descriptor (Ubuntu, CRLF + `App.Type=mixed`) |
+| `Project/x86_64-ubuntu_22.04-gcc11/DCP06.dat` | Version metadata (v10 / build 309) |
+| `Project/x86_64-ubuntu_22.04-gcc11/Config/DCP06_RelWithDebInfo.xml` | MkEdit dev install / PObs |
+| `Project/x86_64-ubuntu_22.04-gcc11/Config/DCP06_Release.xml` | MkEdit signed `.lxx` (dongle; includes `.sig` POB) |
 | `Project/Linux/step07_lxx_package/build_lxx.sh` | Staging + MkEdit driver |
 
 ---
@@ -439,9 +448,9 @@ Reconnaissance build steps on AMS WSL (2026-06-14):
 |------|--------|--------------|--------------|
 | 5 | `~/build/dcp06-step05/DCP06.so` | x86-64 (Ubuntu dev) | `Start15751` |
 | 6 | `~/build/dcp06-step06/DCP06.so` | ARM aarch64 (TS20 device) | `Start15751` |
-| 7 | MkEdit staging / PObs (`.lxx` needs dongle) | x86-64 sim | `Start15751` — plugin load **not** verified |
+| 7 | MkEdit dev install; Apps menu tile | x86-64 sim | `Start15751` — **run** needs signed `.lxx` |
 
-**`.lxx` release packaging** still needs a **dongled Windows host** (coordinate with Pasi for production DCP05).
+**`.lxx` release packaging** needs a **dongled Windows host** — `DCP06_Release.xml` ready for Pasi.
 
 **Linux Captivate simulator** runs on AMS WSL; see [DCP06_POSIX_Linux_Captivate_Sim.md](DCP06_POSIX_Linux_Captivate_Sim.md) for startup, Docker, and plugin crash recovery.
 
@@ -475,3 +484,4 @@ Hand off compile/link/packaging findings to Pasi for the **production DCP05** Li
 | 2026-06-13 | Step 6 added (ARM cross-compile via Yocto SDK + `step06_arm_cross`) |
 | 2026-06-14 | Step 7 added (MkEdit `.lxx` / dev install for Linux Captivate sim) |
 | 2026-06-14 | Documented DCP06 plugin crash recovery; dev install marked experimental |
+| 2026-06-15 | Step 7 verified: Apps menu + `.sys` fix; launch needs signed `.lxx`; `DCP06_Release.xml` |
